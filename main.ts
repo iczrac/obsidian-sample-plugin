@@ -63,17 +63,16 @@ export default class BaziPlugin extends Plugin {
 			editorCallback: (editor: Editor, view: MarkdownView) => {
 				this.openDatePickerModal((baziInfo) => {
 					if (this.settings.useInteractiveView) {
-						// 使用交互式视图
-						const id = 'bazi-view-' + Math.random().toString(36).substring(2, 9);
-						const html = BaziService.generateBaziHTML(baziInfo, id);
+						// 使用交互式视图 - 插入bazi代码块
+						const dateStr = `${baziInfo.solarDate} ${baziInfo.solarTime}`;
 
-						// 在光标位置插入HTML代码块
-						editor.replaceSelection(`\`\`\`html
-${html}
+						// 在光标位置插入bazi代码块
+						editor.replaceSelection(`\`\`\`bazi
+date: ${dateStr}
 \`\`\``);
 
 						// 显示通知
-						new Notice('交互式八字命盘已插入');
+						new Notice('八字命盘已插入');
 					} else {
 						// 使用传统Markdown
 						const markdown = BaziService.generateBaziMarkdown(baziInfo);
@@ -89,74 +88,88 @@ ${html}
 			name: '插入交互式八字命盘',
 			editorCallback: (editor: Editor) => {
 				this.openDatePickerModal((baziInfo) => {
-					const id = 'bazi-view-' + Math.random().toString(36).substring(2, 9);
-					const html = BaziService.generateBaziHTML(baziInfo, id);
+					const dateStr = `${baziInfo.solarDate} ${baziInfo.solarTime}`;
 
-					// 在光标位置插入HTML代码块
-					editor.replaceSelection(`\`\`\`html
-${html}
+					// 在光标位置插入bazi代码块
+					editor.replaceSelection(`\`\`\`bazi
+date: ${dateStr}
 \`\`\``);
 
 					// 显示通知
-					new Notice('交互式八字命盘已插入');
+					new Notice('八字命盘已插入');
 				});
 			}
 		});
 
-		// 注册Markdown后处理器，处理HTML代码块中的交互式八字命盘
-		this.registerMarkdownPostProcessor((el, ctx) => {
-			// 查找所有HTML代码块
-			const codeBlocks = el.querySelectorAll('pre > code.language-html');
+		// 注册代码块处理器 - 类似Dataview的方式
+		this.registerMarkdownCodeBlockProcessor('bazi', (source, el, ctx) => {
+			// 解析代码块内容
+			const params = this.parseCodeBlockParams(source);
 
-			for (let i = 0; i < codeBlocks.length; i++) {
-				const codeBlock = codeBlocks[i];
-				const html = codeBlock.textContent;
+			// 检查是否有日期参数
+			if (params.date) {
+				try {
+					// 解析日期
+					const dateTime = params.date.trim().split(' ');
+					const dateParts = dateTime[0].split('-').map(Number);
+					const timeParts = dateTime.length > 1 ? dateTime[1].split(':').map(Number) : [0, 0];
 
-				// 检查是否包含八字命盘
-				if (html && html.includes('bazi-view-container')) {
-					// 创建一个新的div来替换代码块
-					const container = document.createElement('div');
-					container.innerHTML = html;
+					const year = dateParts[0];
+					const month = dateParts[1];
+					const day = dateParts[2];
+					const hour = timeParts[0];
 
-					// 获取父元素（pre标签）
-					const pre = codeBlock.parentElement;
-					if (pre && pre.parentElement) {
-						// 替换pre标签为新的div
-						pre.parentElement.replaceChild(container, pre);
+					// 获取八字信息
+					const baziInfo = BaziService.getBaziFromDate(year, month, day, hour);
 
-						// 为设置按钮添加点击事件
-						const settingsButtons = container.querySelectorAll('.bazi-view-settings-button');
-						settingsButtons.forEach(button => {
-							button.addEventListener('click', (e) => {
-								e.preventDefault();
-								e.stopPropagation();
+					// 生成唯一ID
+					const id = 'bazi-view-' + Math.random().toString(36).substring(2, 9);
 
-								// 获取八字命盘ID
-								const baziId = (button as HTMLElement).getAttribute('data-bazi-id');
-								if (baziId) {
-									// 获取日期数据
-									const dataEl = container.querySelector(`#${baziId} .bazi-view-data`);
-									if (dataEl) {
-										const year = parseInt(dataEl.getAttribute('data-year') || '0');
-										const month = parseInt(dataEl.getAttribute('data-month') || '0');
-										const day = parseInt(dataEl.getAttribute('data-day') || '0');
-										const hour = parseInt(dataEl.getAttribute('data-hour') || '0');
+					// 渲染八字命盘
+					el.innerHTML = BaziService.generateBaziHTML(baziInfo, id);
 
-										// 打开设置模态框
-										this.openBaziSettingsModal(baziId, { year, month, day, hour }, (newBaziInfo) => {
-											// 更新八字命盘
-											const newHtml = BaziService.generateBaziHTML(newBaziInfo, baziId);
-											container.innerHTML = newHtml;
+					// 为设置按钮添加事件监听器
+					this.addSettingsButtonListeners(el);
 
-											// 重新添加事件监听器
-											this.addSettingsButtonListeners(container);
-										});
-									}
-								}
-							});
-						});
-					}
+					// 添加源代码属性，用于编辑时恢复
+					el.setAttribute('data-bazi-source', source);
+				} catch (error) {
+					// 显示错误信息
+					el.createEl('div', {
+						cls: 'bazi-error',
+						text: `八字命盘渲染错误: ${error.message}`
+					});
 				}
+			} else if (params.bazi) {
+				try {
+					// 解析八字字符串
+					const baziInfo = BaziService.parseBaziString(params.bazi);
+
+					// 生成唯一ID
+					const id = 'bazi-view-' + Math.random().toString(36).substring(2, 9);
+
+					// 渲染八字命盘
+					el.innerHTML = BaziService.generateBaziHTML(baziInfo, id);
+
+					// 为设置按钮添加事件监听器
+					this.addSettingsButtonListeners(el);
+
+					// 添加源代码属性，用于编辑时恢复
+					el.setAttribute('data-bazi-source', source);
+				} catch (error) {
+					console.error('八字命盘渲染错误:', error);
+					// 显示错误信息
+					el.createEl('div', {
+						cls: 'bazi-error',
+						text: `八字命盘渲染错误: ${error.message}`
+					});
+				}
+			} else {
+				// 显示错误信息
+				el.createEl('div', {
+					cls: 'bazi-error',
+					text: '八字命盘缺少必要参数，请指定 date 或 bazi 参数'
+				});
 			}
 		});
 
@@ -263,11 +276,49 @@ ${html}
 
 							// 重新添加事件监听器
 							this.addSettingsButtonListeners(container);
+
+							// 如果是在代码块中，更新源代码
+							const sourceBlock = container.closest('.markdown-rendered');
+							if (sourceBlock) {
+								const codeBlock = sourceBlock.closest('[data-bazi-source]');
+								if (codeBlock) {
+									// 更新日期
+									const dateStr = `${newBaziInfo.solarDate} ${newBaziInfo.solarTime}`;
+									codeBlock.setAttribute('data-bazi-source', `date: ${dateStr}`);
+								}
+							}
 						});
 					}
 				}
 			});
 		});
+	}
+
+	/**
+	 * 解析代码块参数
+	 * @param source 代码块源代码
+	 * @returns 解析后的参数对象
+	 */
+	parseCodeBlockParams(source: string): Record<string, string> {
+		const params: Record<string, string> = {};
+		const lines = source.split('\n');
+
+		for (const line of lines) {
+			// 跳过空行和注释
+			if (!line.trim() || line.trim().startsWith('#')) {
+				continue;
+			}
+
+			// 解析键值对
+			const match = line.match(/^([^:]+):\s*(.*)$/);
+			if (match) {
+				const key = match[1].trim().toLowerCase();
+				const value = match[2].trim();
+				params[key] = value;
+			}
+		}
+
+		return params;
 	}
 }
 
@@ -322,5 +373,21 @@ class BaziSettingTab extends PluginSettingTab {
 		usageList.createEl('li', {text: '使用命令面板中的"插入交互式八字命盘"命令可以在光标位置插入交互式八字命盘'});
 		usageList.createEl('li', {text: '在交互式八字命盘中，点击右上角的设置图标可以调整参数'});
 		usageList.createEl('li', {text: '选中八字文本后，使用命令面板中的"解析选中的八字"命令可以解析八字并生成详细信息'});
+
+		containerEl.createEl('h3', {text: '代码块用法'});
+
+		const codeExample = containerEl.createEl('pre');
+		codeExample.createEl('code', {
+			text: '```bazi\ndate: 1986-05-29 12:00\n```'
+		});
+
+		containerEl.createEl('p', {
+			text: '您也可以直接使用八字：'
+		});
+
+		const codeExample2 = containerEl.createEl('pre');
+		codeExample2.createEl('code', {
+			text: '```bazi\nbazi: 甲子 乙丑 丙寅 丁卯\n```'
+		});
 	}
 }

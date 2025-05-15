@@ -55,9 +55,9 @@ export class BaziService {
   /**
    * 解析八字字符串
    * @param baziStr 八字字符串，如"甲子 乙丑 丙寅 丁卯"
-   * @returns 八字信息对象（部分信息）
+   * @returns 八字信息对象
    */
-  static parseBaziString(baziStr: string): Partial<BaziInfo> {
+  static parseBaziString(baziStr: string): BaziInfo {
     // 清理并分割八字字符串
     const parts = baziStr.replace(/\s+/g, ' ').trim().split(' ');
 
@@ -65,20 +65,161 @@ export class BaziService {
       throw new Error('八字格式不正确，应为"年柱 月柱 日柱 时柱"的格式，如"甲子 乙丑 丙寅 丁卯"');
     }
 
+    // 提取天干地支
+    const yearStem = parts[0][0];
+    const yearBranch = parts[0][1];
+    const monthStem = parts[1][0];
+    const monthBranch = parts[1][1];
+    const dayStem = parts[2][0];
+    const dayBranch = parts[2][1];
+    const hourStem = parts[3][0];
+    const hourBranch = parts[3][1];
+
+    // 计算五行
+    const yearWuXing = this.getStemWuXing(yearStem);
+    const monthWuXing = this.getStemWuXing(monthStem);
+    const dayWuXing = this.getStemWuXing(dayStem);
+    const hourWuXing = this.getStemWuXing(hourStem);
+
+    // 计算纳音
+    const yearNaYin = this.getNaYin(yearStem + yearBranch);
+    const monthNaYin = this.getNaYin(monthStem + monthBranch);
+    const dayNaYin = this.getNaYin(dayStem + dayBranch);
+    const hourNaYin = this.getNaYin(hourStem + hourBranch);
+
+    // 创建一个完整的BaziInfo对象
     return {
+      // 基本信息 - 使用占位符
+      solarDate: '----年--月--日',
+      lunarDate: '农历----年--月--日',
+      solarTime: '--:--',
+
+      // 八字信息
       yearPillar: parts[0],
+      yearStem,
+      yearBranch,
+      yearHideGan: this.getHideGan(yearBranch),
+      yearWuXing,
+      yearNaYin,
+
       monthPillar: parts[1],
+      monthStem,
+      monthBranch,
+      monthHideGan: this.getHideGan(monthBranch),
+      monthWuXing,
+      monthNaYin,
+
       dayPillar: parts[2],
+      dayStem,
+      dayBranch,
+      dayHideGan: this.getHideGan(dayBranch),
+      dayWuXing,
+      dayNaYin,
+
       hourPillar: parts[3],
-      yearStem: parts[0][0],
-      yearBranch: parts[0][1],
-      monthStem: parts[1][0],
-      monthBranch: parts[1][1],
-      dayStem: parts[2][0],
-      dayBranch: parts[2][1],
-      hourStem: parts[3][0],
-      hourBranch: parts[3][1],
+      hourStem,
+      hourBranch,
+      hourHideGan: this.getHideGan(hourBranch),
+      hourWuXing,
+      hourNaYin,
+
+      // 其他信息 - 使用占位符
+      taiYuan: '占位符',
+      taiYuanNaYin: '占位符',
+      mingGong: '占位符',
+      mingGongNaYin: '占位符',
+
+      // 完整信息
+      fullString: `八字：${parts[0]} ${parts[1]} ${parts[2]} ${parts[3]}`
     };
+  }
+
+  /**
+   * 获取天干对应的五行
+   * @param stem 天干
+   * @returns 五行
+   */
+  private static getStemWuXing(stem: string): string {
+    const map: {[key: string]: string} = {
+      '甲': '木',
+      '乙': '木',
+      '丙': '火',
+      '丁': '火',
+      '戊': '土',
+      '己': '土',
+      '庚': '金',
+      '辛': '金',
+      '壬': '水',
+      '癸': '水'
+    };
+
+    return map[stem] || '未知';
+  }
+
+  /**
+   * 获取地支藏干
+   * @param branch 地支
+   * @returns 藏干字符串
+   */
+  private static getHideGan(branch: string): string {
+    const map: {[key: string]: string} = {
+      '子': '癸',
+      '丑': '己,癸,辛',
+      '寅': '甲,丙,戊',
+      '卯': '乙',
+      '辰': '戊,乙,癸',
+      '巳': '丙,庚,戊',
+      '午': '丁,己',
+      '未': '己,丁,乙',
+      '申': '庚,壬,戊',
+      '酉': '辛',
+      '戌': '戊,辛,丁',
+      '亥': '壬,甲'
+    };
+
+    return map[branch] || '';
+  }
+
+  /**
+   * 获取纳音
+   * @param gz 干支
+   * @returns 纳音
+   */
+  private static getNaYin(gz: string): string {
+    const map: {[key: string]: string} = {
+      '甲子': '海中金', '乙丑': '海中金',
+      '丙寅': '炉中火', '丁卯': '炉中火',
+      '戊辰': '大林木', '己巳': '大林木',
+      '庚午': '路旁土', '辛未': '路旁土',
+      '壬申': '剑锋金', '癸酉': '剑锋金',
+      '甲戌': '山头火', '乙亥': '山头火',
+      '丙子': '涧下水', '丁丑': '涧下水',
+      '戊寅': '城头土', '己卯': '城头土',
+      '庚辰': '白蜡金', '辛巳': '白蜡金',
+      '壬午': '杨柳木', '癸未': '杨柳木',
+      '甲申': '泉中水', '乙酉': '泉中水',
+      '丙戌': '屋上土', '丁亥': '屋上土',
+      '戊子': '霹雳火', '己丑': '霹雳火',
+      '庚寅': '松柏木', '辛卯': '松柏木',
+      '壬辰': '长流水', '癸巳': '长流水',
+      '甲午': '砂石金', '乙未': '砂石金',
+      '丙申': '山下火', '丁酉': '山下火',
+      '戊戌': '平地木', '己亥': '平地木',
+      '庚子': '壁上土', '辛丑': '壁上土',
+      '壬寅': '金薄金', '癸卯': '金薄金',
+      '甲辰': '覆灯火', '乙巳': '覆灯火',
+      '丙午': '天河水', '丁未': '天河水',
+      '戊申': '大驿土', '己酉': '大驿土',
+      '庚戌': '钗环金', '辛亥': '钗环金',
+      '壬子': '桑柘木', '癸丑': '桑柘木',
+      '甲寅': '大溪水', '乙卯': '大溪水',
+      '丙辰': '沙中土', '丁巳': '沙中土',
+      '戊午': '天上火', '己未': '天上火',
+      '庚申': '石榴木', '辛酉': '石榴木',
+      '壬戌': '大海水', '癸亥': '大海水'
+    };
+
+    return map[gz] || '未知';
   }
 
   /**
@@ -244,10 +385,10 @@ ${baziInfo.fullString}
 
   <div class="bazi-view-section bazi-view-basic-info">
     <div class="bazi-view-col">
-      <div class="bazi-view-info-item">公历：${baziInfo.solarDate} ${baziInfo.solarTime}</div>
+      <div class="bazi-view-info-item">公历：${baziInfo.solarDate || '----'} ${baziInfo.solarTime || '--:--'}</div>
     </div>
     <div class="bazi-view-col">
-      <div class="bazi-view-info-item">农历：${baziInfo.lunarDate}</div>
+      <div class="bazi-view-info-item">农历：${baziInfo.lunarDate || '----'}</div>
     </div>
   </div>
 
@@ -310,10 +451,10 @@ ${baziInfo.fullString}
 
   <div class="bazi-view-section" style="display: none;">
     <div class="bazi-view-data"
-      data-year="${baziInfo.solarDate.split('-')[0]}"
-      data-month="${baziInfo.solarDate.split('-')[1]}"
-      data-day="${baziInfo.solarDate.split('-')[2]}"
-      data-hour="${baziInfo.solarTime.split(':')[0]}">
+      data-year="${baziInfo.solarDate && baziInfo.solarDate.includes('-') ? baziInfo.solarDate.split('-')[0] : '2023'}"
+      data-month="${baziInfo.solarDate && baziInfo.solarDate.includes('-') ? baziInfo.solarDate.split('-')[1] : '1'}"
+      data-day="${baziInfo.solarDate && baziInfo.solarDate.includes('-') ? baziInfo.solarDate.split('-')[2] : '1'}"
+      data-hour="${baziInfo.solarTime && baziInfo.solarTime.includes(':') ? baziInfo.solarTime.split(':')[0] : '0'}">
     </div>
   </div>
 </div>`;
@@ -325,6 +466,11 @@ ${baziInfo.fullString}
    * @returns CSS类名
    */
   private static getWuXingClass(wuxing: string): string {
+    // 如果wuxing未定义，返回空字符串
+    if (!wuxing) {
+      return '';
+    }
+
     const map: {[key: string]: string} = {
       '金': 'jin',
       '木': 'mu',
