@@ -1,7 +1,7 @@
 {
-	"name": "obsidian-sample-plugin",
+	"name": "obsidian-bazi-plugin",
 	"version": "1.0.0",
-	"description": "This is a sample plugin for Obsidian (https://obsidian.md)",
+	"description": "基于lunar-typescript的八字命盘插件，支持输入时间转换为八字信息，解析笔记中的八字。",
 	"main": "main.js",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",

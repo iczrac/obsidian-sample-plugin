@@ -1,11 +1,10 @@
 {
-	"id": "sample-plugin",
-	"name": "Sample Plugin",
+	"id": "bazi-plugin",
+	"name": "八字命盘",
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
-	"description": "Demonstrates some of the capabilities of the Obsidian API.",
-	"author": "Obsidian",
-	"authorUrl": "https://obsidian.md",
-	"fundingUrl": "https://obsidian.md/pricing",
+	"description": "基于lunar-typescript的八字命盘插件，支持输入时间转换为八字信息，解析笔记中的八字。",
+	"author": "您的名字",
+	"authorUrl": "https://github.com/yourusername",
 	"isDesktopOnly": false
 }
