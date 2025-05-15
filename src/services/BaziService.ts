@@ -87,12 +87,90 @@ export class BaziService {
     const dayNaYin = this.getNaYin(dayStem + dayBranch);
     const hourNaYin = this.getNaYin(hourStem + hourBranch);
 
+    // 尝试反推日期
+    let solarDate = '----年--月--日';
+    let lunarDate = '农历----年--月--日';
+    let solarTime = '--:--';
+
+    try {
+      // 使用lunar-typescript库反推日期
+      // 注意：这里只是一个估算，因为同一八字可能对应多个日期
+      // 我们取最近的一个可能的日期
+
+      // 1. 从年柱估算年份
+      const currentYear = new Date().getFullYear();
+      const startYear = currentYear - 80; // 从80年前开始查找
+      const endYear = currentYear + 20;   // 查找到20年后
+
+      // 天干序号（甲=0, 乙=1, ..., 癸=9）
+      const stemIndex = "甲乙丙丁戊己庚辛壬癸".indexOf(yearStem);
+      // 地支序号（子=0, 丑=1, ..., 亥=11）
+      const branchIndex = "子丑寅卯辰巳午未申酉戌亥".indexOf(yearBranch);
+
+      // 查找符合年柱的年份
+      let matchingYears: number[] = [];
+      for (let year = startYear; year <= endYear; year++) {
+        // 计算天干序号：年份减去4，除以10的余数
+        const stemCheck = (year - 4) % 10;
+        // 计算地支序号：年份减去4，除以12的余数
+        const branchCheck = (year - 4) % 12;
+
+        if (stemCheck === stemIndex && branchCheck === branchIndex) {
+          matchingYears.push(year);
+        }
+      }
+
+      if (matchingYears.length > 0) {
+        // 取最近的年份
+        const year = matchingYears[matchingYears.length - 1];
+
+        // 2. 从月柱估算月份
+        // 地支对应的月份（寅=1月, 卯=2月, ..., 丑=12月）
+        const monthMap = {
+          '寅': 1, '卯': 2, '辰': 3, '巳': 4, '午': 5, '未': 6,
+          '申': 7, '酉': 8, '戌': 9, '亥': 10, '子': 11, '丑': 12
+        };
+        const month = monthMap[monthBranch] || 1;
+
+        // 3. 从时柱估算小时
+        // 地支对应的时辰（子=23-1点, 丑=1-3点, ..., 亥=21-23点）
+        const hourMap = {
+          '子': 0, '丑': 2, '寅': 4, '卯': 6, '辰': 8, '巳': 10,
+          '午': 12, '未': 14, '申': 16, '酉': 18, '戌': 20, '亥': 22
+        };
+        const hour = hourMap[hourBranch] || 0;
+
+        // 4. 使用lunar-typescript库查找符合条件的日期
+        // 这里简化处理，取月中的第15天
+        const day = 15;
+
+        // 创建阳历对象
+        const solar = Solar.fromYmdHms(year, month, day, hour, 0, 0);
+        // 转换为农历
+        const lunar = solar.getLunar();
+
+        // 格式化日期
+        solarDate = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+        lunarDate = lunar.toString();
+        solarTime = `${hour.toString().padStart(2, '0')}:00`;
+      }
+    } catch (error) {
+      console.error('反推日期出错:', error);
+      // 出错时使用默认值
+    }
+
+    // 计算特殊信息
+    const taiYuan = this.calculateTaiYuan(monthStem, monthBranch);
+    const taiYuanNaYin = this.getNaYin(taiYuan);
+    const mingGong = this.calculateMingGong(hourStem, hourBranch);
+    const mingGongNaYin = this.getNaYin(mingGong);
+
     // 创建一个完整的BaziInfo对象
     return {
-      // 基本信息 - 使用占位符
-      solarDate: '----年--月--日',
-      lunarDate: '农历----年--月--日',
-      solarTime: '--:--',
+      // 基本信息
+      solarDate,
+      lunarDate,
+      solarTime,
 
       // 八字信息
       yearPillar: parts[0],
@@ -123,15 +201,75 @@ export class BaziService {
       hourWuXing,
       hourNaYin,
 
-      // 其他信息 - 使用占位符
-      taiYuan: '占位符',
-      taiYuanNaYin: '占位符',
-      mingGong: '占位符',
-      mingGongNaYin: '占位符',
+      // 特殊信息
+      taiYuan,
+      taiYuanNaYin,
+      mingGong,
+      mingGongNaYin,
 
       // 完整信息
       fullString: `八字：${parts[0]} ${parts[1]} ${parts[2]} ${parts[3]}`
     };
+  }
+
+  /**
+   * 计算胎元
+   * @param monthStem 月干
+   * @param monthBranch 月支
+   * @returns 胎元干支
+   */
+  private static calculateTaiYuan(monthStem: string, monthBranch: string): string {
+    // 天干顺序
+    const stems = "甲乙丙丁戊己庚辛壬癸";
+    // 地支顺序
+    const branches = "子丑寅卯辰巳午未申酉戌亥";
+
+    // 计算月干的索引
+    const stemIndex = stems.indexOf(monthStem);
+    // 计算月支的索引
+    const branchIndex = branches.indexOf(monthBranch);
+
+    if (stemIndex === -1 || branchIndex === -1) {
+      return "未知";
+    }
+
+    // 计算胎元干（月干 + 5，超过10则减10）
+    const taiYuanStemIndex = (stemIndex + 5) % 10;
+    // 计算胎元支（月支 + 3，超过12则减12）
+    const taiYuanBranchIndex = (branchIndex + 3) % 12;
+
+    // 组合胎元干支
+    return stems[taiYuanStemIndex] + branches[taiYuanBranchIndex];
+  }
+
+  /**
+   * 计算命宫
+   * @param hourStem 时干
+   * @param hourBranch 时支
+   * @returns 命宫干支
+   */
+  private static calculateMingGong(hourStem: string, hourBranch: string): string {
+    // 天干顺序
+    const stems = "甲乙丙丁戊己庚辛壬癸";
+    // 地支顺序
+    const branches = "子丑寅卯辰巳午未申酉戌亥";
+
+    // 计算时干的索引
+    const stemIndex = stems.indexOf(hourStem);
+    // 计算时支的索引
+    const branchIndex = branches.indexOf(hourBranch);
+
+    if (stemIndex === -1 || branchIndex === -1) {
+      return "未知";
+    }
+
+    // 计算命宫干（时干 + 7，超过10则减10）
+    const mingGongStemIndex = (stemIndex + 7) % 10;
+    // 计算命宫支（时支 + 1，超过12则减12）
+    const mingGongBranchIndex = (branchIndex + 1) % 12;
+
+    // 组合命宫干支
+    return stems[mingGongStemIndex] + branches[mingGongBranchIndex];
   }
 
   /**
@@ -403,29 +541,29 @@ ${baziInfo.fullString}
         </tr>
       </thead>
       <tbody>
-        <tr>
+        <tr class="bazi-stem-row">
           <td class="wuxing-${this.getWuXingClass(baziInfo.yearWuXing)}">${baziInfo.yearStem}</td>
           <td class="wuxing-${this.getWuXingClass(baziInfo.monthWuXing)}">${baziInfo.monthStem}</td>
           <td class="wuxing-${this.getWuXingClass(baziInfo.dayWuXing)}">${baziInfo.dayStem}</td>
           <td class="wuxing-${this.getWuXingClass(baziInfo.hourWuXing)}">${baziInfo.hourStem}</td>
         </tr>
-        <tr>
+        <tr class="bazi-branch-row">
           <td>${baziInfo.yearBranch}</td>
           <td>${baziInfo.monthBranch}</td>
           <td>${baziInfo.dayBranch}</td>
           <td>${baziInfo.hourBranch}</td>
         </tr>
-        <tr>
-          <td>${baziInfo.yearHideGan}</td>
-          <td>${baziInfo.monthHideGan}</td>
-          <td>${baziInfo.dayHideGan}</td>
-          <td>${baziInfo.hourHideGan}</td>
+        <tr class="bazi-hidegan-row">
+          <td><small>${baziInfo.yearHideGan || '无'}</small></td>
+          <td><small>${baziInfo.monthHideGan || '无'}</small></td>
+          <td><small>${baziInfo.dayHideGan || '无'}</small></td>
+          <td><small>${baziInfo.hourHideGan || '无'}</small></td>
         </tr>
-        <tr>
-          <td>${baziInfo.yearNaYin}</td>
-          <td>${baziInfo.monthNaYin}</td>
-          <td>${baziInfo.dayNaYin}</td>
-          <td>${baziInfo.hourNaYin}</td>
+        <tr class="bazi-nayin-row">
+          <td>${baziInfo.yearNaYin || '未知'}</td>
+          <td>${baziInfo.monthNaYin || '未知'}</td>
+          <td>${baziInfo.dayNaYin || '未知'}</td>
+          <td>${baziInfo.hourNaYin || '未知'}</td>
         </tr>
       </tbody>
     </table>
@@ -434,18 +572,18 @@ ${baziInfo.fullString}
   <div class="bazi-view-section">
     <h4 class="bazi-view-subtitle">五行分析</h4>
     <div class="bazi-view-wuxing-list">
-      <span class="wuxing-tag wuxing-${this.getWuXingClass(baziInfo.yearWuXing)}">${baziInfo.yearStem}(${baziInfo.yearWuXing})</span>
-      <span class="wuxing-tag wuxing-${this.getWuXingClass(baziInfo.monthWuXing)}">${baziInfo.monthStem}(${baziInfo.monthWuXing})</span>
-      <span class="wuxing-tag wuxing-${this.getWuXingClass(baziInfo.dayWuXing)}">${baziInfo.dayStem}(${baziInfo.dayWuXing})</span>
-      <span class="wuxing-tag wuxing-${this.getWuXingClass(baziInfo.hourWuXing)}">${baziInfo.hourStem}(${baziInfo.hourWuXing})</span>
+      <span class="wuxing-tag wuxing-${this.getWuXingClass(baziInfo.yearWuXing)}">${baziInfo.yearStem}(${baziInfo.yearWuXing || '未知'})</span>
+      <span class="wuxing-tag wuxing-${this.getWuXingClass(baziInfo.monthWuXing)}">${baziInfo.monthStem}(${baziInfo.monthWuXing || '未知'})</span>
+      <span class="wuxing-tag wuxing-${this.getWuXingClass(baziInfo.dayWuXing)}">${baziInfo.dayStem}(${baziInfo.dayWuXing || '未知'})</span>
+      <span class="wuxing-tag wuxing-${this.getWuXingClass(baziInfo.hourWuXing)}">${baziInfo.hourStem}(${baziInfo.hourWuXing || '未知'})</span>
     </div>
   </div>
 
   <div class="bazi-view-section">
     <h4 class="bazi-view-subtitle">特殊信息</h4>
     <div class="bazi-view-info-list">
-      <div class="bazi-view-info-item">胎元：${baziInfo.taiYuan}（${baziInfo.taiYuanNaYin}）</div>
-      <div class="bazi-view-info-item">命宫：${baziInfo.mingGong}（${baziInfo.mingGongNaYin}）</div>
+      <div class="bazi-view-info-item">胎元：${baziInfo.taiYuan || '未知'}${baziInfo.taiYuanNaYin ? `（${baziInfo.taiYuanNaYin}）` : ''}</div>
+      <div class="bazi-view-info-item">命宫：${baziInfo.mingGong || '未知'}${baziInfo.mingGongNaYin ? `（${baziInfo.mingGongNaYin}）` : ''}</div>
     </div>
   </div>
 

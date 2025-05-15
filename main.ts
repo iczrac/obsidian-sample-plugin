@@ -133,6 +133,48 @@ date: ${dateStr}
 
 					// 添加源代码属性，用于编辑时恢复
 					el.setAttribute('data-bazi-source', source);
+
+					// 应用额外的显示选项
+					this.applyDisplayOptions(el, params);
+				} catch (error) {
+					// 显示错误信息
+					el.createEl('div', {
+						cls: 'bazi-error',
+						text: `八字命盘渲染错误: ${error.message}`
+					});
+				}
+			} else if (params.lunar) {
+				try {
+					// 解析农历日期
+					const dateTime = params.lunar.trim().split(' ');
+					const dateParts = dateTime[0].split('-').map(Number);
+					const timeParts = dateTime.length > 1 ? dateTime[1].split(':').map(Number) : [0, 0];
+
+					const year = dateParts[0];
+					const month = dateParts[1];
+					const day = dateParts[2];
+					const hour = timeParts[0];
+
+					// 是否闰月
+					const isLeapMonth = params.leap === 'true' || params.leap === '1';
+
+					// 获取八字信息
+					const baziInfo = BaziService.getBaziFromLunarDate(year, month, day, hour, isLeapMonth);
+
+					// 生成唯一ID
+					const id = 'bazi-view-' + Math.random().toString(36).substring(2, 9);
+
+					// 渲染八字命盘
+					el.innerHTML = BaziService.generateBaziHTML(baziInfo, id);
+
+					// 为设置按钮添加事件监听器
+					this.addSettingsButtonListeners(el);
+
+					// 添加源代码属性，用于编辑时恢复
+					el.setAttribute('data-bazi-source', source);
+
+					// 应用额外的显示选项
+					this.applyDisplayOptions(el, params);
 				} catch (error) {
 					// 显示错误信息
 					el.createEl('div', {
@@ -156,8 +198,44 @@ date: ${dateStr}
 
 					// 添加源代码属性，用于编辑时恢复
 					el.setAttribute('data-bazi-source', source);
+
+					// 应用额外的显示选项
+					this.applyDisplayOptions(el, params);
 				} catch (error) {
 					console.error('八字命盘渲染错误:', error);
+					// 显示错误信息
+					el.createEl('div', {
+						cls: 'bazi-error',
+						text: `八字命盘渲染错误: ${error.message}`
+					});
+				}
+			} else if (params.now) {
+				try {
+					// 使用当前时间
+					const now = new Date();
+					const year = now.getFullYear();
+					const month = now.getMonth() + 1;
+					const day = now.getDate();
+					const hour = now.getHours();
+
+					// 获取八字信息
+					const baziInfo = BaziService.getBaziFromDate(year, month, day, hour);
+
+					// 生成唯一ID
+					const id = 'bazi-view-' + Math.random().toString(36).substring(2, 9);
+
+					// 渲染八字命盘
+					el.innerHTML = BaziService.generateBaziHTML(baziInfo, id);
+
+					// 为设置按钮添加事件监听器
+					this.addSettingsButtonListeners(el);
+
+					// 添加源代码属性，用于编辑时恢复
+					el.setAttribute('data-bazi-source', source);
+
+					// 应用额外的显示选项
+					this.applyDisplayOptions(el, params);
+				} catch (error) {
 					// 显示错误信息
 					el.createEl('div', {
 						cls: 'bazi-error',
@@ -168,7 +246,7 @@ date: ${dateStr}
 				// 显示错误信息
 				el.createEl('div', {
 					cls: 'bazi-error',
-					text: '八字命盘缺少必要参数，请指定 date 或 bazi 参数'
+					text: '八字命盘缺少必要参数，请指定 date、lunar、bazi 或 now 参数'
 				});
 			}
 		});
@@ -320,6 +398,51 @@ date: ${dateStr}
 
 		return params;
 	}
+
+	/**
+	 * 应用显示选项
+	 * @param el 容器元素
+	 * @param params 参数对象
+	 */
+	applyDisplayOptions(el: HTMLElement, params: Record<string, string>) {
+		// 显示/隐藏五行分析
+		if (params.showWuxing === 'false' || params.showWuxing === '0') {
+			const wuxingSection = el.querySelector('.bazi-view-wuxing-list')?.parentElement;
+			if (wuxingSection) {
+				(wuxingSection as HTMLElement).style.display = 'none';
+			}
+		}
+
+		// 显示/隐藏特殊信息
+		if (params.showSpecialInfo === 'false' || params.showSpecialInfo === '0') {
+			const specialInfoSection = el.querySelector('.bazi-view-info-list')?.parentElement;
+			if (specialInfoSection) {
+				(specialInfoSection as HTMLElement).style.display = 'none';
+			}
+		}
+
+		// 设置标题
+		if (params.title) {
+			const titleEl = el.querySelector('.bazi-view-title');
+			if (titleEl) {
+				titleEl.textContent = params.title;
+			}
+		}
+
+		// 设置主题
+		if (params.theme) {
+			const container = el.querySelector('.bazi-view-container');
+			if (container) {
+				if (params.theme === 'dark') {
+					container.classList.add('bazi-theme-dark');
+				} else if (params.theme === 'light') {
+					container.classList.add('bazi-theme-light');
+				} else if (params.theme === 'colorful') {
+					container.classList.add('bazi-theme-colorful');
+				}
+			}
+		}
+	}
 }
 
 /**
@@ -376,18 +499,50 @@ class BaziSettingTab extends PluginSettingTab {
 
 		containerEl.createEl('h3', {text: '代码块用法'});
 
+		containerEl.createEl('p', {
+			text: '使用公历日期：'
+		});
 		const codeExample = containerEl.createEl('pre');
 		codeExample.createEl('code', {
 			text: '```bazi\ndate: 1986-05-29 12:00\n```'
 		});
 
 		containerEl.createEl('p', {
-			text: '您也可以直接使用八字：'
+			text: '使用农历日期：'
+		});
+		const codeExample3 = containerEl.createEl('pre');
+		codeExample3.createEl('code', {
+			text: '```bazi\nlunar: 1986-4-21 12:00\nleap: false\n```'
 		});
 
+		containerEl.createEl('p', {
+			text: '使用当前时间：'
+		});
+		const codeExample4 = containerEl.createEl('pre');
+		codeExample4.createEl('code', {
+			text: '```bazi\nnow: true\n```'
+		});
+
+		containerEl.createEl('p', {
+			text: '直接使用八字：'
+		});
 		const codeExample2 = containerEl.createEl('pre');
 		codeExample2.createEl('code', {
 			text: '```bazi\nbazi: 甲子 乙丑 丙寅 丁卯\n```'
+		});
+
+		containerEl.createEl('h3', {text: '高级选项'});
+
+		containerEl.createEl('p', {
+			text: '您可以添加以下选项来自定义显示：'
+		});
+		const codeExample5 = containerEl.createEl('pre');
+		codeExample5.createEl('code', {
+			text: '```bazi\ndate: 1986-05-29 12:00\ntitle: 我的八字命盘\nshowWuxing: true\nshowSpecialInfo: true\ntheme: colorful\n```'
+		});
+
+		containerEl.createEl('p', {
+			text: '主题选项：默认、dark（暗色）、light（亮色）、colorful（彩色）'
 		});
 	}
 }
