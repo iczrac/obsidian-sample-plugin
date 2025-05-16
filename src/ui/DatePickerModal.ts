@@ -8,16 +8,30 @@ export class DatePickerModal extends Modal {
   private date: moment.Moment;
   private hour: number = 0;
   private onSubmit: (baziInfo: any) => void;
+  private defaultGender: string = '1'; // 默认为男性
+  private baziSect: string = '2'; // 默认为流派2
 
   constructor(app: App, onSubmit: (baziInfo: any) => void) {
     super(app);
     this.date = moment();
     this.onSubmit = onSubmit;
+
+    // 尝试从插件设置中获取默认性别和流派
+    try {
+      // @ts-ignore - 忽略类型检查
+      const plugin = app.plugins.plugins["bazi-obsidian"];
+      if (plugin && plugin.settings) {
+        this.defaultGender = plugin.settings.defaultGender || '1';
+        this.baziSect = plugin.settings.baziSect || '2';
+      }
+    } catch (e) {
+      console.log("无法获取插件设置，使用默认值");
+    }
   }
 
   onOpen() {
     const { contentEl } = this;
-    
+
     contentEl.createEl('h2', { text: '选择日期和时间' });
 
     // 日期选择
@@ -60,13 +74,13 @@ export class DatePickerModal extends Modal {
               const year = this.date.year();
               const month = this.date.month() + 1; // moment月份从0开始
               const day = this.date.date();
-              
+
               // 获取八字信息
-              const baziInfo = BaziService.getBaziFromDate(year, month, day, this.hour);
-              
+              const baziInfo = BaziService.getBaziFromDate(year, month, day, this.hour, this.defaultGender, this.baziSect);
+
               // 调用回调函数
               this.onSubmit(baziInfo);
-              
+
               // 关闭模态框
               this.close();
             } catch (error) {

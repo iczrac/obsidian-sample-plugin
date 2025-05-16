@@ -12,6 +12,7 @@ export class BaziSettingsModal extends Modal {
   private onUpdate: (baziInfo: any) => void;
   private gender: string = '1'; // 默认为男性
   private calculationMethod: string = '0'; // 默认为传统排盘
+  private baziSect: string = '2'; // 默认为流派2（晚子时日柱算当天）
   private showWuxing: boolean = true; // 默认显示五行分析
   private showSpecialInfo: boolean = true; // 默认显示特殊信息
 
@@ -92,13 +93,29 @@ export class BaziSettingsModal extends Modal {
               // 更新年份
               this.currentDate.year = newYear;
 
-              // 重新计算八字
-              const baziInfo = BaziService.getBaziFromDate(
-                this.currentDate.year,
+              // 获取原始八字信息
+              const originalBaziInfo = BaziService.getBaziFromDate(
+                this.currentDate.year - 60, // 使用原始年份获取八字
                 this.currentDate.month,
                 this.currentDate.day,
                 this.currentDate.hour
               );
+
+              // 创建新的八字信息对象，保持八字不变，只更新日期
+              const baziInfo = {
+                ...originalBaziInfo,
+                solarDate: `${this.currentDate.year}-${this.currentDate.month.toString().padStart(2, '0')}-${this.currentDate.day.toString().padStart(2, '0')}`,
+                solarTime: `${this.currentDate.hour.toString().padStart(2, '0')}:0`,
+                // 更新农历日期（简化处理，实际应该通过lunar-typescript库计算）
+                lunarDate: originalBaziInfo.lunarDate.replace(/\d{4}/, this.currentDate.year.toString()),
+                // 保存原始日期信息
+                originalDate: {
+                  year: this.currentDate.year,
+                  month: this.currentDate.month,
+                  day: this.currentDate.day,
+                  hour: this.currentDate.hour
+                }
+              };
 
               // 更新八字命盘
               this.onUpdate(baziInfo);
@@ -146,13 +163,43 @@ export class BaziSettingsModal extends Modal {
           .onChange(value => {
             this.gender = value;
 
-            // 更新八字命盘
-            const baziInfo = BaziService.getBaziFromDate(
+            // 获取当前八字信息
+            const tempBaziInfo = BaziService.getBaziFromDate(
               this.currentDate.year,
               this.currentDate.month,
               this.currentDate.day,
               this.currentDate.hour
             );
+
+            // 获取原始八字
+            const yearPillar = tempBaziInfo.yearPillar;
+            const monthPillar = tempBaziInfo.monthPillar;
+            const dayPillar = tempBaziInfo.dayPillar;
+            const hourPillar = tempBaziInfo.hourPillar;
+
+            // 构建八字字符串
+            const baziString = `${yearPillar} ${monthPillar} ${dayPillar} ${hourPillar}`;
+
+            // 解析八字字符串，保持八字不变
+            const baziInfo = BaziService.parseBaziString(baziString);
+
+            // 更新日期信息
+            baziInfo.solarDate = `${this.currentDate.year}-${this.currentDate.month.toString().padStart(2, '0')}-${this.currentDate.day.toString().padStart(2, '0')}`;
+            baziInfo.solarTime = `${this.currentDate.hour}:0`;
+
+            // 添加显示选项
+            baziInfo.showWuxing = this.showWuxing;
+            baziInfo.showSpecialInfo = this.showSpecialInfo;
+            baziInfo.gender = this.gender;
+            baziInfo.calculationMethod = this.calculationMethod;
+
+            // 添加原始日期信息
+            baziInfo.originalDate = {
+              year: this.currentDate.year,
+              month: this.currentDate.month,
+              day: this.currentDate.day,
+              hour: this.currentDate.hour
+            };
 
             // TODO: 设置性别并重新计算大运
 
@@ -172,13 +219,43 @@ export class BaziSettingsModal extends Modal {
           .onChange(value => {
             this.calculationMethod = value;
 
-            // 更新八字命盘
-            const baziInfo = BaziService.getBaziFromDate(
+            // 获取当前八字信息
+            const tempBaziInfo = BaziService.getBaziFromDate(
               this.currentDate.year,
               this.currentDate.month,
               this.currentDate.day,
               this.currentDate.hour
             );
+
+            // 获取原始八字
+            const yearPillar = tempBaziInfo.yearPillar;
+            const monthPillar = tempBaziInfo.monthPillar;
+            const dayPillar = tempBaziInfo.dayPillar;
+            const hourPillar = tempBaziInfo.hourPillar;
+
+            // 构建八字字符串
+            const baziString = `${yearPillar} ${monthPillar} ${dayPillar} ${hourPillar}`;
+
+            // 解析八字字符串，保持八字不变
+            const baziInfo = BaziService.parseBaziString(baziString);
+
+            // 更新日期信息
+            baziInfo.solarDate = `${this.currentDate.year}-${this.currentDate.month.toString().padStart(2, '0')}-${this.currentDate.day.toString().padStart(2, '0')}`;
+            baziInfo.solarTime = `${this.currentDate.hour}:0`;
+
+            // 添加显示选项
+            baziInfo.showWuxing = this.showWuxing;
+            baziInfo.showSpecialInfo = this.showSpecialInfo;
+            baziInfo.gender = this.gender;
+            baziInfo.calculationMethod = this.calculationMethod;
+
+            // 添加原始日期信息
+            baziInfo.originalDate = {
+              year: this.currentDate.year,
+              month: this.currentDate.month,
+              day: this.currentDate.day,
+              hour: this.currentDate.hour
+            };
 
             // TODO: 设置排盘方式并重新计算
 
@@ -245,16 +322,55 @@ export class BaziSettingsModal extends Modal {
         button.setButtonText('应用更改')
           .setCta()
           .onClick(() => {
-            // 更新八字命盘
-            const baziInfo = BaziService.getBaziFromDate(
+            // 获取当前八字信息
+            const tempBaziInfo = BaziService.getBaziFromDate(
               this.currentDate.year,
               this.currentDate.month,
               this.currentDate.day,
               this.currentDate.hour
             );
 
-            this.onUpdate(baziInfo);
-            this.close();
+            // 获取原始八字
+            const yearPillar = tempBaziInfo.yearPillar;
+            const monthPillar = tempBaziInfo.monthPillar;
+            const dayPillar = tempBaziInfo.dayPillar;
+            const hourPillar = tempBaziInfo.hourPillar;
+
+            // 构建八字字符串
+            const baziString = `${yearPillar} ${monthPillar} ${dayPillar} ${hourPillar}`;
+
+            // 解析八字字符串，保持八字不变
+            const baziInfo = BaziService.parseBaziString(baziString);
+
+            // 更新日期信息
+            baziInfo.solarDate = `${this.currentDate.year}-${this.currentDate.month.toString().padStart(2, '0')}-${this.currentDate.day.toString().padStart(2, '0')}`;
+            baziInfo.solarTime = `${this.currentDate.hour}:0`;
+
+            // 添加显示选项
+            baziInfo.showWuxing = this.showWuxing;
+            baziInfo.showSpecialInfo = this.showSpecialInfo;
+            baziInfo.gender = this.gender;
+            baziInfo.calculationMethod = this.calculationMethod;
+
+            // 确保保存原始日期信息，用于代码块更新
+            baziInfo.originalDate = {
+              year: this.currentDate.year,
+              month: this.currentDate.month,
+              day: this.currentDate.day,
+              hour: this.currentDate.hour
+            };
+
+            console.log('应用更改，更新八字信息:', baziInfo);
+
+            // 延迟更新，确保DOM更新完成
+            setTimeout(() => {
+              this.onUpdate(baziInfo);
+
+              // 再次延迟关闭，确保更新完成
+              setTimeout(() => {
+                this.close();
+              }, 800);
+            }, 200);
           });
       })
       // 关闭按钮

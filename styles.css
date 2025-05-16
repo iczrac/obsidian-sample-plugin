@@ -310,6 +310,40 @@
   padding-top: 15px;
 }
 
+/* 大运和流年表格样式 */
+.bazi-view-table-container {
+  overflow-x: auto;
+  margin: 10px 0;
+}
+
+.bazi-view-dayun-table,
+.bazi-view-liunian-table {
+  width: 100%;
+  font-size: 0.9em;
+}
+
+.bazi-view-dayun-table th,
+.bazi-view-liunian-table th {
+  background-color: var(--background-secondary);
+  font-weight: bold;
+  padding: 8px;
+}
+
+.bazi-view-dayun-table td,
+.bazi-view-liunian-table td {
+  padding: 6px;
+}
+
+.bazi-view-dayun-table tr:nth-child(even),
+.bazi-view-liunian-table tr:nth-child(even) {
+  background-color: var(--background-secondary-alt);
+}
+
+.bazi-view-dayun-table tr:hover,
+.bazi-view-liunian-table tr:hover {
+  background-color: var(--background-modifier-hover);
+}
+
 /* 打印样式 */
 @media print {
   .bazi-view-settings-button {

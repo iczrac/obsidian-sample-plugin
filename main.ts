@@ -1,4 +1,4 @@
-import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, MarkdownPostProcessorContext } from 'obsidian';
+import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, MarkdownPostProcessorContext, debounce } from 'obsidian';
 import { BaziService } from 'src/services/BaziService';
 import { DatePickerModal } from 'src/ui/DatePickerModal';
 import { BaziInfoModal } from 'src/ui/BaziInfoModal';
@@ -8,26 +8,30 @@ import { BaziSettingsModal } from 'src/ui/BaziSettingsModal';
 interface BaziPluginSettings {
 	defaultFormat: string;
 	useInteractiveView: boolean;
+	debugMode: boolean;
+	autoUpdateCodeBlock: boolean;
+	codeBlockUpdateDelay: number;
+	baziSect: string; // 八字流派
+	defaultGender: string; // 默认性别
 }
 
 const DEFAULT_SETTINGS: BaziPluginSettings = {
 	defaultFormat: 'full', // 'full' 或 'simple'
-	useInteractiveView: true // 是否使用交互式视图
+	useInteractiveView: true, // 是否使用交互式视图
+	debugMode: false, // 调试模式
+	autoUpdateCodeBlock: true, // 自动更新代码块
+	codeBlockUpdateDelay: 500, // 代码块更新延迟（毫秒）
+	baziSect: '2', // 默认使用流派2（晚子时日柱算当天）
+	defaultGender: '1' // 默认为男性
 }
 
 export default class BaziPlugin extends Plugin {
 	settings: BaziPluginSettings;
 
-	async onload() {
-		await this.loadSettings();
-
-		// 添加左侧图标
-		const ribbonIconEl = this.addRibbonIcon('calendar-clock', '八字命盘', (evt: MouseEvent) => {
-			// 点击图标时打开日期选择模态框
-			this.openDatePickerModal();
-		});
-		ribbonIconEl.addClass('bazi-plugin-ribbon-class');
-
+	/**
+	 * 添加命令
+	 */
+	addCommands() {
 		// 添加命令：输入时间转八字
 		this.addCommand({
 			id: 'open-date-picker',
@@ -45,10 +49,15 @@ export default class BaziPlugin extends Plugin {
 				const selection = editor.getSelection();
 				if (selection) {
 					this.openBaziParserModal(selection, (baziInfo) => {
-						// 生成八字信息的Markdown
-						const markdown = BaziService.generateBaziMarkdown(baziInfo as any);
-						// 替换选中的文本
-						editor.replaceSelection(markdown);
+						// 生成八字信息的HTML
+						const id = 'bazi-view-' + Math.random().toString(36).substring(2, 9);
+						const html = BaziService.generateBaziHTML(baziInfo as any, id);
+
+						// 替换选中的文本为代码块
+						const dateStr = `${baziInfo.solarDate} ${baziInfo.solarTime}`;
+						editor.replaceSelection(`\`\`\`bazi
+date: ${dateStr}
+\`\`\``);
 					});
 				} else {
 					new Notice('请先选择八字文本');
@@ -73,10 +82,6 @@ date: ${dateStr}
 
 						// 显示通知
 						new Notice('八字命盘已插入');
-					} else {
-						// 使用传统Markdown
-						const markdown = BaziService.generateBaziMarkdown(baziInfo);
-						editor.replaceSelection(markdown);
 					}
 				});
 			}
@@ -100,6 +105,20 @@ date: ${dateStr}
 				});
 			}
 		});
+	}
+
+	async onload() {
+		await this.loadSettings();
+
+		// 添加命令
+		this.addCommands();
+
+		// 添加左侧图标
+		const ribbonIconEl = this.addRibbonIcon('calendar-clock', '八字命盘', (evt: MouseEvent) => {
+			// 点击图标时打开日期选择模态框
+			this.openDatePickerModal();
+		});
+		ribbonIconEl.addClass('bazi-plugin-ribbon-class');
 
 		// 注册代码块处理器 - 类似Dataview的方式
 		this.registerMarkdownCodeBlockProcessor('bazi', (source, el, ctx) => {
@@ -120,7 +139,7 @@ date: ${dateStr}
 					const hour = timeParts[0];
 
 					// 获取八字信息
-					const baziInfo = BaziService.getBaziFromDate(year, month, day, hour);
+					const baziInfo = BaziService.getBaziFromDate(year, month, day, hour, this.settings.defaultGender, this.settings.baziSect);
 
 					// 生成唯一ID
 					const id = 'bazi-view-' + Math.random().toString(36).substring(2, 9);
@@ -159,7 +178,7 @@ date: ${dateStr}
 					const isLeapMonth = params.leap === 'true' || params.leap === '1';
 
 					// 获取八字信息
-					const baziInfo = BaziService.getBaziFromLunarDate(year, month, day, hour, isLeapMonth);
+					const baziInfo = BaziService.getBaziFromLunarDate(year, month, day, hour, isLeapMonth, this.settings.defaultGender, this.settings.baziSect);
 
 					// 生成唯一ID
 					const id = 'bazi-view-' + Math.random().toString(36).substring(2, 9);
@@ -185,7 +204,7 @@ date: ${dateStr}
 			} else if (params.bazi) {
 				try {
 					// 解析八字字符串
-					const baziInfo = BaziService.parseBaziString(params.bazi);
+					const baziInfo = BaziService.parseBaziString(params.bazi, this.settings.defaultGender, this.settings.baziSect);
 
 					// 生成唯一ID
 					const id = 'bazi-view-' + Math.random().toString(36).substring(2, 9);
@@ -219,7 +238,7 @@ date: ${dateStr}
 					const hour = now.getHours();
 
 					// 获取八字信息
-					const baziInfo = BaziService.getBaziFromDate(year, month, day, hour);
+					const baziInfo = BaziService.getBaziFromDate(year, month, day, hour, this.settings.defaultGender, this.settings.baziSect);
 
 					// 生成唯一ID
 					const id = 'bazi-view-' + Math.random().toString(36).substring(2, 9);
@@ -253,6 +272,145 @@ date: ${dateStr}
 
 		// 添加设置选项卡
 		this.addSettingTab(new BaziSettingTab(this.app, this));
+
+		// 注册事件监听器，在文档变化时更新代码块
+		if (this.settings.autoUpdateCodeBlock) {
+			this.registerDocumentChangeEvents();
+		}
+
+		// 输出调试信息
+		if (this.settings.debugMode) {
+			console.log('八字命盘插件已加载，调试模式已启用');
+		}
+	}
+
+	/**
+	 * 注册文档变化事件监听器
+	 */
+	private registerDocumentChangeEvents() {
+		// 监听编辑器变化事件
+		this.registerEvent(
+			this.app.workspace.on('editor-change', (editor, markdownView) => {
+				// 确保是MarkdownView类型
+				if (!(markdownView instanceof MarkdownView)) {
+					return;
+				}
+
+				// 只在编辑模式下处理
+				if (markdownView.getMode() !== 'source') {
+					return;
+				}
+
+				// 获取编辑器内容
+				const content = editor.getValue();
+
+				// 检查是否包含bazi代码块
+				if (content.includes('```bazi')) {
+					// 延迟处理，避免频繁更新
+					this.debouncedProcessDocumentChange(editor, markdownView);
+				}
+			})
+		);
+
+		// 监听活动叶子变化事件
+		this.registerEvent(
+			this.app.workspace.on('active-leaf-change', (leaf) => {
+				// 检查leaf和view是否存在
+				if (!leaf || !leaf.view) {
+					return;
+				}
+
+				// 检查是否是markdown视图
+				if (leaf.view instanceof MarkdownView) {
+					const markdownView = leaf.view;
+					const editor = markdownView.editor;
+
+					// 获取编辑器内容
+					const content = editor.getValue();
+
+					// 检查是否包含bazi代码块
+					if (content.includes('```bazi')) {
+						// 延迟处理，避免频繁更新
+						this.debouncedProcessDocumentChange(editor, markdownView);
+					}
+				}
+			})
+		);
+
+		if (this.settings.debugMode) {
+			console.log('已注册文档变化事件监听器');
+		}
+	}
+
+	/**
+	 * 防抖处理文档变化
+	 */
+	private debouncedProcessDocumentChange = debounce(
+		(editor: Editor, markdownView: MarkdownView) => {
+			this.processDocumentChange(editor, markdownView);
+		},
+		1000, // 1秒延迟
+		true // 在延迟开始时执行
+	);
+
+	/**
+	 * 处理文档变化
+	 */
+	private processDocumentChange(editor: Editor, markdownView: MarkdownView) {
+		if (this.settings.debugMode) {
+			console.log('检测到文档变化，处理bazi代码块');
+		}
+
+		// 获取编辑器内容
+		const content = editor.getValue();
+		const lines = content.split('\n');
+
+		// 查找所有bazi代码块
+		let inCodeBlock = false;
+		let startLine = -1;
+		let blockLanguage = '';
+		let baziSource = '';
+
+		for (let i = 0; i < lines.length; i++) {
+			const line = lines[i];
+
+			if (line.startsWith('```') && !inCodeBlock) {
+				inCodeBlock = true;
+				startLine = i;
+				blockLanguage = line.substring(3).trim();
+			} else if (line.startsWith('```') && inCodeBlock) {
+				inCodeBlock = false;
+
+				// 如果是bazi代码块，处理它
+				if (blockLanguage === 'bazi') {
+					// 获取代码块内容
+					let blockContent = '';
+					for (let j = startLine + 1; j < i; j++) {
+						blockContent += lines[j] + (j < i - 1 ? '\n' : '');
+					}
+
+					// 如果代码块内容有变化，更新渲染
+					if (blockContent !== baziSource) {
+						baziSource = blockContent;
+
+						if (this.settings.debugMode) {
+							console.log('bazi代码块内容已变化，更新渲染');
+							console.log('代码块内容:', blockContent);
+						}
+
+						// 延迟更新渲染，确保编辑器已经完成更新
+						setTimeout(() => {
+							// 触发重新渲染
+							this.app.workspace.trigger('layout-change');
+
+							if (this.settings.debugMode) {
+								console.log('已触发layout-change事件，重新渲染页面');
+							}
+						}, this.settings.codeBlockUpdateDelay);
+					}
+				}
+			}
+		}
 	}
 
 	onunload() {
@@ -288,16 +446,16 @@ date: ${dateStr}
 	 * @param baziInfo 八字信息
 	 */
 	openBaziInfoModal(baziInfo: any) {
-		const modal = new BaziInfoModal(this.app, baziInfo, (markdown: string) => {
+		const modal = new BaziInfoModal(this.app, baziInfo, (codeBlock: string) => {
 			// 获取当前活动的编辑器视图
 			const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
 			if (activeView) {
-				// 在光标位置插入Markdown
+				// 在光标位置插入代码块
 				const editor = activeView.editor;
-				editor.replaceSelection(markdown);
-				new Notice('八字信息已插入到笔记中');
+				editor.replaceSelection(codeBlock);
+				new Notice('八字命盘已插入到笔记中');
 			} else {
-				new Notice('无法插入八字信息：未找到活动的编辑器视图');
+				new Notice('无法插入八字命盘：未找到活动的编辑器视图');
 			}
 		});
 		modal.open();
@@ -346,6 +504,20 @@ date: ${dateStr}
 						const day = parseInt(dataEl.getAttribute('data-day') || '0');
 						const hour = parseInt(dataEl.getAttribute('data-hour') || '0');
 
+						// 获取原始源代码和八字
+						let originalBazi = '';
+						const sourceBlock = container.closest('.markdown-rendered');
+						if (sourceBlock) {
+							const codeBlock = sourceBlock.closest('[data-bazi-source]');
+							if (codeBlock) {
+								const originalSource = codeBlock.getAttribute('data-bazi-source') || '';
+								const params = this.parseCodeBlockParams(originalSource);
+								if (params.bazi) {
+									originalBazi = params.bazi;
+								}
+							}
+						}
+
 						// 打开设置模态框
 						this.openBaziSettingsModal(baziId, { year, month, day, hour }, (newBaziInfo) => {
 							// 更新八字命盘
@@ -360,9 +532,91 @@ date: ${dateStr}
 							if (sourceBlock) {
 								const codeBlock = sourceBlock.closest('[data-bazi-source]');
 								if (codeBlock) {
-									// 更新日期
-									const dateStr = `${newBaziInfo.solarDate} ${newBaziInfo.solarTime}`;
-									codeBlock.setAttribute('data-bazi-source', `date: ${dateStr}`);
+									// 获取原始源代码
+									const originalSource = codeBlock.getAttribute('data-bazi-source') || '';
+									const params = this.parseCodeBlockParams(originalSource);
+
+									// 检查原始源代码中使用的是哪种参数
+									if (params.date) {
+										// 如果原始使用的是date参数，更新日期
+										const dateStr = `${newBaziInfo.solarDate} ${newBaziInfo.solarTime}`;
+										params.date = dateStr;
+									} else if (params.lunar) {
+										// 如果原始使用的是lunar参数，尝试更新农历日期
+										// 这里简化处理，实际上应该从newBaziInfo中获取农历日期
+										const lunarDate = newBaziInfo.lunarDate;
+										if (lunarDate) {
+											params.lunar = lunarDate;
+										}
+
+										// 同时添加date参数，保存调整后的时间
+										if (newBaziInfo.solarDate && newBaziInfo.solarTime) {
+											const dateStr = `${newBaziInfo.solarDate} ${newBaziInfo.solarTime}`;
+											params.date = dateStr;
+										}
+									} else if (params.bazi) {
+										// 如果原始使用的是bazi参数，更新八字
+										const bazi = `${newBaziInfo.yearPillar} ${newBaziInfo.monthPillar} ${newBaziInfo.dayPillar} ${newBaziInfo.hourPillar}`;
+										params.bazi = bazi;
+
+										// 同时添加date参数，保存调整后的时间
+										if (newBaziInfo.solarDate && newBaziInfo.solarTime) {
+											const dateStr = `${newBaziInfo.solarDate} ${newBaziInfo.solarTime}`;
+											params.date = dateStr;
+										}
+									} else if (params.now) {
+										// 如果原始使用的是now参数，改为使用具体日期
+										params.now = 'false';
+
+										// 添加date参数，保存调整后的时间
+										if (newBaziInfo.solarDate && newBaziInfo.solarTime) {
+											const dateStr = `${newBaziInfo.solarDate} ${newBaziInfo.solarTime}`;
+											params.date = dateStr;
+										}
+									} else {
+										// 如果没有任何参数，添加date参数
+										if (newBaziInfo.solarDate && newBaziInfo.solarTime) {
+											const dateStr = `${newBaziInfo.solarDate} ${newBaziInfo.solarTime}`;
+											params.date = dateStr;
+										}
+									}
+
+									// 添加显示选项
+									if (newBaziInfo.showWuxing !== undefined) {
+										params.showWuxing = newBaziInfo.showWuxing.toString();
+									}
+
+									if (newBaziInfo.showSpecialInfo !== undefined) {
+										params.showSpecialInfo = newBaziInfo.showSpecialInfo.toString();
+									}
+
+									if (newBaziInfo.gender !== undefined) {
+										params.gender = newBaziInfo.gender;
+									}
+
+									if (newBaziInfo.calculationMethod !== undefined) {
+										params.calculationMethod = newBaziInfo.calculationMethod;
+									}
+
+									// 重新构建源代码
+									let newSource = '';
+									for (const key in params) {
+										newSource += `${key}: ${params[key]}\n`;
+									}
+
+									// 更新源代码属性
+									codeBlock.setAttribute('data-bazi-source', newSource);
+									console.log('更新data-bazi-source属性:', newSource);
+
+									// 更新编辑器中的代码块内容
+									console.log('调用updateCodeBlockInEditor方法');
+
+									// 使用setTimeout确保DOM更新后再更新编辑器
+									// 增加延迟时间，确保DOM更新完成
+									setTimeout(() => {
+										this.updateCodeBlockInEditor(newSource, container);
+										console.log('updateCodeBlockInEditor方法调用完成');
+									}, 500);
 								}
 							}
 						});
@@ -405,6 +659,8 @@ date: ${dateStr}
 	 * @param params 参数对象
 	 */
 	applyDisplayOptions(el: HTMLElement, params: Record<string, string>) {
+		console.log('应用显示选项:', params);
+
 		// 显示/隐藏五行分析
 		if (params.showWuxing === 'false' || params.showWuxing === '0') {
 			const wuxingSection = el.querySelector('.bazi-view-wuxing-list')?.parentElement;
@@ -442,6 +698,491 @@ date: ${dateStr}
 				}
 			}
 		}
+
+		// 保存设置到数据属性，方便后续使用
+		const container = el.querySelector('.bazi-view-container');
+		if (container) {
+			// 保存显示选项
+			if (params.showWuxing !== undefined) {
+				container.setAttribute('data-show-wuxing', params.showWuxing);
+			}
+
+			if (params.showSpecialInfo !== undefined) {
+				container.setAttribute('data-show-special-info', params.showSpecialInfo);
+			}
+
+			if (params.gender !== undefined) {
+				container.setAttribute('data-gender', params.gender);
+			}
+
+			if (params.calculationMethod !== undefined) {
+				container.setAttribute('data-calculation-method', params.calculationMethod);
+			}
+		}
+	}
+
+	/**
+	 * 更新编辑器中的代码块内容
+	 * @param newSource 新的源代码
+	 * @param container 容器元素
+	 */
+	updateCodeBlockInEditor(newSource: string, container: HTMLElement) {
+		console.log('开始执行updateCodeBlockInEditor方法');
+		console.log('新的源代码:', newSource);
+
+		// 显示状态通知
+		const statusNotice = new Notice('正在更新八字命盘代码块...', 0);
+
+		try {
+			// 获取当前文件
+			const file = this.app.workspace.getActiveFile();
+			if (!file) {
+				console.error('无法获取当前文件');
+				statusNotice.hide();
+				new Notice('更新代码块失败：无法获取当前文件', 3000);
+				return;
+			}
+
+			// 首先尝试使用vault.modify方法更新文件内容（更可靠的方式）
+			this.app.vault.read(file).then((content) => {
+				console.log('成功读取文件内容，文件长度:', content.length);
+
+				// 查找所有bazi代码块
+				const regex = /```bazi\n([\s\S]*?)```/g;
+				let match;
+				let found = false;
+				let newContent = content;
+				let matchCount = 0;
+
+				// 查找与当前容器关联的代码块
+				// 通过比较代码块内容来确定是哪个代码块
+				const sourceBlock = container.closest('.markdown-rendered');
+				const codeBlock = sourceBlock ? sourceBlock.closest('[data-bazi-source]') : null;
+				const originalSource = codeBlock ? codeBlock.getAttribute('data-bazi-source') || '' : '';
+
+				console.log('原始源代码:', originalSource);
+
+				// 记录所有匹配的代码块位置
+				const matches: {index: number, content: string, fullMatch: string}[] = [];
+				while ((match = regex.exec(content)) !== null) {
+					matchCount++;
+					matches.push({
+						index: match.index,
+						content: match[1],
+						fullMatch: match[0]
+					});
+					console.log(`找到第${matchCount}个bazi代码块，内容:`, match[1].substring(0, 50) + (match[1].length > 50 ? '...' : ''));
+				}
+
+				console.log(`共找到${matchCount}个bazi代码块`);
+
+				// 如果找到了原始源代码，尝试匹配对应的代码块
+				if (originalSource && matches.length > 0) {
+					// 尝试找到最匹配的代码块
+					let bestMatchIndex = -1;
+					let bestMatchScore = 0;
+
+					for (let i = 0; i < matches.length; i++) {
+						const match = matches[i];
+						// 计算匹配分数（改进的相似度计算）
+						let score = 0;
+						const matchLines = match.content.split('\n');
+						const originalLines = originalSource.split('\n');
+
+						// 计算有多少行是相同的
+						for (const line of originalLines) {
+							if (matchLines.includes(line)) {
+								score += 2; // 完全匹配的行给予更高的分数
+							} else {
+								// 检查部分匹配
+								for (const matchLine of matchLines) {
+									if (matchLine.includes(line) || line.includes(matchLine)) {
+										score += 1; // 部分匹配给予较低的分数
+										break;
+									}
+								}
+							}
+						}
+
+						// 如果内容长度相近，增加分数
+						const lengthDiff = Math.abs(match.content.length - originalSource.length);
+						if (lengthDiff < 50) {
+							score += 1;
+						}
+
+						console.log(`代码块${i+1}匹配分数:`, score);
+
+						if (score > bestMatchScore) {
+							bestMatchScore = score;
+							bestMatchIndex = i;
+						}
+					}
+
+					if (bestMatchIndex >= 0) {
+						console.log(`选择第${bestMatchIndex+1}个代码块作为最佳匹配，分数:`, bestMatchScore);
+
+						// 找到最匹配的代码块，替换它
+						const matchToReplace = matches[bestMatchIndex];
+						const startPos = matchToReplace.index;
+						const endPos = startPos + matchToReplace.fullMatch.length;
+
+						// 构建新的代码块内容
+						const newBlock = '```bazi\n' + newSource + '```';
+
+						// 替换代码块
+						newContent =
+							newContent.substring(0, startPos) +
+							newBlock +
+							newContent.substring(endPos);
+
+						found = true;
+
+						// 显示详细的匹配信息
+						console.log('匹配详情:', {
+							原始内容: originalSource,
+							匹配内容: matchToReplace.content,
+							新内容: newSource,
+							位置: `${startPos}-${endPos}`,
+							文档长度: content.length
+						});
+					}
+				}
+
+				// 如果没有找到匹配的代码块，替换第一个
+				if (!found && matchCount > 0) {
+					console.log('未找到匹配的代码块，替换第一个代码块');
+
+					// 重置正则表达式
+					regex.lastIndex = 0;
+					match = regex.exec(content);
+
+					if (match) {
+						// 替换代码块内容
+						const oldBlock = match[0];
+						const newBlock = '```bazi\n' + newSource + '```';
+
+						// 替换第一个匹配的代码块
+						newContent = newContent.replace(oldBlock, newBlock);
+						found = true;
+
+						// 显示替换信息
+						console.log('替换第一个代码块:', {
+							原始内容: oldBlock,
+							新内容: newBlock
+						});
+					}
+				}
+
+				if (found) {
+					// 更新文件内容
+					statusNotice.setMessage('正在写入文件...');
+
+					this.app.vault.modify(file, newContent).then(() => {
+						statusNotice.hide();
+						new Notice('八字命盘代码块已更新', 3000);
+						console.log('使用vault.modify更新代码块成功');
+					}).catch((error) => {
+						statusNotice.hide();
+						console.error('使用vault.modify更新代码块时出错:', error);
+						new Notice('更新代码块时出错: ' + error.message, 5000);
+
+						// 如果vault.modify失败，尝试使用编辑器API
+						this.updateCodeBlockWithEditorAPI(newSource);
+					});
+				} else {
+					console.log('未找到任何bazi代码块，尝试使用编辑器API');
+					statusNotice.setMessage('未找到匹配的代码块，尝试使用编辑器API...');
+
+					// 如果没有找到任何代码块，尝试使用编辑器API
+					this.updateCodeBlockWithEditorAPI(newSource);
+				}
+			}).catch((error) => {
+				statusNotice.hide();
+				console.error('读取文件内容时出错:', error);
+				new Notice('读取文件内容时出错: ' + error.message, 5000);
+
+				// 如果读取文件失败，尝试使用编辑器API
+				this.updateCodeBlockWithEditorAPI(newSource);
+			});
+		} catch (error) {
+			statusNotice.hide();
+			console.error('更新代码块时出错:', error);
+			new Notice('更新代码块时出错: ' + error.message, 5000);
+
+			// 如果出现错误，尝试使用编辑器API
+			this.updateCodeBlockWithEditorAPI(newSource);
+		}
+	}
+
+	/**
+	 * 使用编辑器API更新代码块内容
+	 * @param newSource 新的源代码
+	 */
+	private updateCodeBlockWithEditorAPI(newSource: string) {
+		console.log('尝试使用编辑器API更新代码块');
+
+		// 显示状态通知
+		const statusNotice = new Notice('尝试使用编辑器API更新代码块...', 0);
+
+		// 获取当前活动的编辑器视图
+		const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
+		if (!activeView) {
+			statusNotice.hide();
+			console.log('无法获取活动的编辑器视图');
+			new Notice('更新代码块失败：无法获取活动的编辑器视图', 3000);
+			return;
+		}
+
+		const editor = activeView.editor;
+		console.log('获取到编辑器:', editor ? '成功' : '失败');
+
+		if (!editor) {
+			statusNotice.hide();
+			new Notice('更新代码块失败：无法获取编辑器实例', 3000);
+			return;
+		}
+
+		try {
+			// 获取文档中所有的bazi代码块
+			const text = editor.getValue();
+			const lines = text.split('\n');
+
+			console.log('开始在文档中查找bazi代码块');
+			statusNotice.setMessage('正在查找八字命盘代码块...');
+
+			// 查找所有代码块
+			let inCodeBlock = false;
+			let startLine = -1;
+			let endLine = -1;
+			let blockLanguage = '';
+			let foundBlocks = 0;
+			let blockContents: {start: number, end: number, content: string}[] = [];
+
+			for (let i = 0; i < lines.length; i++) {
+				const line = lines[i];
+
+				if (line.startsWith('```') && !inCodeBlock) {
+					inCodeBlock = true;
+					startLine = i;
+					blockLanguage = line.substring(3).trim();
+					console.log(`第${i+1}行: 找到代码块开始，语言: ${blockLanguage}`);
+				} else if (line.startsWith('```') && inCodeBlock) {
+					inCodeBlock = false;
+					endLine = i;
+					console.log(`第${i+1}行: 找到代码块结束，语言: ${blockLanguage}`);
+
+					if (blockLanguage === 'bazi') {
+						foundBlocks++;
+						console.log(`找到第${foundBlocks}个bazi代码块，从第${startLine+1}行到第${endLine+1}行`);
+
+						// 收集代码块内容
+						let blockContent = '';
+						for (let j = startLine + 1; j < endLine; j++) {
+							blockContent += lines[j] + (j < endLine - 1 ? '\n' : '');
+						}
+
+						blockContents.push({
+							start: startLine,
+							end: endLine,
+							content: blockContent
+						});
+					}
+				}
+			}
+
+			// 如果找到了多个代码块，尝试找到最匹配的
+			if (blockContents.length > 1) {
+				statusNotice.setMessage('找到多个代码块，正在选择最匹配的...');
+				console.log(`找到${blockContents.length}个bazi代码块，尝试找到最匹配的`);
+
+				// 尝试找到最匹配的代码块
+				let bestMatchIndex = 0;
+				let bestMatchScore = 0;
+
+				for (let i = 0; i < blockContents.length; i++) {
+					const block = blockContents[i];
+					// 计算匹配分数（简单的相似度计算）
+					let score = 0;
+					const blockLines = block.content.split('\n');
+					const newSourceLines = newSource.split('\n');
+
+					// 计算有多少行是相同的或相似的
+					for (const line of newSourceLines) {
+						if (blockLines.includes(line)) {
+							score += 2; // 完全匹配的行给予更高的分数
+						} else {
+							// 检查部分匹配
+							for (const blockLine of blockLines) {
+								if (blockLine.includes(line) || line.includes(blockLine)) {
+									score += 1; // 部分匹配给予较低的分数
+									break;
+								}
+							}
+						}
+					}
+
+					console.log(`代码块${i+1}匹配分数:`, score);
+
+					if (score > bestMatchScore) {
+						bestMatchScore = score;
+						bestMatchIndex = i;
+					}
+				}
+
+				console.log(`选择第${bestMatchIndex+1}个代码块作为最佳匹配，分数:`, bestMatchScore);
+
+				// 使用最匹配的代码块
+				const bestMatch = blockContents[bestMatchIndex];
+				startLine = bestMatch.start;
+				endLine = bestMatch.end;
+			} else if (blockContents.length === 1) {
+				// 只有一个代码块，直接使用
+				startLine = blockContents[0].start;
+				endLine = blockContents[0].end;
+			}
+
+			if (blockContents.length > 0) {
+				statusNotice.setMessage('正在更新代码块...');
+
+				// 构建新的代码块内容
+				const newText = '```bazi\n' + newSource + '```';
+
+				// 获取当前代码块内容
+				let currentText = '';
+				for (let j = startLine; j <= endLine; j++) {
+					currentText += lines[j] + (j < endLine ? '\n' : '');
+				}
+
+				console.log('当前代码块内容:', currentText);
+				console.log('新代码块内容:', newText);
+
+				// 只有当内容有变化时才更新
+				if (currentText !== newText) {
+					try {
+						// 保存当前光标位置
+						const cursor = editor.getCursor();
+
+						// 替换代码块内容
+						editor.replaceRange(
+							newText,
+							{ line: startLine, ch: 0 },
+							{ line: endLine + 1, ch: 0 }
+						);
+
+						// 恢复光标位置
+						editor.setCursor(cursor);
+
+						// 显示通知
+						statusNotice.hide();
+						new Notice('八字命盘代码块已更新', 3000);
+						console.log('代码块更新成功');
+					} catch (error) {
+						statusNotice.hide();
+						console.error('更新代码块时出错:', error);
+						new Notice('更新代码块时出错: ' + error.message, 5000);
+					}
+				} else {
+					statusNotice.hide();
+					console.log('代码块内容没有变化，不需要更新');
+					new Notice('代码块内容没有变化，不需要更新', 3000);
+				}
+			} else {
+				console.log('未找到任何bazi代码块，在文档末尾添加一个');
+				statusNotice.setMessage('未找到任何代码块，正在添加新代码块...');
+
+				// 如果没有找到任何代码块，在文档末尾添加一个
+				const newBlock = '\n```bazi\n' + newSource + '```\n';
+
+				try {
+					// 在文档末尾添加代码块
+					editor.replaceRange(
+						newBlock,
+						{ line: lines.length, ch: 0 }
+					);
+
+					statusNotice.hide();
+					new Notice('已在文档末尾添加八字命盘代码块', 3000);
+					console.log('在文档末尾添加代码块成功');
+				} catch (error) {
+					statusNotice.hide();
+					console.error('添加代码块时出错:', error);
+					new Notice('添加代码块时出错: ' + error.message, 5000);
+				}
+			}
+		} catch (error) {
+			statusNotice.hide();
+			console.error('尝试更新代码块时出错:', error);
+			new Notice('更新代码块时出错: ' + error.message, 5000);
+		}
+	}
+
+	/**
+	 * 获取代码块在文档中的位置
+	 * @param editor 编辑器
+	 * @param language 代码块语言
+	 * @returns 代码块位置
+	 */
+	getCodeBlockPosition(editor: Editor, language: string) {
+		const text = editor.getValue();
+		const lines = text.split('\n');
+
+		// 定义代码块位置接口
+		interface CodeBlockPosition {
+			from: { line: number; ch: number };
+			to: { line: number; ch: number };
+		}
+
+		// 查找所有代码块
+		const codeBlocks: CodeBlockPosition[] = [];
+		let inCodeBlock = false;
+		let startLine = -1;
+		let blockLanguage = '';
+
+		console.log(`开始查找${language}代码块，文档共${lines.length}行`);
+
+		for (let i = 0; i < lines.length; i++) {
+			const line = lines[i];
+
+			if (line.startsWith('```') && !inCodeBlock) {
+				inCodeBlock = true;
+				startLine = i;
+				blockLanguage = line.substring(3).trim();
+				console.log(`第${i+1}行: 找到代码块开始，语言: ${blockLanguage}`);
+			} else if (line.startsWith('```') && inCodeBlock) {
+				inCodeBlock = false;
+				console.log(`第${i+1}行: 找到代码块结束，语言: ${blockLanguage}`);
+				if (blockLanguage === language) {
+					console.log(`添加${language}代码块: 从第${startLine+1}行到第${i+1}行`);
+					codeBlocks.push({
+						from: { line: startLine, ch: 0 },
+						to: { line: i + 1, ch: 0 }
+					});
+				}
+			}
+		}
+
+		console.log(`共找到${codeBlocks.length}个${language}代码块`);
+
+		// 找到当前活动的代码块
+		const cursor = editor.getCursor();
+		console.log(`当前光标位置: 第${cursor.line+1}行, 第${cursor.ch+1}列`);
+
+		for (const block of codeBlocks) {
+			if (cursor.line >= block.from.line && cursor.line <= block.to.line) {
+				console.log(`找到活动代码块: 从第${block.from.line+1}行到第${block.to.line+1}行`);
+				return block;
+			}
+		}
+
+		// 如果没有找到活动的代码块，返回第一个匹配的代码块
+		if (codeBlocks.length > 0) {
+			const firstBlock = codeBlocks[0];
+			console.log(`未找到活动代码块，使用第一个匹配的代码块: 从第${firstBlock.from.line+1}行到第${firstBlock.to.line+1}行`);
+			return firstBlock;
+		}
+
+		console.log(`未找到任何${language}代码块`);
+		return null;
 	}
 }
 
@@ -485,6 +1226,84 @@ class BaziSettingTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						this.plugin.settings.useInteractiveView = value;
 						await this.plugin.saveSettings();
+					});
+			});
+
+		new Setting(containerEl)
+			.setName('八字流派')
+			.setDesc('选择八字计算的流派，流派1认为晚子时日柱算明天，流派2认为晚子时日柱算当天')
+			.addDropdown(dropdown => {
+				dropdown
+					.addOption('1', '流派1 (晚子时日柱算明天)')
+					.addOption('2', '流派2 (晚子时日柱算当天)')
+					.setValue(this.plugin.settings.baziSect)
+					.onChange(async (value) => {
+						this.plugin.settings.baziSect = value;
+						await this.plugin.saveSettings();
+						new Notice('八字流派已更改为: ' + (value === '1' ? '流派1' : '流派2'), 3000);
+					});
+			});
+
+		new Setting(containerEl)
+			.setName('默认性别')
+			.setDesc('选择默认性别，用于大运计算')
+			.addDropdown(dropdown => {
+				dropdown
+					.addOption('1', '男')
+					.addOption('0', '女')
+					.setValue(this.plugin.settings.defaultGender)
+					.onChange(async (value) => {
+						this.plugin.settings.defaultGender = value;
+						await this.plugin.saveSettings();
+					});
+			});
+
+		containerEl.createEl('h3', {text: '高级设置'});
+
+		new Setting(containerEl)
+			.setName('自动更新代码块')
+			.setDesc('启用后，当代码块内容变化时会自动更新渲染')
+			.addToggle(toggle => {
+				toggle
+					.setValue(this.plugin.settings.autoUpdateCodeBlock)
+					.onChange(async (value) => {
+						this.plugin.settings.autoUpdateCodeBlock = value;
+						await this.plugin.saveSettings();
+
+						// 如果启用了自动更新，需要重新加载插件以注册事件监听器
+						if (value) {
+							new Notice('已启用自动更新代码块，请重新加载插件以应用更改', 3000);
+						}
+					});
+			});
+
+		new Setting(containerEl)
+			.setName('代码块更新延迟')
+			.setDesc('代码块内容变化后等待多少毫秒更新渲染（较大的值可以减少频繁更新）')
+			.addSlider(slider => {
+				slider
+					.setLimits(100, 2000, 100)
+					.setValue(this.plugin.settings.codeBlockUpdateDelay)
+					.setDynamicTooltip()
+					.onChange(async (value) => {
+						this.plugin.settings.codeBlockUpdateDelay = value;
+						await this.plugin.saveSettings();
+					});
+			});
+
+		new Setting(containerEl)
+			.setName('调试模式')
+			.setDesc('启用后，将在控制台输出详细的调试信息，有助于排查问题')
+			.addToggle(toggle => {
+				toggle
+					.setValue(this.plugin.settings.debugMode)
+					.onChange(async (value) => {
+						this.plugin.settings.debugMode = value;
+						await this.plugin.saveSettings();
+
+						if (value) {
+							console.log('八字命盘插件调试模式已启用');
+						}
 					});
 			});
 
