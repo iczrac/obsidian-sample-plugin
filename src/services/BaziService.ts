@@ -364,6 +364,36 @@ export class BaziService {
   }
 
   /**
+   * 计算旬空
+   * @param gan 天干
+   * @param zhi 地支
+   * @returns 旬空
+   */
+  private static calculateXunKong(gan: string, zhi: string): string {
+    // 天干序号（甲=0, 乙=1, ..., 癸=9）
+    const ganIndex = "甲乙丙丁戊己庚辛壬癸".indexOf(gan);
+    // 地支序号（子=0, 丑=1, ..., 亥=11）
+    const zhiIndex = "子丑寅卯辰巳午未申酉戌亥".indexOf(zhi);
+
+    if (ganIndex < 0 || zhiIndex < 0) {
+      return '';
+    }
+
+    // 计算旬首
+    const xunShouIndex = Math.floor(ganIndex / 2) * 2;
+
+    // 计算旬空地支
+    const xunKongIndex1 = (xunShouIndex + 10) % 12;
+    const xunKongIndex2 = (xunShouIndex + 11) % 12;
+
+    // 获取旬空地支
+    const xunKongZhi1 = "子丑寅卯辰巳午未申酉戌亥".charAt(xunKongIndex1);
+    const xunKongZhi2 = "子丑寅卯辰巳午未申酉戌亥".charAt(xunKongIndex2);
+
+    return xunKongZhi1 + xunKongZhi2;
+  }
+
+  /**
    * 获取纳音
    * @param gz 干支
    * @returns 纳音
@@ -433,7 +463,11 @@ export class BaziService {
     // 添加错误处理，防止旬空计算失败
     let yearXunKong = '';
     try {
-      yearXunKong = eightChar.getYearXunKong();
+      // 先获取旬，再获取旬空
+      const yearXun = eightChar.getYearXun();
+      if (yearXun) {
+        yearXunKong = eightChar.getYearXunKong();
+      }
     } catch (e) {
       console.error('计算年柱旬空出错:', e);
     }
@@ -452,7 +486,11 @@ export class BaziService {
     // 添加错误处理，防止旬空计算失败
     let monthXunKong = '';
     try {
-      monthXunKong = eightChar.getMonthXunKong();
+      // 先获取旬，再获取旬空
+      const monthXun = eightChar.getMonthXun();
+      if (monthXun) {
+        monthXunKong = eightChar.getMonthXunKong();
+      }
     } catch (e) {
       console.error('计算月柱旬空出错:', e);
     }
@@ -470,7 +508,11 @@ export class BaziService {
     // 添加错误处理，防止旬空计算失败
     let dayXunKong = '';
     try {
-      dayXunKong = eightChar.getDayXunKong();
+      // 先获取旬，再获取旬空
+      const dayXun = eightChar.getDayXun();
+      if (dayXun) {
+        dayXunKong = eightChar.getDayXunKong();
+      }
     } catch (e) {
       console.error('计算日柱旬空出错:', e);
     }
@@ -489,7 +531,11 @@ export class BaziService {
     // 添加错误处理，防止旬空计算失败
     let timeXunKong = '';
     try {
-      timeXunKong = eightChar.getTimeXunKong();
+      // 先获取旬，再获取旬空
+      const timeXun = eightChar.getTimeXun();
+      if (timeXun) {
+        timeXunKong = eightChar.getTimeXunKong();
+      }
     } catch (e) {
       console.error('计算时柱旬空出错:', e);
     }
@@ -549,20 +595,36 @@ export class BaziService {
       // 添加错误处理，防止旬空计算失败
       let xunKong = '';
       try {
-        xunKong = dy.getXunKong();
+        // 检查干支是否有效
+        const ganZhi = dy.getGanZhi();
+        if (ganZhi && ganZhi.length === 2) {
+          // 手动计算旬空，避免使用可能出错的getXunKong方法
+          const gan = ganZhi.charAt(0);
+          const zhi = ganZhi.charAt(1);
+          xunKong = this.calculateXunKong(gan, zhi);
+        }
       } catch (e) {
         console.error('计算大运旬空出错:', e);
       }
 
+      // 安全地获取属性，防止空指针异常
+      let startYear = 0, endYear = 0, startAge = 0, endAge = 0, index = 0, ganZhi = '';
+      try { startYear = dy.getStartYear(); } catch (e) { console.error('获取大运起始年出错:', e); }
+      try { endYear = dy.getEndYear(); } catch (e) { console.error('获取大运结束年出错:', e); }
+      try { startAge = dy.getStartAge(); } catch (e) { console.error('获取大运起始年龄出错:', e); }
+      try { endAge = dy.getEndAge(); } catch (e) { console.error('获取大运结束年龄出错:', e); }
+      try { index = dy.getIndex(); } catch (e) { console.error('获取大运序号出错:', e); }
+      try { ganZhi = dy.getGanZhi(); } catch (e) { console.error('获取大运干支出错:', e); }
+
       return {
-        startYear: dy.getStartYear(),
-        endYear: dy.getEndYear(),
-        startAge: dy.getStartAge(),
-        endAge: dy.getEndAge(),
-        index: dy.getIndex(),
-        ganZhi: dy.getGanZhi(),
-        naYin: this.getNaYin(dy.getGanZhi()),
-        xunKong: xunKong
+        startYear,
+        endYear,
+        startAge,
+        endAge,
+        index,
+        ganZhi,
+        naYin: ganZhi ? this.getNaYin(ganZhi) : '',
+        xunKong
       };
     });
 
@@ -572,18 +634,32 @@ export class BaziService {
       // 添加错误处理，防止旬空计算失败
       let xunKong = '';
       try {
-        xunKong = ln.getXunKong();
+        // 检查干支是否有效
+        const ganZhi = ln.getGanZhi();
+        if (ganZhi && ganZhi.length === 2) {
+          // 手动计算旬空，避免使用可能出错的getXunKong方法
+          const gan = ganZhi.charAt(0);
+          const zhi = ganZhi.charAt(1);
+          xunKong = this.calculateXunKong(gan, zhi);
+        }
       } catch (e) {
         console.error('计算流年旬空出错:', e);
       }
 
+      // 安全地获取属性，防止空指针异常
+      let year = 0, age = 0, index = 0, ganZhi = '';
+      try { year = ln.getYear(); } catch (e) { console.error('获取流年年份出错:', e); }
+      try { age = ln.getAge(); } catch (e) { console.error('获取流年年龄出错:', e); }
+      try { index = ln.getIndex(); } catch (e) { console.error('获取流年序号出错:', e); }
+      try { ganZhi = ln.getGanZhi(); } catch (e) { console.error('获取流年干支出错:', e); }
+
       return {
-        year: ln.getYear(),
-        age: ln.getAge(),
-        index: ln.getIndex(),
-        ganZhi: ln.getGanZhi(),
-        naYin: this.getNaYin(ln.getGanZhi()),
-        xunKong: xunKong
+        year,
+        age,
+        index,
+        ganZhi,
+        naYin: ganZhi ? this.getNaYin(ganZhi) : '',
+        xunKong
       };
     });
 
@@ -593,17 +669,31 @@ export class BaziService {
       // 添加错误处理，防止旬空计算失败
       let xunKong = '';
       try {
-        xunKong = xy.getXunKong();
+        // 检查干支是否有效
+        const ganZhi = xy.getGanZhi();
+        if (ganZhi && ganZhi.length === 2) {
+          // 手动计算旬空，避免使用可能出错的getXunKong方法
+          const gan = ganZhi.charAt(0);
+          const zhi = ganZhi.charAt(1);
+          xunKong = this.calculateXunKong(gan, zhi);
+        }
       } catch (e) {
         console.error('计算小运旬空出错:', e);
       }
 
+      // 安全地获取属性，防止空指针异常
+      let year = 0, age = 0, index = 0, ganZhi = '';
+      try { year = xy.getYear(); } catch (e) { console.error('获取小运年份出错:', e); }
+      try { age = xy.getAge(); } catch (e) { console.error('获取小运年龄出错:', e); }
+      try { index = xy.getIndex(); } catch (e) { console.error('获取小运序号出错:', e); }
+      try { ganZhi = xy.getGanZhi(); } catch (e) { console.error('获取小运干支出错:', e); }
+
       return {
-        year: xy.getYear(),
-        age: xy.getAge(),
-        index: xy.getIndex(),
-        ganZhi: xy.getGanZhi(),
-        xunKong: xunKong
+        year,
+        age,
+        index,
+        ganZhi,
+        xunKong
       };
     });
 
@@ -613,16 +703,29 @@ export class BaziService {
       // 添加错误处理，防止旬空计算失败
       let xunKong = '';
       try {
-        xunKong = ly.getXunKong();
+        // 检查干支是否有效
+        const ganZhi = ly.getGanZhi();
+        if (ganZhi && ganZhi.length === 2) {
+          // 手动计算旬空，避免使用可能出错的getXunKong方法
+          const gan = ganZhi.charAt(0);
+          const zhi = ganZhi.charAt(1);
+          xunKong = this.calculateXunKong(gan, zhi);
+        }
       } catch (e) {
         console.error('计算流月旬空出错:', e);
       }
 
+      // 安全地获取属性，防止空指针异常
+      let month = '', index = 0, ganZhi = '';
+      try { month = ly.getMonthInChinese(); } catch (e) { console.error('获取流月月份出错:', e); }
+      try { index = ly.getIndex(); } catch (e) { console.error('获取流月序号出错:', e); }
+      try { ganZhi = ly.getGanZhi(); } catch (e) { console.error('获取流月干支出错:', e); }
+
       return {
-        month: ly.getMonthInChinese(),
-        index: ly.getIndex(),
-        ganZhi: ly.getGanZhi(),
-        xunKong: xunKong
+        month,
+        index,
+        ganZhi,
+        xunKong
       };
     });
 
