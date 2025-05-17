@@ -189,6 +189,13 @@
   background-color: var(--background-secondary-alt);
 }
 
+/* 旬空行 */
+.bazi-xunkong-row {
+  font-size: 0.9em;
+  color: var(--text-muted);
+  background-color: var(--background-primary);
+}
+
 .bazi-view-wuxing-list {
   display: flex;
   flex-wrap: wrap;
@@ -316,32 +323,72 @@
   margin: 10px 0;
 }
 
+.bazi-view-selector {
+  margin-bottom: 10px;
+}
+
+.bazi-view-selector select {
+  width: 100%;
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px solid var(--background-modifier-border);
+  background-color: var(--background-primary);
+  color: var(--text-normal);
+}
+
 .bazi-view-dayun-table,
-.bazi-view-liunian-table {
+.bazi-view-liunian-table,
+.bazi-view-xiaoyun-table,
+.bazi-view-liuyue-table {
   width: 100%;
   font-size: 0.9em;
+  border-collapse: collapse;
+  margin-bottom: 15px;
 }
 
 .bazi-view-dayun-table th,
-.bazi-view-liunian-table th {
+.bazi-view-liunian-table th,
+.bazi-view-xiaoyun-table th,
+.bazi-view-liuyue-table th {
   background-color: var(--background-secondary);
   font-weight: bold;
   padding: 8px;
+  text-align: center;
+  border: 1px solid var(--background-modifier-border);
 }
 
 .bazi-view-dayun-table td,
-.bazi-view-liunian-table td {
+.bazi-view-liunian-table td,
+.bazi-view-xiaoyun-table td,
+.bazi-view-liuyue-table td {
   padding: 6px;
+  text-align: center;
+  border: 1px solid var(--background-modifier-border);
 }
 
 .bazi-view-dayun-table tr:nth-child(even),
-.bazi-view-liunian-table tr:nth-child(even) {
+.bazi-view-liunian-table tr:nth-child(even),
+.bazi-view-xiaoyun-table tr:nth-child(even),
+.bazi-view-liuyue-table tr:nth-child(even) {
   background-color: var(--background-secondary-alt);
 }
 
-.bazi-view-dayun-table tr:hover,
-.bazi-view-liunian-table tr:hover {
+/* 单元格悬停样式 */
+.bazi-dayun-cell:hover,
+.bazi-liunian-cell:hover,
+.bazi-xiaoyun-cell:hover,
+.bazi-liuyue-cell:hover {
   background-color: var(--background-modifier-hover);
+  cursor: pointer;
+}
+
+/* 选中的单元格样式 */
+.bazi-dayun-cell.selected,
+.bazi-liunian-cell.selected,
+.bazi-xiaoyun-cell.selected,
+.bazi-liuyue-cell.selected {
+  background-color: var(--interactive-accent);
+  color: var(--text-on-accent);
 }
 
 /* 打印样式 */

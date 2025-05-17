@@ -1262,6 +1262,12 @@ export class BaziService {
           <td>${baziInfo.dayNaYin || '未知'}</td>
           <td>${baziInfo.hourNaYin || '未知'}</td>
         </tr>
+        <tr class="bazi-xunkong-row">
+          <td><small>${baziInfo.yearXunKong || '无'}</small></td>
+          <td><small>${baziInfo.monthXunKong || '无'}</small></td>
+          <td><small>${baziInfo.dayXunKong || '无'}</small></td>
+          <td><small>${baziInfo.timeXunKong || '无'}</small></td>
+        </tr>
       </tbody>
     </table>
   </div>
@@ -1301,54 +1307,88 @@ export class BaziService {
     <h4 class="bazi-view-subtitle">大运信息</h4>
     <div class="bazi-view-table-container">
       <table class="bazi-view-table bazi-view-dayun-table">
-        <thead>
-          <tr>
-            <th>大运</th>
-            <th>年龄</th>
-            <th>年份</th>
-            <th>干支</th>
-            <th>纳音</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${baziInfo.daYun.slice(0, 5).map(dy => `
-            <tr>
-              <td>${dy.index}</td>
-              <td>${dy.startAge}-${dy.endAge}</td>
-              <td>${dy.startYear}-${dy.endYear}</td>
-              <td>${dy.ganZhi}</td>
-              <td>${dy.naYin}</td>
-            </tr>
+        <tr>
+          <th>大运</th>
+          ${baziInfo.daYun.slice(0, 10).map(dy => `<td>${dy.startYear}</td>`).join('')}
+        </tr>
+        <tr>
+          <th>年龄</th>
+          ${baziInfo.daYun.slice(0, 10).map(dy => `<td>${dy.startAge}</td>`).join('')}
+        </tr>
+        <tr>
+          <th>干支</th>
+          ${baziInfo.daYun.slice(0, 10).map((dy, index) => `
+            <td class="bazi-dayun-cell" data-index="${index}">${dy.ganZhi}</td>
           `).join('')}
-        </tbody>
+        </tr>
       </table>
     </div>
   </div>
   ` : ''}
 
   ${baziInfo.liuNian && baziInfo.liuNian.length > 0 ? `
-  <div class="bazi-view-section">
+  <div class="bazi-view-section bazi-liunian-section" data-bazi-id="${id}">
     <h4 class="bazi-view-subtitle">流年信息</h4>
     <div class="bazi-view-table-container">
       <table class="bazi-view-table bazi-view-liunian-table">
-        <thead>
-          <tr>
-            <th>年份</th>
-            <th>年龄</th>
-            <th>干支</th>
-            <th>纳音</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${baziInfo.liuNian.slice(0, 5).map(ln => `
-            <tr>
-              <td>${ln.year}</td>
-              <td>${ln.age}</td>
-              <td>${ln.ganZhi}</td>
-              <td>${ln.naYin}</td>
-            </tr>
+        <tr>
+          <th>流年</th>
+          ${baziInfo.liuNian.slice(0, 10).map(ln => `<td>${ln.year}</td>`).join('')}
+        </tr>
+        <tr>
+          <th>年龄</th>
+          ${baziInfo.liuNian.slice(0, 10).map(ln => `<td>${ln.age}</td>`).join('')}
+        </tr>
+        <tr>
+          <th>干支</th>
+          ${baziInfo.liuNian.slice(0, 10).map(ln => `
+            <td class="bazi-liunian-cell" data-year="${ln.year}">${ln.ganZhi}</td>
           `).join('')}
-        </tbody>
+        </tr>
+      </table>
+    </div>
+  </div>
+  ` : ''}
+
+  ${baziInfo.xiaoYun && baziInfo.xiaoYun.length > 0 ? `
+  <div class="bazi-view-section bazi-xiaoyun-section" data-bazi-id="${id}">
+    <h4 class="bazi-view-subtitle">小运信息</h4>
+    <div class="bazi-view-table-container">
+      <table class="bazi-view-table bazi-view-xiaoyun-table">
+        <tr>
+          <th>小运</th>
+          ${baziInfo.xiaoYun.slice(0, 10).map(xy => `<td>${xy.year}</td>`).join('')}
+        </tr>
+        <tr>
+          <th>年龄</th>
+          ${baziInfo.xiaoYun.slice(0, 10).map(xy => `<td>${xy.age}</td>`).join('')}
+        </tr>
+        <tr>
+          <th>干支</th>
+          ${baziInfo.xiaoYun.slice(0, 10).map(xy => `
+            <td class="bazi-xiaoyun-cell" data-year="${xy.year}">${xy.ganZhi}</td>
+          `).join('')}
+        </tr>
+      </table>
+    </div>
+  </div>
+  ` : ''}
+
+  ${baziInfo.liuYue && baziInfo.liuYue.length > 0 ? `
+  <div class="bazi-view-section bazi-liuyue-section" data-bazi-id="${id}">
+    <h4 class="bazi-view-subtitle">流月信息</h4>
+    <div class="bazi-view-table-container">
+      <table class="bazi-view-table bazi-view-liuyue-table">
+        <tr>
+          <th>流月</th>
+          ${baziInfo.liuYue.map(ly => `<td>${ly.month}</td>`).join('')}
+        </tr>
+        <tr>
+          <th>干支</th>
+          ${baziInfo.liuYue.map(ly => `
+            <td class="bazi-liuyue-cell" data-month="${ly.month}">${ly.ganZhi}</td>
+          `).join('')}
+        </tr>
       </table>
     </div>
   </div>
@@ -1359,7 +1399,11 @@ export class BaziService {
       data-year="${baziInfo.solarDate && baziInfo.solarDate.includes('-') ? baziInfo.solarDate.split('-')[0] : '2023'}"
       data-month="${baziInfo.solarDate && baziInfo.solarDate.includes('-') ? baziInfo.solarDate.split('-')[1] : '1'}"
       data-day="${baziInfo.solarDate && baziInfo.solarDate.includes('-') ? baziInfo.solarDate.split('-')[2] : '1'}"
-      data-hour="${baziInfo.solarTime && baziInfo.solarTime.includes(':') ? baziInfo.solarTime.split(':')[0] : '0'}">
+      data-hour="${baziInfo.solarTime && baziInfo.solarTime.includes(':') ? baziInfo.solarTime.split(':')[0] : '0'}"
+      data-all-dayun='${JSON.stringify(baziInfo.daYun || [])}'
+      data-all-liunian='${JSON.stringify(baziInfo.liuNian || [])}'
+      data-all-xiaoyun='${JSON.stringify(baziInfo.xiaoYun || [])}'
+      data-all-liuyue='${JSON.stringify(baziInfo.liuYue || [])}'>
     </div>
   </div>
 </div>`;
