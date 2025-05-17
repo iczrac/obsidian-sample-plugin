@@ -149,6 +149,8 @@ date: ${dateStr}
 
 					// 为设置按钮添加事件监听器
 					this.addSettingsButtonListeners(el);
+					// 为表格单元格添加事件监听器
+					this.addTableCellListeners(el, id, baziInfo);
 
 					// 添加源代码属性，用于编辑时恢复
 					el.setAttribute('data-bazi-source', source);
@@ -173,12 +175,10 @@ date: ${dateStr}
 					const month = dateParts[1];
 					const day = dateParts[2];
 					const hour = timeParts[0];
-
-					// 是否闰月
-					const isLeapMonth = params.leap === 'true' || params.leap === '1';
+					const isLeap = params.leap === 'true';
 
 					// 获取八字信息
-					const baziInfo = BaziService.getBaziFromLunarDate(year, month, day, hour, isLeapMonth, this.settings.defaultGender, this.settings.baziSect);
+					const baziInfo = BaziService.getBaziFromLunarDate(year, month, day, hour, isLeap, this.settings.defaultGender, this.settings.baziSect);
 
 					// 生成唯一ID
 					const id = 'bazi-view-' + Math.random().toString(36).substring(2, 9);
@@ -284,135 +284,6 @@ date: ${dateStr}
 		}
 	}
 
-	/**
-	 * 注册文档变化事件监听器
-	 */
-	private registerDocumentChangeEvents() {
-		// 监听编辑器变化事件
-		this.registerEvent(
-			this.app.workspace.on('editor-change', (editor, markdownView) => {
-				// 确保是MarkdownView类型
-				if (!(markdownView instanceof MarkdownView)) {
-					return;
-				}
-
-				// 只在编辑模式下处理
-				if (markdownView.getMode() !== 'source') {
-					return;
-				}
-
-				// 获取编辑器内容
-				const content = editor.getValue();
-
-				// 检查是否包含bazi代码块
-				if (content.includes('```bazi')) {
-					// 延迟处理，避免频繁更新
-					this.debouncedProcessDocumentChange(editor, markdownView);
-				}
-			})
-		);
-
-		// 监听活动叶子变化事件
-		this.registerEvent(
-			this.app.workspace.on('active-leaf-change', (leaf) => {
-				// 检查leaf和view是否存在
-				if (!leaf || !leaf.view) {
-					return;
-				}
-
-				// 检查是否是markdown视图
-				if (leaf.view instanceof MarkdownView) {
-					const markdownView = leaf.view;
-					const editor = markdownView.editor;
-
-					// 获取编辑器内容
-					const content = editor.getValue();
-
-					// 检查是否包含bazi代码块
-					if (content.includes('```bazi')) {
-						// 延迟处理，避免频繁更新
-						this.debouncedProcessDocumentChange(editor, markdownView);
-					}
-				}
-			})
-		);
-
-		if (this.settings.debugMode) {
-			console.log('已注册文档变化事件监听器');
-		}
-	}
-
-	/**
-	 * 防抖处理文档变化
-	 */
-	private debouncedProcessDocumentChange = debounce(
-		(editor: Editor, markdownView: MarkdownView) => {
-			this.processDocumentChange(editor, markdownView);
-		},
-		1000, // 1秒延迟
-		true // 在延迟开始时执行
-	);
-
-	/**
-	 * 处理文档变化
-	 */
-	private processDocumentChange(editor: Editor, markdownView: MarkdownView) {
-		if (this.settings.debugMode) {
-			console.log('检测到文档变化，处理bazi代码块');
-		}
-
-		// 获取编辑器内容
-		const content = editor.getValue();
-		const lines = content.split('\n');
-
-		// 查找所有bazi代码块
-		let inCodeBlock = false;
-		let startLine = -1;
-		let blockLanguage = '';
-		let baziSource = '';
-
-		for (let i = 0; i < lines.length; i++) {
-			const line = lines[i];
-
-			if (line.startsWith('```') && !inCodeBlock) {
-				inCodeBlock = true;
-				startLine = i;
-				blockLanguage = line.substring(3).trim();
-			} else if (line.startsWith('```') && inCodeBlock) {
-				inCodeBlock = false;
-
-				// 如果是bazi代码块，处理它
-				if (blockLanguage === 'bazi') {
-					// 获取代码块内容
-					let blockContent = '';
-					for (let j = startLine + 1; j < i; j++) {
-						blockContent += lines[j] + (j < i - 1 ? '\n' : '');
-					}
-
-					// 如果代码块内容有变化，更新渲染
-					if (blockContent !== baziSource) {
-						baziSource = blockContent;
-
-						if (this.settings.debugMode) {
-							console.log('bazi代码块内容已变化，更新渲染');
-							console.log('代码块内容:', blockContent);
-						}
-
-						// 延迟更新渲染，确保编辑器已经完成更新
-						setTimeout(() => {
-							// 触发重新渲染
-							this.app.workspace.trigger('layout-change');
-
-							if (this.settings.debugMode) {
-								console.log('已触发layout-change事件，重新渲染页面');
-							}
-						}, this.settings.codeBlockUpdateDelay);
-					}
-				}
-			}
-		}
-	}
-
 	onunload() {
 		// 清理资源
 	}
@@ -496,27 +367,56 @@ date: ${dateStr}
 				// 获取八字命盘ID
 				const baziId = (button as HTMLElement).getAttribute('data-bazi-id');
 				if (baziId) {
-					// 获取日期数据
-					const dataEl = container.querySelector(`#${baziId} .bazi-view-data`);
-					if (dataEl) {
-						const year = parseInt(dataEl.getAttribute('data-year') || '0');
-						const month = parseInt(dataEl.getAttribute('data-month') || '0');
-						const day = parseInt(dataEl.getAttribute('data-day') || '0');
-						const hour = parseInt(dataEl.getAttribute('data-hour') || '0');
+					this.handleSettingsButtonClick(container, baziId);
+				}
+			});
+		});
+	}
 
-						// 获取原始源代码和八字
-						let originalBazi = '';
-						const sourceBlock = container.closest('.markdown-rendered');
-						if (sourceBlock) {
-							const codeBlock = sourceBlock.closest('[data-bazi-source]');
-							if (codeBlock) {
-								const originalSource = codeBlock.getAttribute('data-bazi-source') || '';
-								const params = this.parseCodeBlockParams(originalSource);
-								if (params.bazi) {
-									originalBazi = params.bazi;
-								}
-							}
-						}
+	/**
+	 * 为表格单元格添加事件监听器
+	 * @param container 容器元素
+	 * @param baziId 八字命盘ID
+	 * @param baziInfo 八字信息
+	 */
+	addTableCellListeners(container: HTMLElement, baziId: string, baziInfo: any) {
+		// 获取表格中的所有单元格
+		const table = container.querySelector(`#${baziId} .bazi-liuyue-table`);
+		if (!table) return;
+
+		// 添加点击事件
+		const cells = table.querySelectorAll('.bazi-liuyue-cell');
+		cells.forEach(cell => {
+			cell.addEventListener('click', (e) => {
+				// 高亮选中的单元格
+				cells.forEach(c => c.classList.remove('selected'));
+				(e.currentTarget as HTMLElement).classList.add('selected');
+			});
+		});
+	}
+
+	/**
+	 * 处理设置按钮点击事件
+	 * @param container 容器元素
+	 * @param baziId 八字命盘ID
+	 */
+	handleSettingsButtonClick(container: HTMLElement, baziId: string) {
+		if (baziId) {
+			// 获取日期数据
+			const dataEl = container.querySelector(`#${baziId} .bazi-view-data`);
+			if (dataEl) {
+				const year = parseInt(dataEl.getAttribute('data-year') || '0');
+				const month = parseInt(dataEl.getAttribute('data-month') || '0');
+				const day = parseInt(dataEl.getAttribute('data-day') || '0');
+				const hour = parseInt(dataEl.getAttribute('data-hour') || '0');
+
+				// 获取原始源代码和八字
+				const sourceBlock = container.closest('.markdown-rendered');
+				if (sourceBlock) {
+					const codeBlock = sourceBlock.closest('[data-bazi-source]');
+					if (codeBlock) {
+						const originalSource = codeBlock.getAttribute('data-bazi-source') || '';
+						const params = this.parseCodeBlockParams(originalSource);
 
 						// 打开设置模态框
 						this.openBaziSettingsModal(baziId, { year, month, day, hour }, (newBaziInfo) => {
@@ -526,6 +426,9 @@ date: ${dateStr}
 
 							// 重新添加事件监听器
 							this.addSettingsButtonListeners(container);
+
+							// 为表格单元格添加事件监听器
+							this.addTableCellListeners(container, baziId, newBaziInfo);
 
 							// 如果是在代码块中，更新源代码
 							const sourceBlock = container.closest('.markdown-rendered');
@@ -622,8 +525,8 @@ date: ${dateStr}
 						});
 					}
 				}
-			});
-		});
+			}
+		}
 	}
 
 	/**
@@ -631,7 +534,7 @@ date: ${dateStr}
 	 * @param source 代码块源代码
 	 * @returns 解析后的参数对象
 	 */
-	parseCodeBlockParams(source: string): Record<string, string> {
+	parseCodeBlockParams(source: string) {
 		const params: Record<string, string> = {};
 		const lines = source.split('\n');
 
@@ -1183,6 +1086,137 @@ date: ${dateStr}
 
 		console.log(`未找到任何${language}代码块`);
 		return null;
+	}
+
+	/**
+	 * 注册文档变化事件监听器
+	 */
+	private registerDocumentChangeEvents() {
+		// 监听编辑器变化事件
+		this.registerEvent(
+			this.app.workspace.on('editor-change', (editor, markdownView) => {
+				// 确保是MarkdownView类型
+				if (!(markdownView instanceof MarkdownView)) {
+					return;
+				}
+
+				// 只在编辑模式下处理
+				if (markdownView.getMode() !== 'source') {
+					return;
+				}
+
+				// 获取编辑器内容
+				const content = editor.getValue();
+
+				// 检查是否包含bazi代码块
+				if (content.includes('```bazi')) {
+					// 延迟处理，避免频繁更新
+					this.debouncedProcessDocumentChange(editor, markdownView);
+				}
+			})
+		);
+
+		// 监听活动叶子变化事件
+		this.registerEvent(
+			this.app.workspace.on('active-leaf-change', (leaf) => {
+				// 检查leaf和view是否存在
+				if (!leaf || !leaf.view) {
+					return;
+				}
+
+				// 检查是否是markdown视图
+				if (leaf.view instanceof MarkdownView) {
+					const markdownView = leaf.view;
+					const editor = markdownView.editor;
+
+					// 获取编辑器内容
+					const content = editor.getValue();
+
+					// 检查是否包含bazi代码块
+					if (content.includes('```bazi')) {
+						// 延迟处理，避免频繁更新
+						this.debouncedProcessDocumentChange(editor, markdownView);
+					}
+				}
+			})
+		);
+
+		if (this.settings.debugMode) {
+			console.log('已注册文档变化事件监听器');
+		}
+	}
+
+	/**
+	 * 防抖处理文档变化
+	 */
+	private debouncedProcessDocumentChange = debounce(
+		(editor: Editor, markdownView: MarkdownView) => {
+			this.processDocumentChange(editor, markdownView);
+		},
+		1000, // 1秒延迟
+		true // 在延迟开始时执行
+	);
+
+	/**
+	 * 处理文档变化
+	 * @param editor 编辑器
+	 * @param markdownView Markdown视图
+	 */
+	private processDocumentChange(editor: Editor, markdownView: MarkdownView) {
+		if (this.settings.debugMode) {
+			console.log('处理文档变化');
+		}
+
+		// 获取编辑器内容
+		const text = editor.getValue();
+		const lines = text.split('\n');
+
+		// 查找所有bazi代码块
+		let inCodeBlock = false;
+		let startLine = -1;
+		let blockLanguage = '';
+		let baziSource = '';
+
+		for (let i = 0; i < lines.length; i++) {
+			const line = lines[i];
+
+			if (line.startsWith('```') && !inCodeBlock) {
+				inCodeBlock = true;
+				startLine = i;
+				blockLanguage = line.substring(3).trim();
+			} else if (line.startsWith('```') && inCodeBlock) {
+				inCodeBlock = false;
+
+				// 如果是bazi代码块，处理它
+				if (blockLanguage === 'bazi') {
+					// 获取代码块内容
+					let blockContent = '';
+					for (let j = startLine + 1; j < i; j++) {
+						blockContent += lines[j] + (j < i - 1 ? '\n' : '');
+					}
+
+					// 如果代码块内容有变化，更新渲染
+					if (blockContent !== baziSource) {
+						baziSource = blockContent;
+
+						if (this.settings.debugMode) {
+							console.log('bazi代码块内容已变化，更新渲染');
+							console.log('代码块内容:', blockContent);
+						}
+
+						// 延迟更新渲染，确保编辑器已经完成更新
+						setTimeout(() => {
+							// 触发重新渲染
+							this.app.workspace.trigger('layout-change');
+
+							if (this.settings.debugMode) {
+								console.log('已触发layout-change事件，重新渲染页面');
+							}
+						}, this.settings.codeBlockUpdateDelay);
+					}
+				}
+			}
+		}
 	}
 }
 
