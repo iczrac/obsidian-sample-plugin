@@ -57,11 +57,8 @@ export class InteractiveBaziView {
     // 创建大运信息
     this.createDaYunInfo();
 
-    // 创建流年信息
+    // 创建流年和小运信息
     this.createLiuNianInfo();
-
-    // 创建小运信息
-    this.createXiaoYunInfo();
 
     // 创建流月信息
     this.createLiuYueInfo();
@@ -248,39 +245,16 @@ export class InteractiveBaziView {
   }
 
   /**
-   * 创建流年信息
+   * 创建流年和小运信息
    */
   private createLiuNianInfo() {
-    if (!this.baziInfo.liuNian || this.baziInfo.liuNian.length === 0) {
-      return;
-    }
-
-    // 创建流年部分
+    // 创建流年和小运部分
     const liuNianSection = this.container.createDiv({ cls: 'bazi-view-section bazi-liunian-section' });
-    liuNianSection.createEl('h4', { text: '流年信息', cls: 'bazi-view-subtitle' });
+    liuNianSection.createEl('h4', { text: '流年与小运信息', cls: 'bazi-view-subtitle' });
 
     // 创建流年表格容器
     const tableContainer = liuNianSection.createDiv({ cls: 'bazi-view-table-container' });
     this.liuNianTable = tableContainer.createEl('table', { cls: 'bazi-view-table bazi-view-liunian-table' });
-
-    // 表格内容将在selectDaYun方法中动态更新
-  }
-
-  /**
-   * 创建小运信息
-   */
-  private createXiaoYunInfo() {
-    if (!this.baziInfo.xiaoYun || this.baziInfo.xiaoYun.length === 0) {
-      return;
-    }
-
-    // 创建小运部分
-    const xiaoYunSection = this.container.createDiv({ cls: 'bazi-view-section bazi-xiaoyun-section' });
-    xiaoYunSection.createEl('h4', { text: '小运信息', cls: 'bazi-view-subtitle' });
-
-    // 创建小运表格容器
-    const tableContainer = xiaoYunSection.createDiv({ cls: 'bazi-view-table-container' });
-    this.xiaoYunTable = tableContainer.createEl('table', { cls: 'bazi-view-table bazi-view-xiaoyun-table' });
 
     // 表格内容将在selectDaYun方法中动态更新
   }
@@ -331,17 +305,32 @@ export class InteractiveBaziView {
     // 获取选中的大运
     const selectedDaYun = this.baziInfo.daYun[index];
 
-    // 为当前选中的大运生成流年信息
-    const liuNianData = this.generateLiuNianForDaYun(selectedDaYun);
+    // 尝试从原始八字数据中筛选出属于该大运的流年
+    let liuNianData = this.baziInfo.liuNian?.filter(ln => {
+      const startYear = selectedDaYun.startYear;
+      const endYear = selectedDaYun.endYear ?? (startYear + 9);
+      return ln.year >= startYear && ln.year <= endYear;
+    }) || [];
 
-    // 为当前选中的大运生成小运信息
-    const xiaoYunData = this.generateXiaoYunForDaYun(selectedDaYun);
+    // 如果没有找到流年数据，则动态生成
+    if (liuNianData.length === 0) {
+      liuNianData = this.generateLiuNianForDaYun(selectedDaYun);
+    }
 
-    // 更新流年表格
-    this.updateLiuNianTable(liuNianData);
+    // 尝试从原始八字数据中筛选出属于该大运的小运
+    let xiaoYunData = this.baziInfo.xiaoYun?.filter(xy => {
+      const startYear = selectedDaYun.startYear;
+      const endYear = selectedDaYun.endYear ?? (startYear + 9);
+      return xy.year >= startYear && xy.year <= endYear;
+    }) || [];
 
-    // 更新小运表格
-    this.updateXiaoYunTable(xiaoYunData);
+    // 如果没有找到小运数据，则动态生成
+    if (xiaoYunData.length === 0) {
+      xiaoYunData = this.generateXiaoYunForDaYun(selectedDaYun);
+    }
+
+    // 更新流年和小运合并表格
+    this.updateLiuNianXiaoYunTable(liuNianData, xiaoYunData);
 
     // 如果有流年，选择第一个流年
     if (liuNianData.length > 0) {
@@ -370,8 +359,31 @@ export class InteractiveBaziView {
       });
     }
 
-    // 为当前选中的流年生成流月数据
-    const liuYueData = this.generateLiuYueForYear(year);
+    // 查找选中的流年数据
+    const selectedLiuNian = this.findLiuNianByYear(year);
+
+    // 尝试获取流月信息
+    let liuYueData: any[] = [];
+
+    // 如果找到了流年数据，并且有流月信息，使用其流月信息
+    if (selectedLiuNian && selectedLiuNian.liuYue) {
+      liuYueData = selectedLiuNian.liuYue;
+    } else {
+      // 如果没有找到流年数据或流月信息，尝试从原始八字数据中查找
+      liuYueData = this.baziInfo.liuYue?.filter(ly => {
+        // 如果流月数据有year属性，检查是否匹配
+        if (ly.year !== undefined) {
+          return ly.year === year;
+        }
+        return false;
+      }) || [];
+
+      // 如果仍然没有找到流月数据，则动态生成
+      if (liuYueData.length === 0) {
+        // 生成流月数据
+        liuYueData = this.generateLiuYueForYear(year);
+      }
+    }
 
     // 更新流月表格
     this.updateLiuYueTable(liuYueData);
@@ -382,23 +394,45 @@ export class InteractiveBaziView {
    * @param year 年份
    * @returns 流月数据数组
    */
-  private generateLiuYueForYear(year: number): Array<{year: number, month: number, ganZhi: string, xunKong: string}> {
+  private generateLiuYueForYear(year: number): Array<{month: string, ganZhi: string, xunKong: string}> {
     // 天干地支顺序
     const stems = "甲乙丙丁戊己庚辛壬癸";
     const branches = "子丑寅卯辰巳午未申酉戌亥";
 
     // 计算年干支
     const stemIndex = (year - 4) % 10;
+    const branchIndex = (year - 4) % 12;
     const yearStem = stems[stemIndex];
+    const yearBranch = branches[branchIndex];
 
     // 生成流月数据
-    const liuYueData: Array<{year: number, month: number, ganZhi: string, xunKong: string}> = [];
+    const liuYueData: Array<{month: string, ganZhi: string, xunKong: string}> = [];
+
+    // 根据八字命理学规则，流月干支的计算方法：
+    // 月支固定对应：寅卯辰巳午未申酉戌亥子丑
+    // 月干则根据流年干支确定起始月干，然后依次递增
+
+    // 确定节令月干支
+    // 甲己年起丙寅，乙庚年起戊寅，丙辛年起庚寅，丁壬年起壬寅，戊癸年起甲寅
+    let firstMonthStem = '';
+    if (yearStem === '甲' || yearStem === '己') {
+      firstMonthStem = '丙';
+    } else if (yearStem === '乙' || yearStem === '庚') {
+      firstMonthStem = '戊';
+    } else if (yearStem === '丙' || yearStem === '辛') {
+      firstMonthStem = '庚';
+    } else if (yearStem === '丁' || yearStem === '壬') {
+      firstMonthStem = '壬';
+    } else if (yearStem === '戊' || yearStem === '癸') {
+      firstMonthStem = '甲';
+    }
+
+    const firstMonthStemIndex = stems.indexOf(firstMonthStem);
 
     // 生成12个月的流月数据
     for (let month = 1; month <= 12; month++) {
-      // 计算月干（以节气为准，简化处理）
-      // 月干公式：年干 + (月份 - 1) * 2 + 1，超过10则减10
-      const monthStemIndex = (stemIndex + (month - 1) * 2 + 1) % 10;
+      // 计算月干（正月寅月开始，每月递增一位）
+      const monthStemIndex = (firstMonthStemIndex + month - 1) % 10;
       const monthStem = stems[monthStemIndex];
 
       // 月支固定对应
@@ -411,9 +445,12 @@ export class InteractiveBaziView {
       // 计算旬空
       const xunKong = this.calculateXunKong(monthStem, monthBranch);
 
+      // 中文月份
+      const chineseMonths = ['', '正', '二', '三', '四', '五', '六', '七', '八', '九', '十', '冬', '腊'];
+      const monthText = chineseMonths[month] + '月';
+
       liuYueData.push({
-        year,
-        month,
+        month: monthText,
         ganZhi,
         xunKong
       });
@@ -423,10 +460,31 @@ export class InteractiveBaziView {
   }
 
   /**
-   * 更新流年表格
-   * @param liuNian 流年数据
+   * 根据年份查找流年数据
+   * @param year 流年年份
+   * @returns 流年数据对象
    */
-  private updateLiuNianTable(liuNian: any[]) {
+  private findLiuNianByYear(year: number): any {
+    // 从原始流年数据中查找
+    if (this.baziInfo.liuNian) {
+      for (const liuNian of this.baziInfo.liuNian) {
+        if (liuNian.year === year) {
+          return liuNian;
+        }
+      }
+    }
+
+    return null;
+  }
+
+
+
+  /**
+   * 更新流年和小运合并表格
+   * @param liuNian 流年数据
+   * @param xiaoYun 小运数据
+   */
+  private updateLiuNianXiaoYunTable(liuNian: any[], xiaoYun: any[]) {
     if (!this.liuNianTable) {
       return;
     }
@@ -445,7 +503,7 @@ export class InteractiveBaziView {
 
     // 第一行：年份
     const yearRow = this.liuNianTable.createEl('tr');
-    yearRow.createEl('th', { text: '流年' });
+    yearRow.createEl('th', { text: '年份' });
     liuNian.slice(0, 10).forEach(ln => {
       yearRow.createEl('td', { text: ln.year.toString() });
     });
@@ -457,11 +515,11 @@ export class InteractiveBaziView {
       ageRow.createEl('td', { text: ln.age.toString() });
     });
 
-    // 第三行：干支
-    const gzRow = this.liuNianTable.createEl('tr');
-    gzRow.createEl('th', { text: '干支' });
+    // 第三行：流年干支
+    const lnGzRow = this.liuNianTable.createEl('tr');
+    lnGzRow.createEl('th', { text: '流年' });
     liuNian.slice(0, 10).forEach(ln => {
-      const cell = gzRow.createEl('td', {
+      const cell = lnGzRow.createEl('td', {
         text: ln.ganZhi,
         cls: 'bazi-liunian-cell',
         attr: { 'data-year': ln.year.toString() }
@@ -478,12 +536,46 @@ export class InteractiveBaziView {
       }
     });
 
-    // 第四行：旬空
+    // 第四行：流年旬空
     if (liuNian[0].xunKong) {
-      const xkRow = this.liuNianTable.createEl('tr');
-      xkRow.createEl('th', { text: '旬空' });
+      const lnXkRow = this.liuNianTable.createEl('tr');
+      lnXkRow.createEl('th', { text: '流年旬空' });
       liuNian.slice(0, 10).forEach(ln => {
-        xkRow.createEl('td', { text: ln.xunKong || '' });
+        lnXkRow.createEl('td', { text: ln.xunKong || '' });
+      });
+    }
+
+    // 第五行：小运干支
+    if (xiaoYun.length > 0) {
+      const xyGzRow = this.liuNianTable.createEl('tr');
+      xyGzRow.createEl('th', { text: '小运' });
+
+      // 创建一个映射，用于快速查找特定年份的小运
+      const xyMap = new Map();
+      xiaoYun.forEach(xy => {
+        xyMap.set(xy.year, xy);
+      });
+
+      liuNian.slice(0, 10).forEach(ln => {
+        const xy = xyMap.get(ln.year);
+        xyGzRow.createEl('td', { text: xy ? xy.ganZhi : '' });
+      });
+    }
+
+    // 第六行：小运旬空
+    if (xiaoYun.length > 0 && xiaoYun[0].xunKong) {
+      const xyXkRow = this.liuNianTable.createEl('tr');
+      xyXkRow.createEl('th', { text: '小运旬空' });
+
+      // 创建一个映射，用于快速查找特定年份的小运
+      const xyMap = new Map();
+      xiaoYun.forEach(xy => {
+        xyMap.set(xy.year, xy);
+      });
+
+      liuNian.slice(0, 10).forEach(ln => {
+        const xy = xyMap.get(ln.year);
+        xyXkRow.createEl('td', { text: xy ? (xy.xunKong || '') : '' });
       });
     }
 
@@ -491,78 +583,6 @@ export class InteractiveBaziView {
     setTimeout(() => {
       if (this.liuNianTable) {
         this.liuNianTable.style.opacity = '1';
-      }
-    }, 10);
-  }
-
-  /**
-   * 更新小运表格
-   * @param xiaoYun 小运数据
-   */
-  private updateXiaoYunTable(xiaoYun: any[]) {
-    if (!this.xiaoYunTable) {
-      return;
-    }
-
-    // 清空表格
-    this.xiaoYunTable.empty();
-
-    // 如果没有数据，返回
-    if (xiaoYun.length === 0) {
-      return;
-    }
-
-    // 添加动画效果
-    this.xiaoYunTable.style.opacity = '0';
-    this.xiaoYunTable.style.transition = `opacity ${this.animationDuration}ms ease-in-out`;
-
-    // 第一行：年份
-    const yearRow = this.xiaoYunTable.createEl('tr');
-    yearRow.createEl('th', { text: '小运' });
-    xiaoYun.slice(0, 10).forEach(xy => {
-      yearRow.createEl('td', { text: xy.year.toString() });
-    });
-
-    // 第二行：年龄
-    const ageRow = this.xiaoYunTable.createEl('tr');
-    ageRow.createEl('th', { text: '年龄' });
-    xiaoYun.slice(0, 10).forEach(xy => {
-      ageRow.createEl('td', { text: xy.age.toString() });
-    });
-
-    // 第三行：干支
-    const gzRow = this.xiaoYunTable.createEl('tr');
-    gzRow.createEl('th', { text: '干支' });
-    xiaoYun.slice(0, 10).forEach(xy => {
-      const cell = gzRow.createEl('td', {
-        text: xy.ganZhi,
-        cls: 'bazi-xiaoyun-cell',
-        attr: { 'data-year': xy.year.toString() }
-      });
-
-      // 添加点击事件
-      cell.addEventListener('click', () => {
-        // 高亮选中的单元格
-        this.xiaoYunTable?.querySelectorAll('.bazi-xiaoyun-cell').forEach(c => {
-          c.classList.remove('selected');
-        });
-        cell.classList.add('selected');
-      });
-    });
-
-    // 第四行：旬空
-    if (xiaoYun[0].xunKong) {
-      const xkRow = this.xiaoYunTable.createEl('tr');
-      xkRow.createEl('th', { text: '旬空' });
-      xiaoYun.slice(0, 10).forEach(xy => {
-        xkRow.createEl('td', { text: xy.xunKong || '' });
-      });
-    }
-
-    // 显示表格（带动画）
-    setTimeout(() => {
-      if (this.xiaoYunTable) {
-        this.xiaoYunTable.style.opacity = '1';
       }
     }, 10);
   }
@@ -592,9 +612,24 @@ export class InteractiveBaziView {
     const monthRow = this.liuYueTable.createEl('tr');
     monthRow.createEl('th', { text: '流月' });
     liuYue.forEach(ly => {
-      // 将数字月份转换为中文月份
-      const chineseMonths = ['', '正', '二', '三', '四', '五', '六', '七', '八', '九', '十', '冬', '腊'];
-      const monthText = chineseMonths[ly.month] + '月';
+      // 处理不同格式的月份数据
+      let monthText = '';
+      if (typeof ly.month === 'string') {
+        // 如果是字符串（如"正月"），直接使用
+        monthText = ly.month;
+      } else if (typeof ly.month === 'number') {
+        // 如果是数字，转换为中文月份
+        const chineseMonths = ['', '正', '二', '三', '四', '五', '六', '七', '八', '九', '十', '冬', '腊'];
+        monthText = chineseMonths[ly.month] + '月';
+      } else if (ly.monthInChinese) {
+        // 如果有monthInChinese属性（lunar-typescript库格式）
+        monthText = ly.monthInChinese;
+      } else if (ly.index !== undefined) {
+        // 如果有index属性（lunar-typescript库格式）
+        const chineseMonths = ['正', '二', '三', '四', '五', '六', '七', '八', '九', '十', '冬', '腊'];
+        monthText = chineseMonths[ly.index] + '月';
+      }
+
       monthRow.createEl('td', { text: monthText });
     });
 
@@ -602,10 +637,18 @@ export class InteractiveBaziView {
     const gzRow = this.liuYueTable.createEl('tr');
     gzRow.createEl('th', { text: '干支' });
     liuYue.forEach(ly => {
+      // 获取月份标识，用于data-month属性
+      let monthId = '';
+      if (typeof ly.month === 'number' || typeof ly.month === 'string') {
+        monthId = ly.month.toString();
+      } else if (ly.index !== undefined) {
+        monthId = (ly.index + 1).toString(); // 索引从0开始，月份从1开始
+      }
+
       const cell = gzRow.createEl('td', {
         text: ly.ganZhi,
         cls: 'bazi-liuyue-cell',
-        attr: { 'data-month': ly.month.toString() }
+        attr: { 'data-month': monthId }
       });
 
       // 添加点击事件
@@ -622,7 +665,22 @@ export class InteractiveBaziView {
     const xkRow = this.liuYueTable.createEl('tr');
     xkRow.createEl('th', { text: '旬空' });
     liuYue.forEach(ly => {
-      xkRow.createEl('td', { text: ly.xunKong || '' });
+      // 处理不同格式的旬空数据
+      let xunKong = '';
+      if (ly.xunKong) {
+        xunKong = ly.xunKong;
+      } else if (ly.xun && ly.xunKong) {
+        // lunar-typescript库可能使用这种格式
+        xunKong = ly.xunKong;
+      } else {
+        // 如果没有旬空数据，尝试计算
+        const ganZhi = ly.ganZhi;
+        if (ganZhi && ganZhi.length === 2) {
+          xunKong = this.calculateXunKong(ganZhi[0], ganZhi[1]);
+        }
+      }
+
+      xkRow.createEl('td', { text: xunKong });
     });
 
     // 显示表格（带动画）
