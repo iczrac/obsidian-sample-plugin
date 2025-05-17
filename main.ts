@@ -4,6 +4,7 @@ import { DatePickerModal } from 'src/ui/DatePickerModal';
 import { BaziInfoModal } from 'src/ui/BaziInfoModal';
 import { BaziParserModal } from 'src/ui/BaziParserModal';
 import { BaziSettingsModal } from 'src/ui/BaziSettingsModal';
+import { InteractiveBaziView } from 'src/ui/InteractiveBaziView';
 
 interface BaziPluginSettings {
 	defaultFormat: string;
@@ -121,7 +122,7 @@ date: ${dateStr}
 		ribbonIconEl.addClass('bazi-plugin-ribbon-class');
 
 		// 注册代码块处理器 - 类似Dataview的方式
-		this.registerMarkdownCodeBlockProcessor('bazi', (source, el, ctx) => {
+		this.registerMarkdownCodeBlockProcessor('bazi', (source, el, _ctx) => {
 			// 解析代码块内容
 			const params = this.parseCodeBlockParams(source);
 
@@ -144,16 +145,21 @@ date: ${dateStr}
 					// 生成唯一ID
 					const id = 'bazi-view-' + Math.random().toString(36).substring(2, 9);
 
-					// 渲染八字命盘
-					el.innerHTML = BaziService.generateBaziHTML(baziInfo, id);
-
-					// 为设置按钮添加事件监听器
-					this.addSettingsButtonListeners(el);
-					// 为表格单元格添加事件监听器
-					this.addTableCellListeners(el, id, baziInfo);
-
 					// 添加源代码属性，用于编辑时恢复
 					el.setAttribute('data-bazi-source', source);
+
+					if (this.settings.useInteractiveView) {
+						// 使用交互式视图
+						new InteractiveBaziView(el, baziInfo, id);
+					} else {
+						// 使用传统视图
+						el.innerHTML = BaziService.generateBaziHTML(baziInfo, id);
+
+						// 为设置按钮添加事件监听器
+						this.addSettingsButtonListeners(el);
+						// 为表格单元格添加事件监听器
+						this.addTableCellListeners(el, id, baziInfo);
+					}
 
 					// 应用额外的显示选项
 					this.applyDisplayOptions(el, params);
@@ -183,14 +189,21 @@ date: ${dateStr}
 					// 生成唯一ID
 					const id = 'bazi-view-' + Math.random().toString(36).substring(2, 9);
 
-					// 渲染八字命盘
-					el.innerHTML = BaziService.generateBaziHTML(baziInfo, id);
-
-					// 为设置按钮添加事件监听器
-					this.addSettingsButtonListeners(el);
-
 					// 添加源代码属性，用于编辑时恢复
 					el.setAttribute('data-bazi-source', source);
+
+					if (this.settings.useInteractiveView) {
+						// 使用交互式视图
+						new InteractiveBaziView(el, baziInfo, id);
+					} else {
+						// 使用传统视图
+						el.innerHTML = BaziService.generateBaziHTML(baziInfo, id);
+
+						// 为设置按钮添加事件监听器
+						this.addSettingsButtonListeners(el);
+						// 为表格单元格添加事件监听器
+						this.addTableCellListeners(el, id, baziInfo);
+					}
 
 					// 应用额外的显示选项
 					this.applyDisplayOptions(el, params);
@@ -209,14 +222,21 @@ date: ${dateStr}
 					// 生成唯一ID
 					const id = 'bazi-view-' + Math.random().toString(36).substring(2, 9);
 
-					// 渲染八字命盘
-					el.innerHTML = BaziService.generateBaziHTML(baziInfo, id);
-
-					// 为设置按钮添加事件监听器
-					this.addSettingsButtonListeners(el);
-
 					// 添加源代码属性，用于编辑时恢复
 					el.setAttribute('data-bazi-source', source);
+
+					if (this.settings.useInteractiveView) {
+						// 使用交互式视图
+						new InteractiveBaziView(el, baziInfo, id);
+					} else {
+						// 使用传统视图
+						el.innerHTML = BaziService.generateBaziHTML(baziInfo, id);
+
+						// 为设置按钮添加事件监听器
+						this.addSettingsButtonListeners(el);
+						// 为表格单元格添加事件监听器
+						this.addTableCellListeners(el, id, baziInfo);
+					}
 
 					// 应用额外的显示选项
 					this.applyDisplayOptions(el, params);
@@ -243,14 +263,21 @@ date: ${dateStr}
 					// 生成唯一ID
 					const id = 'bazi-view-' + Math.random().toString(36).substring(2, 9);
 
-					// 渲染八字命盘
-					el.innerHTML = BaziService.generateBaziHTML(baziInfo, id);
-
-					// 为设置按钮添加事件监听器
-					this.addSettingsButtonListeners(el);
-
 					// 添加源代码属性，用于编辑时恢复
 					el.setAttribute('data-bazi-source', source);
+
+					if (this.settings.useInteractiveView) {
+						// 使用交互式视图
+						new InteractiveBaziView(el, baziInfo, id);
+					} else {
+						// 使用传统视图
+						el.innerHTML = BaziService.generateBaziHTML(baziInfo, id);
+
+						// 为设置按钮添加事件监听器
+						this.addSettingsButtonListeners(el);
+						// 为表格单元格添加事件监听器
+						this.addTableCellListeners(el, id, baziInfo);
+					}
 
 					// 应用额外的显示选项
 					this.applyDisplayOptions(el, params);
@@ -380,19 +407,432 @@ date: ${dateStr}
 	 * @param baziInfo 八字信息
 	 */
 	addTableCellListeners(container: HTMLElement, baziId: string, baziInfo: any) {
-		// 获取表格中的所有单元格
-		const table = container.querySelector(`#${baziId} .bazi-liuyue-table`);
-		if (!table) return;
+		// 获取所有表格
+		const daYunTable = container.querySelector(`#${baziId} .bazi-view-dayun-table`);
+		const liuNianTable = container.querySelector(`#${baziId} .bazi-view-liunian-table`);
+		const xiaoYunTable = container.querySelector(`#${baziId} .bazi-view-xiaoyun-table`);
+		const liuYueTable = container.querySelector(`#${baziId} .bazi-view-liuyue-table`);
 
-		// 添加点击事件
-		const cells = table.querySelectorAll('.bazi-liuyue-cell');
-		cells.forEach(cell => {
-			cell.addEventListener('click', (e) => {
-				// 高亮选中的单元格
-				cells.forEach(c => c.classList.remove('selected'));
-				(e.currentTarget as HTMLElement).classList.add('selected');
+		// 获取存储在DOM中的数据
+		const dataEl = container.querySelector(`#${baziId} .bazi-view-data`);
+		let allDaYun: any[] = [];
+		let allLiuNian: any[] = [];
+		let allXiaoYun: any[] = [];
+		let allLiuYue: any[] = [];
+
+		if (dataEl) {
+			try {
+				const daYunData = dataEl.getAttribute('data-all-dayun');
+				const liuNianData = dataEl.getAttribute('data-all-liunian');
+				const xiaoYunData = dataEl.getAttribute('data-all-xiaoyun');
+				const liuYueData = dataEl.getAttribute('data-all-liuyue');
+
+				if (daYunData) allDaYun = JSON.parse(daYunData);
+				if (liuNianData) allLiuNian = JSON.parse(liuNianData);
+				if (xiaoYunData) allXiaoYun = JSON.parse(xiaoYunData);
+				if (liuYueData) allLiuYue = JSON.parse(liuYueData);
+			} catch (e) {
+				console.error('解析八字数据出错:', e);
+			}
+		}
+
+		// 为大运表格添加点击事件
+		if (daYunTable) {
+			const daYunCells = daYunTable.querySelectorAll('.bazi-dayun-cell');
+			daYunCells.forEach(cell => {
+				cell.addEventListener('click', (e) => {
+					// 高亮选中的单元格
+					daYunCells.forEach(c => c.classList.remove('selected'));
+					(e.currentTarget as HTMLElement).classList.add('selected');
+
+					// 获取大运索引
+					const index = parseInt((e.currentTarget as HTMLElement).getAttribute('data-index') || '0');
+
+					// 更新流年、小运和流月
+					this.handleDaYunSelect(container, baziId, index, allDaYun, allLiuNian, allXiaoYun, allLiuYue);
+				});
 			});
+		}
+
+		// 为流年表格添加点击事件
+		if (liuNianTable) {
+			const liuNianCells = liuNianTable.querySelectorAll('.bazi-liunian-cell');
+			liuNianCells.forEach(cell => {
+				cell.addEventListener('click', (e) => {
+					// 高亮选中的单元格
+					liuNianCells.forEach(c => c.classList.remove('selected'));
+					(e.currentTarget as HTMLElement).classList.add('selected');
+
+					// 获取流年年份
+					const year = parseInt((e.currentTarget as HTMLElement).getAttribute('data-year') || '0');
+
+					// 更新流月
+					this.handleLiuNianSelect(container, baziId, year, allLiuYue);
+				});
+			});
+		}
+
+		// 为小运表格添加点击事件
+		if (xiaoYunTable) {
+			const xiaoYunCells = xiaoYunTable.querySelectorAll('.bazi-xiaoyun-cell');
+			xiaoYunCells.forEach(cell => {
+				cell.addEventListener('click', (e) => {
+					// 高亮选中的单元格
+					xiaoYunCells.forEach(c => c.classList.remove('selected'));
+					(e.currentTarget as HTMLElement).classList.add('selected');
+				});
+			});
+		}
+
+		// 为流月表格添加点击事件
+		if (liuYueTable) {
+			const liuYueCells = liuYueTable.querySelectorAll('.bazi-liuyue-cell');
+			liuYueCells.forEach(cell => {
+				cell.addEventListener('click', (e) => {
+					// 高亮选中的单元格
+					liuYueCells.forEach(c => c.classList.remove('selected'));
+					(e.currentTarget as HTMLElement).classList.add('selected');
+				});
+			});
+		}
+
+		// 默认选中第一个大运
+		if (daYunTable && allDaYun.length > 0) {
+			const firstDaYunCell = daYunTable.querySelector('.bazi-dayun-cell');
+			if (firstDaYunCell) {
+				// 模拟点击第一个大运单元格
+				firstDaYunCell.classList.add('selected');
+				this.handleDaYunSelect(container, baziId, 0, allDaYun, allLiuNian, allXiaoYun, allLiuYue);
+			}
+		}
+	}
+
+	/**
+	 * 处理大运选择
+	 * @param container 容器元素
+	 * @param baziId 八字命盘ID
+	 * @param index 大运索引
+	 * @param allDaYun 所有大运数据
+	 * @param allLiuNian 所有流年数据
+	 * @param allXiaoYun 所有小运数据
+	 * @param allLiuYue 所有流月数据
+	 */
+	handleDaYunSelect(container: HTMLElement, baziId: string, index: number, allDaYun: any[], allLiuNian: any[], allXiaoYun: any[], allLiuYue: any[]) {
+		// 根据选择的大运索引，筛选对应的流年、小运和流月
+		const selectedDaYun = allDaYun[index];
+		if (!selectedDaYun) return;
+
+		// 筛选该大运对应的流年
+		const filteredLiuNian = allLiuNian.filter(ln => {
+			return ln.year >= selectedDaYun.startYear && ln.year <= selectedDaYun.endYear;
 		});
+
+		// 筛选该大运对应的小运
+		const filteredXiaoYun = allXiaoYun.filter(xy => {
+			return xy.year >= selectedDaYun.startYear && xy.year <= selectedDaYun.endYear;
+		});
+
+		// 更新流年表格
+		this.updateLiuNianTable(container, baziId, filteredLiuNian, allLiuYue);
+
+		// 更新小运表格
+		this.updateXiaoYunTable(container, baziId, filteredXiaoYun);
+
+		// 如果有流年，更新流月表格（取第一个流年的流月）
+		if (filteredLiuNian.length > 0) {
+			this.handleLiuNianSelect(container, baziId, filteredLiuNian[0].year, allLiuYue);
+		}
+	}
+
+	/**
+	 * 处理流年选择
+	 * @param container 容器元素
+	 * @param baziId 八字命盘ID
+	 * @param year 流年年份
+	 * @param allLiuYue 所有流月数据
+	 */
+	handleLiuNianSelect(container: HTMLElement, baziId: string, year: number, allLiuYue: any[]) {
+		// 更新流月表格
+		this.updateLiuYueTable(container, baziId, allLiuYue);
+
+		// 高亮选中的流年单元格
+		const liuNianTable = container.querySelector(`#${baziId} .bazi-view-liunian-table`);
+		if (liuNianTable) {
+			const cells = liuNianTable.querySelectorAll('.bazi-liunian-cell');
+			cells.forEach(cell => {
+				cell.classList.remove('selected');
+				if (cell.getAttribute('data-year') === year.toString()) {
+					cell.classList.add('selected');
+				}
+			});
+		}
+	}
+
+	/**
+	 * 更新流年表格
+	 * @param container 容器元素
+	 * @param baziId 八字命盘ID
+	 * @param liuNian 流年数据
+	 * @param allLiuYue 所有流月数据
+	 */
+	updateLiuNianTable(container: HTMLElement, baziId: string, liuNian: any[], allLiuYue: any[]) {
+		const liuNianSection = container.querySelector(`#${baziId} .bazi-liunian-section`);
+		if (!liuNianSection) return;
+
+		// 获取或创建表格
+		let table = liuNianSection.querySelector('.bazi-view-liunian-table');
+		if (!table) {
+			const tableContainer = liuNianSection.querySelector('.bazi-view-table-container');
+			if (!tableContainer) return;
+			table = document.createElement('table');
+			table.className = 'bazi-view-table bazi-view-liunian-table';
+			tableContainer.appendChild(table);
+		}
+
+		// 清空表格
+		table.innerHTML = '';
+
+		// 第一行：年份
+		const yearRow = document.createElement('tr');
+		const yearHeader = document.createElement('th');
+		yearHeader.textContent = '流年';
+		yearRow.appendChild(yearHeader);
+
+		liuNian.slice(0, 10).forEach(ln => {
+			const cell = document.createElement('td');
+			cell.textContent = ln.year.toString();
+			yearRow.appendChild(cell);
+		});
+		table.appendChild(yearRow);
+
+		// 第二行：年龄
+		const ageRow = document.createElement('tr');
+		const ageHeader = document.createElement('th');
+		ageHeader.textContent = '年龄';
+		ageRow.appendChild(ageHeader);
+
+		liuNian.slice(0, 10).forEach(ln => {
+			const cell = document.createElement('td');
+			cell.textContent = ln.age.toString();
+			ageRow.appendChild(cell);
+		});
+		table.appendChild(ageRow);
+
+		// 第三行：干支
+		const gzRow = document.createElement('tr');
+		const gzHeader = document.createElement('th');
+		gzHeader.textContent = '干支';
+		gzRow.appendChild(gzHeader);
+
+		liuNian.slice(0, 10).forEach(ln => {
+			const cell = document.createElement('td');
+			cell.textContent = ln.ganZhi;
+			cell.className = 'bazi-liunian-cell';
+			cell.setAttribute('data-year', ln.year.toString());
+
+			// 添加点击事件
+			cell.addEventListener('click', () => {
+				// 高亮选中的单元格
+				if (table) {
+					table.querySelectorAll('.bazi-liunian-cell').forEach(c => {
+						c.classList.remove('selected');
+					});
+				}
+				cell.classList.add('selected');
+
+				// 更新流月
+				this.handleLiuNianSelect(container, baziId, ln.year, allLiuYue);
+			});
+
+			gzRow.appendChild(cell);
+		});
+		table.appendChild(gzRow);
+
+		// 如果有旬空信息，添加第四行
+		if (liuNian.length > 0 && liuNian[0].xunKong) {
+			const xkRow = document.createElement('tr');
+			const xkHeader = document.createElement('th');
+			xkHeader.textContent = '旬空';
+			xkRow.appendChild(xkHeader);
+
+			liuNian.slice(0, 10).forEach(ln => {
+				const cell = document.createElement('td');
+				cell.textContent = ln.xunKong || '';
+				xkRow.appendChild(cell);
+			});
+			table.appendChild(xkRow);
+		}
+	}
+
+	/**
+	 * 更新小运表格
+	 * @param container 容器元素
+	 * @param baziId 八字命盘ID
+	 * @param xiaoYun 小运数据
+	 */
+	updateXiaoYunTable(container: HTMLElement, baziId: string, xiaoYun: any[]) {
+		const xiaoYunSection = container.querySelector(`#${baziId} .bazi-xiaoyun-section`);
+		if (!xiaoYunSection) return;
+
+		// 获取或创建表格
+		let table = xiaoYunSection.querySelector('.bazi-view-xiaoyun-table');
+		if (!table) {
+			const tableContainer = xiaoYunSection.querySelector('.bazi-view-table-container');
+			if (!tableContainer) return;
+			table = document.createElement('table');
+			table.className = 'bazi-view-table bazi-view-xiaoyun-table';
+			tableContainer.appendChild(table);
+		}
+
+		// 清空表格
+		table.innerHTML = '';
+
+		// 第一行：年份
+		const yearRow = document.createElement('tr');
+		const yearHeader = document.createElement('th');
+		yearHeader.textContent = '小运';
+		yearRow.appendChild(yearHeader);
+
+		xiaoYun.slice(0, 10).forEach(xy => {
+			const cell = document.createElement('td');
+			cell.textContent = xy.year.toString();
+			yearRow.appendChild(cell);
+		});
+		table.appendChild(yearRow);
+
+		// 第二行：年龄
+		const ageRow = document.createElement('tr');
+		const ageHeader = document.createElement('th');
+		ageHeader.textContent = '年龄';
+		ageRow.appendChild(ageHeader);
+
+		xiaoYun.slice(0, 10).forEach(xy => {
+			const cell = document.createElement('td');
+			cell.textContent = xy.age.toString();
+			ageRow.appendChild(cell);
+		});
+		table.appendChild(ageRow);
+
+		// 第三行：干支
+		const gzRow = document.createElement('tr');
+		const gzHeader = document.createElement('th');
+		gzHeader.textContent = '干支';
+		gzRow.appendChild(gzHeader);
+
+		xiaoYun.slice(0, 10).forEach(xy => {
+			const cell = document.createElement('td');
+			cell.textContent = xy.ganZhi;
+			cell.className = 'bazi-xiaoyun-cell';
+			cell.setAttribute('data-year', xy.year.toString());
+
+			// 添加点击事件
+			cell.addEventListener('click', () => {
+				// 高亮选中的单元格
+				if (table) {
+					table.querySelectorAll('.bazi-xiaoyun-cell').forEach(c => {
+						c.classList.remove('selected');
+					});
+				}
+				cell.classList.add('selected');
+			});
+
+			gzRow.appendChild(cell);
+		});
+		table.appendChild(gzRow);
+
+		// 如果有旬空信息，添加第四行
+		if (xiaoYun.length > 0 && xiaoYun[0].xunKong) {
+			const xkRow = document.createElement('tr');
+			const xkHeader = document.createElement('th');
+			xkHeader.textContent = '旬空';
+			xkRow.appendChild(xkHeader);
+
+			xiaoYun.slice(0, 10).forEach(xy => {
+				const cell = document.createElement('td');
+				cell.textContent = xy.xunKong || '';
+				xkRow.appendChild(cell);
+			});
+			table.appendChild(xkRow);
+		}
+	}
+
+	/**
+	 * 更新流月表格
+	 * @param container 容器元素
+	 * @param baziId 八字命盘ID
+	 * @param liuYue 流月数据
+	 */
+	updateLiuYueTable(container: HTMLElement, baziId: string, liuYue: any[]) {
+		const liuYueSection = container.querySelector(`#${baziId} .bazi-liuyue-section`);
+		if (!liuYueSection) return;
+
+		// 获取或创建表格
+		let table = liuYueSection.querySelector('.bazi-view-liuyue-table');
+		if (!table) {
+			const tableContainer = liuYueSection.querySelector('.bazi-view-table-container');
+			if (!tableContainer) return;
+			table = document.createElement('table');
+			table.className = 'bazi-view-table bazi-view-liuyue-table';
+			tableContainer.appendChild(table);
+		}
+
+		// 清空表格
+		table.innerHTML = '';
+
+		// 第一行：月份
+		const monthRow = document.createElement('tr');
+		const monthHeader = document.createElement('th');
+		monthHeader.textContent = '流月';
+		monthRow.appendChild(monthHeader);
+
+		liuYue.forEach(ly => {
+			const cell = document.createElement('td');
+			cell.textContent = ly.month.toString();
+			monthRow.appendChild(cell);
+		});
+		table.appendChild(monthRow);
+
+		// 第二行：干支
+		const gzRow = document.createElement('tr');
+		const gzHeader = document.createElement('th');
+		gzHeader.textContent = '干支';
+		gzRow.appendChild(gzHeader);
+
+		liuYue.forEach(ly => {
+			const cell = document.createElement('td');
+			cell.textContent = ly.ganZhi;
+			cell.className = 'bazi-liuyue-cell';
+			cell.setAttribute('data-month', ly.month.toString());
+
+			// 添加点击事件
+			cell.addEventListener('click', () => {
+				// 高亮选中的单元格
+				if (table) {
+					table.querySelectorAll('.bazi-liuyue-cell').forEach(c => {
+						c.classList.remove('selected');
+					});
+				}
+				cell.classList.add('selected');
+			});
+
+			gzRow.appendChild(cell);
+		});
+		table.appendChild(gzRow);
+
+		// 如果有旬空信息，添加第三行
+		if (liuYue.length > 0 && liuYue[0].xunKong) {
+			const xkRow = document.createElement('tr');
+			const xkHeader = document.createElement('th');
+			xkHeader.textContent = '旬空';
+			xkRow.appendChild(xkHeader);
+
+			liuYue.forEach(ly => {
+				const cell = document.createElement('td');
+				cell.textContent = ly.xunKong || '';
+				xkRow.appendChild(cell);
+			});
+			table.appendChild(xkRow);
+		}
 	}
 
 	/**
@@ -415,9 +855,6 @@ date: ${dateStr}
 				if (sourceBlock) {
 					const codeBlock = sourceBlock.closest('[data-bazi-source]');
 					if (codeBlock) {
-						const originalSource = codeBlock.getAttribute('data-bazi-source') || '';
-						const params = this.parseCodeBlockParams(originalSource);
-
 						// 打开设置模态框
 						this.openBaziSettingsModal(baziId, { year, month, day, hour }, (newBaziInfo) => {
 							// 更新八字命盘
@@ -652,7 +1089,7 @@ date: ${dateStr}
 
 				// 查找所有bazi代码块
 				const regex = /```bazi\n([\s\S]*?)```/g;
-				let match;
+				let match: RegExpExecArray | null;
 				let found = false;
 				let newContent = content;
 				let matchCount = 0;
@@ -1162,7 +1599,7 @@ date: ${dateStr}
 	 * @param editor 编辑器
 	 * @param markdownView Markdown视图
 	 */
-	private processDocumentChange(editor: Editor, markdownView: MarkdownView) {
+	private processDocumentChange(editor: Editor, _markdownView: MarkdownView) {
 		if (this.settings.debugMode) {
 			console.log('处理文档变化');
 		}

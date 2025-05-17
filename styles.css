@@ -403,3 +403,76 @@
     page-break-inside: avoid;
   }
 }
+
+/* 交互式八字命盘样式 */
+.interactive-bazi-view {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  margin: 10px 0;
+  padding: 15px;
+  border-radius: 8px;
+  background-color: var(--background-primary);
+  border: 1px solid var(--background-modifier-border);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+/* 动画效果 */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.interactive-bazi-view .bazi-view-section {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+/* 表格单元格交互样式增强 */
+.interactive-bazi-view .bazi-dayun-cell,
+.interactive-bazi-view .bazi-liunian-cell,
+.interactive-bazi-view .bazi-xiaoyun-cell,
+.interactive-bazi-view .bazi-liuyue-cell {
+  position: relative;
+  overflow: hidden;
+}
+
+.interactive-bazi-view .bazi-dayun-cell:before,
+.interactive-bazi-view .bazi-liunian-cell:before,
+.interactive-bazi-view .bazi-xiaoyun-cell:before,
+.interactive-bazi-view .bazi-liuyue-cell:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--interactive-accent);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: -1;
+}
+
+.interactive-bazi-view .bazi-dayun-cell:hover:before,
+.interactive-bazi-view .bazi-liunian-cell:hover:before,
+.interactive-bazi-view .bazi-xiaoyun-cell:hover:before,
+.interactive-bazi-view .bazi-liuyue-cell:hover:before {
+  opacity: 0.2;
+}
+
+.interactive-bazi-view .bazi-dayun-cell.selected:before,
+.interactive-bazi-view .bazi-liunian-cell.selected:before,
+.interactive-bazi-view .bazi-xiaoyun-cell.selected:before,
+.interactive-bazi-view .bazi-liuyue-cell.selected:before {
+  opacity: 0.4;
+}
+
+/* 响应式布局增强 */
+@media (max-width: 768px) {
+  .interactive-bazi-view .bazi-view-table {
+    font-size: 0.8em;
+  }
+
+  .interactive-bazi-view .bazi-view-table th,
+  .interactive-bazi-view .bazi-view-table td {
+    padding: 5px;
+  }
+}
