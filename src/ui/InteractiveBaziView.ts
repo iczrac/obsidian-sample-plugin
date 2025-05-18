@@ -1251,7 +1251,7 @@ export class InteractiveBaziView {
    * @param daYun 大运数据
    * @returns 流年数据数组
    */
-  private generateLiuNianForDaYun(daYun: any): Array<{year: number, age: number, ganZhi: string, xunKong: string}> {
+  private generateLiuNianForDaYun(daYun: any): Array<{year: number, age: number, ganZhi: string, xunKong: string, shiShenGan?: string, diShi?: string}> {
     // 如果没有起始年或结束年，返回空数组
     if (!daYun.startYear) {
       return [];
@@ -1261,8 +1261,11 @@ export class InteractiveBaziView {
     const endYear = daYun.endYear ?? (daYun.startYear + 9);
 
     // 生成流年数据
-    const liuNianData: Array<{year: number, age: number, ganZhi: string, xunKong: string}> = [];
+    const liuNianData: Array<{year: number, age: number, ganZhi: string, xunKong: string, shiShenGan?: string, diShi?: string}> = [];
     let age = daYun.startAge;
+
+    // 获取日干，用于计算十神
+    const dayStem = this.baziInfo.dayStem;
 
     for (let year = daYun.startYear; year <= endYear; year++, age++) {
       // 计算干支
@@ -1281,11 +1284,25 @@ export class InteractiveBaziView {
       // 计算旬空
       const xunKong = this.calculateXunKong(stem, branch);
 
+      // 计算十神（如果有日干）
+      let shiShenGan = '';
+      if (dayStem) {
+        shiShenGan = this.getShiShen(dayStem, stem);
+      }
+
+      // 计算地势（如果有日干）
+      let diShi = '';
+      if (dayStem) {
+        diShi = this.getDiShi(dayStem, branch);
+      }
+
       liuNianData.push({
         year,
         age,
         ganZhi,
-        xunKong
+        xunKong,
+        shiShenGan,
+        diShi
       });
     }
 
@@ -1297,7 +1314,7 @@ export class InteractiveBaziView {
    * @param daYun 大运数据
    * @returns 小运数据数组
    */
-  private generateXiaoYunForDaYun(daYun: any): Array<{year: number, age: number, ganZhi: string, xunKong: string}> {
+  private generateXiaoYunForDaYun(daYun: any): Array<{year: number, age: number, ganZhi: string, xunKong: string, shiShenGan?: string, diShi?: string}> {
     // 如果没有起始年或结束年，返回空数组
     if (!daYun.startYear) {
       return [];
@@ -1307,7 +1324,7 @@ export class InteractiveBaziView {
     const endYear = daYun.endYear ?? (daYun.startYear + 9);
 
     // 生成小运数据
-    const xiaoYunData: Array<{year: number, age: number, ganZhi: string, xunKong: string}> = [];
+    const xiaoYunData: Array<{year: number, age: number, ganZhi: string, xunKong: string, shiShenGan?: string, diShi?: string}> = [];
     let age = daYun.startAge;
 
     // 获取大运干支
@@ -1328,6 +1345,9 @@ export class InteractiveBaziView {
       return [];
     }
 
+    // 获取日干，用于计算十神
+    const dayStem = this.baziInfo.dayStem;
+
     for (let year = daYun.startYear; year <= endYear; year++, age++) {
       // 小运干支计算（简化处理，实际应根据命理规则）
       // 这里假设小运天干按年干顺排，地支按月支顺排
@@ -1341,11 +1361,25 @@ export class InteractiveBaziView {
       // 计算旬空
       const xunKong = this.calculateXunKong(stem, branch);
 
+      // 计算十神（如果有日干）
+      let shiShenGan = '';
+      if (dayStem) {
+        shiShenGan = this.getShiShen(dayStem, stem);
+      }
+
+      // 计算地势（如果有日干）
+      let diShi = '';
+      if (dayStem) {
+        diShi = this.getDiShi(dayStem, branch);
+      }
+
       xiaoYunData.push({
         year,
         age,
         ganZhi,
-        xunKong
+        xunKong,
+        shiShenGan,
+        diShi
       });
     }
 
@@ -1398,6 +1432,105 @@ export class InteractiveBaziView {
       case '土': return 'tu';
       default: return '';
     }
+  }
+
+  /**
+   * 获取十神
+   * @param dayStem 日干
+   * @param stem 天干
+   * @returns 十神
+   */
+  private getShiShen(dayStem: string, stem: string): string {
+    // 天干顺序
+    const stems = "甲乙丙丁戊己庚辛壬癸";
+
+    // 五行属性
+    const wuxing = ["木", "木", "火", "火", "土", "土", "金", "金", "水", "水"];
+
+    // 十神名称
+    const shiShenNames = [
+      ["比肩", "劫财", "食神", "伤官", "偏财", "正财", "七杀", "正官", "偏印", "正印"],  // 阳干
+      ["比肩", "劫财", "食神", "伤官", "偏财", "正财", "七杀", "正官", "偏印", "正印"]   // 阴干
+    ];
+
+    // 获取日干和目标天干的索引
+    const dayStemIndex = stems.indexOf(dayStem);
+    const stemIndex = stems.indexOf(stem);
+
+    if (dayStemIndex === -1 || stemIndex === -1) {
+      return '';
+    }
+
+    // 判断日干阴阳
+    const dayYinYang = dayStemIndex % 2 === 0 ? 0 : 1;  // 0为阳干，1为阴干
+
+    // 计算十神索引
+    let shiShenIndex = (stemIndex - dayStemIndex + 10) % 10;
+
+    // 返回十神名称
+    return shiShenNames[dayYinYang][shiShenIndex];
+  }
+
+  /**
+   * 获取地势（长生十二神）
+   * @param dayStem 日干
+   * @param branch 地支
+   * @returns 地势
+   */
+  private getDiShi(dayStem: string, branch: string): string {
+    // 地支顺序
+    const branches = "子丑寅卯辰巳午未申酉戌亥";
+
+    // 长生十二神名称
+    const diShiNames = ["长生", "沐浴", "冠带", "临官", "帝旺", "衰", "病", "死", "墓", "绝", "胎", "养"];
+
+    // 各天干的长生地支起点
+    const startPoints: Record<string, number> = {
+      "甲": branches.indexOf("亥"),  // 甲木长生在亥
+      "乙": branches.indexOf("午"),  // 乙木长生在午
+      "丙": branches.indexOf("寅"),  // 丙火长生在寅
+      "丁": branches.indexOf("酉"),  // 丁火长生在酉
+      "戊": branches.indexOf("寅"),  // 戊土长生在寅
+      "己": branches.indexOf("酉"),  // 己土长生在酉
+      "庚": branches.indexOf("巳"),  // 庚金长生在巳
+      "辛": branches.indexOf("子"),  // 辛金长生在子
+      "壬": branches.indexOf("申"),  // 壬水长生在申
+      "癸": branches.indexOf("卯")   // 癸水长生在卯
+    };
+
+    // 阴阳顺逆方向
+    const directions: Record<string, number> = {
+      "甲": 1,  // 阳干顺行
+      "乙": -1, // 阴干逆行
+      "丙": 1,
+      "丁": -1,
+      "戊": 1,
+      "己": -1,
+      "庚": 1,
+      "辛": -1,
+      "壬": 1,
+      "癸": -1
+    };
+
+    // 获取地支索引
+    const branchIndex = branches.indexOf(branch);
+
+    if (!(dayStem in startPoints) || branchIndex === -1) {
+      return '';
+    }
+
+    // 获取起点和方向
+    const startPoint = startPoints[dayStem];
+    const direction = directions[dayStem];
+
+    // 计算地势索引
+    let diShiIndex = (branchIndex - startPoint + 12) % 12;
+    if (direction === -1) {
+      diShiIndex = (12 - diShiIndex) % 12;
+    }
+
+    // 返回地势名称
+    return diShiNames[diShiIndex];
   }
 
   /**

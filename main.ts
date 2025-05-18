@@ -142,8 +142,20 @@ date: ${dateStr}
 					const day = dateParts[2];
 					const hour = timeParts[0];
 
+					// 获取性别参数，如果没有则使用默认值
+					let gender = this.settings.defaultGender;
+					if (params.gender) {
+						// 支持多种性别输入格式
+						const genderValue = params.gender.trim().toLowerCase();
+						if (genderValue === '男' || genderValue === 'male' || genderValue === '1') {
+							gender = '1';
+						} else if (genderValue === '女' || genderValue === 'female' || genderValue === '0') {
+							gender = '0';
+						}
+					}
+
 					// 获取八字信息
-					const baziInfo = BaziService.getBaziFromDate(year, month, day, hour, this.settings.defaultGender, this.settings.baziSect);
+					const baziInfo = BaziService.getBaziFromDate(year, month, day, hour, gender, this.settings.baziSect);
 
 					// 生成唯一ID
 					const id = 'bazi-view-' + Math.random().toString(36).substring(2, 9);
@@ -186,8 +198,20 @@ date: ${dateStr}
 					const hour = timeParts[0];
 					const isLeap = params.leap === 'true';
 
+					// 获取性别参数，如果没有则使用默认值
+					let gender = this.settings.defaultGender;
+					if (params.gender) {
+						// 支持多种性别输入格式
+						const genderValue = params.gender.trim().toLowerCase();
+						if (genderValue === '男' || genderValue === 'male' || genderValue === '1') {
+							gender = '1';
+						} else if (genderValue === '女' || genderValue === 'female' || genderValue === '0') {
+							gender = '0';
+						}
+					}
+
 					// 获取八字信息
-					const baziInfo = BaziService.getBaziFromLunarDate(year, month, day, hour, isLeap, this.settings.defaultGender, this.settings.baziSect);
+					const baziInfo = BaziService.getBaziFromLunarDate(year, month, day, hour, isLeap, gender, this.settings.baziSect);
 
 					// 生成唯一ID
 					const id = 'bazi-view-' + Math.random().toString(36).substring(2, 9);
@@ -219,8 +243,20 @@ date: ${dateStr}
 				}
 			} else if (params.bazi) {
 				try {
+					// 获取性别参数，如果没有则使用默认值
+					let gender = this.settings.defaultGender;
+					if (params.gender) {
+						// 支持多种性别输入格式
+						const genderValue = params.gender.trim().toLowerCase();
+						if (genderValue === '男' || genderValue === 'male' || genderValue === '1') {
+							gender = '1';
+						} else if (genderValue === '女' || genderValue === 'female' || genderValue === '0') {
+							gender = '0';
+						}
+					}
+
 					// 解析八字字符串
-					const baziInfo = BaziService.parseBaziString(params.bazi, this.settings.defaultGender, this.settings.baziSect);
+					const baziInfo = BaziService.parseBaziString(params.bazi, gender, this.settings.baziSect);
 
 					// 生成唯一ID
 					const id = 'bazi-view-' + Math.random().toString(36).substring(2, 9);
@@ -260,8 +296,20 @@ date: ${dateStr}
 					const day = now.getDate();
 					const hour = now.getHours();
 
+					// 获取性别参数，如果没有则使用默认值
+					let gender = this.settings.defaultGender;
+					if (params.gender) {
+						// 支持多种性别输入格式
+						const genderValue = params.gender.trim().toLowerCase();
+						if (genderValue === '男' || genderValue === 'male' || genderValue === '1') {
+							gender = '1';
+						} else if (genderValue === '女' || genderValue === 'female' || genderValue === '0') {
+							gender = '0';
+						}
+					}
+
 					// 获取八字信息
-					const baziInfo = BaziService.getBaziFromDate(year, month, day, hour, this.settings.defaultGender, this.settings.baziSect);
+					const baziInfo = BaziService.getBaziFromDate(year, month, day, hour, gender, this.settings.baziSect);
 
 					// 生成唯一ID
 					const id = 'bazi-view-' + Math.random().toString(36).substring(2, 9);
