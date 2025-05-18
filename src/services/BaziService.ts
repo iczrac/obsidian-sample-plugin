@@ -536,8 +536,15 @@ export class BaziService {
       if (timeXun) {
         timeXunKong = eightChar.getTimeXunKong();
       }
+
+      // 如果通过API获取失败，则手动计算
+      if (!timeXunKong) {
+        timeXunKong = this.calculateXunKong(hourStem, hourBranch);
+      }
     } catch (e) {
       console.error('计算时柱旬空出错:', e);
+      // 出错时手动计算
+      timeXunKong = this.calculateXunKong(hourStem, hourBranch);
     }
 
     // 特殊信息
@@ -577,8 +584,12 @@ export class BaziService {
 
     // 神煞
     const daySha = Array.isArray(lunar.getDaySha()) ? lunar.getDaySha() : [];
-    const customShenSha = this.calculateShenSha(eightChar);
-    const shenSha = [...daySha, ...customShenSha];
+    const shenShaResult = this.calculateShenSha(eightChar);
+    const shenSha = [...daySha, ...shenShaResult.shenSha];
+    const yearShenSha = shenShaResult.yearShenSha;
+    const monthShenSha = shenShaResult.monthShenSha;
+    const dayShenSha = shenShaResult.dayShenSha;
+    const hourShenSha = shenShaResult.hourShenSha;
 
     // 格局
     const geJuInfo = this.calculateGeJu(eightChar);
@@ -2024,10 +2035,20 @@ export class BaziService {
   /**
    * 计算神煞
    * @param eightChar 八字对象
-   * @returns 神煞数组
+   * @returns 包含总神煞和各柱神煞的对象
    */
-  private static calculateShenSha(eightChar: EightChar): string[] {
+  private static calculateShenSha(eightChar: EightChar): {
+    shenSha: string[];
+    yearShenSha: string[];
+    monthShenSha: string[];
+    dayShenSha: string[];
+    hourShenSha: string[];
+  } {
     const shenSha: string[] = [];
+    const yearShenSha: string[] = [];
+    const monthShenSha: string[] = [];
+    const dayShenSha: string[] = [];
+    const hourShenSha: string[] = [];
 
     // 获取四柱干支
     const yearStem = eightChar.getYearGan();
@@ -2040,334 +2061,592 @@ export class BaziService {
     const timeBranch = eightChar.getTimeZhi();
 
     // 天乙贵人
-    if (this.isTianYiGuiRen(dayStem, yearBranch) ||
-        this.isTianYiGuiRen(dayStem, monthBranch) ||
-        this.isTianYiGuiRen(dayStem, dayBranch) ||
-        this.isTianYiGuiRen(dayStem, timeBranch)) {
-      shenSha.push('天乙贵人');
+    if (this.isTianYiGuiRen(dayStem, yearBranch)) {
+      yearShenSha.push('天乙贵人');
+    }
+    if (this.isTianYiGuiRen(dayStem, monthBranch)) {
+      monthShenSha.push('天乙贵人');
+    }
+    if (this.isTianYiGuiRen(dayStem, dayBranch)) {
+      dayShenSha.push('天乙贵人');
+    }
+    if (this.isTianYiGuiRen(dayStem, timeBranch)) {
+      hourShenSha.push('天乙贵人');
     }
 
     // 文昌
-    if (this.isWenChang(yearBranch) ||
-        this.isWenChang(monthBranch) ||
-        this.isWenChang(dayBranch) ||
-        this.isWenChang(timeBranch)) {
-      shenSha.push('文昌');
+    if (this.isWenChang(yearBranch)) {
+      yearShenSha.push('文昌');
+    }
+    if (this.isWenChang(monthBranch)) {
+      monthShenSha.push('文昌');
+    }
+    if (this.isWenChang(dayBranch)) {
+      dayShenSha.push('文昌');
+    }
+    if (this.isWenChang(timeBranch)) {
+      hourShenSha.push('文昌');
     }
 
     // 华盖
-    if (this.isHuaGai(yearBranch) ||
-        this.isHuaGai(monthBranch) ||
-        this.isHuaGai(dayBranch) ||
-        this.isHuaGai(timeBranch)) {
-      shenSha.push('华盖');
+    if (this.isHuaGai(yearBranch)) {
+      yearShenSha.push('华盖');
+    }
+    if (this.isHuaGai(monthBranch)) {
+      monthShenSha.push('华盖');
+    }
+    if (this.isHuaGai(dayBranch)) {
+      dayShenSha.push('华盖');
+    }
+    if (this.isHuaGai(timeBranch)) {
+      hourShenSha.push('华盖');
     }
 
     // 禄神
-    if (this.isLuShen(yearStem, yearBranch) ||
-        this.isLuShen(monthStem, monthBranch) ||
-        this.isLuShen(dayStem, dayBranch) ||
-        this.isLuShen(timeStem, timeBranch)) {
-      shenSha.push('禄神');
+    if (this.isLuShen(yearStem, yearBranch)) {
+      yearShenSha.push('禄神');
+    }
+    if (this.isLuShen(monthStem, monthBranch)) {
+      monthShenSha.push('禄神');
+    }
+    if (this.isLuShen(dayStem, dayBranch)) {
+      dayShenSha.push('禄神');
+    }
+    if (this.isLuShen(timeStem, timeBranch)) {
+      hourShenSha.push('禄神');
     }
 
     // 桃花
-    if (this.isTaoHua(yearBranch) ||
-        this.isTaoHua(monthBranch) ||
-        this.isTaoHua(dayBranch) ||
-        this.isTaoHua(timeBranch)) {
-      shenSha.push('桃花');
+    if (this.isTaoHua(yearBranch)) {
+      yearShenSha.push('桃花');
+    }
+    if (this.isTaoHua(monthBranch)) {
+      monthShenSha.push('桃花');
+    }
+    if (this.isTaoHua(dayBranch)) {
+      dayShenSha.push('桃花');
+    }
+    if (this.isTaoHua(timeBranch)) {
+      hourShenSha.push('桃花');
     }
 
     // 孤辰
-    if (this.isGuChen(yearBranch) ||
-        this.isGuChen(monthBranch) ||
-        this.isGuChen(dayBranch) ||
-        this.isGuChen(timeBranch)) {
-      shenSha.push('孤辰');
+    if (this.isGuChen(yearBranch)) {
+      yearShenSha.push('孤辰');
+    }
+    if (this.isGuChen(monthBranch)) {
+      monthShenSha.push('孤辰');
+    }
+    if (this.isGuChen(dayBranch)) {
+      dayShenSha.push('孤辰');
+    }
+    if (this.isGuChen(timeBranch)) {
+      hourShenSha.push('孤辰');
     }
 
     // 寡宿
-    if (this.isGuaSu(yearBranch) ||
-        this.isGuaSu(monthBranch) ||
-        this.isGuaSu(dayBranch) ||
-        this.isGuaSu(timeBranch)) {
-      shenSha.push('寡宿');
+    if (this.isGuaSu(yearBranch)) {
+      yearShenSha.push('寡宿');
+    }
+    if (this.isGuaSu(monthBranch)) {
+      monthShenSha.push('寡宿');
+    }
+    if (this.isGuaSu(dayBranch)) {
+      dayShenSha.push('寡宿');
+    }
+    if (this.isGuaSu(timeBranch)) {
+      hourShenSha.push('寡宿');
     }
 
     // 驿马
-    if (this.isYiMa(yearBranch) ||
-        this.isYiMa(monthBranch) ||
-        this.isYiMa(dayBranch) ||
-        this.isYiMa(timeBranch)) {
-      shenSha.push('驿马');
+    if (this.isYiMa(yearBranch)) {
+      yearShenSha.push('驿马');
+    }
+    if (this.isYiMa(monthBranch)) {
+      monthShenSha.push('驿马');
+    }
+    if (this.isYiMa(dayBranch)) {
+      dayShenSha.push('驿马');
+    }
+    if (this.isYiMa(timeBranch)) {
+      hourShenSha.push('驿马');
     }
 
     // 将星
-    if (this.isJiangXing(dayStem, yearBranch) ||
-        this.isJiangXing(dayStem, monthBranch) ||
-        this.isJiangXing(dayStem, dayBranch) ||
-        this.isJiangXing(dayStem, timeBranch)) {
-      shenSha.push('将星');
+    if (this.isJiangXing(dayStem, yearBranch)) {
+      yearShenSha.push('将星');
+    }
+    if (this.isJiangXing(dayStem, monthBranch)) {
+      monthShenSha.push('将星');
+    }
+    if (this.isJiangXing(dayStem, dayBranch)) {
+      dayShenSha.push('将星');
+    }
+    if (this.isJiangXing(dayStem, timeBranch)) {
+      hourShenSha.push('将星');
     }
 
     // 金神
-    if (this.isJinShen(yearBranch) ||
-        this.isJinShen(monthBranch) ||
-        this.isJinShen(dayBranch) ||
-        this.isJinShen(timeBranch)) {
-      shenSha.push('金神');
+    if (this.isJinShen(yearBranch)) {
+      yearShenSha.push('金神');
+    }
+    if (this.isJinShen(monthBranch)) {
+      monthShenSha.push('金神');
+    }
+    if (this.isJinShen(dayBranch)) {
+      dayShenSha.push('金神');
+    }
+    if (this.isJinShen(timeBranch)) {
+      hourShenSha.push('金神');
     }
 
     // 天德
-    if (this.isTianDe(yearStem, yearBranch) ||
-        this.isTianDe(monthStem, monthBranch) ||
-        this.isTianDe(dayStem, dayBranch) ||
-        this.isTianDe(timeStem, timeBranch)) {
-      shenSha.push('天德');
+    if (this.isTianDe(yearStem, yearBranch)) {
+      yearShenSha.push('天德');
+    }
+    if (this.isTianDe(monthStem, monthBranch)) {
+      monthShenSha.push('天德');
+    }
+    if (this.isTianDe(dayStem, dayBranch)) {
+      dayShenSha.push('天德');
+    }
+    if (this.isTianDe(timeStem, timeBranch)) {
+      hourShenSha.push('天德');
     }
 
     // 天德合
-    if (this.isTianDeHe(yearStem, yearBranch) ||
-        this.isTianDeHe(monthStem, monthBranch) ||
-        this.isTianDeHe(dayStem, dayBranch) ||
-        this.isTianDeHe(timeStem, timeBranch)) {
-      shenSha.push('天德合');
+    if (this.isTianDeHe(yearStem, yearBranch)) {
+      yearShenSha.push('天德合');
+    }
+    if (this.isTianDeHe(monthStem, monthBranch)) {
+      monthShenSha.push('天德合');
+    }
+    if (this.isTianDeHe(dayStem, dayBranch)) {
+      dayShenSha.push('天德合');
+    }
+    if (this.isTianDeHe(timeStem, timeBranch)) {
+      hourShenSha.push('天德合');
     }
 
     // 月德
-    if (this.isYueDe(yearStem) ||
-        this.isYueDe(monthStem) ||
-        this.isYueDe(dayStem) ||
-        this.isYueDe(timeStem)) {
-      shenSha.push('月德');
+    if (this.isYueDe(yearStem)) {
+      yearShenSha.push('月德');
+    }
+    if (this.isYueDe(monthStem)) {
+      monthShenSha.push('月德');
+    }
+    if (this.isYueDe(dayStem)) {
+      dayShenSha.push('月德');
+    }
+    if (this.isYueDe(timeStem)) {
+      hourShenSha.push('月德');
     }
 
     // 天医
-    if (this.isTianYi(yearBranch) ||
-        this.isTianYi(monthBranch) ||
-        this.isTianYi(dayBranch) ||
-        this.isTianYi(timeBranch)) {
-      shenSha.push('天医');
+    if (this.isTianYi(yearBranch)) {
+      yearShenSha.push('天医');
+    }
+    if (this.isTianYi(monthBranch)) {
+      monthShenSha.push('天医');
+    }
+    if (this.isTianYi(dayBranch)) {
+      dayShenSha.push('天医');
+    }
+    if (this.isTianYi(timeBranch)) {
+      hourShenSha.push('天医');
     }
 
     // 天喜
-    if (this.isTianXi(yearBranch) ||
-        this.isTianXi(monthBranch) ||
-        this.isTianXi(dayBranch) ||
-        this.isTianXi(timeBranch)) {
-      shenSha.push('天喜');
+    if (this.isTianXi(yearBranch)) {
+      yearShenSha.push('天喜');
+    }
+    if (this.isTianXi(monthBranch)) {
+      monthShenSha.push('天喜');
+    }
+    if (this.isTianXi(dayBranch)) {
+      dayShenSha.push('天喜');
+    }
+    if (this.isTianXi(timeBranch)) {
+      hourShenSha.push('天喜');
     }
 
     // 红艳
-    if (this.isHongYan(yearBranch) ||
-        this.isHongYan(monthBranch) ||
-        this.isHongYan(dayBranch) ||
-        this.isHongYan(timeBranch)) {
-      shenSha.push('红艳');
+    if (this.isHongYan(yearBranch)) {
+      yearShenSha.push('红艳');
+    }
+    if (this.isHongYan(monthBranch)) {
+      monthShenSha.push('红艳');
+    }
+    if (this.isHongYan(dayBranch)) {
+      dayShenSha.push('红艳');
+    }
+    if (this.isHongYan(timeBranch)) {
+      hourShenSha.push('红艳');
     }
 
     // 天罗
-    if (this.isTianLuo(yearBranch) ||
-        this.isTianLuo(monthBranch) ||
-        this.isTianLuo(dayBranch) ||
-        this.isTianLuo(timeBranch)) {
-      shenSha.push('天罗');
+    if (this.isTianLuo(yearBranch)) {
+      yearShenSha.push('天罗');
+    }
+    if (this.isTianLuo(monthBranch)) {
+      monthShenSha.push('天罗');
+    }
+    if (this.isTianLuo(dayBranch)) {
+      dayShenSha.push('天罗');
+    }
+    if (this.isTianLuo(timeBranch)) {
+      hourShenSha.push('天罗');
     }
 
     // 地网
-    if (this.isDiWang(yearBranch) ||
-        this.isDiWang(monthBranch) ||
-        this.isDiWang(dayBranch) ||
-        this.isDiWang(timeBranch)) {
-      shenSha.push('地网');
+    if (this.isDiWang(yearBranch)) {
+      yearShenSha.push('地网');
+    }
+    if (this.isDiWang(monthBranch)) {
+      monthShenSha.push('地网');
+    }
+    if (this.isDiWang(dayBranch)) {
+      dayShenSha.push('地网');
+    }
+    if (this.isDiWang(timeBranch)) {
+      hourShenSha.push('地网');
     }
 
     // 羊刃
-    if (this.isYangRen(dayStem, yearBranch) ||
-        this.isYangRen(dayStem, monthBranch) ||
-        this.isYangRen(dayStem, dayBranch) ||
-        this.isYangRen(dayStem, timeBranch)) {
-      shenSha.push('羊刃');
+    if (this.isYangRen(dayStem, yearBranch)) {
+      yearShenSha.push('羊刃');
+    }
+    if (this.isYangRen(dayStem, monthBranch)) {
+      monthShenSha.push('羊刃');
+    }
+    if (this.isYangRen(dayStem, dayBranch)) {
+      dayShenSha.push('羊刃');
+    }
+    if (this.isYangRen(dayStem, timeBranch)) {
+      hourShenSha.push('羊刃');
     }
 
     // 天空
-    if (this.isTianKong(yearBranch) ||
-        this.isTianKong(monthBranch) ||
-        this.isTianKong(dayBranch) ||
-        this.isTianKong(timeBranch)) {
-      shenSha.push('天空');
+    if (this.isTianKong(yearBranch)) {
+      yearShenSha.push('天空');
+    }
+    if (this.isTianKong(monthBranch)) {
+      monthShenSha.push('天空');
+    }
+    if (this.isTianKong(dayBranch)) {
+      dayShenSha.push('天空');
+    }
+    if (this.isTianKong(timeBranch)) {
+      hourShenSha.push('天空');
     }
 
     // 地劫
-    if (this.isDiJie(yearBranch) ||
-        this.isDiJie(monthBranch) ||
-        this.isDiJie(dayBranch) ||
-        this.isDiJie(timeBranch)) {
-      shenSha.push('地劫');
+    if (this.isDiJie(yearBranch)) {
+      yearShenSha.push('地劫');
+    }
+    if (this.isDiJie(monthBranch)) {
+      monthShenSha.push('地劫');
+    }
+    if (this.isDiJie(dayBranch)) {
+      dayShenSha.push('地劫');
+    }
+    if (this.isDiJie(timeBranch)) {
+      hourShenSha.push('地劫');
     }
 
     // 天刑
-    if (this.isTianXing(yearBranch) ||
-        this.isTianXing(monthBranch) ||
-        this.isTianXing(dayBranch) ||
-        this.isTianXing(timeBranch)) {
-      shenSha.push('天刑');
+    if (this.isTianXing(yearBranch)) {
+      yearShenSha.push('天刑');
+    }
+    if (this.isTianXing(monthBranch)) {
+      monthShenSha.push('天刑');
+    }
+    if (this.isTianXing(dayBranch)) {
+      dayShenSha.push('天刑');
+    }
+    if (this.isTianXing(timeBranch)) {
+      hourShenSha.push('天刑');
     }
 
     // 天哭
-    if (this.isTianKu(yearBranch) ||
-        this.isTianKu(monthBranch) ||
-        this.isTianKu(dayBranch) ||
-        this.isTianKu(timeBranch)) {
-      shenSha.push('天哭');
+    if (this.isTianKu(yearBranch)) {
+      yearShenSha.push('天哭');
+    }
+    if (this.isTianKu(monthBranch)) {
+      monthShenSha.push('天哭');
+    }
+    if (this.isTianKu(dayBranch)) {
+      dayShenSha.push('天哭');
+    }
+    if (this.isTianKu(timeBranch)) {
+      hourShenSha.push('天哭');
     }
 
     // 天虚
-    if (this.isTianXu(yearBranch) ||
-        this.isTianXu(monthBranch) ||
-        this.isTianXu(dayBranch) ||
-        this.isTianXu(timeBranch)) {
-      shenSha.push('天虚');
+    if (this.isTianXu(yearBranch)) {
+      yearShenSha.push('天虚');
+    }
+    if (this.isTianXu(monthBranch)) {
+      monthShenSha.push('天虚');
+    }
+    if (this.isTianXu(dayBranch)) {
+      dayShenSha.push('天虚');
+    }
+    if (this.isTianXu(timeBranch)) {
+      hourShenSha.push('天虚');
     }
 
     // 咸池
-    if (this.isXianChi(yearBranch) ||
-        this.isXianChi(monthBranch) ||
-        this.isXianChi(dayBranch) ||
-        this.isXianChi(timeBranch)) {
-      shenSha.push('咸池');
+    if (this.isXianChi(yearBranch)) {
+      yearShenSha.push('咸池');
+    }
+    if (this.isXianChi(monthBranch)) {
+      monthShenSha.push('咸池');
+    }
+    if (this.isXianChi(dayBranch)) {
+      dayShenSha.push('咸池');
+    }
+    if (this.isXianChi(timeBranch)) {
+      hourShenSha.push('咸池');
     }
 
     // 亡神
-    if (this.isWangShen(yearBranch) ||
-        this.isWangShen(monthBranch) ||
-        this.isWangShen(dayBranch) ||
-        this.isWangShen(timeBranch)) {
-      shenSha.push('亡神');
+    if (this.isWangShen(yearBranch)) {
+      yearShenSha.push('亡神');
+    }
+    if (this.isWangShen(monthBranch)) {
+      monthShenSha.push('亡神');
+    }
+    if (this.isWangShen(dayBranch)) {
+      dayShenSha.push('亡神');
+    }
+    if (this.isWangShen(timeBranch)) {
+      hourShenSha.push('亡神');
     }
 
     // 劫煞
-    if (this.isJieSha(yearBranch) ||
-        this.isJieSha(monthBranch) ||
-        this.isJieSha(dayBranch) ||
-        this.isJieSha(timeBranch)) {
-      shenSha.push('劫煞');
+    if (this.isJieSha(yearBranch)) {
+      yearShenSha.push('劫煞');
+    }
+    if (this.isJieSha(monthBranch)) {
+      monthShenSha.push('劫煞');
+    }
+    if (this.isJieSha(dayBranch)) {
+      dayShenSha.push('劫煞');
+    }
+    if (this.isJieSha(timeBranch)) {
+      hourShenSha.push('劫煞');
     }
 
     // 灾煞
-    if (this.isZaiSha(yearBranch) ||
-        this.isZaiSha(monthBranch) ||
-        this.isZaiSha(dayBranch) ||
-        this.isZaiSha(timeBranch)) {
-      shenSha.push('灾煞');
+    if (this.isZaiSha(yearBranch)) {
+      yearShenSha.push('灾煞');
+    }
+    if (this.isZaiSha(monthBranch)) {
+      monthShenSha.push('灾煞');
+    }
+    if (this.isZaiSha(dayBranch)) {
+      dayShenSha.push('灾煞');
+    }
+    if (this.isZaiSha(timeBranch)) {
+      hourShenSha.push('灾煞');
     }
 
     // 岁破
-    if (this.isSuiPo(yearBranch, yearBranch) ||
-        this.isSuiPo(monthBranch, yearBranch) ||
-        this.isSuiPo(dayBranch, yearBranch) ||
-        this.isSuiPo(timeBranch, yearBranch)) {
-      shenSha.push('岁破');
+    if (this.isSuiPo(yearBranch, yearBranch)) {
+      yearShenSha.push('岁破');
+    }
+    if (this.isSuiPo(monthBranch, yearBranch)) {
+      monthShenSha.push('岁破');
+    }
+    if (this.isSuiPo(dayBranch, yearBranch)) {
+      dayShenSha.push('岁破');
+    }
+    if (this.isSuiPo(timeBranch, yearBranch)) {
+      hourShenSha.push('岁破');
     }
 
     // 大耗
-    if (this.isDaHao(yearBranch, yearBranch) ||
-        this.isDaHao(monthBranch, yearBranch) ||
-        this.isDaHao(dayBranch, yearBranch) ||
-        this.isDaHao(timeBranch, yearBranch)) {
-      shenSha.push('大耗');
+    if (this.isDaHao(yearBranch, yearBranch)) {
+      yearShenSha.push('大耗');
+    }
+    if (this.isDaHao(monthBranch, yearBranch)) {
+      monthShenSha.push('大耗');
+    }
+    if (this.isDaHao(dayBranch, yearBranch)) {
+      dayShenSha.push('大耗');
+    }
+    if (this.isDaHao(timeBranch, yearBranch)) {
+      hourShenSha.push('大耗');
     }
 
     // 五鬼
-    if (this.isWuGui(yearBranch) ||
-        this.isWuGui(monthBranch) ||
-        this.isWuGui(dayBranch) ||
-        this.isWuGui(timeBranch)) {
-      shenSha.push('五鬼');
+    if (this.isWuGui(yearBranch)) {
+      yearShenSha.push('五鬼');
+    }
+    if (this.isWuGui(monthBranch)) {
+      monthShenSha.push('五鬼');
+    }
+    if (this.isWuGui(dayBranch)) {
+      dayShenSha.push('五鬼');
+    }
+    if (this.isWuGui(timeBranch)) {
+      hourShenSha.push('五鬼');
     }
 
     // 天德贵人
-    if (this.isTianDeGuiRen(yearStem, yearBranch) ||
-        this.isTianDeGuiRen(monthStem, monthBranch) ||
-        this.isTianDeGuiRen(dayStem, dayBranch) ||
-        this.isTianDeGuiRen(timeStem, timeBranch)) {
-      shenSha.push('天德贵人');
+    if (this.isTianDeGuiRen(yearStem, yearBranch)) {
+      yearShenSha.push('天德贵人');
+    }
+    if (this.isTianDeGuiRen(monthStem, monthBranch)) {
+      monthShenSha.push('天德贵人');
+    }
+    if (this.isTianDeGuiRen(dayStem, dayBranch)) {
+      dayShenSha.push('天德贵人');
+    }
+    if (this.isTianDeGuiRen(timeStem, timeBranch)) {
+      hourShenSha.push('天德贵人');
     }
 
     // 月德贵人
-    if (this.isYueDeGuiRen(yearStem, yearBranch) ||
-        this.isYueDeGuiRen(monthStem, monthBranch) ||
-        this.isYueDeGuiRen(dayStem, dayBranch) ||
-        this.isYueDeGuiRen(timeStem, timeBranch)) {
-      shenSha.push('月德贵人');
+    if (this.isYueDeGuiRen(yearStem, yearBranch)) {
+      yearShenSha.push('月德贵人');
+    }
+    if (this.isYueDeGuiRen(monthStem, monthBranch)) {
+      monthShenSha.push('月德贵人');
+    }
+    if (this.isYueDeGuiRen(dayStem, dayBranch)) {
+      dayShenSha.push('月德贵人');
+    }
+    if (this.isYueDeGuiRen(timeStem, timeBranch)) {
+      hourShenSha.push('月德贵人');
     }
 
     // 天赦
-    if (this.isTianShe(yearStem, yearBranch) ||
-        this.isTianShe(monthStem, monthBranch) ||
-        this.isTianShe(dayStem, dayBranch) ||
-        this.isTianShe(timeStem, timeBranch)) {
-      shenSha.push('天赦');
+    if (this.isTianShe(yearStem, yearBranch)) {
+      yearShenSha.push('天赦');
+    }
+    if (this.isTianShe(monthStem, monthBranch)) {
+      monthShenSha.push('天赦');
+    }
+    if (this.isTianShe(dayStem, dayBranch)) {
+      dayShenSha.push('天赦');
+    }
+    if (this.isTianShe(timeStem, timeBranch)) {
+      hourShenSha.push('天赦');
     }
 
     // 天恩
-    if (this.isTianEn(yearStem, yearBranch) ||
-        this.isTianEn(monthStem, monthBranch) ||
-        this.isTianEn(dayStem, dayBranch) ||
-        this.isTianEn(timeStem, timeBranch)) {
-      shenSha.push('天恩');
+    if (this.isTianEn(yearStem, yearBranch)) {
+      yearShenSha.push('天恩');
+    }
+    if (this.isTianEn(monthStem, monthBranch)) {
+      monthShenSha.push('天恩');
+    }
+    if (this.isTianEn(dayStem, dayBranch)) {
+      dayShenSha.push('天恩');
+    }
+    if (this.isTianEn(timeStem, timeBranch)) {
+      hourShenSha.push('天恩');
     }
 
     // 天官
-    if (this.isTianGuan(yearStem, yearBranch) ||
-        this.isTianGuan(monthStem, monthBranch) ||
-        this.isTianGuan(dayStem, dayBranch) ||
-        this.isTianGuan(timeStem, timeBranch)) {
-      shenSha.push('天官');
+    if (this.isTianGuan(yearStem, yearBranch)) {
+      yearShenSha.push('天官');
+    }
+    if (this.isTianGuan(monthStem, monthBranch)) {
+      monthShenSha.push('天官');
+    }
+    if (this.isTianGuan(dayStem, dayBranch)) {
+      dayShenSha.push('天官');
+    }
+    if (this.isTianGuan(timeStem, timeBranch)) {
+      hourShenSha.push('天官');
     }
 
     // 天福
-    if (this.isTianFu(yearStem, yearBranch) ||
-        this.isTianFu(monthStem, monthBranch) ||
-        this.isTianFu(dayStem, dayBranch) ||
-        this.isTianFu(timeStem, timeBranch)) {
-      shenSha.push('天福');
+    if (this.isTianFu(yearStem, yearBranch)) {
+      yearShenSha.push('天福');
+    }
+    if (this.isTianFu(monthStem, monthBranch)) {
+      monthShenSha.push('天福');
+    }
+    if (this.isTianFu(dayStem, dayBranch)) {
+      dayShenSha.push('天福');
+    }
+    if (this.isTianFu(timeStem, timeBranch)) {
+      hourShenSha.push('天福');
     }
 
     // 天厨
-    if (this.isTianChu(yearStem, yearBranch) ||
-        this.isTianChu(monthStem, monthBranch) ||
-        this.isTianChu(dayStem, dayBranch) ||
-        this.isTianChu(timeStem, timeBranch)) {
-      shenSha.push('天厨');
+    if (this.isTianChu(yearStem, yearBranch)) {
+      yearShenSha.push('天厨');
+    }
+    if (this.isTianChu(monthStem, monthBranch)) {
+      monthShenSha.push('天厨');
+    }
+    if (this.isTianChu(dayStem, dayBranch)) {
+      dayShenSha.push('天厨');
+    }
+    if (this.isTianChu(timeStem, timeBranch)) {
+      hourShenSha.push('天厨');
     }
 
     // 天巫
-    if (this.isTianWu(yearBranch) ||
-        this.isTianWu(monthBranch) ||
-        this.isTianWu(dayBranch) ||
-        this.isTianWu(timeBranch)) {
-      shenSha.push('天巫');
+    if (this.isTianWu(yearBranch)) {
+      yearShenSha.push('天巫');
+    }
+    if (this.isTianWu(monthBranch)) {
+      monthShenSha.push('天巫');
+    }
+    if (this.isTianWu(dayBranch)) {
+      dayShenSha.push('天巫');
+    }
+    if (this.isTianWu(timeBranch)) {
+      hourShenSha.push('天巫');
     }
 
     // 天月
-    if (this.isTianYue(yearBranch) ||
-        this.isTianYue(monthBranch) ||
-        this.isTianYue(dayBranch) ||
-        this.isTianYue(timeBranch)) {
-      shenSha.push('天月');
+    if (this.isTianYue(yearBranch)) {
+      yearShenSha.push('天月');
+    }
+    if (this.isTianYue(monthBranch)) {
+      monthShenSha.push('天月');
+    }
+    if (this.isTianYue(dayBranch)) {
+      dayShenSha.push('天月');
+    }
+    if (this.isTianYue(timeBranch)) {
+      hourShenSha.push('天月');
     }
 
     // 天马
-    if (this.isTianMa(yearBranch, yearBranch) ||
-        this.isTianMa(monthBranch, yearBranch) ||
-        this.isTianMa(dayBranch, yearBranch) ||
-        this.isTianMa(timeBranch, yearBranch)) {
-      shenSha.push('天马');
+    if (this.isTianMa(yearBranch, yearBranch)) {
+      yearShenSha.push('天马');
+    }
+    if (this.isTianMa(monthBranch, yearBranch)) {
+      monthShenSha.push('天马');
+    }
+    if (this.isTianMa(dayBranch, yearBranch)) {
+      dayShenSha.push('天马');
+    }
+    if (this.isTianMa(timeBranch, yearBranch)) {
+      hourShenSha.push('天马');
     }
 
-    return shenSha;
+    // 将各柱神煞添加到总神煞数组中
+    shenSha.push(...yearShenSha.map(s => `年柱:${s}`));
+    shenSha.push(...monthShenSha.map(s => `月柱:${s}`));
+    shenSha.push(...dayShenSha.map(s => `日柱:${s}`));
+    shenSha.push(...hourShenSha.map(s => `时柱:${s}`));
+
+    return {
+      shenSha,
+      yearShenSha,
+      monthShenSha,
+      dayShenSha,
+      hourShenSha
+    };
   }
 
   /**

@@ -751,3 +751,234 @@
 .bazi-modal-close:hover {
   background-color: var(--interactive-accent-hover);
 }
+
+/* 表格标题栏样式 */
+.bazi-table-label {
+  font-weight: bold;
+  background-color: var(--background-secondary);
+  text-align: center;
+}
+
+/* 神煞单元格样式 */
+.bazi-shensha-cell {
+  padding: 3px;
+  vertical-align: top;
+  max-width: 120px;
+  word-wrap: break-word;
+  white-space: normal;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1px;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 30px;
+  max-height: 80px;
+  overflow-y: auto;
+}
+
+/* 神煞标签样式（小） */
+.shensha-tag-small {
+  display: inline-block;
+  margin: 1px;
+  padding: 1px 3px;
+  border-radius: 3px;
+  font-size: 0.75em;
+  cursor: pointer;
+  white-space: nowrap;
+  line-height: 1.2;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+}
+
+/* 吉神标签样式 */
+.shensha-tag-good {
+  background-color: rgba(46, 204, 113, 0.1);
+  color: #27ae60;
+  border-color: rgba(46, 204, 113, 0.3);
+}
+
+.shensha-tag-good:hover {
+  background-color: rgba(46, 204, 113, 0.2);
+  border-color: rgba(46, 204, 113, 0.5);
+}
+
+/* 凶神标签样式 */
+.shensha-tag-bad {
+  background-color: rgba(231, 76, 60, 0.1);
+  color: #c0392b;
+  border-color: rgba(231, 76, 60, 0.3);
+}
+
+.shensha-tag-bad:hover {
+  background-color: rgba(231, 76, 60, 0.2);
+  border-color: rgba(231, 76, 60, 0.5);
+}
+
+/* 吉凶神标签样式 */
+.shensha-tag-mixed {
+  background-color: rgba(241, 196, 15, 0.1);
+  color: #f39c12;
+  border-color: rgba(241, 196, 15, 0.3);
+}
+
+.shensha-tag-mixed:hover {
+  background-color: rgba(241, 196, 15, 0.2);
+  border-color: rgba(241, 196, 15, 0.5);
+}
+
+/* 地势标签样式（小） */
+.dishi-tag-small {
+  display: inline-block;
+  margin: 2px;
+  padding: 2px 5px;
+  border-radius: 3px;
+  background-color: var(--background-secondary-alt);
+  color: var(--text-accent);
+  font-size: 0.8em;
+}
+
+.dishi-tag-small:hover {
+  background-color: var(--background-modifier-hover);
+}
+
+/* 旬空标签样式（小） */
+.xunkong-tag-small {
+  display: inline-block;
+  margin: 2px;
+  padding: 2px 5px;
+  border-radius: 3px;
+  background-color: var(--background-secondary-alt);
+  color: var(--text-muted);
+  font-size: 0.8em;
+}
+
+.xunkong-tag-small:hover {
+  background-color: var(--background-modifier-hover);
+}
+
+/* 十神标签样式（小） */
+.shishen-tag-small {
+  display: inline-block;
+  margin: 1px;
+  padding: 1px 3px;
+  border-radius: 3px;
+  background-color: var(--background-secondary-alt);
+  color: var(--text-accent-hover);
+  font-size: 0.75em;
+  font-weight: bold;
+}
+
+.shishen-tag-small:hover {
+  background-color: var(--background-modifier-hover);
+}
+
+/* 神煞弹窗样式 */
+.bazi-modal-subtitle {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  color: var(--text-normal);
+  font-size: 1.1em;
+}
+
+.bazi-modal-combo-container {
+  margin-bottom: 15px;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: var(--background-secondary-alt);
+  border-left: 3px solid #9b59b6;
+  transition: all 0.2s ease;
+}
+
+.bazi-modal-combo-container:hover {
+  background-color: var(--background-modifier-hover);
+  transform: translateX(2px);
+}
+
+.bazi-modal-combo-title {
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: var(--text-accent);
+  font-size: 1.05em;
+  border-bottom: 1px dotted rgba(155, 89, 182, 0.3);
+  padding-bottom: 5px;
+}
+
+.bazi-modal-combo-analysis {
+  color: var(--text-normal);
+  font-size: 0.9em;
+  line-height: 1.5;
+}
+
+/* 基本信息样式 */
+.bazi-basic-info {
+  margin-bottom: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.bazi-basic-info-item {
+  background-color: var(--background-secondary);
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+/* 弹窗样式增强 */
+.bazi-modal-type {
+  margin: 0 5px 10px 0;
+  font-weight: 500;
+  color: var(--text-accent);
+  padding: 3px 8px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.bazi-modal-type-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 15px;
+  padding: 10px;
+  background-color: var(--background-secondary);
+  border-radius: 4px;
+}
+
+/* 吉神类型样式 */
+.bazi-modal-type-good {
+  background-color: rgba(46, 204, 113, 0.1);
+  color: #27ae60;
+  border: 1px solid rgba(46, 204, 113, 0.3);
+}
+
+/* 凶神类型样式 */
+.bazi-modal-type-bad {
+  background-color: rgba(231, 76, 60, 0.1);
+  color: #c0392b;
+  border: 1px solid rgba(231, 76, 60, 0.3);
+}
+
+/* 吉凶神类型样式 */
+.bazi-modal-type-mixed {
+  background-color: rgba(241, 196, 15, 0.1);
+  color: #f39c12;
+  border: 1px solid rgba(241, 196, 15, 0.3);
+}
+
+.bazi-modal-explanation {
+  margin-bottom: 10px;
+  line-height: 1.5;
+  padding: 10px;
+  background-color: var(--background-secondary);
+  border-radius: 4px;
+}
+
+.bazi-modal-influence {
+  margin-bottom: 15px;
+  line-height: 1.5;
+  font-style: italic;
+  padding: 10px;
+  background-color: rgba(var(--interactive-accent-rgb), 0.05);
+  border-radius: 4px;
+  border-left: 3px solid var(--interactive-accent);
+}

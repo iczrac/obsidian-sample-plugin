@@ -4,11 +4,11 @@
  */
 export class ShenShaService {
   /**
-   * 获取神煞的详细解释
+   * 获取神煞的详细信息
    * @param shenSha 神煞名称
-   * @returns 神煞的详细解释
+   * @returns 神煞的详细信息
    */
-  public static getShenShaExplanation(shenSha: string): { name: string; type: string; explanation: string; influence: string } {
+  public static getShenShaInfo(shenSha: string): { name: string; type: string; explanation: string; influence: string } | null {
     const explanations: { [key: string]: { name: string; type: string; explanation: string; influence: string } } = {
       '天乙贵人': {
         name: '天乙贵人',
@@ -258,7 +258,22 @@ export class ShenShaService {
       }
     };
 
-    return explanations[shenSha] || {
+    return explanations[shenSha] || null;
+  }
+
+  /**
+   * 获取神煞的详细解释
+   * @param shenSha 神煞名称
+   * @returns 神煞的详细解释
+   */
+  public static getShenShaExplanation(shenSha: string): { name: string; type: string; explanation: string; influence: string } {
+    const info = this.getShenShaInfo(shenSha);
+
+    if (info) {
+      return info;
+    }
+
+    return {
       name: shenSha,
       type: '未知',
       explanation: '暂无解释',
