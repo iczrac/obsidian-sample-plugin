@@ -404,7 +404,76 @@ date: ${dateStr}
 			border-top: 1px dashed rgba(0, 0, 0, 0.1);
 			border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
 		}
-		/* 神煞行样式已删除 */
+		/* 神煞行样式 */
+		.bazi-shensha-row {
+			background-color: var(--background-primary);
+		}
+
+		.bazi-shensha-row td:first-child {
+			font-weight: bold;
+			color: #6200ee;
+			background-color: rgba(0, 0, 0, 0.03);
+		}
+
+		/* 神煞行样式 */
+		.bazi-shensha-row {
+			background-color: var(--background-primary);
+		}
+
+		.bazi-shensha-row td:first-child {
+			font-weight: bold;
+			color: #6200ee;
+			background-color: rgba(0, 0, 0, 0.03);
+		}
+
+		/* 神煞标签样式 */
+		.shensha-good {
+			color: #27ae60;
+			font-weight: 500;
+			margin-right: 2px;
+			cursor: pointer;
+			display: inline-block;
+			padding: 0 2px;
+			border-radius: 2px;
+			transition: all 0.2s ease;
+		}
+
+		.shensha-good:hover {
+			background-color: rgba(46, 204, 113, 0.1);
+			transform: translateY(-1px);
+		}
+
+		.shensha-bad {
+			color: #c0392b;
+			font-weight: 500;
+			margin-right: 2px;
+			cursor: pointer;
+			display: inline-block;
+			padding: 0 2px;
+			border-radius: 2px;
+			transition: all 0.2s ease;
+		}
+
+		.shensha-bad:hover {
+			background-color: rgba(231, 76, 60, 0.1);
+			transform: translateY(-1px);
+		}
+
+		.shensha-mixed {
+			color: #f39c12;
+			font-weight: 500;
+			margin-right: 2px;
+			cursor: pointer;
+			display: inline-block;
+			padding: 0 2px;
+			border-radius: 2px;
+			transition: all 0.2s ease;
+		}
+
+		.shensha-mixed:hover {
+			background-color: rgba(241, 196, 15, 0.1);
+			transform: translateY(-1px);
+		}
 
 		/* 神煞详情弹窗样式已删除 */
 
