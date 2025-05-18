@@ -304,143 +304,9 @@ export class InteractiveBaziView {
     shengXiaoRow.createEl('td', { text: this.baziInfo.dayShengXiao || '' });
     shengXiaoRow.createEl('td', { text: this.baziInfo.hourShengXiao || '' });
 
-    // 神煞行
-    // 检查是否有神煞信息（总神煞或各柱神煞）
-    if ((this.baziInfo.shenSha && this.baziInfo.shenSha.length > 0) ||
-        (this.baziInfo.yearShenSha && this.baziInfo.yearShenSha.length > 0) ||
-        (this.baziInfo.monthShenSha && this.baziInfo.monthShenSha.length > 0) ||
-        (this.baziInfo.dayShenSha && this.baziInfo.dayShenSha.length > 0) ||
-        (this.baziInfo.hourShenSha && this.baziInfo.hourShenSha.length > 0)) {
-      // 获取每柱的神煞信息
-      const yearShenSha = this.getColumnShenSha('year');
-      const monthShenSha = this.getColumnShenSha('month');
-      const dayShenSha = this.getColumnShenSha('day');
-      const hourShenSha = this.getColumnShenSha('hour');
+    // 神煞行已删除，将在特殊信息区域显示神煞信息
 
-      // 创建神煞行
-      const shenShaRow = tbody.createEl('tr', { cls: 'bazi-shensha-row' });
-      shenShaRow.createEl('td', { text: '神煞', cls: 'bazi-table-label' });
-
-      // 年柱神煞
-      const yearShenShaCell = shenShaRow.createEl('td', { cls: 'bazi-shensha-cell' });
-      yearShenSha.forEach(shenSha => {
-        // 获取神煞类型
-        const shenShaInfo = ShenShaService.getShenShaInfo(shenSha);
-        const shenShaType = shenShaInfo?.type || '未知';
-
-        // 根据神煞类型设置不同的CSS类
-        let cssClass = 'shensha-tag-small';
-        if (shenShaType === '吉神') {
-          cssClass += ' shensha-tag-good';
-        } else if (shenShaType === '凶神') {
-          cssClass += ' shensha-tag-bad';
-        } else if (shenShaType === '吉凶神') {
-          cssClass += ' shensha-tag-mixed';
-        }
-
-        const shenShaTag = yearShenShaCell.createSpan({
-          text: shenSha,
-          cls: cssClass,
-          attr: { 'title': shenShaInfo?.explanation || '' }
-        });
-
-        // 添加点击事件，显示神煞详细解释
-        shenShaTag.addEventListener('click', (e) => {
-          e.stopPropagation();
-          this.showShenShaExplanation(shenSha);
-        });
-      });
-
-      // 月柱神煞
-      const monthShenShaCell = shenShaRow.createEl('td', { cls: 'bazi-shensha-cell' });
-      monthShenSha.forEach(shenSha => {
-        // 获取神煞类型
-        const shenShaInfo = ShenShaService.getShenShaInfo(shenSha);
-        const shenShaType = shenShaInfo?.type || '未知';
-
-        // 根据神煞类型设置不同的CSS类
-        let cssClass = 'shensha-tag-small';
-        if (shenShaType === '吉神') {
-          cssClass += ' shensha-tag-good';
-        } else if (shenShaType === '凶神') {
-          cssClass += ' shensha-tag-bad';
-        } else if (shenShaType === '吉凶神') {
-          cssClass += ' shensha-tag-mixed';
-        }
-
-        const shenShaTag = monthShenShaCell.createSpan({
-          text: shenSha,
-          cls: cssClass,
-          attr: { 'title': shenShaInfo?.explanation || '' }
-        });
-
-        // 添加点击事件，显示神煞详细解释
-        shenShaTag.addEventListener('click', (e) => {
-          e.stopPropagation();
-          this.showShenShaExplanation(shenSha);
-        });
-      });
-
-      // 日柱神煞
-      const dayShenShaCell = shenShaRow.createEl('td', { cls: 'bazi-shensha-cell' });
-      dayShenSha.forEach(shenSha => {
-        // 获取神煞类型
-        const shenShaInfo = ShenShaService.getShenShaInfo(shenSha);
-        const shenShaType = shenShaInfo?.type || '未知';
-
-        // 根据神煞类型设置不同的CSS类
-        let cssClass = 'shensha-tag-small';
-        if (shenShaType === '吉神') {
-          cssClass += ' shensha-tag-good';
-        } else if (shenShaType === '凶神') {
-          cssClass += ' shensha-tag-bad';
-        } else if (shenShaType === '吉凶神') {
-          cssClass += ' shensha-tag-mixed';
-        }
-
-        const shenShaTag = dayShenShaCell.createSpan({
-          text: shenSha,
-          cls: cssClass,
-          attr: { 'title': shenShaInfo?.explanation || '' }
-        });
-
-        // 添加点击事件，显示神煞详细解释
-        shenShaTag.addEventListener('click', (e) => {
-          e.stopPropagation();
-          this.showShenShaExplanation(shenSha);
-        });
-      });
-
-      // 时柱神煞
-      const hourShenShaCell = shenShaRow.createEl('td', { cls: 'bazi-shensha-cell' });
-      hourShenSha.forEach(shenSha => {
-        // 获取神煞类型
-        const shenShaInfo = ShenShaService.getShenShaInfo(shenSha);
-        const shenShaType = shenShaInfo?.type || '未知';
-
-        // 根据神煞类型设置不同的CSS类
-        let cssClass = 'shensha-tag-small';
-        if (shenShaType === '吉神') {
-          cssClass += ' shensha-tag-good';
-        } else if (shenShaType === '凶神') {
-          cssClass += ' shensha-tag-bad';
-        } else if (shenShaType === '吉凶神') {
-          cssClass += ' shensha-tag-mixed';
-        }
-
-        const shenShaTag = hourShenShaCell.createSpan({
-          text: shenSha,
-          cls: cssClass,
-          attr: { 'title': shenShaInfo?.explanation || '' }
-        });
-
-        // 添加点击事件，显示神煞详细解释
-        shenShaTag.addEventListener('click', (e) => {
-          e.stopPropagation();
-          this.showShenShaExplanation(shenSha);
-        });
-      });
-    }
+    // 移除特殊信息区域中的神煞组合分析，因为已经在命盘表格中显示了
   }
 
   /**
@@ -483,7 +349,10 @@ export class InteractiveBaziView {
       }
     }
 
-    // 添加神煞组合分析
+    // 添加神煞信息
+    this.addShenShaInfo(infoList);
+
+    // 添加神煞组合分析 - 移到特殊信息区域
     if (this.baziInfo.shenSha && this.baziInfo.shenSha.length > 1) {
       const combinations = ShenShaService.getShenShaCombinationAnalysis(this.baziInfo.shenSha);
       if (combinations.length > 0) {
@@ -1421,7 +1290,10 @@ export class InteractiveBaziView {
     // 查找相关的神煞组合
     if (this.baziInfo.shenSha && this.baziInfo.shenSha.length > 0) {
       const combinations = ShenShaService.getShenShaCombinationAnalysis(this.baziInfo.shenSha);
-      const relevantCombinations = combinations.filter(combo => combo.combination.includes(shenSha));
+      // 移除可能的前缀（如"年柱:"）
+      const cleanShenSha = shenSha.includes(':') ? shenSha.split(':')[1] : shenSha;
+      // 筛选包含当前神煞的组合，并按级别排序
+      const relevantCombinations = combinations.filter(combo => combo.combination.includes(cleanShenSha));
 
       if (relevantCombinations.length > 0) {
         // 创建组合分析标题
@@ -1430,21 +1302,99 @@ export class InteractiveBaziView {
         combinationsTitle.className = 'bazi-modal-subtitle';
         modalContent.appendChild(combinationsTitle);
 
+        // 按组合级别排序（4级组合优先显示，然后是3级，最后是2级）
+        const sortedCombinations = [...relevantCombinations].sort((a, b) => (b.level || 2) - (a.level || 2));
+
         // 创建组合分析列表
-        relevantCombinations.forEach(combo => {
+        sortedCombinations.forEach(combo => {
           const comboContainer = document.createElement('div');
           comboContainer.className = 'bazi-modal-combo-container';
 
+          // 根据组合类型添加不同的样式
+          if (combo.type === 'good') {
+            comboContainer.classList.add('combo-good');
+          } else if (combo.type === 'bad') {
+            comboContainer.classList.add('combo-bad');
+          } else if (combo.type === 'mixed') {
+            comboContainer.classList.add('combo-mixed');
+          }
+
           const comboTitle = document.createElement('div');
-          comboTitle.textContent = combo.combination;
+
+          // 根据组合级别添加不同的标签
+          let levelText = '';
+          let levelClass = '';
+          if (combo.level === 4) {
+            levelText = '【四神煞组合】';
+            levelClass = 'bazi-combination-level-4';
+          } else if (combo.level === 3) {
+            levelText = '【三神煞组合】';
+            levelClass = 'bazi-combination-level-3';
+          } else {
+            levelText = '【二神煞组合】';
+            levelClass = 'bazi-combination-level-2';
+          }
+
+          const levelSpan = document.createElement('span');
+          levelSpan.textContent = levelText;
+          levelSpan.className = levelClass;
+
+          // 根据组合类型添加不同的标签
+          let typeText = '';
+          let typeClass = '';
+          if (combo.type === 'good') {
+            typeText = '吉神组合';
+            typeClass = 'bazi-combo-type bazi-combo-type-good';
+          } else if (combo.type === 'bad') {
+            typeText = '凶神组合';
+            typeClass = 'bazi-combo-type bazi-combo-type-bad';
+          } else if (combo.type === 'mixed') {
+            typeText = '吉凶神组合';
+            typeClass = 'bazi-combo-type bazi-combo-type-mixed';
+          }
+
+          const typeSpan = document.createElement('span');
+          typeSpan.textContent = typeText;
+          typeSpan.className = typeClass;
+
+          comboTitle.textContent = combo.combination + ' ';
+          comboTitle.appendChild(levelSpan);
+          comboTitle.appendChild(typeSpan);
           comboTitle.className = 'bazi-modal-combo-title';
 
           const comboAnalysis = document.createElement('div');
           comboAnalysis.textContent = combo.analysis;
           comboAnalysis.className = 'bazi-modal-combo-analysis';
 
-          comboContainer.appendChild(comboTitle);
-          comboContainer.appendChild(comboAnalysis);
+          // 添加组合来源
+          if (combo.source) {
+            const comboSource = document.createElement('div');
+            comboSource.textContent = '【组合来源】' + combo.source;
+            comboSource.className = 'bazi-combo-source';
+            comboContainer.appendChild(comboTitle);
+            comboContainer.appendChild(comboAnalysis);
+            comboContainer.appendChild(comboSource);
+          } else {
+            comboContainer.appendChild(comboTitle);
+            comboContainer.appendChild(comboAnalysis);
+          }
+
+          // 添加组合影响
+          if (combo.influence) {
+            const comboInfluence = document.createElement('div');
+            comboInfluence.textContent = '【组合影响】' + combo.influence;
+            comboInfluence.className = 'bazi-combo-influence';
+            comboContainer.appendChild(comboInfluence);
+          }
+
+          // 添加应对方法
+          if (combo.solution) {
+            const comboSolution = document.createElement('div');
+            comboSolution.textContent = '【应对方法】' + combo.solution;
+            comboSolution.className = 'bazi-combo-solution';
+            comboContainer.appendChild(comboSolution);
+          }
+
           modalContent.appendChild(comboContainer);
         });
       }
@@ -1562,40 +1512,151 @@ export class InteractiveBaziView {
   }
 
   /**
-   * 获取指定柱的神煞信息
-   * @param column 柱位（year, month, day, hour）
-   * @returns 神煞数组
+   * 添加神煞信息
+   * @param infoList 信息列表元素
    */
-  private getColumnShenSha(column: 'year' | 'month' | 'day' | 'hour'): string[] {
-    // 首先检查是否有直接按柱位分类的神煞数据
-    if (column === 'year' && this.baziInfo.yearShenSha && this.baziInfo.yearShenSha.length > 0) {
-      return this.baziInfo.yearShenSha;
-    }
-    if (column === 'month' && this.baziInfo.monthShenSha && this.baziInfo.monthShenSha.length > 0) {
-      return this.baziInfo.monthShenSha;
-    }
-    if (column === 'day' && this.baziInfo.dayShenSha && this.baziInfo.dayShenSha.length > 0) {
-      return this.baziInfo.dayShenSha;
-    }
-    if (column === 'hour' && this.baziInfo.hourShenSha && this.baziInfo.hourShenSha.length > 0) {
-      return this.baziInfo.hourShenSha;
-    }
-
-    // 如果没有直接分类的数据，则从总神煞中筛选
+  private addShenShaInfo(infoList: HTMLElement) {
+    // 检查是否有神煞信息
     if (!this.baziInfo.shenSha || this.baziInfo.shenSha.length === 0) {
-      return [];
+      return;
     }
 
-    // 柱位对应的中文前缀
-    const columnPrefix = column === 'year' ? '年柱:' :
-                        column === 'month' ? '月柱:' :
-                        column === 'day' ? '日柱:' : '时柱:';
+    // 创建神煞信息项
+    const shenShaItem = infoList.createEl('li', { cls: 'shensha-info-item' });
+    shenShaItem.createSpan({ text: '神煞: ' });
 
-    // 筛选出带有对应柱位前缀的神煞
-    const prefixedShenSha = this.baziInfo.shenSha
-      .filter(shenSha => shenSha.startsWith(columnPrefix))
-      .map(shenSha => shenSha.substring(columnPrefix.length)); // 移除前缀
+    // 创建神煞表格
+    const shenShaTable = shenShaItem.createEl('table', { cls: 'shensha-info-table' });
 
-    return prefixedShenSha;
+    // 创建表头
+    const thead = shenShaTable.createEl('thead');
+    const headerRow = thead.createEl('tr');
+    headerRow.createEl('th', { text: '柱位' });
+    headerRow.createEl('th', { text: '神煞' });
+
+    // 创建表体
+    const tbody = shenShaTable.createEl('tbody');
+
+    // 按柱位分组神煞
+    const yearShenSha: string[] = [];
+    const monthShenSha: string[] = [];
+    const dayShenSha: string[] = [];
+    const hourShenSha: string[] = [];
+
+    this.baziInfo.shenSha.forEach(shenSha => {
+      if (shenSha.startsWith('年柱:')) {
+        yearShenSha.push(shenSha.substring(3));
+      } else if (shenSha.startsWith('月柱:')) {
+        monthShenSha.push(shenSha.substring(3));
+      } else if (shenSha.startsWith('日柱:')) {
+        dayShenSha.push(shenSha.substring(3));
+      } else if (shenSha.startsWith('时柱:')) {
+        hourShenSha.push(shenSha.substring(3));
+      }
+    });
+
+    // 添加年柱神煞
+    if (yearShenSha.length > 0) {
+      const yearRow = tbody.createEl('tr');
+      yearRow.createEl('td', { text: '年柱', cls: 'shensha-column' });
+
+      const yearCell = yearRow.createEl('td', { cls: 'shensha-list' });
+      yearShenSha.forEach(shenSha => {
+        const shenShaInfo = ShenShaService.getShenShaInfo(shenSha);
+        const type = shenShaInfo?.type || '未知';
+
+        const tagClass = type === '吉神' ? 'shensha-tag shensha-tag-good' :
+                        type === '凶神' ? 'shensha-tag shensha-tag-bad' :
+                        'shensha-tag shensha-tag-mixed';
+
+        const tag = yearCell.createSpan({
+          text: shenSha,
+          cls: tagClass,
+          attr: { 'title': shenShaInfo?.explanation || '' }
+        });
+
+        tag.addEventListener('click', () => {
+          this.showShenShaExplanation(shenSha);
+        });
+      });
+    }
+
+    // 添加月柱神煞
+    if (monthShenSha.length > 0) {
+      const monthRow = tbody.createEl('tr');
+      monthRow.createEl('td', { text: '月柱', cls: 'shensha-column' });
+
+      const monthCell = monthRow.createEl('td', { cls: 'shensha-list' });
+      monthShenSha.forEach(shenSha => {
+        const shenShaInfo = ShenShaService.getShenShaInfo(shenSha);
+        const type = shenShaInfo?.type || '未知';
+
+        const tagClass = type === '吉神' ? 'shensha-tag shensha-tag-good' :
+                        type === '凶神' ? 'shensha-tag shensha-tag-bad' :
+                        'shensha-tag shensha-tag-mixed';
+
+        const tag = monthCell.createSpan({
+          text: shenSha,
+          cls: tagClass,
+          attr: { 'title': shenShaInfo?.explanation || '' }
+        });
+
+        tag.addEventListener('click', () => {
+          this.showShenShaExplanation(shenSha);
+        });
+      });
+    }
+
+    // 添加日柱神煞
+    if (dayShenSha.length > 0) {
+      const dayRow = tbody.createEl('tr');
+      dayRow.createEl('td', { text: '日柱', cls: 'shensha-column' });
+
+      const dayCell = dayRow.createEl('td', { cls: 'shensha-list' });
+      dayShenSha.forEach(shenSha => {
+        const shenShaInfo = ShenShaService.getShenShaInfo(shenSha);
+        const type = shenShaInfo?.type || '未知';
+
+        const tagClass = type === '吉神' ? 'shensha-tag shensha-tag-good' :
+                        type === '凶神' ? 'shensha-tag shensha-tag-bad' :
+                        'shensha-tag shensha-tag-mixed';
+
+        const tag = dayCell.createSpan({
+          text: shenSha,
+          cls: tagClass,
+          attr: { 'title': shenShaInfo?.explanation || '' }
+        });
+
+        tag.addEventListener('click', () => {
+          this.showShenShaExplanation(shenSha);
+        });
+      });
+    }
+
+    // 添加时柱神煞
+    if (hourShenSha.length > 0) {
+      const hourRow = tbody.createEl('tr');
+      hourRow.createEl('td', { text: '时柱', cls: 'shensha-column' });
+
+      const hourCell = hourRow.createEl('td', { cls: 'shensha-list' });
+      hourShenSha.forEach(shenSha => {
+        const shenShaInfo = ShenShaService.getShenShaInfo(shenSha);
+        const type = shenShaInfo?.type || '未知';
+
+        const tagClass = type === '吉神' ? 'shensha-tag shensha-tag-good' :
+                        type === '凶神' ? 'shensha-tag shensha-tag-bad' :
+                        'shensha-tag shensha-tag-mixed';
+
+        const tag = hourCell.createSpan({
+          text: shenSha,
+          cls: tagClass,
+          attr: { 'title': shenShaInfo?.explanation || '' }
+        });
+
+        tag.addEventListener('click', () => {
+          this.showShenShaExplanation(shenSha);
+        });
+      });
+    }
   }
 }

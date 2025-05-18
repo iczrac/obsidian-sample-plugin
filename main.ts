@@ -114,6 +114,9 @@ date: ${dateStr}
 		// 添加命令
 		this.addCommands();
 
+		// 加载CSS样式
+		this.loadStyles();
+
 		// 添加左侧图标
 		const ribbonIconEl = this.addRibbonIcon('calendar-clock', '八字命盘', (evt: MouseEvent) => {
 			// 点击图标时打开日期选择模态框
@@ -317,6 +320,171 @@ date: ${dateStr}
 
 	async loadSettings() {
 		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+	}
+
+	/**
+	 * 加载CSS样式
+	 */
+	loadStyles() {
+		// 创建样式元素
+		const styleEl = document.createElement('style');
+		styleEl.id = 'bazi-plugin-styles';
+
+		// 添加样式内容
+		styleEl.textContent = `
+		/* 表格整体样式 */
+		.bazi-view-table {
+			width: 100%;
+			border-collapse: separate;
+			border-spacing: 0;
+			margin: 15px 0;
+			font-size: 1.1em;
+			border-radius: 10px;
+			overflow: hidden;
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+			table-layout: fixed; /* 固定表格布局 */
+			background-color: var(--background-primary);
+		}
+
+		.bazi-view-table th,
+		.bazi-view-table td {
+			border: 1px solid rgba(0, 0, 0, 0.1);
+			padding: 12px 8px;
+			text-align: center;
+			word-wrap: break-word; /* 允许长文本换行 */
+			overflow: visible; /* 允许内容溢出 */
+			position: relative;
+		}
+
+		/* 设置表格列宽 */
+		.bazi-view-table th:first-child,
+		.bazi-view-table td:first-child {
+			width: 12%; /* 标签列宽度 */
+			background-color: rgba(0, 0, 0, 0.03);
+			font-weight: bold;
+		}
+
+		.bazi-view-table th:not(:first-child),
+		.bazi-view-table td:not(:first-child) {
+			width: 22%; /* 四柱列宽度 */
+		}
+
+		/* 表头样式 */
+		.bazi-view-table th {
+			background-color: rgba(0, 0, 0, 0.05);
+			font-weight: bold;
+			color: var(--text-normal);
+			border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+		}
+
+		/* 交替行颜色 */
+		.bazi-view-table tr:nth-child(even) {
+			background-color: rgba(0, 0, 0, 0.02);
+		}
+
+		/* 鼠标悬停效果 */
+		.bazi-view-table tr:hover {
+			background-color: rgba(0, 0, 0, 0.04);
+		}
+
+		/* 天干地支样式 */
+		.bazi-stem-row td, .bazi-branch-row td {
+			font-size: 1.8em;
+			font-weight: bold;
+			padding: 15px 0;
+			text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+		}
+
+		/* 纳音样式 */
+		.bazi-nayin-row td {
+			font-style: italic;
+			color: var(--text-muted);
+			background-color: rgba(0, 0, 0, 0.02);
+			padding: 10px 0;
+			border-top: 1px dashed rgba(0, 0, 0, 0.1);
+			border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
+		}
+		/* 神煞行样式已删除 */
+
+		/* 神煞详情弹窗样式已删除 */
+
+		/* 神煞信息表格样式 */
+		.shensha-info-table {
+			width: 100%;
+			border-collapse: collapse;
+			margin: 10px 0;
+			border: 1px solid rgba(0, 0, 0, 0.1);
+		}
+
+		.shensha-info-table th,
+		.shensha-info-table td {
+			padding: 8px;
+			border: 1px solid rgba(0, 0, 0, 0.1);
+			text-align: left;
+		}
+
+		.shensha-info-table th {
+			background-color: rgba(0, 0, 0, 0.05);
+			font-weight: bold;
+		}
+
+		.shensha-column {
+			width: 15%;
+			font-weight: bold;
+			background-color: rgba(0, 0, 0, 0.02);
+		}
+
+		.shensha-list {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 5px;
+			padding: 5px;
+		}
+
+		/* 神煞标签样式 */
+		.shensha-tag {
+			display: inline-block;
+			padding: 3px 6px;
+			border-radius: 3px;
+			font-size: 0.9em;
+			cursor: pointer;
+			transition: all 0.2s ease;
+			border: 1px solid rgba(0, 0, 0, 0.1);
+			box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+		}
+
+		.shensha-tag:hover {
+			transform: translateY(-1px);
+			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+		}
+
+		/* 吉神标签样式 */
+		.shensha-tag-good {
+			background-color: rgba(46, 204, 113, 0.1);
+			color: #27ae60;
+			border-color: rgba(46, 204, 113, 0.3);
+			border-left: 2px solid #27ae60;
+		}
+
+		/* 凶神标签样式 */
+		.shensha-tag-bad {
+			background-color: rgba(231, 76, 60, 0.1);
+			color: #c0392b;
+			border-color: rgba(231, 76, 60, 0.3);
+			border-left: 2px solid #c0392b;
+		}
+
+		/* 吉凶神标签样式 */
+		.shensha-tag-mixed {
+			background-color: rgba(241, 196, 15, 0.1);
+			color: #f39c12;
+			border-color: rgba(241, 196, 15, 0.3);
+			border-left: 2px solid #f39c12;
+		}
+		`;
+
+		// 添加到文档头部
+		document.head.appendChild(styleEl);
 	}
 
 	async saveSettings() {

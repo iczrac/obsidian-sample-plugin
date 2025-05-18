@@ -9,6 +9,8 @@ export class ShenShaService {
    * @returns 神煞的详细信息
    */
   public static getShenShaInfo(shenSha: string): { name: string; type: string; explanation: string; influence: string } | null {
+    // 移除可能的前缀（如"年柱:"）
+    const cleanName = shenSha.includes(':') ? shenSha.split(':')[1] : shenSha;
     const explanations: { [key: string]: { name: string; type: string; explanation: string; influence: string } } = {
       '天乙贵人': {
         name: '天乙贵人',
@@ -258,7 +260,7 @@ export class ShenShaService {
       }
     };
 
-    return explanations[shenSha] || null;
+    return explanations[cleanName] || null;
   }
 
   /**
@@ -267,6 +269,8 @@ export class ShenShaService {
    * @returns 神煞的详细解释
    */
   public static getShenShaExplanation(shenSha: string): { name: string; type: string; explanation: string; influence: string } {
+    // 移除可能的前缀（如"年柱:"）
+    const cleanName = shenSha.includes(':') ? shenSha.split(':')[1] : shenSha;
     const info = this.getShenShaInfo(shenSha);
 
     if (info) {
@@ -274,7 +278,7 @@ export class ShenShaService {
     }
 
     return {
-      name: shenSha,
+      name: cleanName,
       type: '未知',
       explanation: '暂无解释',
       influence: '暂无影响'
@@ -284,160 +288,563 @@ export class ShenShaService {
   /**
    * 获取神煞组合的分析
    * @param shenShaList 神煞列表
-   * @returns 神煞组合的分析
+   * @returns 神煞组合的分析，包含组合名称、分析内容、组合级别（2表示两神煞组合，3表示三神煞组合，4表示四神煞组合）、
+   * 组合类型（good表示吉神组合，bad表示凶神组合，mixed表示吉凶混合组合）、组合来源、组合影响和应对方法
    */
-  public static getShenShaCombinationAnalysis(shenShaList: string[]): { combination: string; analysis: string }[] {
-    const combinations: { combination: string; analysis: string }[] = [];
+  public static getShenShaCombinationAnalysis(shenShaList: string[]): {
+    combination: string;
+    analysis: string;
+    level: number;
+    type: 'good' | 'bad' | 'mixed';
+    source?: string;
+    influence?: string;
+    solution?: string; // 应对方法
+  }[] {
+    // 清理神煞名称，移除前缀
+    const cleanShenShaList = shenShaList.map(shenSha =>
+      shenSha.includes(':') ? shenSha.split(':')[1] : shenSha
+    );
+
+    // 去重
+    const uniqueCleanShenShaList = [...new Set(cleanShenShaList)];
+
+    const combinations: {
+      combination: string;
+      analysis: string;
+      level: number;
+      type: 'good' | 'bad' | 'mixed';
+      source?: string;
+      influence?: string;
+      solution?: string; // 应对方法
+    }[] = [];
 
     // 天乙贵人 + 文昌
-    if (shenShaList.includes('天乙贵人') && shenShaList.includes('文昌')) {
+    if (uniqueCleanShenShaList.includes('天乙贵人') && uniqueCleanShenShaList.includes('文昌')) {
       combinations.push({
         combination: '天乙贵人 + 文昌',
-        analysis: '天乙贵人与文昌同时出现，主学业有成，仕途顺利，文职工作发展良好，容易得到贵人相助，学业和事业双丰收。'
+        analysis: '天乙贵人与文昌同时出现，主学业有成，仕途顺利，文职工作发展良好，容易得到贵人相助，学业和事业双丰收。',
+        level: 2,
+        type: 'good',
+        source: '此组合源于传统命理学说，天乙贵人为上等吉神，主贵人扶持；文昌为文章星，主文章秀丽，学业有成。二者同时出现，相辅相成，增强文运与贵人运。',
+        influence: '有此组合者，学业事业双丰收，文职工作发展顺利，容易得到贵人提携，适合从事文化、教育、公务等工作，一生较为顺遂。',
+        solution: '应对方法：积极发展文化、教育、公务等方面的事业，多结交贵人，注重学习和提升自己的文化素养，善用贵人相助的机会，可以取得更大的成就。'
       });
     }
 
     // 天乙贵人 + 禄神
-    if (shenShaList.includes('天乙贵人') && shenShaList.includes('禄神')) {
+    if (uniqueCleanShenShaList.includes('天乙贵人') && uniqueCleanShenShaList.includes('禄神')) {
       combinations.push({
         combination: '天乙贵人 + 禄神',
-        analysis: '天乙贵人与禄神同时出现，主财运亨通，官运亨通，事业有成，容易得到贵人相助，财富和地位双丰收。'
+        analysis: '天乙贵人与禄神同时出现，主财运亨通，官运亨通，事业有成，容易得到贵人相助，财富和地位双丰收。',
+        level: 2,
+        type: 'good',
+        source: '此组合源于传统命理学说，天乙贵人为上等吉神，主贵人扶持；禄神主财禄丰厚，事业有成。二者同时出现，相辅相成，增强财运与贵人运。',
+        influence: '有此组合者，财运官运双亨通，事业有成，容易得到贵人提携，适合从事金融、管理、行政等工作，财富与地位双丰收。',
+        solution: '应对方法：积极发展金融、管理、行政等方面的事业，多结交贵人，注重理财和投资，善用贵人相助的机会，可以取得更大的财富和地位。同时要注意不可骄傲自满，保持谦虚的态度，才能长久保持好运。'
       });
     }
 
     // 天乙贵人 + 驿马
-    if (shenShaList.includes('天乙贵人') && shenShaList.includes('驿马')) {
+    if (uniqueCleanShenShaList.includes('天乙贵人') && uniqueCleanShenShaList.includes('驿马')) {
       combinations.push({
         combination: '天乙贵人 + 驿马',
-        analysis: '天乙贵人与驿马同时出现，主行动顺利，事业发展顺利，容易得到贵人相助，适合经商、旅行、变动，事业发展顺利。'
+        analysis: '天乙贵人与驿马同时出现，主行动顺利，事业发展顺利，容易得到贵人相助，适合经商、旅行、变动，事业发展顺利。',
+        level: 2,
+        type: 'good',
+        source: '此组合源于传统命理学说，天乙贵人为上等吉神，主贵人扶持；驿马主行动、变动、旅行。二者同时出现，相辅相成，增强行动力与贵人运。',
+        influence: '有此组合者，行动顺利，事业发展顺利，容易得到贵人提携，适合从事经商、旅行、外交等工作，行动与事业双丰收。'
       });
     }
 
     // 文昌 + 华盖
-    if (shenShaList.includes('文昌') && shenShaList.includes('华盖')) {
+    if (uniqueCleanShenShaList.includes('文昌') && uniqueCleanShenShaList.includes('华盖')) {
       combinations.push({
         combination: '文昌 + 华盖',
-        analysis: '文昌与华盖同时出现，主学术研究有成，适合从事学术、艺术、宗教等工作，有才华但不善交际，需要注意人际关系。'
+        analysis: '文昌与华盖同时出现，主学术研究有成，适合从事学术、艺术、宗教等工作，有才华但不善交际，需要注意人际关系。',
+        level: 2,
+        type: 'mixed',
+        source: '此组合源于传统命理学说，文昌为文章星，主文章秀丽，学业有成；华盖主清高孤傲，有才华但不善交际。二者同时出现，相辅相成，增强学术才华，但也增加孤傲特质。',
+        influence: '有此组合者，学术研究有成，适合从事学术、艺术、宗教等工作，有才华但不善交际，需要注意人际关系，容易成为学术界、艺术界的佼佼者，但也容易孤独。'
       });
     }
 
     // 桃花 + 红艳
-    if (shenShaList.includes('桃花') && shenShaList.includes('红艳')) {
+    if (uniqueCleanShenShaList.includes('桃花') && uniqueCleanShenShaList.includes('红艳')) {
       combinations.push({
         combination: '桃花 + 红艳',
-        analysis: '桃花与红艳同时出现，主感情丰富，异性缘好，但也容易因感情而烦恼，需要注意感情问题，避免因感情而影响事业和生活。'
+        analysis: '桃花与红艳同时出现，主感情丰富，异性缘好，但也容易因感情而烦恼，需要注意感情问题，避免因感情而影响事业和生活。',
+        level: 2,
+        type: 'mixed',
+        source: '此组合源于传统命理学说，桃花主感情丰富，异性缘好；红艳主艳遇和桃花运。二者同时出现，相辅相成，增强感情运，但也增加感情烦恼。',
+        influence: '有此组合者，感情丰富，异性缘好，但也容易因感情而烦恼，需要注意感情问题，避免因感情而影响事业和生活，容易有多段感情经历，需要谨慎处理感情问题。'
       });
     }
 
     // 天罗 + 地网
-    if (shenShaList.includes('天罗') && shenShaList.includes('地网')) {
+    if (uniqueCleanShenShaList.includes('天罗') && uniqueCleanShenShaList.includes('地网')) {
       combinations.push({
         combination: '天罗 + 地网',
-        analysis: '天罗与地网同时出现，主困境重重，容易陷入困境和陷阱，事业发展不顺，需要注意避免陷入困境和陷阱，谨慎行事。'
+        analysis: '天罗与地网同时出现，主困境重重，容易陷入困境和陷阱，事业发展不顺，需要注意避免陷入困境和陷阱，谨慎行事。',
+        level: 2,
+        type: 'bad',
+        source: '此组合源于传统命理学说，天罗主困境和阻碍；地网主陷阱和困境。二者同时出现，相辅相成，增强困境和陷阱，是较为严重的凶神组合。',
+        influence: '有此组合者，困境重重，容易陷入困境和陷阱，事业发展不顺，需要注意避免陷入困境和陷阱，谨慎行事，多行善事，积德行善可化解部分凶险。',
+        solution: '应对方法：谨慎行事，避免冒险和投机，不要轻易相信他人，特别是在商业和投资方面；多行善事，积德行善，可化解部分凶险；佩戴或摆放五帝钱、貔貅等化解物品；定期做功德，如放生、捐赠等；保持心态平和，不要因困境而气馁，坚持不懈，终会度过难关。'
       });
     }
 
     // 羊刃 + 劫煞
-    if (shenShaList.includes('羊刃') && shenShaList.includes('劫煞')) {
+    if (uniqueCleanShenShaList.includes('羊刃') && uniqueCleanShenShaList.includes('劫煞')) {
       combinations.push({
         combination: '羊刃 + 劫煞',
-        analysis: '羊刃与劫煞同时出现，主冲动易怒，容易因冲动而惹祸，容易遭遇劫难和灾祸，需要注意控制情绪，避免冲动行事。'
+        analysis: '羊刃与劫煞同时出现，主冲动易怒，容易因冲动而惹祸，容易遭遇劫难和灾祸，需要注意控制情绪，避免冲动行事。',
+        level: 2,
+        type: 'bad',
+        source: '此组合源于传统命理学说，羊刃主锋芒和冲动，容易因冲动而惹祸；劫煞主劫难和灾祸，容易遭遇劫难和灾祸。二者同时出现，相辅相成，增强冲动和劫难，是较为严重的凶神组合。',
+        influence: '有此组合者，性格冲动易怒，容易因冲动而惹祸，容易遭遇劫难和灾祸，事业发展不顺，人际关系不佳，需要注意控制情绪，避免冲动行事。',
+        solution: '应对方法：修身养性，控制情绪，避免冲动行事；学习冥想、瑜伽等平静心灵的方法；远离是非之地，避免卷入纠纷和争端；多行善事，积德行善，可化解部分凶险；佩戴或摆放黑曜石、黑玛瑙等镇静物品；定期做功德，如放生、捐赠等；保持心态平和，不要因小事而动怒。'
       });
     }
 
     // 天德 + 月德
-    if (shenShaList.includes('天德') && shenShaList.includes('月德')) {
+    if (uniqueCleanShenShaList.includes('天德') && uniqueCleanShenShaList.includes('月德')) {
       combinations.push({
         combination: '天德 + 月德',
-        analysis: '天德与月德同时出现，主德行好，善良，人际关系好，婚姻美满，容易得到他人的帮助，事业发展顺利。'
+        analysis: '天德与月德同时出现，主德行好，善良，人际关系好，婚姻美满，容易得到他人的帮助，事业发展顺利。',
+        level: 2,
+        type: 'good',
+        source: '此组合源于传统命理学说，天德主德行和善良，能够化解灾难，增加福气；月德主温柔和善良，能够化解灾难，增加福气。二者同时出现，相辅相成，增强德行和善良，是较为吉利的组合。',
+        influence: '有此组合者，德行好，善良，人际关系好，婚姻美满，容易得到他人的帮助，事业发展顺利，逢凶化吉，遇难呈祥，一生福泽深厚，少有大灾大难。',
+        solution: '应对方法：继续保持善良的本性，多行善事，积德行善，可增加福气；关心他人，乐于助人，可增加人缘；注重家庭和婚姻，可增加幸福感；积极发展事业，可取得更大的成就；保持谦虚的态度，不要因福气而骄傲自满，才能长久保持好运。'
       });
     }
 
     // 天医 + 天喜
-    if (shenShaList.includes('天医') && shenShaList.includes('天喜')) {
+    if (uniqueCleanShenShaList.includes('天医') && uniqueCleanShenShaList.includes('天喜')) {
       combinations.push({
         combination: '天医 + 天喜',
-        analysis: '天医与天喜同时出现，主健康好，婚姻美满，容易有喜事，适合从事医疗工作，人生充满欢乐。'
+        analysis: '天医与天喜同时出现，主健康好，婚姻美满，容易有喜事，适合从事医疗工作，人生充满欢乐。',
+        level: 2,
+        type: 'good',
+        source: '此组合源于传统命理学说，天医主健康和医疗；天喜主喜庆和婚姻。二者同时出现，相辅相成，增强健康和婚姻运势。',
+        influence: '有此组合者，健康好，婚姻美满，容易有喜事，适合从事医疗工作，人生充满欢乐。',
+        solution: '应对方法：注重健康，保持良好的生活习惯；注重家庭和婚姻，增进夫妻感情；积极发展医疗方面的事业；保持乐观的心态，享受生活的美好。'
       });
     }
 
     // 孤辰 + 寡宿
-    if (shenShaList.includes('孤辰') && shenShaList.includes('寡宿')) {
+    if (uniqueCleanShenShaList.includes('孤辰') && uniqueCleanShenShaList.includes('寡宿')) {
       combinations.push({
         combination: '孤辰 + 寡宿',
-        analysis: '孤辰与寡宿同时出现，主孤独，人际关系不佳，婚姻不顺，容易孤立无援，需要注意人际关系和婚姻问题。'
+        analysis: '孤辰与寡宿同时出现，主孤独，人际关系不佳，婚姻不顺，容易孤立无援，需要注意人际关系和婚姻问题。',
+        level: 2,
+        type: 'bad',
+        source: '此组合源于传统命理学说，孤辰主孤独和孤立；寡宿主孤独和寡居。二者同时出现，相辅相成，增强孤独和婚姻不顺的特质。',
+        influence: '有此组合者，孤独，人际关系不佳，婚姻不顺，容易孤立无援，需要注意人际关系和婚姻问题，容易感到孤独和寂寞。',
+        solution: '应对方法：积极参与社交活动，扩大社交圈；学习沟通技巧，改善人际关系；注重婚姻和感情，增进夫妻感情；寻找精神寄托，如宗教、艺术等；培养兴趣爱好，丰富生活内容；多行善事，积德行善，可化解部分凶险。'
       });
     }
 
     // 天德贵人 + 月德贵人
-    if (shenShaList.includes('天德贵人') && shenShaList.includes('月德贵人')) {
+    if (uniqueCleanShenShaList.includes('天德贵人') && uniqueCleanShenShaList.includes('月德贵人')) {
       combinations.push({
         combination: '天德贵人 + 月德贵人',
-        analysis: '天德贵人与月德贵人同时出现，主德行高尚，温柔善良，得贵人相助，逢凶化吉，能够化解灾难，增加福气，人际关系好，婚姻美满。'
+        analysis: '天德贵人与月德贵人同时出现，主德行高尚，温柔善良，得贵人相助，逢凶化吉，能够化解灾难，增加福气，人际关系好，婚姻美满。',
+        level: 2,
+        type: 'good',
+        source: '此组合源于传统命理学说，天德贵人是天德与贵人的结合，主德行高尚，得贵人相助；月德贵人是月德与贵人的结合，主温柔善良，得贵人相助。二者同时出现，相辅相成，增强德行和贵人运势。',
+        influence: '有此组合者，德行高尚，温柔善良，得贵人相助，逢凶化吉，能够化解灾难，增加福气，人际关系好，婚姻美满，一生福泽深厚。',
+        solution: '应对方法：继续保持善良的本性，多行善事，积德行善，可增加福气；关心他人，乐于助人，可增加人缘；注重家庭和婚姻，增进夫妻感情；积极发展事业，可取得更大的成就；保持谦虚的态度，不要因福气而骄傲自满，才能长久保持好运。'
       });
     }
 
     // 天德贵人 + 天乙贵人
-    if (shenShaList.includes('天德贵人') && shenShaList.includes('天乙贵人')) {
+    if (uniqueCleanShenShaList.includes('天德贵人') && uniqueCleanShenShaList.includes('天乙贵人')) {
       combinations.push({
         combination: '天德贵人 + 天乙贵人',
-        analysis: '天德贵人与天乙贵人同时出现，主德行高尚，得贵人相助，逢凶化吉，能够化解灾难，增加福气，事业发展顺利，容易得到他人的帮助。'
+        analysis: '天德贵人与天乙贵人同时出现，主德行高尚，得贵人相助，逢凶化吉，能够化解灾难，增加福气，事业发展顺利，容易得到他人的帮助。',
+        level: 2,
+        type: 'good',
+        source: '此组合源于传统命理学说，天德贵人是天德与贵人的结合，主德行高尚，得贵人相助；天乙贵人为上等吉神，主贵人扶持。二者同时出现，相辅相成，增强德行和贵人运势。',
+        influence: '有此组合者，德行高尚，得贵人相助，逢凶化吉，能够化解灾难，增加福气，事业发展顺利，容易得到他人的帮助，一生福泽深厚。',
+        solution: '应对方法：继续保持善良的本性，多行善事，积德行善，可增加福气；关心他人，乐于助人，可增加人缘；积极发展事业，可取得更大的成就；善用贵人相助的机会，可以取得更大的成就；保持谦虚的态度，不要因福气而骄傲自满，才能长久保持好运。'
       });
     }
 
     // 天赦 + 天恩
-    if (shenShaList.includes('天赦') && shenShaList.includes('天恩')) {
+    if (uniqueCleanShenShaList.includes('天赦') && uniqueCleanShenShaList.includes('天恩')) {
       combinations.push({
         combination: '天赦 + 天恩',
-        analysis: '天赦与天恩同时出现，主赦免和宽恕，恩惠和恩典，能够赦免罪过，化解灾难，得到上天的恩惠和恩典，事业发展顺利，容易得到他人的帮助。'
+        analysis: '天赦与天恩同时出现，主赦免和宽恕，恩惠和恩典，能够赦免罪过，化解灾难，得到上天的恩惠和恩典，事业发展顺利，容易得到他人的帮助。',
+        level: 2,
+        type: 'good',
+        source: '此组合源于传统命理学说，天赦主赦免和宽恕，能够赦免罪过，化解灾难；天恩主恩惠和恩典，能够得到上天的恩惠和恩典。二者同时出现，相辅相成，增强赦免和恩典的能量。',
+        influence: '有此组合者，能够赦免罪过，化解灾难，得到上天的恩惠和恩典，事业发展顺利，容易得到他人的帮助，一生福泽深厚，少有大灾大难。',
+        solution: '应对方法：继续保持善良的本性，多行善事，积德行善，可增加福气；宽恕他人，不计前嫌，可增加人缘；积极发展事业，可取得更大的成就；善用上天的恩惠和恩典，可以取得更大的成就；保持谦虚的态度，不要因福气而骄傲自满，才能长久保持好运。'
       });
     }
 
     // 天官 + 天福
-    if (shenShaList.includes('天官') && shenShaList.includes('天福')) {
+    if (uniqueCleanShenShaList.includes('天官') && uniqueCleanShenShaList.includes('天福')) {
       combinations.push({
         combination: '天官 + 天福',
-        analysis: '天官与天福同时出现，主官运亨通，福气和福运好，能够得到官职和地位，事业发展顺利，容易得到他人的帮助，生活幸福美满。'
+        analysis: '天官与天福同时出现，主官运亨通，福气和福运好，能够得到官职和地位，事业发展顺利，容易得到他人的帮助，生活幸福美满。',
+        level: 2,
+        type: 'good',
+        source: '此组合源于传统命理学说，天官主官运和地位，能够得到官职和地位；天福主福气和福运，能够得到福气和福运。二者同时出现，相辅相成，增强官运和福运的能量。',
+        influence: '有此组合者，官运亨通，福气和福运好，能够得到官职和地位，事业发展顺利，容易得到他人的帮助，生活幸福美满，一生福泽深厚，少有大灾大难。',
+        solution: '应对方法：积极发展事业，可取得更大的成就；注重人际关系，广结善缘；善用官运和福运，可以取得更大的成就；保持谦虚的态度，不要因地位和福气而骄傲自满，才能长久保持好运；多行善事，积德行善，可增加福气。'
       });
     }
 
     // 天厨 + 天月
-    if (shenShaList.includes('天厨') && shenShaList.includes('天月')) {
+    if (uniqueCleanShenShaList.includes('天厨') && uniqueCleanShenShaList.includes('天月')) {
       combinations.push({
         combination: '天厨 + 天月',
-        analysis: '天厨与天月同时出现，主饮食丰富，温柔善良，能够得到丰富的饮食和物质享受，人际关系好，婚姻美满，生活幸福美满。'
+        analysis: '天厨与天月同时出现，主饮食丰富，温柔善良，能够得到丰富的饮食和物质享受，人际关系好，婚姻美满，生活幸福美满。',
+        level: 2,
+        type: 'good',
+        source: '此组合源于传统命理学说，天厨主饮食和物质享受，能够得到丰富的饮食和物质享受；天月主月亮和夜晚的能量，能够得到月亮和夜晚的能量加持。二者同时出现，相辅相成，增强饮食和夜晚活动的能量。',
+        influence: '有此组合者，饮食丰富，温柔善良，能够得到丰富的饮食和物质享受，人际关系好，婚姻美满，生活幸福美满，容易在餐饮、夜间工作等领域取得成就。',
+        solution: '应对方法：注重饮食质量，享受美食但不过度；善用夜晚时间，可以取得更大的成就；积极发展餐饮、夜间工作等方面的事业；保持健康的生活习惯，避免因饮食过度而影响健康；注意夜晚安全，避免夜晚活动过多而影响健康。'
       });
     }
 
     // 天巫 + 天月
-    if (shenShaList.includes('天巫') && shenShaList.includes('天月')) {
+    if (uniqueCleanShenShaList.includes('天巫') && uniqueCleanShenShaList.includes('天月')) {
       combinations.push({
         combination: '天巫 + 天月',
-        analysis: '天巫与天月同时出现，主神秘和灵异，温柔善良，能够感知神秘和灵异的事物，人际关系好，婚姻美满，适合从事宗教、占卜、心理等工作。'
+        analysis: '天巫与天月同时出现，主神秘和灵异，温柔善良，能够感知神秘和灵异的事物，人际关系好，婚姻美满，适合从事宗教、占卜、心理等工作。',
+        level: 2,
+        type: 'mixed',
+        source: '此组合源于传统命理学说，天巫主神秘和灵异，能够感知神秘和灵异的事物；天月主月亮和夜晚的能量，能够得到月亮和夜晚的能量加持。二者同时出现，相辅相成，增强神秘和灵异的能量。',
+        influence: '有此组合者，神秘和灵异，温柔善良，能够感知神秘和灵异的事物，人际关系好，婚姻美满，适合从事宗教、占卜、心理等工作，容易在宗教、占卜、心理等领域取得成就。',
+        solution: '应对方法：善用神秘和灵异的能力，可以取得更大的成就；积极发展宗教、占卜、心理等方面的事业；保持理性思维，不要过度沉迷于神秘和灵异；注重人际关系，广结善缘；保持谦虚的态度，不要因能力而骄傲自满，才能长久保持好运。'
       });
     }
 
     // 天马 + 驿马
-    if (shenShaList.includes('天马') && shenShaList.includes('驿马')) {
+    if (uniqueCleanShenShaList.includes('天马') && uniqueCleanShenShaList.includes('驿马')) {
       combinations.push({
         combination: '天马 + 驿马',
-        analysis: '天马与驿马同时出现，主行动和变动，能够得到行动和变动的机会，行动力强，适合经商、旅行、变动，事业发展顺利，但也容易漂泊不定。'
+        analysis: '天马与驿马同时出现，主行动和变动，能够得到行动和变动的机会，行动力强，适合经商、旅行、变动，事业发展顺利，但也容易漂泊不定。',
+        level: 2,
+        type: 'mixed',
+        source: '此组合源于传统命理学说，天马主行动和变动，能够得到行动和变动的机会；驿马主行动、变动、旅行。二者同时出现，相辅相成，增强行动和变动的能量。',
+        influence: '有此组合者，行动和变动，能够得到行动和变动的机会，行动力强，适合经商、旅行、变动，事业发展顺利，但也容易漂泊不定，需要注意稳定性。',
+        solution: '应对方法：善用行动和变动的能力，可以取得更大的成就；积极发展经商、旅行、变动等方面的事业；注意稳定性，不要过度漂泊不定；建立稳定的家庭和事业基础；保持谦虚的态度，不要因行动力而骄傲自满，才能长久保持好运。'
       });
     }
 
     // 天空 + 地劫
-    if (shenShaList.includes('天空') && shenShaList.includes('地劫')) {
+    if (uniqueCleanShenShaList.includes('天空') && uniqueCleanShenShaList.includes('地劫')) {
       combinations.push({
         combination: '天空 + 地劫',
-        analysis: '天空与地劫同时出现，主虚无和空虚，劫难和灾祸，容易感到空虚和无所依靠，容易遭遇劫难和灾祸，事业发展不顺，需要注意寻找精神寄托和避免灾祸。'
+        analysis: '天空与地劫同时出现，主虚无和空虚，劫难和灾祸，容易感到空虚和无所依靠，容易遭遇劫难和灾祸，事业发展不顺，需要注意寻找精神寄托和避免灾祸。',
+        level: 2,
+        type: 'bad',
+        source: '此组合源于传统命理学说，天空主虚无和空虚，容易感到空虚和无所依靠；地劫主劫难和灾祸，容易遭遇劫难和灾祸。二者同时出现，相辅相成，增强虚无和劫难的能量。',
+        influence: '有此组合者，虚无和空虚，劫难和灾祸，容易感到空虚和无所依靠，容易遭遇劫难和灾祸，事业发展不顺，需要注意寻找精神寄托和避免灾祸，一生多灾多难。',
+        solution: '应对方法：寻找精神寄托，如宗教、艺术等；多行善事，积德行善，可化解部分凶险；佩戴或摆放五帝钱、貔貅等化解物品；定期做功德，如放生、捐赠等；保持心态平和，不要因困境而气馁，坚持不懈，终会度过难关；谨慎理财，避免投机取巧，不要轻易相信他人，特别是在商业和投资方面。'
       });
     }
 
     // 天刑 + 天哭
-    if (shenShaList.includes('天刑') && shenShaList.includes('天哭')) {
+    if (uniqueCleanShenShaList.includes('天刑') && uniqueCleanShenShaList.includes('天哭')) {
       combinations.push({
         combination: '天刑 + 天哭',
-        analysis: '天刑与天哭同时出现，主刑罚和伤害，悲伤和哭泣，容易遭受刑罚和伤害，容易悲伤和哭泣，事业发展不顺，需要注意避免刑罚和伤害，调节情绪。'
+        analysis: '天刑与天哭同时出现，主刑罚和伤害，悲伤和哭泣，容易遭受刑罚和伤害，容易悲伤和哭泣，事业发展不顺，需要注意避免刑罚和伤害，调节情绪。',
+        level: 2,
+        type: 'bad',
+        source: '此组合源于传统命理学说，天刑主刑罚和伤害，容易遭受刑罚和伤害；天哭主悲伤和哭泣，容易悲伤和哭泣。二者同时出现，相辅相成，增强刑罚和悲伤的能量。',
+        influence: '有此组合者，刑罚和伤害，悲伤和哭泣，容易遭受刑罚和伤害，容易悲伤和哭泣，事业发展不顺，需要注意避免刑罚和伤害，调节情绪，一生多灾多难。',
+        solution: '应对方法：远离是非之地，避免卷入纠纷和争端；学习情绪管理，避免过度悲伤；多行善事，积德行善，可化解部分凶险；佩戴或摆放黑曜石、黑玛瑙等镇静物品；定期做功德，如放生、捐赠等；保持心态平和，不要因困境而气馁，坚持不懈，终会度过难关；寻求心理咨询，解决心理问题。'
+      });
+    }
+
+    // 三神煞组合分析
+
+    // 天乙贵人 + 文昌 + 禄神（三吉神组合）
+    if (uniqueCleanShenShaList.includes('天乙贵人') &&
+        uniqueCleanShenShaList.includes('文昌') &&
+        uniqueCleanShenShaList.includes('禄神')) {
+      combinations.push({
+        combination: '天乙贵人 + 文昌 + 禄神',
+        analysis: '天乙贵人、文昌与禄神三吉神同时出现，主学业有成，仕途顺利，财运亨通，官运亨通，事业有成，容易得到贵人相助，学业、事业、财富三丰收。此为上等吉利组合，主一生顺遂，少有大灾大难。',
+        level: 3,
+        type: 'good',
+        source: '此组合源于传统命理学说中的"三吉神"理论，天乙贵人为上等吉神，主贵人扶持；文昌为文章星，主文章秀丽，学业有成；禄神主财禄丰厚，事业有成。三者同时出现，相辅相成，形成强大的吉利能量场。',
+        influence: '有此组合者，学业有成，仕途顺利，财运亨通，官运亨通，事业有成，容易得到贵人相助，学业、事业、财富三丰收。适合从事文化、教育、公务、金融、管理等工作，一生顺遂，少有大灾大难。'
+      });
+    }
+
+    // 天德 + 月德 + 天乙贵人（三贵人组合）
+    if (uniqueCleanShenShaList.includes('天德') &&
+        uniqueCleanShenShaList.includes('月德') &&
+        uniqueCleanShenShaList.includes('天乙贵人')) {
+      combinations.push({
+        combination: '天德 + 月德 + 天乙贵人',
+        analysis: '天德、月德与天乙贵人三贵人同时出现，主德行高尚，善良，人际关系极佳，婚姻美满，容易得到各方贵人相助，逢凶化吉，遇难呈祥，一生福泽深厚，少有大灾大难。',
+        level: 3,
+        type: 'good',
+        source: '此组合源于传统命理学说中的"三贵人"理论，天德主德行和善良；月德主温柔和善良；天乙贵人为上等吉神，主贵人扶持。三者同时出现，相辅相成，形成强大的贵人能量场。',
+        influence: '有此组合者，德行高尚，善良，人际关系极佳，婚姻美满，容易得到各方贵人相助，逢凶化吉，遇难呈祥，一生福泽深厚，少有大灾大难。适合从事公益、教育、医疗等工作，一生顺遂，福泽深厚。'
+      });
+    }
+
+    // 文昌 + 文曲 + 华盖（文人组合）
+    if (uniqueCleanShenShaList.includes('文昌') &&
+        uniqueCleanShenShaList.includes('文曲') &&
+        uniqueCleanShenShaList.includes('华盖')) {
+      combinations.push({
+        combination: '文昌 + 文曲 + 华盖',
+        analysis: '文昌、文曲与华盖三文人星同时出现，主学术才华出众，文思敏捷，适合从事学术、文学、艺术、宗教等工作，容易在文化、教育、艺术等领域取得成就，但性格可能较为孤傲，不善交际。',
+        level: 3,
+        type: 'mixed',
+        source: '此组合源于传统命理学说中的"文人三星"理论，文昌为文章星，主文章秀丽，学业有成；文曲为文学星，主文学才华；华盖主清高孤傲，有才华但不善交际。三者同时出现，相辅相成，形成强大的文人能量场。',
+        influence: '有此组合者，学术才华出众，文思敏捷，适合从事学术、文学、艺术、宗教等工作，容易在文化、教育、艺术等领域取得成就，但性格可能较为孤傲，不善交际。适合从事学术、文学、艺术、宗教等工作，容易成为学术界、艺术界的佼佼者，但也容易孤独。'
+      });
+    }
+
+    // 天罗 + 地网 + 五鬼（凶神组合）
+    if (uniqueCleanShenShaList.includes('天罗') &&
+        uniqueCleanShenShaList.includes('地网') &&
+        uniqueCleanShenShaList.includes('五鬼')) {
+      combinations.push({
+        combination: '天罗 + 地网 + 五鬼',
+        analysis: '天罗、地网与五鬼三凶神同时出现，主困境重重，容易陷入困境和陷阱，事业发展不顺，容易遭遇邪祟和灾祸，需要注意避免陷入困境和陷阱，谨慎行事，多行善事，积德行善可化解部分凶险。',
+        level: 3,
+        type: 'bad',
+        source: '此组合源于传统命理学说中的"三凶神"理论，天罗主困境和阻碍；地网主陷阱和困境；五鬼主邪祟和灾祸。三者同时出现，相辅相成，形成强大的凶险能量场。',
+        influence: '有此组合者，困境重重，容易陷入困境和陷阱，事业发展不顺，容易遭遇邪祟和灾祸，需要注意避免陷入困境和陷阱，谨慎行事，多行善事，积德行善可化解部分凶险。建议多行善事，积德行善，可化解部分凶险。'
+      });
+    }
+
+    // 天空 + 地劫 + 大耗（破财组合）
+    if (uniqueCleanShenShaList.includes('天空') &&
+        uniqueCleanShenShaList.includes('地劫') &&
+        uniqueCleanShenShaList.includes('大耗')) {
+      combinations.push({
+        combination: '天空 + 地劫 + 大耗',
+        analysis: '天空、地劫与大耗三凶神同时出现，主财运不稳，容易破财，容易感到空虚和无所依靠，容易遭遇劫难和灾祸，财运不佳，需要注意节约和保护财产，谨慎理财，避免投机取巧。',
+        level: 3,
+        type: 'bad',
+        source: '此组合源于传统命理学说中的"破财三煞"理论，天空主虚无和空虚；地劫主劫难和灾祸；大耗主消耗和损失。三者同时出现，相辅相成，形成强大的破财能量场。',
+        influence: '有此组合者，财运不稳，容易破财，容易感到空虚和无所依靠，容易遭遇劫难和灾祸，财运不佳，需要注意节约和保护财产，谨慎理财，避免投机取巧。建议谨慎理财，避免投机取巧，可减轻部分破财风险。'
+      });
+    }
+
+    // 天德 + 天德贵人 + 月德（福德组合）
+    if (uniqueCleanShenShaList.includes('天德') &&
+        uniqueCleanShenShaList.includes('天德贵人') &&
+        uniqueCleanShenShaList.includes('月德')) {
+      combinations.push({
+        combination: '天德 + 天德贵人 + 月德',
+        analysis: '天德、天德贵人与月德三福德神同时出现，主德行高尚，善良，人际关系极佳，婚姻美满，容易得到各方贵人相助，逢凶化吉，遇难呈祥，一生福泽深厚，少有大灾大难。',
+        level: 3,
+        type: 'good',
+        source: '此组合源于传统命理学说中的"福德三星"理论，天德主德行和善良；天德贵人是天德与贵人的结合，主德行高尚，得贵人相助；月德主温柔和善良。三者同时出现，相辅相成，形成强大的福德能量场。',
+        influence: '有此组合者，德行高尚，善良，人际关系极佳，婚姻美满，容易得到各方贵人相助，逢凶化吉，遇难呈祥，一生福泽深厚，少有大灾大难。适合从事公益、教育、医疗等工作，一生顺遂，福泽深厚。'
+      });
+    }
+
+    // 文昌 + 文曲 + 天乙贵人（文贵组合）
+    if (uniqueCleanShenShaList.includes('文昌') &&
+        uniqueCleanShenShaList.includes('文曲') &&
+        uniqueCleanShenShaList.includes('天乙贵人')) {
+      combinations.push({
+        combination: '文昌 + 文曲 + 天乙贵人',
+        analysis: '文昌、文曲与天乙贵人三星同时出现，主学术才华出众，文思敏捷，容易得到贵人相助，适合从事文化、教育、公务等工作，容易在文化、教育、公务等领域取得成就。',
+        level: 3,
+        type: 'good',
+        source: '此组合源于传统命理学说中的"文贵三星"理论，文昌为文章星，主文章秀丽，学业有成；文曲为文学星，主文学才华；天乙贵人为上等吉神，主贵人扶持。三者同时出现，相辅相成，形成强大的文贵能量场。',
+        influence: '有此组合者，学术才华出众，文思敏捷，容易得到贵人相助，适合从事文化、教育、公务等工作，容易在文化、教育、公务等领域取得成就。适合从事文化、教育、公务等工作，容易成为文化、教育、公务等领域的佼佼者。'
+      });
+    }
+
+    // 禄神 + 驿马 + 天马（财动组合）
+    if (uniqueCleanShenShaList.includes('禄神') &&
+        uniqueCleanShenShaList.includes('驿马') &&
+        uniqueCleanShenShaList.includes('天马')) {
+      combinations.push({
+        combination: '禄神 + 驿马 + 天马',
+        analysis: '禄神、驿马与天马三星同时出现，主财运亨通，行动力强，适合经商、旅行、变动，事业发展顺利，容易在外地或旅行中获得财富和机会，事业和财富双丰收。',
+        level: 3,
+        type: 'good',
+        source: '此组合源于传统命理学说中的"财动三星"理论，禄神主财禄丰厚，事业有成；驿马主行动、变动、旅行；天马主行动和变动。三者同时出现，相辅相成，形成强大的财动能量场。',
+        influence: '有此组合者，财运亨通，行动力强，适合经商、旅行、变动，事业发展顺利，容易在外地或旅行中获得财富和机会，事业和财富双丰收。适合从事经商、旅行、外交等工作，容易在经商、旅行、外交等领域取得成就。',
+        solution: '应对方法：积极发展经商、旅行、外交等方面的事业，多出门旅行，寻找商机；善于把握机会，勇于冒险，但也要注意风险控制；保持积极进取的心态，不要安于现状；多结交各地朋友，扩大人脉圈；注意财务管理，避免因行动过于频繁而导致财务混乱。'
+      });
+    }
+
+    // 天医 + 天喜 + 天厨（福寿组合）
+    if (uniqueCleanShenShaList.includes('天医') &&
+        uniqueCleanShenShaList.includes('天喜') &&
+        uniqueCleanShenShaList.includes('天厨')) {
+      combinations.push({
+        combination: '天医 + 天喜 + 天厨',
+        analysis: '天医、天喜与天厨三星同时出现，主健康好，婚姻美满，饮食丰富，容易有喜事，适合从事医疗、餐饮、婚庆等工作，人生充满欢乐和幸福。',
+        level: 3,
+        type: 'good',
+        source: '此组合源于传统命理学说中的"福寿三星"理论，天医主健康和医疗；天喜主喜庆和婚姻；天厨主饮食和物质享受。三者同时出现，相辅相成，形成强大的福寿能量场。',
+        influence: '有此组合者，健康好，婚姻美满，饮食丰富，容易有喜事，适合从事医疗、餐饮、婚庆等工作，人生充满欢乐和幸福，一生福泽深厚，少有大灾大难。',
+        solution: '应对方法：注重健康，保持良好的生活习惯；注重家庭和婚姻，增进夫妻感情；注重饮食质量，享受美食但不过度；积极发展医疗、餐饮、婚庆等方面的事业；保持乐观的心态，享受生活的美好；多行善事，积德行善，可增加福气。'
+      });
+    }
+
+    // 文昌 + 天乙贵人 + 天官（文官组合）
+    if (uniqueCleanShenShaList.includes('文昌') &&
+        uniqueCleanShenShaList.includes('天乙贵人') &&
+        uniqueCleanShenShaList.includes('天官')) {
+      combinations.push({
+        combination: '文昌 + 天乙贵人 + 天官',
+        analysis: '文昌、天乙贵人与天官三星同时出现，主学业有成，仕途顺利，官运亨通，容易得到贵人相助，适合从事文化、教育、公务等工作，容易在文化、教育、公务等领域取得成就。',
+        level: 3,
+        type: 'good',
+        source: '此组合源于传统命理学说中的"文官三星"理论，文昌为文章星，主文章秀丽，学业有成；天乙贵人为上等吉神，主贵人扶持；天官主官运和地位。三者同时出现，相辅相成，形成强大的文官能量场。',
+        influence: '有此组合者，学业有成，仕途顺利，官运亨通，容易得到贵人相助，适合从事文化、教育、公务等工作，容易在文化、教育、公务等领域取得成就，一生顺遂，事业有成，地位显赫。',
+        solution: '应对方法：积极发展文化、教育、公务等方面的事业，多结交贵人，注重学习和提升自己的文化素养；善用贵人相助的机会，可以取得更大的成就；注重人际关系，广结善缘；保持谦虚的态度，不要因地位而骄傲自满，才能长久保持好运。'
+      });
+    }
+
+    // 孤辰 + 寡宿 + 天哭（孤独组合）
+    if (uniqueCleanShenShaList.includes('孤辰') &&
+        uniqueCleanShenShaList.includes('寡宿') &&
+        uniqueCleanShenShaList.includes('天哭')) {
+      combinations.push({
+        combination: '孤辰 + 寡宿 + 天哭',
+        analysis: '孤辰、寡宿与天哭三星同时出现，主孤独，人际关系不佳，婚姻不顺，容易悲伤和哭泣，容易孤立无援，需要注意人际关系和婚姻问题，调节情绪。',
+        level: 3,
+        type: 'bad',
+        source: '此组合源于传统命理学说中的"孤独三星"理论，孤辰主孤独和孤立；寡宿主孤独和寡居；天哭主悲伤和哭泣。三者同时出现，相辅相成，形成强大的孤独能量场。',
+        influence: '有此组合者，孤独，人际关系不佳，婚姻不顺，容易悲伤和哭泣，容易孤立无援，需要注意人际关系和婚姻问题，调节情绪，容易感到孤独和寂寞，需要寻找精神寄托。',
+        solution: '应对方法：积极参与社交活动，扩大社交圈；学习沟通技巧，改善人际关系；注重婚姻和感情，增进夫妻感情；寻找精神寄托，如宗教、艺术等；学习情绪管理，避免过度悲伤；多行善事，积德行善，可化解部分凶险；寻求心理咨询，解决心理问题；培养兴趣爱好，丰富生活内容。'
+      });
+    }
+
+    // 四神煞组合分析
+
+    // 天乙贵人 + 文昌 + 禄神 + 驿马（事业成功组合）
+    if (uniqueCleanShenShaList.includes('天乙贵人') &&
+        uniqueCleanShenShaList.includes('文昌') &&
+        uniqueCleanShenShaList.includes('禄神') &&
+        uniqueCleanShenShaList.includes('驿马')) {
+      combinations.push({
+        combination: '天乙贵人 + 文昌 + 禄神 + 驿马',
+        analysis: '天乙贵人、文昌、禄神与驿马四吉神同时出现，主学业有成，仕途顺利，财运亨通，官运亨通，事业有成，行动力强，适合经商、旅行、变动，容易得到贵人相助，学业、事业、财富、行动四方面皆顺遂。此为极上等吉利组合，主一生顺遂，事业有成，财富丰厚，少有大灾大难。',
+        level: 4,
+        type: 'good',
+        source: '此组合源于传统命理学说中的"四吉神"理论，天乙贵人为上等吉神，主贵人扶持；文昌为文章星，主文章秀丽，学业有成；禄神主财禄丰厚，事业有成；驿马主行动、变动、旅行。四者同时出现，相辅相成，形成极强大的吉利能量场。',
+        influence: '有此组合者，学业有成，仕途顺利，财运亨通，官运亨通，事业有成，行动力强，适合经商、旅行、变动，容易得到贵人相助，学业、事业、财富、行动四方面皆顺遂。适合从事文化、教育、公务、金融、管理、经商、旅行、外交等工作，一生顺遂，事业有成，财富丰厚，少有大灾大难。'
+      });
+    }
+
+    // 天德 + 月德 + 天乙贵人 + 天德贵人（贵人扶持组合）
+    if (uniqueCleanShenShaList.includes('天德') &&
+        uniqueCleanShenShaList.includes('月德') &&
+        uniqueCleanShenShaList.includes('天乙贵人') &&
+        uniqueCleanShenShaList.includes('天德贵人')) {
+      combinations.push({
+        combination: '天德 + 月德 + 天乙贵人 + 天德贵人',
+        analysis: '天德、月德、天乙贵人与天德贵人四贵人同时出现，主德行高尚，善良，人际关系极佳，婚姻美满，容易得到各方贵人相助，逢凶化吉，遇难呈祥，一生福泽深厚，少有大灾大难。此为极上等吉利组合，主一生贵人扶持，逢凶化吉，遇难呈祥。',
+        level: 4,
+        type: 'good',
+        source: '此组合源于传统命理学说中的"四贵人"理论，天德主德行和善良；月德主温柔和善良；天乙贵人为上等吉神，主贵人扶持；天德贵人是天德与贵人的结合，主德行高尚，得贵人相助。四者同时出现，相辅相成，形成极强大的贵人能量场。',
+        influence: '有此组合者，德行高尚，善良，人际关系极佳，婚姻美满，容易得到各方贵人相助，逢凶化吉，遇难呈祥，一生福泽深厚，少有大灾大难。适合从事公益、教育、医疗等工作，一生顺遂，福泽深厚，即使遇到困难，也能逢凶化吉，遇难呈祥。'
+      });
+    }
+
+    // 天罗 + 地网 + 五鬼 + 羊刃（大凶组合）
+    if (uniqueCleanShenShaList.includes('天罗') &&
+        uniqueCleanShenShaList.includes('地网') &&
+        uniqueCleanShenShaList.includes('五鬼') &&
+        uniqueCleanShenShaList.includes('羊刃')) {
+      combinations.push({
+        combination: '天罗 + 地网 + 五鬼 + 羊刃',
+        analysis: '天罗、地网、五鬼与羊刃四凶神同时出现，主困境重重，容易陷入困境和陷阱，事业发展不顺，容易遭遇邪祟和灾祸，性格冲动易怒，容易因冲动而惹祸，需要注意避免陷入困境和陷阱，谨慎行事，控制情绪，多行善事，积德行善可化解部分凶险。此为大凶组合，需谨慎应对人生各种挑战。',
+        level: 4,
+        type: 'bad',
+        source: '此组合源于传统命理学说中的"四凶神"理论，天罗主困境和阻碍；地网主陷阱和困境；五鬼主邪祟和灾祸；羊刃主锋芒和冲动。四者同时出现，相辅相成，形成极强大的凶险能量场。',
+        influence: '有此组合者，困境重重，容易陷入困境和陷阱，事业发展不顺，容易遭遇邪祟和灾祸，性格冲动易怒，容易因冲动而惹祸，需要注意避免陷入困境和陷阱，谨慎行事，控制情绪，多行善事，积德行善可化解部分凶险。建议多行善事，积德行善，可化解部分凶险，同时需要谨慎行事，控制情绪，避免因冲动而惹祸。'
+      });
+    }
+
+    // 文昌 + 文曲 + 天乙贵人 + 禄神（文财贵组合）
+    if (uniqueCleanShenShaList.includes('文昌') &&
+        uniqueCleanShenShaList.includes('文曲') &&
+        uniqueCleanShenShaList.includes('天乙贵人') &&
+        uniqueCleanShenShaList.includes('禄神')) {
+      combinations.push({
+        combination: '文昌 + 文曲 + 天乙贵人 + 禄神',
+        analysis: '文昌、文曲、天乙贵人与禄神四星同时出现，主学术才华出众，文思敏捷，容易得到贵人相助，财运亨通，官运亨通，事业有成，适合从事文化、教育、公务、金融、管理等工作，容易在文化、教育、公务、金融、管理等领域取得成就。',
+        level: 4,
+        type: 'good',
+        source: '此组合源于传统命理学说中的"文财贵四星"理论，文昌为文章星，主文章秀丽，学业有成；文曲为文学星，主文学才华；天乙贵人为上等吉神，主贵人扶持；禄神主财禄丰厚，事业有成。四者同时出现，相辅相成，形成极强大的文财贵能量场。',
+        influence: '有此组合者，学术才华出众，文思敏捷，容易得到贵人相助，财运亨通，官运亨通，事业有成，适合从事文化、教育、公务、金融、管理等工作，容易在文化、教育、公务、金融、管理等领域取得成就。一生顺遂，事业有成，财富丰厚，少有大灾大难。'
+      });
+    }
+
+    // 天德 + 月德 + 天医 + 天喜（福寿康宁组合）
+    if (uniqueCleanShenShaList.includes('天德') &&
+        uniqueCleanShenShaList.includes('月德') &&
+        uniqueCleanShenShaList.includes('天医') &&
+        uniqueCleanShenShaList.includes('天喜')) {
+      combinations.push({
+        combination: '天德 + 月德 + 天医 + 天喜',
+        analysis: '天德、月德、天医与天喜四星同时出现，主德行高尚，善良，人际关系极佳，婚姻美满，健康好，容易有喜事，一生福泽深厚，少有大灾大难。此为福寿康宁组合，主一生福寿康宁，幸福美满。',
+        level: 4,
+        type: 'good',
+        source: '此组合源于传统命理学说中的"福寿康宁四星"理论，天德主德行和善良；月德主温柔和善良；天医主健康和医疗；天喜主喜庆和婚姻。四者同时出现，相辅相成，形成极强大的福寿康宁能量场。',
+        influence: '有此组合者，德行高尚，善良，人际关系极佳，婚姻美满，健康好，容易有喜事，一生福泽深厚，少有大灾大难。适合从事公益、教育、医疗等工作，一生顺遂，福泽深厚，健康长寿，婚姻美满，幸福美满。',
+        solution: '应对方法：继续保持善良的本性，多行善事，积德行善，可增加福气；关心他人，乐于助人，可增加人缘；注重家庭和婚姻，增进夫妻感情；注重健康，保持良好的生活习惯；积极发展公益、教育、医疗等方面的事业；保持乐观的心态，享受生活的美好；多参加喜庆活动，增加生活乐趣。'
+      });
+    }
+
+    // 文昌 + 文曲 + 天乙贵人 + 天官（文贵官组合）
+    if (uniqueCleanShenShaList.includes('文昌') &&
+        uniqueCleanShenShaList.includes('文曲') &&
+        uniqueCleanShenShaList.includes('天乙贵人') &&
+        uniqueCleanShenShaList.includes('天官')) {
+      combinations.push({
+        combination: '文昌 + 文曲 + 天乙贵人 + 天官',
+        analysis: '文昌、文曲、天乙贵人与天官四星同时出现，主学术才华出众，文思敏捷，容易得到贵人相助，官运亨通，适合从事文化、教育、公务等工作，容易在文化、教育、公务等领域取得成就，一生顺遂，事业有成，地位显赫。',
+        level: 4,
+        type: 'good',
+        source: '此组合源于传统命理学说中的"文贵官四星"理论，文昌为文章星，主文章秀丽，学业有成；文曲为文学星，主文学才华；天乙贵人为上等吉神，主贵人扶持；天官主官运和地位。四者同时出现，相辅相成，形成极强大的文贵官能量场。',
+        influence: '有此组合者，学术才华出众，文思敏捷，容易得到贵人相助，官运亨通，适合从事文化、教育、公务等工作，容易在文化、教育、公务等领域取得成就，一生顺遂，事业有成，地位显赫，少有大灾大难。',
+        solution: '应对方法：积极发展文化、教育、公务等方面的事业，多结交贵人，注重学习和提升自己的文化素养；善用贵人相助的机会，可以取得更大的成就；注重人际关系，广结善缘；保持谦虚的态度，不要因才华和地位而骄傲自满，才能长久保持好运；多参加文化活动，增加文化底蕴。'
+      });
+    }
+
+    // 天空 + 地劫 + 大耗 + 羊刃（破财伤身组合）
+    if (uniqueCleanShenShaList.includes('天空') &&
+        uniqueCleanShenShaList.includes('地劫') &&
+        uniqueCleanShenShaList.includes('大耗') &&
+        uniqueCleanShenShaList.includes('羊刃')) {
+      combinations.push({
+        combination: '天空 + 地劫 + 大耗 + 羊刃',
+        analysis: '天空、地劫、大耗与羊刃四凶神同时出现，主财运不稳，容易破财，容易感到空虚和无所依靠，容易遭遇劫难和灾祸，性格冲动易怒，容易因冲动而惹祸，财运不佳，需要注意节约和保护财产，谨慎理财，避免投机取巧，控制情绪，避免冲动行事。',
+        level: 4,
+        type: 'bad',
+        source: '此组合源于传统命理学说中的"破财伤身四煞"理论，天空主虚无和空虚；地劫主劫难和灾祸；大耗主消耗和损失；羊刃主锋芒和冲动。四者同时出现，相辅相成，形成极强大的破财伤身能量场。',
+        influence: '有此组合者，财运不稳，容易破财，容易感到空虚和无所依靠，容易遭遇劫难和灾祸，性格冲动易怒，容易因冲动而惹祸，财运不佳，需要注意节约和保护财产，谨慎理财，避免投机取巧，控制情绪，避免冲动行事，一生多灾多难，需要谨慎应对。',
+        solution: '应对方法：谨慎理财，避免投机取巧，不要轻易相信他人，特别是在商业和投资方面；修身养性，控制情绪，避免冲动行事；学习冥想、瑜伽等平静心灵的方法；远离是非之地，避免卷入纠纷和争端；多行善事，积德行善，可化解部分凶险；佩戴或摆放五帝钱、貔貅、黑曜石、黑玛瑙等化解物品；定期做功德，如放生、捐赠等；保持心态平和，不要因困境而气馁，坚持不懈，终会度过难关。'
+      });
+    }
+
+    // 孤辰 + 寡宿 + 天哭 + 天刑（孤苦伶仃组合）
+    if (uniqueCleanShenShaList.includes('孤辰') &&
+        uniqueCleanShenShaList.includes('寡宿') &&
+        uniqueCleanShenShaList.includes('天哭') &&
+        uniqueCleanShenShaList.includes('天刑')) {
+      combinations.push({
+        combination: '孤辰 + 寡宿 + 天哭 + 天刑',
+        analysis: '孤辰、寡宿、天哭与天刑四星同时出现，主孤独，人际关系不佳，婚姻不顺，容易悲伤和哭泣，容易遭受刑罚和伤害，容易孤立无援，需要注意人际关系和婚姻问题，调节情绪，避免刑罚和伤害。',
+        level: 4,
+        type: 'bad',
+        source: '此组合源于传统命理学说中的"孤苦伶仃四星"理论，孤辰主孤独和孤立；寡宿主孤独和寡居；天哭主悲伤和哭泣；天刑主刑罚和伤害。四者同时出现，相辅相成，形成极强大的孤苦伶仃能量场。',
+        influence: '有此组合者，孤独，人际关系不佳，婚姻不顺，容易悲伤和哭泣，容易遭受刑罚和伤害，容易孤立无援，需要注意人际关系和婚姻问题，调节情绪，避免刑罚和伤害，容易感到孤独和寂寞，需要寻找精神寄托，一生多灾多难，需要谨慎应对。',
+        solution: '应对方法：积极参与社交活动，扩大社交圈；学习沟通技巧，改善人际关系；注重婚姻和感情，增进夫妻感情；寻找精神寄托，如宗教、艺术等；学习情绪管理，避免过度悲伤；远离是非之地，避免卷入纠纷和争端；多行善事，积德行善，可化解部分凶险；寻求心理咨询，解决心理问题；培养兴趣爱好，丰富生活内容；佩戴或摆放化解物品，如黑曜石、黑玛瑙等；定期做功德，如放生、捐赠等；保持心态平和，不要因困境而气馁，坚持不懈，终会度过难关。'
       });
     }
 
