@@ -1,4 +1,5 @@
 import { BaziInfo } from '../types/BaziInfo';
+import { ShenShaService } from '../services/ShenShaService';
 
 /**
  * 交互式八字命盘视图
@@ -137,12 +138,37 @@ export class InteractiveBaziView {
     hideGanRow.createEl('td', { text: Array.isArray(this.baziInfo.dayHideGan) ? this.baziInfo.dayHideGan.join('') : (this.baziInfo.dayHideGan || '') });
     hideGanRow.createEl('td', { text: Array.isArray(this.baziInfo.hourHideGan) ? this.baziInfo.hourHideGan.join('') : (this.baziInfo.hourHideGan || '') });
 
+    // 十神行
+    if (this.baziInfo.yearShiShenGan || this.baziInfo.monthShiShenGan || this.baziInfo.dayShiShenGan || this.baziInfo.timeShiShenGan) {
+      const shiShenRow = tbody.createEl('tr', { cls: 'bazi-shishen-row' });
+      shiShenRow.createEl('td', { text: this.baziInfo.yearShiShenGan || '' });
+      shiShenRow.createEl('td', { text: this.baziInfo.monthShiShenGan || '' });
+      shiShenRow.createEl('td', { text: this.baziInfo.dayShiShenGan || '日主' });
+      shiShenRow.createEl('td', { text: this.baziInfo.timeShiShenGan || '' });
+    }
+
+    // 地势行
+    if (this.baziInfo.yearDiShi || this.baziInfo.monthDiShi || this.baziInfo.dayDiShi || this.baziInfo.timeDiShi) {
+      const diShiRow = tbody.createEl('tr', { cls: 'bazi-dishi-row' });
+      diShiRow.createEl('td', { text: this.baziInfo.yearDiShi || '' });
+      diShiRow.createEl('td', { text: this.baziInfo.monthDiShi || '' });
+      diShiRow.createEl('td', { text: this.baziInfo.dayDiShi || '' });
+      diShiRow.createEl('td', { text: this.baziInfo.timeDiShi || '' });
+    }
+
     // 纳音行
     const naYinRow = tbody.createEl('tr', { cls: 'bazi-nayin-row' });
     naYinRow.createEl('td', { text: this.baziInfo.yearNaYin || '' });
     naYinRow.createEl('td', { text: this.baziInfo.monthNaYin || '' });
     naYinRow.createEl('td', { text: this.baziInfo.dayNaYin || '' });
     naYinRow.createEl('td', { text: this.baziInfo.hourNaYin || '' });
+
+    // 旬空行
+    const xunKongRow = tbody.createEl('tr', { cls: 'bazi-xunkong-row' });
+    xunKongRow.createEl('td', { text: this.baziInfo.yearXunKong || '' });
+    xunKongRow.createEl('td', { text: this.baziInfo.monthXunKong || '' });
+    xunKongRow.createEl('td', { text: this.baziInfo.dayXunKong || '' });
+    xunKongRow.createEl('td', { text: this.baziInfo.hourXunKong || '' });
 
     // 生肖行
     const shengXiaoRow = tbody.createEl('tr', { cls: 'bazi-shengxiao-row' });
@@ -170,6 +196,212 @@ export class InteractiveBaziView {
 
     if (this.baziInfo.mingGong) {
       infoList.createEl('li', { text: `命宫: ${this.baziInfo.mingGong}` });
+    }
+
+    if (this.baziInfo.shenGong) {
+      infoList.createEl('li', { text: `身宫: ${this.baziInfo.shenGong}` });
+    }
+
+    // 添加格局信息
+    if (this.baziInfo.geJu) {
+      const geJuItem = infoList.createEl('li');
+      geJuItem.createSpan({
+        text: `格局: ${this.baziInfo.geJu}`,
+        cls: 'geju-tag'
+      });
+
+      if (this.baziInfo.geJuDetail) {
+        const detailEl = geJuItem.createSpan({
+          text: ` (${this.baziInfo.geJuDetail})`,
+          cls: 'geju-detail'
+        });
+      }
+    }
+
+    // 添加神煞信息
+    if (this.baziInfo.shenSha && this.baziInfo.shenSha.length > 0) {
+      const shenShaItem = infoList.createEl('li');
+      shenShaItem.createSpan({ text: '神煞: ' });
+
+      this.baziInfo.shenSha.forEach(shenSha => {
+        const shenShaTag = shenShaItem.createSpan({
+          text: shenSha,
+          cls: 'shensha-tag'
+        });
+
+        // 添加点击事件，显示神煞详细解释
+        shenShaTag.addEventListener('click', (e) => {
+          e.stopPropagation();
+          this.showShenShaExplanation(shenSha);
+        });
+      });
+
+      // 添加神煞组合分析
+      if (this.baziInfo.shenSha.length > 1) {
+        const combinations = ShenShaService.getShenShaCombinationAnalysis(this.baziInfo.shenSha);
+        if (combinations.length > 0) {
+          const combinationItem = infoList.createEl('li', { cls: 'shensha-combination-item' });
+          combinationItem.createSpan({ text: '神煞组合: ' });
+
+          const combinationContainer = combinationItem.createDiv({ cls: 'shensha-combination-container' });
+          combinations.forEach(combination => {
+            const combinationTag = combinationContainer.createDiv({ cls: 'shensha-combination-tag' });
+            combinationTag.createSpan({ text: combination.combination });
+
+            // 添加点击事件，显示组合分析
+            combinationTag.addEventListener('click', (e) => {
+              e.stopPropagation();
+              this.showShenShaCombinationAnalysis(combination);
+            });
+          });
+        }
+      }
+    }
+
+    // 添加十神信息
+    if (this.baziInfo.yearShiShenGan || this.baziInfo.monthShiShenGan || this.baziInfo.timeShiShenGan) {
+      const shiShenItem = infoList.createEl('li');
+      shiShenItem.createSpan({ text: '十神: ' });
+
+      if (this.baziInfo.yearShiShenGan) {
+        shiShenItem.createSpan({
+          text: `年(${this.baziInfo.yearShiShenGan})`,
+          cls: 'shishen-tag'
+        });
+      }
+
+      if (this.baziInfo.monthShiShenGan) {
+        shiShenItem.createSpan({
+          text: `月(${this.baziInfo.monthShiShenGan})`,
+          cls: 'shishen-tag'
+        });
+      }
+
+      shiShenItem.createSpan({
+        text: '日(日主)',
+        cls: 'shishen-tag'
+      });
+
+      if (this.baziInfo.timeShiShenGan) {
+        shiShenItem.createSpan({
+          text: `时(${this.baziInfo.timeShiShenGan})`,
+          cls: 'shishen-tag'
+        });
+      }
+    }
+
+    // 添加地势信息
+    if (this.baziInfo.yearDiShi || this.baziInfo.monthDiShi || this.baziInfo.dayDiShi || this.baziInfo.timeDiShi) {
+      const diShiItem = infoList.createEl('li');
+      diShiItem.createSpan({ text: '地势: ' });
+
+      if (this.baziInfo.yearDiShi) {
+        diShiItem.createSpan({
+          text: `年(${this.baziInfo.yearDiShi})`,
+          cls: 'dishi-tag'
+        });
+      }
+
+      if (this.baziInfo.monthDiShi) {
+        diShiItem.createSpan({
+          text: `月(${this.baziInfo.monthDiShi})`,
+          cls: 'dishi-tag'
+        });
+      }
+
+      if (this.baziInfo.dayDiShi) {
+        diShiItem.createSpan({
+          text: `日(${this.baziInfo.dayDiShi})`,
+          cls: 'dishi-tag'
+        });
+      }
+
+      if (this.baziInfo.timeDiShi) {
+        diShiItem.createSpan({
+          text: `时(${this.baziInfo.timeDiShi})`,
+          cls: 'dishi-tag'
+        });
+      }
+    }
+
+    // 添加旬空信息
+    const yearXunKong = this.baziInfo.yearXunKong;
+    const monthXunKong = this.baziInfo.monthXunKong;
+    const dayXunKong = this.baziInfo.dayXunKong;
+    const timeXunKong = this.baziInfo.hourXunKong;
+
+    if (yearXunKong || monthXunKong || dayXunKong || timeXunKong) {
+      const xunKongItem = infoList.createEl('li');
+      xunKongItem.createSpan({ text: '旬空: ' });
+
+      if (yearXunKong) {
+        xunKongItem.createSpan({
+          text: `年(${yearXunKong})`,
+          cls: 'xunkong-tag'
+        });
+      }
+
+      if (monthXunKong) {
+        xunKongItem.createSpan({
+          text: `月(${monthXunKong})`,
+          cls: 'xunkong-tag'
+        });
+      }
+
+      if (dayXunKong) {
+        xunKongItem.createSpan({
+          text: `日(${dayXunKong})`,
+          cls: 'xunkong-tag'
+        });
+      }
+
+      if (timeXunKong) {
+        xunKongItem.createSpan({
+          text: `时(${timeXunKong})`,
+          cls: 'xunkong-tag'
+        });
+      }
+    }
+
+    // 添加五行强度信息
+    if (this.baziInfo.wuXingStrength) {
+      const wuXingItem = infoList.createEl('li');
+      wuXingItem.createSpan({ text: '五行强度: ' });
+
+      const { jin, mu, shui, huo, tu } = this.baziInfo.wuXingStrength;
+
+      wuXingItem.createSpan({
+        text: `金(${jin})`,
+        cls: 'wuxing-jin-tag'
+      });
+
+      wuXingItem.createSpan({
+        text: `木(${mu})`,
+        cls: 'wuxing-mu-tag'
+      });
+
+      wuXingItem.createSpan({
+        text: `水(${shui})`,
+        cls: 'wuxing-shui-tag'
+      });
+
+      wuXingItem.createSpan({
+        text: `火(${huo})`,
+        cls: 'wuxing-huo-tag'
+      });
+
+      wuXingItem.createSpan({
+        text: `土(${tu})`,
+        cls: 'wuxing-tu-tag'
+      });
+    }
+
+    // 添加日主旺衰信息
+    if (this.baziInfo.riZhuStrength) {
+      infoList.createEl('li', {
+        text: `日主旺衰: ${this.baziInfo.riZhuStrength}`,
+        cls: 'rizhu-strength'
+      });
     }
 
     if (this.baziInfo.solarDate) {
@@ -232,14 +464,58 @@ export class InteractiveBaziView {
       cell.addEventListener('click', () => {
         this.selectDaYun(index);
       });
+
+      // 如果是当前选中的大运，添加选中样式
+      if (index === this.selectedDaYunIndex) {
+        cell.classList.add('selected');
+      }
     });
 
-    // 第四行：旬空
-    if (daYunData[0].xunKong) {
+    // 第四行：十神（如果有）
+    if (daYunData.some(dy => dy.shiShenGan)) {
+      const shiShenRow = this.daYunTable.createEl('tr');
+      shiShenRow.createEl('th', { text: '十神' });
+      daYunData.slice(0, 10).forEach(dy => {
+        shiShenRow.createEl('td', {
+          text: dy.shiShenGan || '',
+          cls: 'bazi-shishen-cell'
+        });
+      });
+    }
+
+    // 第五行：地势（如果有）
+    if (daYunData.some(dy => dy.diShi)) {
+      const diShiRow = this.daYunTable.createEl('tr');
+      diShiRow.createEl('th', { text: '地势' });
+      daYunData.slice(0, 10).forEach(dy => {
+        diShiRow.createEl('td', {
+          text: dy.diShi || '',
+          cls: 'bazi-dishi-cell'
+        });
+      });
+    }
+
+    // 第六行：旬空
+    if (daYunData.some(dy => dy.xunKong)) {
       const xkRow = this.daYunTable.createEl('tr');
       xkRow.createEl('th', { text: '旬空' });
       daYunData.slice(0, 10).forEach(dy => {
-        xkRow.createEl('td', { text: dy.xunKong || '' });
+        xkRow.createEl('td', {
+          text: dy.xunKong || '',
+          cls: 'bazi-xunkong-cell'
+        });
+      });
+    }
+
+    // 第七行：纳音（如果有）
+    if (daYunData.some(dy => dy.naYin)) {
+      const naYinRow = this.daYunTable.createEl('tr');
+      naYinRow.createEl('th', { text: '纳音' });
+      daYunData.slice(0, 10).forEach(dy => {
+        naYinRow.createEl('td', {
+          text: dy.naYin || '',
+          cls: 'bazi-nayin-cell'
+        });
       });
     }
   }
@@ -536,16 +812,43 @@ export class InteractiveBaziView {
       }
     });
 
-    // 第四行：流年旬空
-    if (liuNian[0].xunKong) {
-      const lnXkRow = this.liuNianTable.createEl('tr');
-      lnXkRow.createEl('th', { text: '流年旬空' });
+    // 第四行：流年十神（如果有）
+    if (liuNian.some(ln => ln.shiShenGan)) {
+      const lnShiShenRow = this.liuNianTable.createEl('tr');
+      lnShiShenRow.createEl('th', { text: '流年十神' });
       liuNian.slice(0, 10).forEach(ln => {
-        lnXkRow.createEl('td', { text: ln.xunKong || '' });
+        lnShiShenRow.createEl('td', {
+          text: ln.shiShenGan || '',
+          cls: 'bazi-shishen-cell'
+        });
       });
     }
 
-    // 第五行：小运干支
+    // 第五行：流年地势（如果有）
+    if (liuNian.some(ln => ln.diShi)) {
+      const lnDiShiRow = this.liuNianTable.createEl('tr');
+      lnDiShiRow.createEl('th', { text: '流年地势' });
+      liuNian.slice(0, 10).forEach(ln => {
+        lnDiShiRow.createEl('td', {
+          text: ln.diShi || '',
+          cls: 'bazi-dishi-cell'
+        });
+      });
+    }
+
+    // 第六行：流年旬空
+    if (liuNian.some(ln => ln.xunKong)) {
+      const lnXkRow = this.liuNianTable.createEl('tr');
+      lnXkRow.createEl('th', { text: '流年旬空' });
+      liuNian.slice(0, 10).forEach(ln => {
+        lnXkRow.createEl('td', {
+          text: ln.xunKong || '',
+          cls: 'bazi-xunkong-cell'
+        });
+      });
+    }
+
+    // 第七行：小运干支
     if (xiaoYun.length > 0) {
       const xyGzRow = this.liuNianTable.createEl('tr');
       xyGzRow.createEl('th', { text: '小运' });
@@ -558,12 +861,58 @@ export class InteractiveBaziView {
 
       liuNian.slice(0, 10).forEach(ln => {
         const xy = xyMap.get(ln.year);
-        xyGzRow.createEl('td', { text: xy ? xy.ganZhi : '' });
+        const cell = xyGzRow.createEl('td', {
+          text: xy ? xy.ganZhi : '',
+          cls: 'bazi-xiaoyun-cell'
+        });
+
+        // 如果对应的流年单元格被选中，也高亮小运单元格
+        if (ln.year === this.selectedLiuNianYear) {
+          cell.classList.add('selected');
+        }
       });
     }
 
-    // 第六行：小运旬空
-    if (xiaoYun.length > 0 && xiaoYun[0].xunKong) {
+    // 第八行：小运十神（如果有）
+    if (xiaoYun.length > 0 && xiaoYun.some(xy => xy.shiShenGan)) {
+      const xyShiShenRow = this.liuNianTable.createEl('tr');
+      xyShiShenRow.createEl('th', { text: '小运十神' });
+
+      const xyMap = new Map();
+      xiaoYun.forEach(xy => {
+        xyMap.set(xy.year, xy);
+      });
+
+      liuNian.slice(0, 10).forEach(ln => {
+        const xy = xyMap.get(ln.year);
+        xyShiShenRow.createEl('td', {
+          text: xy ? (xy.shiShenGan || '') : '',
+          cls: 'bazi-shishen-cell'
+        });
+      });
+    }
+
+    // 第九行：小运地势（如果有）
+    if (xiaoYun.length > 0 && xiaoYun.some(xy => xy.diShi)) {
+      const xyDiShiRow = this.liuNianTable.createEl('tr');
+      xyDiShiRow.createEl('th', { text: '小运地势' });
+
+      const xyMap = new Map();
+      xiaoYun.forEach(xy => {
+        xyMap.set(xy.year, xy);
+      });
+
+      liuNian.slice(0, 10).forEach(ln => {
+        const xy = xyMap.get(ln.year);
+        xyDiShiRow.createEl('td', {
+          text: xy ? (xy.diShi || '') : '',
+          cls: 'bazi-dishi-cell'
+        });
+      });
+    }
+
+    // 第十行：小运旬空
+    if (xiaoYun.length > 0 && xiaoYun.some(xy => xy.xunKong)) {
       const xyXkRow = this.liuNianTable.createEl('tr');
       xyXkRow.createEl('th', { text: '小运旬空' });
 
@@ -575,7 +924,10 @@ export class InteractiveBaziView {
 
       liuNian.slice(0, 10).forEach(ln => {
         const xy = xyMap.get(ln.year);
-        xyXkRow.createEl('td', { text: xy ? (xy.xunKong || '') : '' });
+        xyXkRow.createEl('td', {
+          text: xy ? (xy.xunKong || '') : '',
+          cls: 'bazi-xunkong-cell'
+        });
       });
     }
 
@@ -630,7 +982,10 @@ export class InteractiveBaziView {
         monthText = chineseMonths[ly.index] + '月';
       }
 
-      monthRow.createEl('td', { text: monthText });
+      monthRow.createEl('td', {
+        text: monthText,
+        cls: 'bazi-liuyue-month'
+      });
     });
 
     // 第二行：干支
@@ -661,7 +1016,31 @@ export class InteractiveBaziView {
       });
     });
 
-    // 第三行：旬空
+    // 第三行：十神（如果有）
+    if (liuYue.some(ly => ly.shiShenGan)) {
+      const shiShenRow = this.liuYueTable.createEl('tr');
+      shiShenRow.createEl('th', { text: '十神' });
+      liuYue.forEach(ly => {
+        shiShenRow.createEl('td', {
+          text: ly.shiShenGan || '',
+          cls: 'bazi-shishen-cell'
+        });
+      });
+    }
+
+    // 第四行：地势（如果有）
+    if (liuYue.some(ly => ly.diShi)) {
+      const diShiRow = this.liuYueTable.createEl('tr');
+      diShiRow.createEl('th', { text: '地势' });
+      liuYue.forEach(ly => {
+        diShiRow.createEl('td', {
+          text: ly.diShi || '',
+          cls: 'bazi-dishi-cell'
+        });
+      });
+    }
+
+    // 第五行：旬空
     const xkRow = this.liuYueTable.createEl('tr');
     xkRow.createEl('th', { text: '旬空' });
     liuYue.forEach(ly => {
@@ -680,8 +1059,23 @@ export class InteractiveBaziView {
         }
       }
 
-      xkRow.createEl('td', { text: xunKong });
+      xkRow.createEl('td', {
+        text: xunKong,
+        cls: 'bazi-xunkong-cell'
+      });
     });
+
+    // 第六行：纳音（如果有）
+    if (liuYue.some(ly => ly.naYin)) {
+      const naYinRow = this.liuYueTable.createEl('tr');
+      naYinRow.createEl('th', { text: '纳音' });
+      liuYue.forEach(ly => {
+        naYinRow.createEl('td', {
+          text: ly.naYin || '',
+          cls: 'bazi-nayin-cell'
+        });
+      });
+    }
 
     // 显示表格（带动画）
     setTimeout(() => {
@@ -843,5 +1237,116 @@ export class InteractiveBaziView {
       case '土': return 'tu';
       default: return '';
     }
+  }
+
+  /**
+   * 显示神煞详细解释
+   * @param shenSha 神煞名称
+   */
+  private showShenShaExplanation(shenSha: string) {
+    // 获取神煞详细解释
+    const explanation = ShenShaService.getShenShaExplanation(shenSha);
+
+    // 创建弹窗
+    const modal = document.createElement('div');
+    modal.className = 'bazi-modal';
+
+    // 创建弹窗内容
+    const modalContent = document.createElement('div');
+    modalContent.className = 'bazi-modal-content';
+
+    // 创建标题
+    const title = document.createElement('h3');
+    title.textContent = explanation.name;
+    title.className = 'bazi-modal-title';
+
+    // 创建类型
+    const type = document.createElement('div');
+    type.textContent = `类型: ${explanation.type}`;
+    type.className = 'bazi-modal-type';
+
+    // 创建解释
+    const explanationText = document.createElement('div');
+    explanationText.textContent = explanation.explanation;
+    explanationText.className = 'bazi-modal-explanation';
+
+    // 创建影响
+    const influence = document.createElement('div');
+    influence.textContent = explanation.influence;
+    influence.className = 'bazi-modal-influence';
+
+    // 创建关闭按钮
+    const closeButton = document.createElement('button');
+    closeButton.textContent = '关闭';
+    closeButton.className = 'bazi-modal-close';
+    closeButton.addEventListener('click', () => {
+      document.body.removeChild(modal);
+    });
+
+    // 添加内容到弹窗
+    modalContent.appendChild(title);
+    modalContent.appendChild(type);
+    modalContent.appendChild(explanationText);
+    modalContent.appendChild(influence);
+    modalContent.appendChild(closeButton);
+
+    // 添加弹窗到页面
+    modal.appendChild(modalContent);
+    document.body.appendChild(modal);
+
+    // 点击弹窗外部关闭弹窗
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        document.body.removeChild(modal);
+      }
+    });
+  }
+
+  /**
+   * 显示神煞组合分析
+   * @param combination 神煞组合
+   */
+  private showShenShaCombinationAnalysis(combination: { combination: string; analysis: string }) {
+    // 创建弹窗
+    const modal = document.createElement('div');
+    modal.className = 'bazi-modal';
+
+    // 创建弹窗内容
+    const modalContent = document.createElement('div');
+    modalContent.className = 'bazi-modal-content';
+
+    // 创建标题
+    const title = document.createElement('h3');
+    title.textContent = combination.combination;
+    title.className = 'bazi-modal-title';
+
+    // 创建分析
+    const analysis = document.createElement('div');
+    analysis.textContent = combination.analysis;
+    analysis.className = 'bazi-modal-analysis';
+
+    // 创建关闭按钮
+    const closeButton = document.createElement('button');
+    closeButton.textContent = '关闭';
+    closeButton.className = 'bazi-modal-close';
+    closeButton.addEventListener('click', () => {
+      document.body.removeChild(modal);
+    });
+
+    // 添加内容到弹窗
+    modalContent.appendChild(title);
+    modalContent.appendChild(analysis);
+    modalContent.appendChild(closeButton);
+
+    // 添加弹窗到页面
+    modal.appendChild(modalContent);
+    document.body.appendChild(modal);
+
+    // 点击弹窗外部关闭弹窗
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        document.body.removeChild(modal);
+      }
+    });
   }
 }

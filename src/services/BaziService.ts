@@ -576,7 +576,14 @@ export class BaziService {
     const dayJi = lunar.getDayJi() || [];
 
     // 神煞
-    const shenSha = Array.isArray(lunar.getDaySha()) ? lunar.getDaySha() : [];
+    const daySha = Array.isArray(lunar.getDaySha()) ? lunar.getDaySha() : [];
+    const customShenSha = this.calculateShenSha(eightChar);
+    const shenSha = [...daySha, ...customShenSha];
+
+    // 格局
+    const geJuInfo = this.calculateGeJu(eightChar);
+    const geJu = geJuInfo?.geJu;
+    const geJuDetail = geJuInfo?.detail;
 
     // 起运信息
     const genderNum = gender === '1' ? 1 : 0;
@@ -616,6 +623,183 @@ export class BaziService {
       try { index = dy.getIndex(); } catch (e) { console.error('获取大运序号出错:', e); }
       try { ganZhi = dy.getGanZhi(); } catch (e) { console.error('获取大运干支出错:', e); }
 
+      // 计算十神
+      let shiShenGan = '';
+      try {
+        if (ganZhi && ganZhi.length >= 1) {
+          shiShenGan = this.getShiShen(dayStem, ganZhi.charAt(0));
+        }
+      } catch (e) {
+        console.error('计算大运十神出错:', e);
+      }
+
+      // 计算地势
+      let diShi = '';
+      try {
+        if (ganZhi && ganZhi.length >= 2) {
+          const zhi = ganZhi.charAt(1);
+          diShi = this.getDiShi(dayStem, zhi);
+        }
+      } catch (e) {
+        console.error('计算大运地势出错:', e);
+      }
+
+      // 计算神煞
+      const shenSha: string[] = [];
+      try {
+        if (ganZhi && ganZhi.length >= 2) {
+          const stem = ganZhi.charAt(0);
+          const branch = ganZhi.charAt(1);
+
+          // 天乙贵人
+          if (this.isTianYiGuiRen(dayStem, branch)) {
+            shenSha.push('天乙贵人');
+          }
+
+          // 文昌
+          if (this.isWenChang(branch)) {
+            shenSha.push('文昌');
+          }
+
+          // 华盖
+          if (this.isHuaGai(branch)) {
+            shenSha.push('华盖');
+          }
+
+          // 禄神
+          if (this.isLuShen(stem, branch)) {
+            shenSha.push('禄神');
+          }
+
+          // 桃花
+          if (this.isTaoHua(branch)) {
+            shenSha.push('桃花');
+          }
+
+          // 孤辰
+          if (this.isGuChen(branch)) {
+            shenSha.push('孤辰');
+          }
+
+          // 寡宿
+          if (this.isGuaSu(branch)) {
+            shenSha.push('寡宿');
+          }
+
+          // 驿马
+          if (this.isYiMa(branch)) {
+            shenSha.push('驿马');
+          }
+
+          // 将星
+          if (this.isJiangXing(dayStem, branch)) {
+            shenSha.push('将星');
+          }
+
+          // 金神
+          if (this.isJinShen(branch)) {
+            shenSha.push('金神');
+          }
+
+          // 天德
+          if (this.isTianDe(stem, branch)) {
+            shenSha.push('天德');
+          }
+
+          // 天德合
+          if (this.isTianDeHe(stem, branch)) {
+            shenSha.push('天德合');
+          }
+
+          // 月德
+          if (this.isYueDe(stem)) {
+            shenSha.push('月德');
+          }
+
+          // 天医
+          if (this.isTianYi(branch)) {
+            shenSha.push('天医');
+          }
+
+          // 天喜
+          if (this.isTianXi(branch)) {
+            shenSha.push('天喜');
+          }
+
+          // 红艳
+          if (this.isHongYan(branch)) {
+            shenSha.push('红艳');
+          }
+
+          // 天罗
+          if (this.isTianLuo(branch)) {
+            shenSha.push('天罗');
+          }
+
+          // 地网
+          if (this.isDiWang(branch)) {
+            shenSha.push('地网');
+          }
+
+          // 羊刃
+          if (this.isYangRen(dayStem, branch)) {
+            shenSha.push('羊刃');
+          }
+
+          // 天空
+          if (this.isTianKong(branch)) {
+            shenSha.push('天空');
+          }
+
+          // 地劫
+          if (this.isDiJie(branch)) {
+            shenSha.push('地劫');
+          }
+
+          // 天刑
+          if (this.isTianXing(branch)) {
+            shenSha.push('天刑');
+          }
+
+          // 天哭
+          if (this.isTianKu(branch)) {
+            shenSha.push('天哭');
+          }
+
+          // 天虚
+          if (this.isTianXu(branch)) {
+            shenSha.push('天虚');
+          }
+
+          // 咸池
+          if (this.isXianChi(branch)) {
+            shenSha.push('咸池');
+          }
+
+          // 亡神
+          if (this.isWangShen(branch)) {
+            shenSha.push('亡神');
+          }
+
+          // 劫煞
+          if (this.isJieSha(branch)) {
+            shenSha.push('劫煞');
+          }
+
+          // 灾煞
+          if (this.isZaiSha(branch)) {
+            shenSha.push('灾煞');
+          }
+
+          // 五鬼
+          if (this.isWuGui(branch)) {
+            shenSha.push('五鬼');
+          }
+        }
+      } catch (e) {
+        console.error('计算大运神煞出错:', e);
+      }
+
       return {
         startYear,
         endYear,
@@ -624,7 +808,10 @@ export class BaziService {
         index,
         ganZhi,
         naYin: ganZhi ? this.getNaYin(ganZhi) : '',
-        xunKong
+        xunKong,
+        shiShenGan,
+        diShi,
+        shenSha
       };
     });
 
@@ -653,13 +840,253 @@ export class BaziService {
       try { index = ln.getIndex(); } catch (e) { console.error('获取流年序号出错:', e); }
       try { ganZhi = ln.getGanZhi(); } catch (e) { console.error('获取流年干支出错:', e); }
 
+      // 计算十神
+      let shiShenGan = '';
+      try {
+        if (ganZhi && ganZhi.length >= 1) {
+          shiShenGan = this.getShiShen(dayStem, ganZhi.charAt(0));
+        }
+      } catch (e) {
+        console.error('计算流年十神出错:', e);
+      }
+
+      // 计算地势
+      let diShi = '';
+      try {
+        if (ganZhi && ganZhi.length >= 2) {
+          const zhi = ganZhi.charAt(1);
+          diShi = this.getDiShi(dayStem, zhi);
+        }
+      } catch (e) {
+        console.error('计算流年地势出错:', e);
+      }
+
+      // 计算神煞
+      const shenSha: string[] = [];
+      try {
+        if (ganZhi && ganZhi.length >= 2) {
+          const stem = ganZhi.charAt(0);
+          const branch = ganZhi.charAt(1);
+
+          // 天乙贵人
+          if (this.isTianYiGuiRen(dayStem, branch)) {
+            shenSha.push('天乙贵人');
+          }
+
+          // 文昌
+          if (this.isWenChang(branch)) {
+            shenSha.push('文昌');
+          }
+
+          // 华盖
+          if (this.isHuaGai(branch)) {
+            shenSha.push('华盖');
+          }
+
+          // 禄神
+          if (this.isLuShen(stem, branch)) {
+            shenSha.push('禄神');
+          }
+
+          // 桃花
+          if (this.isTaoHua(branch)) {
+            shenSha.push('桃花');
+          }
+
+          // 孤辰
+          if (this.isGuChen(branch)) {
+            shenSha.push('孤辰');
+          }
+
+          // 寡宿
+          if (this.isGuaSu(branch)) {
+            shenSha.push('寡宿');
+          }
+
+          // 驿马
+          if (this.isYiMa(branch)) {
+            shenSha.push('驿马');
+          }
+
+          // 将星
+          if (this.isJiangXing(dayStem, branch)) {
+            shenSha.push('将星');
+          }
+
+          // 金神
+          if (this.isJinShen(branch)) {
+            shenSha.push('金神');
+          }
+
+          // 天德
+          if (this.isTianDe(stem, branch)) {
+            shenSha.push('天德');
+          }
+
+          // 天德合
+          if (this.isTianDeHe(stem, branch)) {
+            shenSha.push('天德合');
+          }
+
+          // 月德
+          if (this.isYueDe(stem)) {
+            shenSha.push('月德');
+          }
+
+          // 天医
+          if (this.isTianYi(branch)) {
+            shenSha.push('天医');
+          }
+
+          // 天喜
+          if (this.isTianXi(branch)) {
+            shenSha.push('天喜');
+          }
+
+          // 红艳
+          if (this.isHongYan(branch)) {
+            shenSha.push('红艳');
+          }
+
+          // 天罗
+          if (this.isTianLuo(branch)) {
+            shenSha.push('天罗');
+          }
+
+          // 地网
+          if (this.isDiWang(branch)) {
+            shenSha.push('地网');
+          }
+
+          // 羊刃
+          if (this.isYangRen(dayStem, branch)) {
+            shenSha.push('羊刃');
+          }
+
+          // 天空
+          if (this.isTianKong(branch)) {
+            shenSha.push('天空');
+          }
+
+          // 地劫
+          if (this.isDiJie(branch)) {
+            shenSha.push('地劫');
+          }
+
+          // 天刑
+          if (this.isTianXing(branch)) {
+            shenSha.push('天刑');
+          }
+
+          // 天哭
+          if (this.isTianKu(branch)) {
+            shenSha.push('天哭');
+          }
+
+          // 天虚
+          if (this.isTianXu(branch)) {
+            shenSha.push('天虚');
+          }
+
+          // 咸池
+          if (this.isXianChi(branch)) {
+            shenSha.push('咸池');
+          }
+
+          // 亡神
+          if (this.isWangShen(branch)) {
+            shenSha.push('亡神');
+          }
+
+          // 劫煞
+          if (this.isJieSha(branch)) {
+            shenSha.push('劫煞');
+          }
+
+          // 灾煞
+          if (this.isZaiSha(branch)) {
+            shenSha.push('灾煞');
+          }
+
+          // 岁破
+          if (this.isSuiPo(branch, yearBranch)) {
+            shenSha.push('岁破');
+          }
+
+          // 大耗
+          if (this.isDaHao(branch, yearBranch)) {
+            shenSha.push('大耗');
+          }
+
+          // 五鬼
+          if (this.isWuGui(branch)) {
+            shenSha.push('五鬼');
+          }
+
+          // 天德贵人
+          if (this.isTianDeGuiRen(stem, branch)) {
+            shenSha.push('天德贵人');
+          }
+
+          // 月德贵人
+          if (this.isYueDeGuiRen(stem, branch)) {
+            shenSha.push('月德贵人');
+          }
+
+          // 天赦
+          if (this.isTianShe(stem, branch)) {
+            shenSha.push('天赦');
+          }
+
+          // 天恩
+          if (this.isTianEn(stem, branch)) {
+            shenSha.push('天恩');
+          }
+
+          // 天官
+          if (this.isTianGuan(stem, branch)) {
+            shenSha.push('天官');
+          }
+
+          // 天福
+          if (this.isTianFu(stem, branch)) {
+            shenSha.push('天福');
+          }
+
+          // 天厨
+          if (this.isTianChu(stem, branch)) {
+            shenSha.push('天厨');
+          }
+
+          // 天巫
+          if (this.isTianWu(branch)) {
+            shenSha.push('天巫');
+          }
+
+          // 天月
+          if (this.isTianYue(branch)) {
+            shenSha.push('天月');
+          }
+
+          // 天马
+          if (this.isTianMa(branch, yearBranch)) {
+            shenSha.push('天马');
+          }
+        }
+      } catch (e) {
+        console.error('计算流年神煞出错:', e);
+      }
+
       return {
         year,
         age,
         index,
         ganZhi,
         naYin: ganZhi ? this.getNaYin(ganZhi) : '',
-        xunKong
+        xunKong,
+        shiShenGan,
+        diShi,
+        shenSha
       };
     });
 
@@ -688,12 +1115,243 @@ export class BaziService {
       try { index = xy.getIndex(); } catch (e) { console.error('获取小运序号出错:', e); }
       try { ganZhi = xy.getGanZhi(); } catch (e) { console.error('获取小运干支出错:', e); }
 
+      // 计算十神
+      let shiShenGan = '';
+      try {
+        if (ganZhi && ganZhi.length >= 1) {
+          shiShenGan = this.getShiShen(dayStem, ganZhi.charAt(0));
+        }
+      } catch (e) {
+        console.error('计算小运十神出错:', e);
+      }
+
+      // 计算地势
+      let diShi = '';
+      try {
+        if (ganZhi && ganZhi.length >= 2) {
+          const zhi = ganZhi.charAt(1);
+          diShi = this.getDiShi(dayStem, zhi);
+        }
+      } catch (e) {
+        console.error('计算小运地势出错:', e);
+      }
+
+      // 计算神煞
+      const shenSha: string[] = [];
+      try {
+        if (ganZhi && ganZhi.length >= 2) {
+          const stem = ganZhi.charAt(0);
+          const branch = ganZhi.charAt(1);
+
+          // 天乙贵人
+          if (this.isTianYiGuiRen(dayStem, branch)) {
+            shenSha.push('天乙贵人');
+          }
+
+          // 文昌
+          if (this.isWenChang(branch)) {
+            shenSha.push('文昌');
+          }
+
+          // 华盖
+          if (this.isHuaGai(branch)) {
+            shenSha.push('华盖');
+          }
+
+          // 禄神
+          if (this.isLuShen(stem, branch)) {
+            shenSha.push('禄神');
+          }
+
+          // 桃花
+          if (this.isTaoHua(branch)) {
+            shenSha.push('桃花');
+          }
+
+          // 孤辰
+          if (this.isGuChen(branch)) {
+            shenSha.push('孤辰');
+          }
+
+          // 寡宿
+          if (this.isGuaSu(branch)) {
+            shenSha.push('寡宿');
+          }
+
+          // 驿马
+          if (this.isYiMa(branch)) {
+            shenSha.push('驿马');
+          }
+
+          // 将星
+          if (this.isJiangXing(dayStem, branch)) {
+            shenSha.push('将星');
+          }
+
+          // 金神
+          if (this.isJinShen(branch)) {
+            shenSha.push('金神');
+          }
+
+          // 天德
+          if (this.isTianDe(stem, branch)) {
+            shenSha.push('天德');
+          }
+
+          // 天德合
+          if (this.isTianDeHe(stem, branch)) {
+            shenSha.push('天德合');
+          }
+
+          // 月德
+          if (this.isYueDe(stem)) {
+            shenSha.push('月德');
+          }
+
+          // 天医
+          if (this.isTianYi(branch)) {
+            shenSha.push('天医');
+          }
+
+          // 天喜
+          if (this.isTianXi(branch)) {
+            shenSha.push('天喜');
+          }
+
+          // 红艳
+          if (this.isHongYan(branch)) {
+            shenSha.push('红艳');
+          }
+
+          // 天罗
+          if (this.isTianLuo(branch)) {
+            shenSha.push('天罗');
+          }
+
+          // 地网
+          if (this.isDiWang(branch)) {
+            shenSha.push('地网');
+          }
+
+          // 羊刃
+          if (this.isYangRen(dayStem, branch)) {
+            shenSha.push('羊刃');
+          }
+
+          // 天空
+          if (this.isTianKong(branch)) {
+            shenSha.push('天空');
+          }
+
+          // 地劫
+          if (this.isDiJie(branch)) {
+            shenSha.push('地劫');
+          }
+
+          // 天刑
+          if (this.isTianXing(branch)) {
+            shenSha.push('天刑');
+          }
+
+          // 天哭
+          if (this.isTianKu(branch)) {
+            shenSha.push('天哭');
+          }
+
+          // 天虚
+          if (this.isTianXu(branch)) {
+            shenSha.push('天虚');
+          }
+
+          // 咸池
+          if (this.isXianChi(branch)) {
+            shenSha.push('咸池');
+          }
+
+          // 亡神
+          if (this.isWangShen(branch)) {
+            shenSha.push('亡神');
+          }
+
+          // 劫煞
+          if (this.isJieSha(branch)) {
+            shenSha.push('劫煞');
+          }
+
+          // 灾煞
+          if (this.isZaiSha(branch)) {
+            shenSha.push('灾煞');
+          }
+
+          // 五鬼
+          if (this.isWuGui(branch)) {
+            shenSha.push('五鬼');
+          }
+
+          // 天德贵人
+          if (this.isTianDeGuiRen(stem, branch)) {
+            shenSha.push('天德贵人');
+          }
+
+          // 月德贵人
+          if (this.isYueDeGuiRen(stem, branch)) {
+            shenSha.push('月德贵人');
+          }
+
+          // 天赦
+          if (this.isTianShe(stem, branch)) {
+            shenSha.push('天赦');
+          }
+
+          // 天恩
+          if (this.isTianEn(stem, branch)) {
+            shenSha.push('天恩');
+          }
+
+          // 天官
+          if (this.isTianGuan(stem, branch)) {
+            shenSha.push('天官');
+          }
+
+          // 天福
+          if (this.isTianFu(stem, branch)) {
+            shenSha.push('天福');
+          }
+
+          // 天厨
+          if (this.isTianChu(stem, branch)) {
+            shenSha.push('天厨');
+          }
+
+          // 天巫
+          if (this.isTianWu(branch)) {
+            shenSha.push('天巫');
+          }
+
+          // 天月
+          if (this.isTianYue(branch)) {
+            shenSha.push('天月');
+          }
+
+          // 天马
+          if (this.isTianMa(branch, yearBranch)) {
+            shenSha.push('天马');
+          }
+        }
+      } catch (e) {
+        console.error('计算小运神煞出错:', e);
+      }
+
       return {
         year,
         age,
         index,
         ganZhi,
-        xunKong
+        naYin: ganZhi ? this.getNaYin(ganZhi) : '',
+        xunKong,
+        shiShenGan,
+        diShi,
+        shenSha
       };
     });
 
@@ -721,11 +1379,252 @@ export class BaziService {
       try { index = ly.getIndex(); } catch (e) { console.error('获取流月序号出错:', e); }
       try { ganZhi = ly.getGanZhi(); } catch (e) { console.error('获取流月干支出错:', e); }
 
+      // 计算十神
+      let shiShenGan = '';
+      try {
+        if (ganZhi && ganZhi.length >= 1) {
+          shiShenGan = this.getShiShen(dayStem, ganZhi.charAt(0));
+        }
+      } catch (e) {
+        console.error('计算流月十神出错:', e);
+      }
+
+      // 计算地势
+      let diShi = '';
+      try {
+        if (ganZhi && ganZhi.length >= 2) {
+          const zhi = ganZhi.charAt(1);
+          diShi = this.getDiShi(dayStem, zhi);
+        }
+      } catch (e) {
+        console.error('计算流月地势出错:', e);
+      }
+
+      // 计算纳音
+      let naYin = '';
+      try {
+        if (ganZhi && ganZhi.length === 2) {
+          naYin = this.getNaYin(ganZhi);
+        }
+      } catch (e) {
+        console.error('计算流月纳音出错:', e);
+      }
+
+      // 计算神煞
+      const shenSha: string[] = [];
+      try {
+        if (ganZhi && ganZhi.length >= 2) {
+          const stem = ganZhi.charAt(0);
+          const branch = ganZhi.charAt(1);
+
+          // 天乙贵人
+          if (this.isTianYiGuiRen(dayStem, branch)) {
+            shenSha.push('天乙贵人');
+          }
+
+          // 文昌
+          if (this.isWenChang(branch)) {
+            shenSha.push('文昌');
+          }
+
+          // 华盖
+          if (this.isHuaGai(branch)) {
+            shenSha.push('华盖');
+          }
+
+          // 禄神
+          if (this.isLuShen(stem, branch)) {
+            shenSha.push('禄神');
+          }
+
+          // 桃花
+          if (this.isTaoHua(branch)) {
+            shenSha.push('桃花');
+          }
+
+          // 孤辰
+          if (this.isGuChen(branch)) {
+            shenSha.push('孤辰');
+          }
+
+          // 寡宿
+          if (this.isGuaSu(branch)) {
+            shenSha.push('寡宿');
+          }
+
+          // 驿马
+          if (this.isYiMa(branch)) {
+            shenSha.push('驿马');
+          }
+
+          // 将星
+          if (this.isJiangXing(dayStem, branch)) {
+            shenSha.push('将星');
+          }
+
+          // 金神
+          if (this.isJinShen(branch)) {
+            shenSha.push('金神');
+          }
+
+          // 天德
+          if (this.isTianDe(stem, branch)) {
+            shenSha.push('天德');
+          }
+
+          // 天德合
+          if (this.isTianDeHe(stem, branch)) {
+            shenSha.push('天德合');
+          }
+
+          // 月德
+          if (this.isYueDe(stem)) {
+            shenSha.push('月德');
+          }
+
+          // 天医
+          if (this.isTianYi(branch)) {
+            shenSha.push('天医');
+          }
+
+          // 天喜
+          if (this.isTianXi(branch)) {
+            shenSha.push('天喜');
+          }
+
+          // 红艳
+          if (this.isHongYan(branch)) {
+            shenSha.push('红艳');
+          }
+
+          // 天罗
+          if (this.isTianLuo(branch)) {
+            shenSha.push('天罗');
+          }
+
+          // 地网
+          if (this.isDiWang(branch)) {
+            shenSha.push('地网');
+          }
+
+          // 羊刃
+          if (this.isYangRen(dayStem, branch)) {
+            shenSha.push('羊刃');
+          }
+
+          // 天空
+          if (this.isTianKong(branch)) {
+            shenSha.push('天空');
+          }
+
+          // 地劫
+          if (this.isDiJie(branch)) {
+            shenSha.push('地劫');
+          }
+
+          // 天刑
+          if (this.isTianXing(branch)) {
+            shenSha.push('天刑');
+          }
+
+          // 天哭
+          if (this.isTianKu(branch)) {
+            shenSha.push('天哭');
+          }
+
+          // 天虚
+          if (this.isTianXu(branch)) {
+            shenSha.push('天虚');
+          }
+
+          // 咸池
+          if (this.isXianChi(branch)) {
+            shenSha.push('咸池');
+          }
+
+          // 亡神
+          if (this.isWangShen(branch)) {
+            shenSha.push('亡神');
+          }
+
+          // 劫煞
+          if (this.isJieSha(branch)) {
+            shenSha.push('劫煞');
+          }
+
+          // 灾煞
+          if (this.isZaiSha(branch)) {
+            shenSha.push('灾煞');
+          }
+
+          // 五鬼
+          if (this.isWuGui(branch)) {
+            shenSha.push('五鬼');
+          }
+
+          // 天德贵人
+          if (this.isTianDeGuiRen(stem, branch)) {
+            shenSha.push('天德贵人');
+          }
+
+          // 月德贵人
+          if (this.isYueDeGuiRen(stem, branch)) {
+            shenSha.push('月德贵人');
+          }
+
+          // 天赦
+          if (this.isTianShe(stem, branch)) {
+            shenSha.push('天赦');
+          }
+
+          // 天恩
+          if (this.isTianEn(stem, branch)) {
+            shenSha.push('天恩');
+          }
+
+          // 天官
+          if (this.isTianGuan(stem, branch)) {
+            shenSha.push('天官');
+          }
+
+          // 天福
+          if (this.isTianFu(stem, branch)) {
+            shenSha.push('天福');
+          }
+
+          // 天厨
+          if (this.isTianChu(stem, branch)) {
+            shenSha.push('天厨');
+          }
+
+          // 天巫
+          if (this.isTianWu(branch)) {
+            shenSha.push('天巫');
+          }
+
+          // 天月
+          if (this.isTianYue(branch)) {
+            shenSha.push('天月');
+          }
+
+          // 天马
+          if (this.isTianMa(branch, yearBranch)) {
+            shenSha.push('天马');
+          }
+        }
+      } catch (e) {
+        console.error('计算流月神煞出错:', e);
+      }
+
       return {
         month,
         index,
         ganZhi,
-        xunKong
+        naYin,
+        xunKong,
+        shiShenGan,
+        diShi,
+        shenSha
       };
     });
 
@@ -823,6 +1722,10 @@ export class BaziService {
       dayYi: dayYi as string[],
       dayJi: dayJi as string[],
       shenSha: shenSha as string[],
+
+      // 格局
+      ...(geJu ? { geJu } : {}),
+      ...(geJuDetail ? { geJuDetail } : {}),
 
       // 起运信息
       qiYunYear,
@@ -1116,6 +2019,1525 @@ export class BaziService {
     }
 
     return '平'; // 默认平
+  }
+
+  /**
+   * 计算神煞
+   * @param eightChar 八字对象
+   * @returns 神煞数组
+   */
+  private static calculateShenSha(eightChar: EightChar): string[] {
+    const shenSha: string[] = [];
+
+    // 获取四柱干支
+    const yearStem = eightChar.getYearGan();
+    const yearBranch = eightChar.getYearZhi();
+    const monthStem = eightChar.getMonthGan();
+    const monthBranch = eightChar.getMonthZhi();
+    const dayStem = eightChar.getDayGan();
+    const dayBranch = eightChar.getDayZhi();
+    const timeStem = eightChar.getTimeGan();
+    const timeBranch = eightChar.getTimeZhi();
+
+    // 天乙贵人
+    if (this.isTianYiGuiRen(dayStem, yearBranch) ||
+        this.isTianYiGuiRen(dayStem, monthBranch) ||
+        this.isTianYiGuiRen(dayStem, dayBranch) ||
+        this.isTianYiGuiRen(dayStem, timeBranch)) {
+      shenSha.push('天乙贵人');
+    }
+
+    // 文昌
+    if (this.isWenChang(yearBranch) ||
+        this.isWenChang(monthBranch) ||
+        this.isWenChang(dayBranch) ||
+        this.isWenChang(timeBranch)) {
+      shenSha.push('文昌');
+    }
+
+    // 华盖
+    if (this.isHuaGai(yearBranch) ||
+        this.isHuaGai(monthBranch) ||
+        this.isHuaGai(dayBranch) ||
+        this.isHuaGai(timeBranch)) {
+      shenSha.push('华盖');
+    }
+
+    // 禄神
+    if (this.isLuShen(yearStem, yearBranch) ||
+        this.isLuShen(monthStem, monthBranch) ||
+        this.isLuShen(dayStem, dayBranch) ||
+        this.isLuShen(timeStem, timeBranch)) {
+      shenSha.push('禄神');
+    }
+
+    // 桃花
+    if (this.isTaoHua(yearBranch) ||
+        this.isTaoHua(monthBranch) ||
+        this.isTaoHua(dayBranch) ||
+        this.isTaoHua(timeBranch)) {
+      shenSha.push('桃花');
+    }
+
+    // 孤辰
+    if (this.isGuChen(yearBranch) ||
+        this.isGuChen(monthBranch) ||
+        this.isGuChen(dayBranch) ||
+        this.isGuChen(timeBranch)) {
+      shenSha.push('孤辰');
+    }
+
+    // 寡宿
+    if (this.isGuaSu(yearBranch) ||
+        this.isGuaSu(monthBranch) ||
+        this.isGuaSu(dayBranch) ||
+        this.isGuaSu(timeBranch)) {
+      shenSha.push('寡宿');
+    }
+
+    // 驿马
+    if (this.isYiMa(yearBranch) ||
+        this.isYiMa(monthBranch) ||
+        this.isYiMa(dayBranch) ||
+        this.isYiMa(timeBranch)) {
+      shenSha.push('驿马');
+    }
+
+    // 将星
+    if (this.isJiangXing(dayStem, yearBranch) ||
+        this.isJiangXing(dayStem, monthBranch) ||
+        this.isJiangXing(dayStem, dayBranch) ||
+        this.isJiangXing(dayStem, timeBranch)) {
+      shenSha.push('将星');
+    }
+
+    // 金神
+    if (this.isJinShen(yearBranch) ||
+        this.isJinShen(monthBranch) ||
+        this.isJinShen(dayBranch) ||
+        this.isJinShen(timeBranch)) {
+      shenSha.push('金神');
+    }
+
+    // 天德
+    if (this.isTianDe(yearStem, yearBranch) ||
+        this.isTianDe(monthStem, monthBranch) ||
+        this.isTianDe(dayStem, dayBranch) ||
+        this.isTianDe(timeStem, timeBranch)) {
+      shenSha.push('天德');
+    }
+
+    // 天德合
+    if (this.isTianDeHe(yearStem, yearBranch) ||
+        this.isTianDeHe(monthStem, monthBranch) ||
+        this.isTianDeHe(dayStem, dayBranch) ||
+        this.isTianDeHe(timeStem, timeBranch)) {
+      shenSha.push('天德合');
+    }
+
+    // 月德
+    if (this.isYueDe(yearStem) ||
+        this.isYueDe(monthStem) ||
+        this.isYueDe(dayStem) ||
+        this.isYueDe(timeStem)) {
+      shenSha.push('月德');
+    }
+
+    // 天医
+    if (this.isTianYi(yearBranch) ||
+        this.isTianYi(monthBranch) ||
+        this.isTianYi(dayBranch) ||
+        this.isTianYi(timeBranch)) {
+      shenSha.push('天医');
+    }
+
+    // 天喜
+    if (this.isTianXi(yearBranch) ||
+        this.isTianXi(monthBranch) ||
+        this.isTianXi(dayBranch) ||
+        this.isTianXi(timeBranch)) {
+      shenSha.push('天喜');
+    }
+
+    // 红艳
+    if (this.isHongYan(yearBranch) ||
+        this.isHongYan(monthBranch) ||
+        this.isHongYan(dayBranch) ||
+        this.isHongYan(timeBranch)) {
+      shenSha.push('红艳');
+    }
+
+    // 天罗
+    if (this.isTianLuo(yearBranch) ||
+        this.isTianLuo(monthBranch) ||
+        this.isTianLuo(dayBranch) ||
+        this.isTianLuo(timeBranch)) {
+      shenSha.push('天罗');
+    }
+
+    // 地网
+    if (this.isDiWang(yearBranch) ||
+        this.isDiWang(monthBranch) ||
+        this.isDiWang(dayBranch) ||
+        this.isDiWang(timeBranch)) {
+      shenSha.push('地网');
+    }
+
+    // 羊刃
+    if (this.isYangRen(dayStem, yearBranch) ||
+        this.isYangRen(dayStem, monthBranch) ||
+        this.isYangRen(dayStem, dayBranch) ||
+        this.isYangRen(dayStem, timeBranch)) {
+      shenSha.push('羊刃');
+    }
+
+    // 天空
+    if (this.isTianKong(yearBranch) ||
+        this.isTianKong(monthBranch) ||
+        this.isTianKong(dayBranch) ||
+        this.isTianKong(timeBranch)) {
+      shenSha.push('天空');
+    }
+
+    // 地劫
+    if (this.isDiJie(yearBranch) ||
+        this.isDiJie(monthBranch) ||
+        this.isDiJie(dayBranch) ||
+        this.isDiJie(timeBranch)) {
+      shenSha.push('地劫');
+    }
+
+    // 天刑
+    if (this.isTianXing(yearBranch) ||
+        this.isTianXing(monthBranch) ||
+        this.isTianXing(dayBranch) ||
+        this.isTianXing(timeBranch)) {
+      shenSha.push('天刑');
+    }
+
+    // 天哭
+    if (this.isTianKu(yearBranch) ||
+        this.isTianKu(monthBranch) ||
+        this.isTianKu(dayBranch) ||
+        this.isTianKu(timeBranch)) {
+      shenSha.push('天哭');
+    }
+
+    // 天虚
+    if (this.isTianXu(yearBranch) ||
+        this.isTianXu(monthBranch) ||
+        this.isTianXu(dayBranch) ||
+        this.isTianXu(timeBranch)) {
+      shenSha.push('天虚');
+    }
+
+    // 咸池
+    if (this.isXianChi(yearBranch) ||
+        this.isXianChi(monthBranch) ||
+        this.isXianChi(dayBranch) ||
+        this.isXianChi(timeBranch)) {
+      shenSha.push('咸池');
+    }
+
+    // 亡神
+    if (this.isWangShen(yearBranch) ||
+        this.isWangShen(monthBranch) ||
+        this.isWangShen(dayBranch) ||
+        this.isWangShen(timeBranch)) {
+      shenSha.push('亡神');
+    }
+
+    // 劫煞
+    if (this.isJieSha(yearBranch) ||
+        this.isJieSha(monthBranch) ||
+        this.isJieSha(dayBranch) ||
+        this.isJieSha(timeBranch)) {
+      shenSha.push('劫煞');
+    }
+
+    // 灾煞
+    if (this.isZaiSha(yearBranch) ||
+        this.isZaiSha(monthBranch) ||
+        this.isZaiSha(dayBranch) ||
+        this.isZaiSha(timeBranch)) {
+      shenSha.push('灾煞');
+    }
+
+    // 岁破
+    if (this.isSuiPo(yearBranch, yearBranch) ||
+        this.isSuiPo(monthBranch, yearBranch) ||
+        this.isSuiPo(dayBranch, yearBranch) ||
+        this.isSuiPo(timeBranch, yearBranch)) {
+      shenSha.push('岁破');
+    }
+
+    // 大耗
+    if (this.isDaHao(yearBranch, yearBranch) ||
+        this.isDaHao(monthBranch, yearBranch) ||
+        this.isDaHao(dayBranch, yearBranch) ||
+        this.isDaHao(timeBranch, yearBranch)) {
+      shenSha.push('大耗');
+    }
+
+    // 五鬼
+    if (this.isWuGui(yearBranch) ||
+        this.isWuGui(monthBranch) ||
+        this.isWuGui(dayBranch) ||
+        this.isWuGui(timeBranch)) {
+      shenSha.push('五鬼');
+    }
+
+    // 天德贵人
+    if (this.isTianDeGuiRen(yearStem, yearBranch) ||
+        this.isTianDeGuiRen(monthStem, monthBranch) ||
+        this.isTianDeGuiRen(dayStem, dayBranch) ||
+        this.isTianDeGuiRen(timeStem, timeBranch)) {
+      shenSha.push('天德贵人');
+    }
+
+    // 月德贵人
+    if (this.isYueDeGuiRen(yearStem, yearBranch) ||
+        this.isYueDeGuiRen(monthStem, monthBranch) ||
+        this.isYueDeGuiRen(dayStem, dayBranch) ||
+        this.isYueDeGuiRen(timeStem, timeBranch)) {
+      shenSha.push('月德贵人');
+    }
+
+    // 天赦
+    if (this.isTianShe(yearStem, yearBranch) ||
+        this.isTianShe(monthStem, monthBranch) ||
+        this.isTianShe(dayStem, dayBranch) ||
+        this.isTianShe(timeStem, timeBranch)) {
+      shenSha.push('天赦');
+    }
+
+    // 天恩
+    if (this.isTianEn(yearStem, yearBranch) ||
+        this.isTianEn(monthStem, monthBranch) ||
+        this.isTianEn(dayStem, dayBranch) ||
+        this.isTianEn(timeStem, timeBranch)) {
+      shenSha.push('天恩');
+    }
+
+    // 天官
+    if (this.isTianGuan(yearStem, yearBranch) ||
+        this.isTianGuan(monthStem, monthBranch) ||
+        this.isTianGuan(dayStem, dayBranch) ||
+        this.isTianGuan(timeStem, timeBranch)) {
+      shenSha.push('天官');
+    }
+
+    // 天福
+    if (this.isTianFu(yearStem, yearBranch) ||
+        this.isTianFu(monthStem, monthBranch) ||
+        this.isTianFu(dayStem, dayBranch) ||
+        this.isTianFu(timeStem, timeBranch)) {
+      shenSha.push('天福');
+    }
+
+    // 天厨
+    if (this.isTianChu(yearStem, yearBranch) ||
+        this.isTianChu(monthStem, monthBranch) ||
+        this.isTianChu(dayStem, dayBranch) ||
+        this.isTianChu(timeStem, timeBranch)) {
+      shenSha.push('天厨');
+    }
+
+    // 天巫
+    if (this.isTianWu(yearBranch) ||
+        this.isTianWu(monthBranch) ||
+        this.isTianWu(dayBranch) ||
+        this.isTianWu(timeBranch)) {
+      shenSha.push('天巫');
+    }
+
+    // 天月
+    if (this.isTianYue(yearBranch) ||
+        this.isTianYue(monthBranch) ||
+        this.isTianYue(dayBranch) ||
+        this.isTianYue(timeBranch)) {
+      shenSha.push('天月');
+    }
+
+    // 天马
+    if (this.isTianMa(yearBranch, yearBranch) ||
+        this.isTianMa(monthBranch, yearBranch) ||
+        this.isTianMa(dayBranch, yearBranch) ||
+        this.isTianMa(timeBranch, yearBranch)) {
+      shenSha.push('天马');
+    }
+
+    return shenSha;
+  }
+
+  /**
+   * 判断是否为天乙贵人
+   * @param dayStem 日干
+   * @param branch 地支
+   * @returns 是否为天乙贵人
+   */
+  private static isTianYiGuiRen(dayStem: string, branch: string): boolean {
+    const map: {[key: string]: string[]} = {
+      '甲': ['丑', '未'],
+      '乙': ['子', '申'],
+      '丙': ['亥', '酉'],
+      '丁': ['亥', '酉'],
+      '戊': ['丑', '未'],
+      '己': ['子', '申'],
+      '庚': ['丑', '未'],
+      '辛': ['子', '申'],
+      '壬': ['卯', '巳'],
+      '癸': ['卯', '巳']
+    };
+
+    return map[dayStem]?.includes(branch) || false;
+  }
+
+  /**
+   * 判断是否为文昌
+   * @param branch 地支
+   * @returns 是否为文昌
+   */
+  private static isWenChang(branch: string): boolean {
+    return ['巳', '午', '申', '酉'].includes(branch);
+  }
+
+  /**
+   * 判断是否为华盖
+   * @param branch 地支
+   * @returns 是否为华盖
+   */
+  private static isHuaGai(branch: string): boolean {
+    return ['辰', '戌', '丑', '未'].includes(branch);
+  }
+
+  /**
+   * 判断是否为禄神
+   * @param stem 天干
+   * @param branch 地支
+   * @returns 是否为禄神
+   */
+  private static isLuShen(stem: string, branch: string): boolean {
+    const map: {[key: string]: string} = {
+      '甲': '寅',
+      '乙': '卯',
+      '丙': '巳',
+      '丁': '午',
+      '戊': '巳',
+      '己': '午',
+      '庚': '申',
+      '辛': '酉',
+      '壬': '亥',
+      '癸': '子'
+    };
+
+    return map[stem] === branch;
+  }
+
+  /**
+   * 判断是否为桃花
+   * @param branch 地支
+   * @returns 是否为桃花
+   */
+  private static isTaoHua(branch: string): boolean {
+    return ['卯', '酉', '子', '午'].includes(branch);
+  }
+
+  /**
+   * 判断是否为孤辰
+   * @param branch 地支
+   * @returns 是否为孤辰
+   */
+  private static isGuChen(branch: string): boolean {
+    return ['辰', '戌', '丑', '未'].includes(branch);
+  }
+
+  /**
+   * 判断是否为寡宿
+   * @param branch 地支
+   * @returns 是否为寡宿
+   */
+  private static isGuaSu(branch: string): boolean {
+    return ['寅', '申', '巳', '亥'].includes(branch);
+  }
+
+  /**
+   * 判断是否为驿马
+   * @param branch 地支
+   * @returns 是否为驿马
+   */
+  private static isYiMa(branch: string): boolean {
+    // 驿马与地支的对应关系
+    const yiMaMap: {[key: string]: string} = {
+      '子': '午',
+      '午': '子',
+      '卯': '酉',
+      '酉': '卯',
+      '辰': '戌',
+      '戌': '辰',
+      '丑': '未',
+      '未': '丑',
+      '寅': '申',
+      '申': '寅',
+      '巳': '亥',
+      '亥': '巳'
+    };
+
+    // 检查是否为驿马
+    return Object.values(yiMaMap).includes(branch);
+  }
+
+  /**
+   * 判断是否为将星
+   * @param dayStem 日干
+   * @param branch 地支
+   * @returns 是否为将星
+   */
+  private static isJiangXing(dayStem: string, branch: string): boolean {
+    // 将星与日干的对应关系
+    const jiangXingMap: {[key: string]: string[]} = {
+      '甲': ['巳'],
+      '乙': ['午'],
+      '丙': ['申'],
+      '丁': ['酉'],
+      '戊': ['申'],
+      '己': ['酉'],
+      '庚': ['亥'],
+      '辛': ['子'],
+      '壬': ['寅'],
+      '癸': ['卯']
+    };
+
+    return jiangXingMap[dayStem]?.includes(branch) || false;
+  }
+
+  /**
+   * 判断是否为金神
+   * @param branch 地支
+   * @returns 是否为金神
+   */
+  private static isJinShen(branch: string): boolean {
+    return ['申', '酉', '戌'].includes(branch);
+  }
+
+  /**
+   * 判断是否为天德
+   * @param stem 天干
+   * @param branch 地支
+   * @returns 是否为天德
+   */
+  private static isTianDe(stem: string, branch: string): boolean {
+    // 天德与天干的对应关系
+    const tianDeMap: {[key: string]: string} = {
+      '甲': '丁',
+      '乙': '申',
+      '丙': '壬',
+      '丁': '辛',
+      '戊': '丙',
+      '己': '乙',
+      '庚': '戊',
+      '辛': '己',
+      '壬': '庚',
+      '癸': '癸'
+    };
+
+    // 天德与地支的对应关系
+    const tianDeBranchMap: {[key: string]: string} = {
+      '丁': '午',
+      '申': '申',
+      '壬': '亥',
+      '辛': '酉',
+      '丙': '巳',
+      '乙': '卯',
+      '戊': '辰',
+      '己': '丑',
+      '庚': '申',
+      '癸': '子'
+    };
+
+    const tianDeStem = tianDeMap[stem];
+    const tianDeBranch = tianDeBranchMap[tianDeStem];
+
+    return branch === tianDeBranch;
+  }
+
+  /**
+   * 判断是否为天德合
+   * @param stem 天干
+   * @param branch 地支
+   * @returns 是否为天德合
+   */
+  private static isTianDeHe(stem: string, branch: string): boolean {
+    // 天德合与天干的对应关系
+    const tianDeHeMap: {[key: string]: string} = {
+      '甲': '己',
+      '乙': '庚',
+      '丙': '辛',
+      '丁': '壬',
+      '戊': '癸',
+      '己': '甲',
+      '庚': '乙',
+      '辛': '丙',
+      '壬': '丁',
+      '癸': '戊'
+    };
+
+    // 天德合与地支的对应关系
+    const tianDeHeBranchMap: {[key: string]: string} = {
+      '己': '丑',
+      '庚': '寅',
+      '辛': '卯',
+      '壬': '辰',
+      '癸': '巳',
+      '甲': '午',
+      '乙': '未',
+      '丙': '申',
+      '丁': '酉',
+      '戊': '戌'
+    };
+
+    const tianDeHeStem = tianDeHeMap[stem];
+    const tianDeHeBranch = tianDeHeBranchMap[tianDeHeStem];
+
+    return branch === tianDeHeBranch;
+  }
+
+  /**
+   * 判断是否为月德
+   * @param stem 天干
+   * @returns 是否为月德
+   */
+  private static isYueDe(stem: string): boolean {
+    // 月德与天干的对应关系
+    const yueDeMap: {[key: string]: string} = {
+      '甲': '丙',
+      '乙': '甲',
+      '丙': '壬',
+      '丁': '庚',
+      '戊': '戊',
+      '己': '丙',
+      '庚': '甲',
+      '辛': '壬',
+      '壬': '庚',
+      '癸': '戊'
+    };
+
+    return Object.values(yueDeMap).includes(stem);
+  }
+
+  /**
+   * 判断是否为天医
+   * @param branch 地支
+   * @returns 是否为天医
+   */
+  private static isTianYi(branch: string): boolean {
+    // 天医与地支的对应关系
+    const tianYiMap: {[key: string]: string} = {
+      '子': '丑',
+      '丑': '子',
+      '寅': '亥',
+      '卯': '戌',
+      '辰': '酉',
+      '巳': '申',
+      '午': '未',
+      '未': '午',
+      '申': '巳',
+      '酉': '辰',
+      '戌': '卯',
+      '亥': '寅'
+    };
+
+    return Object.values(tianYiMap).includes(branch);
+  }
+
+  /**
+   * 判断是否为天喜
+   * @param branch 地支
+   * @returns 是否为天喜
+   */
+  private static isTianXi(branch: string): boolean {
+    // 天喜与地支的对应关系
+    const tianXiMap: {[key: string]: string} = {
+      '子': '酉',
+      '丑': '申',
+      '寅': '未',
+      '卯': '午',
+      '辰': '巳',
+      '巳': '辰',
+      '午': '卯',
+      '未': '寅',
+      '申': '丑',
+      '酉': '子',
+      '戌': '亥',
+      '亥': '戌'
+    };
+
+    return Object.values(tianXiMap).includes(branch);
+  }
+
+  /**
+   * 判断是否为红艳
+   * @param branch 地支
+   * @returns 是否为红艳
+   */
+  private static isHongYan(branch: string): boolean {
+    return ['卯', '巳', '申', '戌'].includes(branch);
+  }
+
+  /**
+   * 判断是否为天罗
+   * @param branch 地支
+   * @returns 是否为天罗
+   */
+  private static isTianLuo(branch: string): boolean {
+    return branch === '戌';
+  }
+
+  /**
+   * 判断是否为地网
+   * @param branch 地支
+   * @returns 是否为地网
+   */
+  private static isDiWang(branch: string): boolean {
+    return branch === '未';
+  }
+
+  /**
+   * 判断是否为羊刃
+   * @param dayStem 日干
+   * @param branch 地支
+   * @returns 是否为羊刃
+   */
+  private static isYangRen(dayStem: string, branch: string): boolean {
+    // 羊刃与日干的对应关系
+    const yangRenMap: {[key: string]: string} = {
+      '甲': '卯',
+      '乙': '寅',
+      '丙': '巳',
+      '丁': '辰',
+      '戊': '巳',
+      '己': '辰',
+      '庚': '酉',
+      '辛': '申',
+      '壬': '亥',
+      '癸': '戌'
+    };
+
+    return yangRenMap[dayStem] === branch;
+  }
+
+  /**
+   * 判断是否为天空
+   * @param branch 地支
+   * @returns 是否为天空
+   */
+  private static isTianKong(branch: string): boolean {
+    return branch === '戌';
+  }
+
+  /**
+   * 判断是否为地劫
+   * @param branch 地支
+   * @returns 是否为地劫
+   */
+  private static isDiJie(branch: string): boolean {
+    return branch === '辰';
+  }
+
+  /**
+   * 判断是否为天刑
+   * @param branch 地支
+   * @returns 是否为天刑
+   */
+  private static isTianXing(branch: string): boolean {
+    return branch === '巳';
+  }
+
+  /**
+   * 判断是否为天哭
+   * @param branch 地支
+   * @returns 是否为天哭
+   */
+  private static isTianKu(branch: string): boolean {
+    return branch === '未';
+  }
+
+  /**
+   * 判断是否为天虚
+   * @param branch 地支
+   * @returns 是否为天虚
+   */
+  private static isTianXu(branch: string): boolean {
+    return branch === '丑';
+  }
+
+  /**
+   * 判断是否为咸池
+   * @param branch 地支
+   * @returns 是否为咸池
+   */
+  private static isXianChi(branch: string): boolean {
+    return ['丑', '未', '辰', '戌'].includes(branch);
+  }
+
+  /**
+   * 判断是否为亡神
+   * @param branch 地支
+   * @returns 是否为亡神
+   */
+  private static isWangShen(branch: string): boolean {
+    return ['寅', '申'].includes(branch);
+  }
+
+  /**
+   * 判断是否为劫煞
+   * @param branch 地支
+   * @returns 是否为劫煞
+   */
+  private static isJieSha(branch: string): boolean {
+    return ['子', '午'].includes(branch);
+  }
+
+  /**
+   * 判断是否为灾煞
+   * @param branch 地支
+   * @returns 是否为灾煞
+   */
+  private static isZaiSha(branch: string): boolean {
+    return ['卯', '酉'].includes(branch);
+  }
+
+  /**
+   * 判断是否为岁破
+   * @param branch 地支
+   * @param yearBranch 年支
+   * @returns 是否为岁破
+   */
+  private static isSuiPo(branch: string, yearBranch: string): boolean {
+    // 岁破与年支的对应关系
+    const suiPoMap: {[key: string]: string} = {
+      '子': '午',
+      '午': '子',
+      '卯': '酉',
+      '酉': '卯',
+      '辰': '戌',
+      '戌': '辰',
+      '丑': '未',
+      '未': '丑',
+      '寅': '申',
+      '申': '寅',
+      '巳': '亥',
+      '亥': '巳'
+    };
+
+    return suiPoMap[yearBranch] === branch;
+  }
+
+  /**
+   * 判断是否为大耗
+   * @param branch 地支
+   * @param yearBranch 年支
+   * @returns 是否为大耗
+   */
+  private static isDaHao(branch: string, yearBranch: string): boolean {
+    // 大耗与年支的对应关系
+    const daHaoMap: {[key: string]: string} = {
+      '子': '未',
+      '丑': '申',
+      '寅': '酉',
+      '卯': '戌',
+      '辰': '亥',
+      '巳': '子',
+      '午': '丑',
+      '未': '寅',
+      '申': '卯',
+      '酉': '辰',
+      '戌': '巳',
+      '亥': '午'
+    };
+
+    return daHaoMap[yearBranch] === branch;
+  }
+
+  /**
+   * 判断是否为五鬼
+   * @param branch 地支
+   * @returns 是否为五鬼
+   */
+  private static isWuGui(branch: string): boolean {
+    return ['巳', '申', '亥', '寅'].includes(branch);
+  }
+
+  /**
+   * 判断是否为天德贵人
+   * @param stem 天干
+   * @param branch 地支
+   * @returns 是否为天德贵人
+   */
+  private static isTianDeGuiRen(stem: string, branch: string): boolean {
+    // 天德贵人与天干的对应关系
+    const tianDeGuiRenMap: {[key: string]: string[]} = {
+      '甲': ['丑', '未'],
+      '乙': ['子', '申'],
+      '丙': ['亥', '酉'],
+      '丁': ['亥', '酉'],
+      '戊': ['丑', '未'],
+      '己': ['子', '申'],
+      '庚': ['亥', '酉'],
+      '辛': ['亥', '酉'],
+      '壬': ['丑', '未'],
+      '癸': ['子', '申']
+    };
+
+    return tianDeGuiRenMap[stem]?.includes(branch) || false;
+  }
+
+  /**
+   * 判断是否为月德贵人
+   * @param stem 天干
+   * @param branch 地支
+   * @returns 是否为月德贵人
+   */
+  private static isYueDeGuiRen(stem: string, branch: string): boolean {
+    // 月德贵人与天干的对应关系
+    const yueDeGuiRenMap: {[key: string]: string[]} = {
+      '甲': ['卯'],
+      '乙': ['寅'],
+      '丙': ['巳'],
+      '丁': ['午'],
+      '戊': ['巳'],
+      '己': ['午'],
+      '庚': ['申'],
+      '辛': ['酉'],
+      '壬': ['亥'],
+      '癸': ['子']
+    };
+
+    return yueDeGuiRenMap[stem]?.includes(branch) || false;
+  }
+
+  /**
+   * 判断是否为天赦
+   * @param stem 天干
+   * @param branch 地支
+   * @returns 是否为天赦
+   */
+  private static isTianShe(stem: string, branch: string): boolean {
+    // 天赦与天干地支的对应关系
+    const tianSheMap: {[key: string]: string[]} = {
+      '甲': ['戌'],
+      '乙': ['酉'],
+      '丙': ['申'],
+      '丁': ['未'],
+      '戊': ['午'],
+      '己': ['巳'],
+      '庚': ['辰'],
+      '辛': ['卯'],
+      '壬': ['寅'],
+      '癸': ['丑']
+    };
+
+    return tianSheMap[stem]?.includes(branch) || false;
+  }
+
+  /**
+   * 判断是否为天恩
+   * @param stem 天干
+   * @param branch 地支
+   * @returns 是否为天恩
+   */
+  private static isTianEn(stem: string, branch: string): boolean {
+    // 天恩与天干地支的对应关系
+    const tianEnMap: {[key: string]: string[]} = {
+      '甲': ['申'],
+      '乙': ['酉'],
+      '丙': ['戌'],
+      '丁': ['亥'],
+      '戊': ['子'],
+      '己': ['丑'],
+      '庚': ['寅'],
+      '辛': ['卯'],
+      '壬': ['辰'],
+      '癸': ['巳']
+    };
+
+    return tianEnMap[stem]?.includes(branch) || false;
+  }
+
+  /**
+   * 判断是否为天官
+   * @param stem 天干
+   * @param branch 地支
+   * @returns 是否为天官
+   */
+  private static isTianGuan(stem: string, branch: string): boolean {
+    // 天官与天干地支的对应关系
+    const tianGuanMap: {[key: string]: string[]} = {
+      '甲': ['未'],
+      '乙': ['申'],
+      '丙': ['酉'],
+      '丁': ['戌'],
+      '戊': ['亥'],
+      '己': ['子'],
+      '庚': ['丑'],
+      '辛': ['寅'],
+      '壬': ['卯'],
+      '癸': ['辰']
+    };
+
+    return tianGuanMap[stem]?.includes(branch) || false;
+  }
+
+  /**
+   * 判断是否为天福
+   * @param stem 天干
+   * @param branch 地支
+   * @returns 是否为天福
+   */
+  private static isTianFu(stem: string, branch: string): boolean {
+    // 天福与天干地支的对应关系
+    const tianFuMap: {[key: string]: string[]} = {
+      '甲': ['酉'],
+      '乙': ['申'],
+      '丙': ['未'],
+      '丁': ['午'],
+      '戊': ['巳'],
+      '己': ['辰'],
+      '庚': ['卯'],
+      '辛': ['寅'],
+      '壬': ['丑'],
+      '癸': ['子']
+    };
+
+    return tianFuMap[stem]?.includes(branch) || false;
+  }
+
+  /**
+   * 判断是否为天厨
+   * @param stem 天干
+   * @param branch 地支
+   * @returns 是否为天厨
+   */
+  private static isTianChu(stem: string, branch: string): boolean {
+    // 天厨与天干地支的对应关系
+    const tianChuMap: {[key: string]: string[]} = {
+      '甲': ['巳'],
+      '乙': ['午'],
+      '丙': ['未'],
+      '丁': ['申'],
+      '戊': ['酉'],
+      '己': ['戌'],
+      '庚': ['亥'],
+      '辛': ['子'],
+      '壬': ['丑'],
+      '癸': ['寅']
+    };
+
+    return tianChuMap[stem]?.includes(branch) || false;
+  }
+
+  /**
+   * 判断是否为天巫
+   * @param branch 地支
+   * @returns 是否为天巫
+   */
+  private static isTianWu(branch: string): boolean {
+    return ['巳', '亥'].includes(branch);
+  }
+
+  /**
+   * 判断是否为天月
+   * @param branch 地支
+   * @returns 是否为天月
+   */
+  private static isTianYue(branch: string): boolean {
+    return ['未', '丑'].includes(branch);
+  }
+
+  /**
+   * 判断是否为天马
+   * @param branch 地支
+   * @param yearBranch 年支
+   * @returns 是否为天马
+   */
+  private static isTianMa(branch: string, yearBranch: string): boolean {
+    // 天马与年支的对应关系
+    const tianMaMap: {[key: string]: string} = {
+      '子': '午',
+      '丑': '未',
+      '寅': '申',
+      '卯': '酉',
+      '辰': '戌',
+      '巳': '亥',
+      '午': '子',
+      '未': '丑',
+      '申': '寅',
+      '酉': '卯',
+      '戌': '辰',
+      '亥': '巳'
+    };
+
+    return tianMaMap[yearBranch] === branch;
+  }
+
+  /**
+   * 获取地势（长生十二神）
+   * @param dayStem 日干
+   * @param branch 地支
+   * @returns 地势
+   */
+  private static getDiShi(dayStem: string, branch: string): string {
+    // 阳干：甲丙戊庚壬
+    // 阴干：乙丁己辛癸
+    const yangGan = '甲丙戊庚壬';
+    const isDayYang = yangGan.includes(dayStem);
+
+    // 长生十二神表
+    const diShiMap: {[key: string]: {[key: string]: string}} = {
+      '甲': {
+        '亥': '长生', '子': '沐浴', '丑': '冠带', '寅': '临官', '卯': '帝旺',
+        '辰': '衰', '巳': '病', '午': '死', '未': '墓', '申': '绝',
+        '酉': '胎', '戌': '养'
+      },
+      '丙戊': {
+        '寅': '长生', '卯': '沐浴', '辰': '冠带', '巳': '临官', '午': '帝旺',
+        '未': '衰', '申': '病', '酉': '死', '戌': '墓', '亥': '绝',
+        '子': '胎', '丑': '养'
+      },
+      '庚': {
+        '巳': '长生', '午': '沐浴', '未': '冠带', '申': '临官', '酉': '帝旺',
+        '戌': '衰', '亥': '病', '子': '死', '丑': '墓', '寅': '绝',
+        '卯': '胎', '辰': '养'
+      },
+      '壬': {
+        '申': '长生', '酉': '沐浴', '戌': '冠带', '亥': '临官', '子': '帝旺',
+        '丑': '衰', '寅': '病', '卯': '死', '辰': '墓', '巳': '绝',
+        '午': '胎', '未': '养'
+      },
+      '乙': {
+        '午': '长生', '巳': '沐浴', '辰': '冠带', '卯': '临官', '寅': '帝旺',
+        '丑': '衰', '子': '病', '亥': '死', '戌': '墓', '酉': '绝',
+        '申': '胎', '未': '养'
+      },
+      '丁己': {
+        '酉': '长生', '申': '沐浴', '未': '冠带', '午': '临官', '巳': '帝旺',
+        '辰': '衰', '卯': '病', '寅': '死', '丑': '墓', '子': '绝',
+        '亥': '胎', '戌': '养'
+      },
+      '辛': {
+        '子': '长生', '亥': '沐浴', '戌': '冠带', '酉': '临官', '申': '帝旺',
+        '未': '衰', '午': '病', '巳': '死', '辰': '墓', '卯': '绝',
+        '寅': '胎', '丑': '养'
+      },
+      '癸': {
+        '卯': '长生', '寅': '沐浴', '丑': '冠带', '子': '临官', '亥': '帝旺',
+        '戌': '衰', '酉': '病', '申': '死', '未': '墓', '午': '绝',
+        '巳': '胎', '辰': '养'
+      }
+    };
+
+    // 根据日干查找对应的地势表
+    let diShiTable: {[key: string]: string} | undefined;
+
+    if (dayStem === '甲') {
+      diShiTable = diShiMap['甲'];
+    } else if (dayStem === '乙') {
+      diShiTable = diShiMap['乙'];
+    } else if (dayStem === '丙' || dayStem === '戊') {
+      diShiTable = diShiMap['丙戊'];
+    } else if (dayStem === '丁' || dayStem === '己') {
+      diShiTable = diShiMap['丁己'];
+    } else if (dayStem === '庚') {
+      diShiTable = diShiMap['庚'];
+    } else if (dayStem === '辛') {
+      diShiTable = diShiMap['辛'];
+    } else if (dayStem === '壬') {
+      diShiTable = diShiMap['壬'];
+    } else if (dayStem === '癸') {
+      diShiTable = diShiMap['癸'];
+    }
+
+    // 如果找到对应的地势表，返回地势
+    if (diShiTable && diShiTable[branch]) {
+      return diShiTable[branch];
+    }
+
+    return '未知';
+  }
+
+  /**
+   * 计算八字格局
+   * @param eightChar 八字对象
+   * @returns 格局信息
+   */
+  private static calculateGeJu(eightChar: EightChar): { geJu: string; detail: string } {
+    // 获取日干和五行
+    const dayStem = eightChar.getDayGan();
+    const dayWuXing = eightChar.getDayWuXing();
+
+    // 获取四柱天干和五行
+    const yearStem = eightChar.getYearGan();
+    const yearWuXing = eightChar.getYearWuXing();
+    const monthStem = eightChar.getMonthGan();
+    const monthWuXing = eightChar.getMonthWuXing();
+    const timeStem = eightChar.getTimeGan();
+    const timeWuXing = eightChar.getTimeWuXing();
+
+    // 获取四柱地支和五行
+    const yearBranch = eightChar.getYearZhi();
+    const yearBranchWuXing = this.getBranchWuXing(yearBranch);
+    const monthBranch = eightChar.getMonthZhi();
+    const monthBranchWuXing = this.getBranchWuXing(monthBranch);
+    const dayBranch = eightChar.getDayZhi();
+    const dayBranchWuXing = this.getBranchWuXing(dayBranch);
+    const timeBranch = eightChar.getTimeZhi();
+    const timeBranchWuXing = this.getBranchWuXing(timeBranch);
+
+    // 计算五行个数
+    const wuXingCount = {
+      '金': 0,
+      '木': 0,
+      '水': 0,
+      '火': 0,
+      '土': 0
+    };
+
+    // 天干五行
+    if (yearWuXing === '金') wuXingCount['金']++;
+    if (yearWuXing === '木') wuXingCount['木']++;
+    if (yearWuXing === '水') wuXingCount['水']++;
+    if (yearWuXing === '火') wuXingCount['火']++;
+    if (yearWuXing === '土') wuXingCount['土']++;
+
+    if (monthWuXing === '金') wuXingCount['金']++;
+    if (monthWuXing === '木') wuXingCount['木']++;
+    if (monthWuXing === '水') wuXingCount['水']++;
+    if (monthWuXing === '火') wuXingCount['火']++;
+    if (monthWuXing === '土') wuXingCount['土']++;
+
+    if (dayWuXing === '金') wuXingCount['金']++;
+    if (dayWuXing === '木') wuXingCount['木']++;
+    if (dayWuXing === '水') wuXingCount['水']++;
+    if (dayWuXing === '火') wuXingCount['火']++;
+    if (dayWuXing === '土') wuXingCount['土']++;
+
+    if (timeWuXing === '金') wuXingCount['金']++;
+    if (timeWuXing === '木') wuXingCount['木']++;
+    if (timeWuXing === '水') wuXingCount['水']++;
+    if (timeWuXing === '火') wuXingCount['火']++;
+    if (timeWuXing === '土') wuXingCount['土']++;
+
+    // 地支五行
+    if (yearBranchWuXing === '金') wuXingCount['金']++;
+    if (yearBranchWuXing === '木') wuXingCount['木']++;
+    if (yearBranchWuXing === '水') wuXingCount['水']++;
+    if (yearBranchWuXing === '火') wuXingCount['火']++;
+    if (yearBranchWuXing === '土') wuXingCount['土']++;
+
+    if (monthBranchWuXing === '金') wuXingCount['金']++;
+    if (monthBranchWuXing === '木') wuXingCount['木']++;
+    if (monthBranchWuXing === '水') wuXingCount['水']++;
+    if (monthBranchWuXing === '火') wuXingCount['火']++;
+    if (monthBranchWuXing === '土') wuXingCount['土']++;
+
+    if (dayBranchWuXing === '金') wuXingCount['金']++;
+    if (dayBranchWuXing === '木') wuXingCount['木']++;
+    if (dayBranchWuXing === '水') wuXingCount['水']++;
+    if (dayBranchWuXing === '火') wuXingCount['火']++;
+    if (dayBranchWuXing === '土') wuXingCount['土']++;
+
+    if (timeBranchWuXing === '金') wuXingCount['金']++;
+    if (timeBranchWuXing === '木') wuXingCount['木']++;
+    if (timeBranchWuXing === '水') wuXingCount['水']++;
+    if (timeBranchWuXing === '火') wuXingCount['火']++;
+    if (timeBranchWuXing === '土') wuXingCount['土']++;
+
+    // 判断格局
+    // 1. 日主旺衰
+    const riZhuStrength = this.calculateRiZhuStrength(eightChar);
+
+    // 2. 五行缺失
+    const missingWuXing = Object.keys(wuXingCount).filter(key => wuXingCount[key as keyof typeof wuXingCount] === 0);
+
+    // 3. 特殊格局判断
+
+    // 3.1 七杀格
+    if (this.isQiShaGe(eightChar)) {
+      return {
+        geJu: '七杀格',
+        detail: '八字中有七杀，且七杀有力，日主衰弱。'
+      };
+    }
+
+    // 3.2 正官格
+    if (this.isZhengGuanGe(eightChar)) {
+      return {
+        geJu: '正官格',
+        detail: '八字中有正官，且正官有力，日主衰弱。'
+      };
+    }
+
+    // 3.3 偏印格
+    if (this.isPianYinGe(eightChar)) {
+      return {
+        geJu: '偏印格',
+        detail: '八字中有偏印，且偏印有力，日主衰弱。'
+      };
+    }
+
+    // 3.4 正印格
+    if (this.isZhengYinGe(eightChar)) {
+      return {
+        geJu: '正印格',
+        detail: '八字中有正印，且正印有力，日主衰弱。'
+      };
+    }
+
+    // 3.5 食神格
+    if (this.isShiShenGe(eightChar)) {
+      return {
+        geJu: '食神格',
+        detail: '八字中有食神，且食神有力，日主旺盛。'
+      };
+    }
+
+    // 3.6 伤官格
+    if (this.isShangGuanGe(eightChar)) {
+      return {
+        geJu: '伤官格',
+        detail: '八字中有伤官，且伤官有力，日主旺盛。'
+      };
+    }
+
+    // 3.7 偏财格
+    if (this.isPianCaiGe(eightChar)) {
+      return {
+        geJu: '偏财格',
+        detail: '八字中有偏财，且偏财有力，日主旺盛。'
+      };
+    }
+
+    // 3.8 正财格
+    if (this.isZhengCaiGe(eightChar)) {
+      return {
+        geJu: '正财格',
+        detail: '八字中有正财，且正财有力，日主旺盛。'
+      };
+    }
+
+    // 3.9 比肩格
+    if (this.isBiJianGe(eightChar)) {
+      return {
+        geJu: '比肩格',
+        detail: '八字中有比肩，且比肩有力，日主旺盛。'
+      };
+    }
+
+    // 3.10 劫财格
+    if (this.isJieCaiGe(eightChar)) {
+      return {
+        geJu: '劫财格',
+        detail: '八字中有劫财，且劫财有力，日主旺盛。'
+      };
+    }
+
+    // 默认格局
+    if (riZhuStrength === '旺' || riZhuStrength === '相') {
+      return {
+        geJu: '日主旺相',
+        detail: '日主旺盛或相旺，需要抑制。'
+      };
+    } else if (riZhuStrength === '衰' || riZhuStrength === '休') {
+      return {
+        geJu: '日主衰弱',
+        detail: '日主衰弱或休囚，需要扶助。'
+      };
+    } else {
+      return {
+        geJu: '日主平和',
+        detail: '日主平和，需要根据具体情况调整。'
+      };
+    }
+  }
+
+  /**
+   * 判断是否为七杀格
+   * @param eightChar 八字对象
+   * @returns 是否为七杀格
+   */
+  private static isQiShaGe(eightChar: EightChar): boolean {
+    // 简化判断，实际应该根据八字命理规则计算
+    const dayStem = eightChar.getDayGan();
+    const yearStem = eightChar.getYearGan();
+    const monthStem = eightChar.getMonthGan();
+    const timeStem = eightChar.getTimeGan();
+
+    // 判断是否有七杀
+    return this.getShiShen(dayStem, yearStem) === '七杀' ||
+           this.getShiShen(dayStem, monthStem) === '七杀' ||
+           this.getShiShen(dayStem, timeStem) === '七杀';
+  }
+
+  /**
+   * 判断是否为正官格
+   * @param eightChar 八字对象
+   * @returns 是否为正官格
+   */
+  private static isZhengGuanGe(eightChar: EightChar): boolean {
+    // 简化判断，实际应该根据八字命理规则计算
+    const dayStem = eightChar.getDayGan();
+    const yearStem = eightChar.getYearGan();
+    const monthStem = eightChar.getMonthGan();
+    const timeStem = eightChar.getTimeGan();
+
+    // 判断是否有正官
+    return this.getShiShen(dayStem, yearStem) === '正官' ||
+           this.getShiShen(dayStem, monthStem) === '正官' ||
+           this.getShiShen(dayStem, timeStem) === '正官';
+  }
+
+  /**
+   * 判断是否为偏印格
+   * @param eightChar 八字对象
+   * @returns 是否为偏印格
+   */
+  private static isPianYinGe(eightChar: EightChar): boolean {
+    // 简化判断，实际应该根据八字命理规则计算
+    const dayStem = eightChar.getDayGan();
+    const yearStem = eightChar.getYearGan();
+    const monthStem = eightChar.getMonthGan();
+    const timeStem = eightChar.getTimeGan();
+
+    // 判断是否有偏印
+    return this.getShiShen(dayStem, yearStem) === '偏印' ||
+           this.getShiShen(dayStem, monthStem) === '偏印' ||
+           this.getShiShen(dayStem, timeStem) === '偏印';
+  }
+
+  /**
+   * 判断是否为正印格
+   * @param eightChar 八字对象
+   * @returns 是否为正印格
+   */
+  private static isZhengYinGe(eightChar: EightChar): boolean {
+    // 简化判断，实际应该根据八字命理规则计算
+    const dayStem = eightChar.getDayGan();
+    const yearStem = eightChar.getYearGan();
+    const monthStem = eightChar.getMonthGan();
+    const timeStem = eightChar.getTimeGan();
+
+    // 判断是否有正印
+    return this.getShiShen(dayStem, yearStem) === '正印' ||
+           this.getShiShen(dayStem, monthStem) === '正印' ||
+           this.getShiShen(dayStem, timeStem) === '正印';
+  }
+
+  /**
+   * 判断是否为食神格
+   * @param eightChar 八字对象
+   * @returns 是否为食神格
+   */
+  private static isShiShenGe(eightChar: EightChar): boolean {
+    // 简化判断，实际应该根据八字命理规则计算
+    const dayStem = eightChar.getDayGan();
+    const yearStem = eightChar.getYearGan();
+    const monthStem = eightChar.getMonthGan();
+    const timeStem = eightChar.getTimeGan();
+
+    // 判断是否有食神
+    return this.getShiShen(dayStem, yearStem) === '食神' ||
+           this.getShiShen(dayStem, monthStem) === '食神' ||
+           this.getShiShen(dayStem, timeStem) === '食神';
+  }
+
+  /**
+   * 判断是否为伤官格
+   * @param eightChar 八字对象
+   * @returns 是否为伤官格
+   */
+  private static isShangGuanGe(eightChar: EightChar): boolean {
+    // 简化判断，实际应该根据八字命理规则计算
+    const dayStem = eightChar.getDayGan();
+    const yearStem = eightChar.getYearGan();
+    const monthStem = eightChar.getMonthGan();
+    const timeStem = eightChar.getTimeGan();
+
+    // 判断是否有伤官
+    return this.getShiShen(dayStem, yearStem) === '伤官' ||
+           this.getShiShen(dayStem, monthStem) === '伤官' ||
+           this.getShiShen(dayStem, timeStem) === '伤官';
+  }
+
+  /**
+   * 判断是否为偏财格
+   * @param eightChar 八字对象
+   * @returns 是否为偏财格
+   */
+  private static isPianCaiGe(eightChar: EightChar): boolean {
+    // 简化判断，实际应该根据八字命理规则计算
+    const dayStem = eightChar.getDayGan();
+    const yearStem = eightChar.getYearGan();
+    const monthStem = eightChar.getMonthGan();
+    const timeStem = eightChar.getTimeGan();
+
+    // 判断是否有偏财
+    return this.getShiShen(dayStem, yearStem) === '偏财' ||
+           this.getShiShen(dayStem, monthStem) === '偏财' ||
+           this.getShiShen(dayStem, timeStem) === '偏财';
+  }
+
+  /**
+   * 判断是否为正财格
+   * @param eightChar 八字对象
+   * @returns 是否为正财格
+   */
+  private static isZhengCaiGe(eightChar: EightChar): boolean {
+    // 简化判断，实际应该根据八字命理规则计算
+    const dayStem = eightChar.getDayGan();
+    const yearStem = eightChar.getYearGan();
+    const monthStem = eightChar.getMonthGan();
+    const timeStem = eightChar.getTimeGan();
+
+    // 判断是否有正财
+    return this.getShiShen(dayStem, yearStem) === '正财' ||
+           this.getShiShen(dayStem, monthStem) === '正财' ||
+           this.getShiShen(dayStem, timeStem) === '正财';
+  }
+
+  /**
+   * 判断是否为比肩格
+   * @param eightChar 八字对象
+   * @returns 是否为比肩格
+   */
+  private static isBiJianGe(eightChar: EightChar): boolean {
+    // 简化判断，实际应该根据八字命理规则计算
+    const dayStem = eightChar.getDayGan();
+    const yearStem = eightChar.getYearGan();
+    const monthStem = eightChar.getMonthGan();
+    const timeStem = eightChar.getTimeGan();
+
+    // 判断是否有比肩
+    return this.getShiShen(dayStem, yearStem) === '比肩' ||
+           this.getShiShen(dayStem, monthStem) === '比肩' ||
+           this.getShiShen(dayStem, timeStem) === '比肩';
+  }
+
+  /**
+   * 判断是否为劫财格
+   * @param eightChar 八字对象
+   * @returns 是否为劫财格
+   */
+  private static isJieCaiGe(eightChar: EightChar): boolean {
+    // 简化判断，实际应该根据八字命理规则计算
+    const dayStem = eightChar.getDayGan();
+    const yearStem = eightChar.getYearGan();
+    const monthStem = eightChar.getMonthGan();
+    const timeStem = eightChar.getTimeGan();
+
+    // 判断是否有劫财
+    return this.getShiShen(dayStem, yearStem) === '劫财' ||
+           this.getShiShen(dayStem, monthStem) === '劫财' ||
+           this.getShiShen(dayStem, timeStem) === '劫财';
   }
 
   /**

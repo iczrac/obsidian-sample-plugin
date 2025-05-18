@@ -48,9 +48,39 @@ export interface BaziInfo {
   dayXunKong?: string;
   hourXunKong?: string;
 
+  // 十神信息
+  yearShiShenGan?: string;
+  monthShiShenGan?: string;
+  dayShiShenGan?: string;
+  timeShiShenGan?: string;
+
+  // 地支十神信息
+  yearShiShenZhi?: string | string[];
+  monthShiShenZhi?: string | string[];
+  dayShiShenZhi?: string | string[];
+  hourShiShenZhi?: string | string[];
+
+  // 地势（长生十二神）信息
+  yearDiShi?: string;
+  monthDiShi?: string;
+  dayDiShi?: string;
+  timeDiShi?: string;
+
+  // 神煞信息
+  shenSha?: string[];
+  yearShenSha?: string[];
+  monthShenSha?: string[];
+  dayShenSha?: string[];
+  hourShenSha?: string[];
+
+  // 格局信息
+  geJu?: string;
+  geJuDetail?: string;
+
   // 特殊信息
   taiYuan?: string;
   mingGong?: string;
+  shenGong?: string;
 
   // 大运信息
   daYun?: DaYunInfo[];
@@ -63,6 +93,18 @@ export interface BaziInfo {
 
   // 流月信息
   liuYue?: LiuYueInfo[];
+
+  // 五行强度
+  wuXingStrength?: {
+    jin: number;
+    mu: number;
+    shui: number;
+    huo: number;
+    tu: number;
+  };
+
+  // 日主旺衰
+  riZhuStrength?: string;
 }
 
 /**
@@ -77,6 +119,19 @@ export interface DaYunInfo {
   ganZhi: string;
   naYin?: string;
   xunKong?: string;
+  shiShenGan?: string;
+  shiShenZhi?: string | string[];
+  diShi?: string;
+  shenSha?: string[];
+  geJu?: string;
+  wuXingStrength?: {
+    jin: number;
+    mu: number;
+    shui: number;
+    huo: number;
+    tu: number;
+  };
+  riZhuStrength?: string;
 }
 
 /**
@@ -89,6 +144,11 @@ export interface LiuNianInfo {
   ganZhi: string;
   naYin?: string;
   xunKong?: string;
+  shiShenGan?: string;
+  shiShenZhi?: string | string[];
+  diShi?: string;
+  shenSha?: string[];
+  geJu?: string;
 }
 
 /**
@@ -101,6 +161,10 @@ export interface XiaoYunInfo {
   ganZhi: string;
   naYin?: string;
   xunKong?: string;
+  shiShenGan?: string;
+  shiShenZhi?: string | string[];
+  diShi?: string;
+  shenSha?: string[];
 }
 
 /**
@@ -111,5 +175,10 @@ export interface LiuYueInfo {
   month: string | number;
   index?: number;
   ganZhi: string;
+  naYin?: string;
   xunKong?: string;
+  shiShenGan?: string;
+  shiShenZhi?: string | string[];
+  diShi?: string;
+  shenSha?: string[];
 }

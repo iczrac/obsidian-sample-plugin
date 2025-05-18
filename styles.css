@@ -194,6 +194,29 @@
   font-size: 0.9em;
   color: var(--text-muted);
   background-color: var(--background-primary);
+  font-style: italic;
+}
+
+/* 旬空单元格 */
+.bazi-xunkong-cell {
+  color: var(--text-muted);
+  font-style: italic;
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+/* 地势行 */
+.bazi-dishi-row {
+  font-size: 0.9em;
+  color: var(--text-accent);
+  background-color: var(--background-secondary-alt);
+}
+
+/* 十神行 */
+.bazi-shishen-row {
+  font-size: 0.9em;
+  color: var(--text-normal);
+  background-color: var(--background-primary);
+  font-weight: 500;
 }
 
 .bazi-view-wuxing-list {
@@ -236,13 +259,20 @@
 }
 
 .bazi-theme-dark .bazi-branch-row,
-.bazi-theme-dark .bazi-nayin-row {
+.bazi-theme-dark .bazi-nayin-row,
+.bazi-theme-dark .bazi-dishi-row {
   background-color: #181825 !important;
 }
 
 .bazi-theme-dark .bazi-stem-row,
-.bazi-theme-dark .bazi-hidegan-row {
+.bazi-theme-dark .bazi-hidegan-row,
+.bazi-theme-dark .bazi-xunkong-row,
+.bazi-theme-dark .bazi-shishen-row {
   background-color: #1e1e2e !important;
+}
+
+.bazi-theme-dark .bazi-xunkong-cell {
+  background-color: rgba(255, 255, 255, 0.03) !important;
 }
 
 .bazi-theme-light {
@@ -257,13 +287,20 @@
 }
 
 .bazi-theme-light .bazi-branch-row,
-.bazi-theme-light .bazi-nayin-row {
+.bazi-theme-light .bazi-nayin-row,
+.bazi-theme-light .bazi-dishi-row {
   background-color: #f0f0f0 !important;
 }
 
 .bazi-theme-light .bazi-stem-row,
-.bazi-theme-light .bazi-hidegan-row {
+.bazi-theme-light .bazi-hidegan-row,
+.bazi-theme-light .bazi-xunkong-row,
+.bazi-theme-light .bazi-shishen-row {
   background-color: #ffffff !important;
+}
+
+.bazi-theme-light .bazi-xunkong-cell {
+  background-color: rgba(0, 0, 0, 0.03) !important;
 }
 
 .bazi-theme-colorful {
@@ -286,13 +323,29 @@
 }
 
 .bazi-theme-colorful .bazi-branch-row,
-.bazi-theme-colorful .bazi-nayin-row {
+.bazi-theme-colorful .bazi-nayin-row,
+.bazi-theme-colorful .bazi-dishi-row {
   background-color: #eadbc8 !important;
 }
 
 .bazi-theme-colorful .bazi-stem-row,
-.bazi-theme-colorful .bazi-hidegan-row {
+.bazi-theme-colorful .bazi-hidegan-row,
+.bazi-theme-colorful .bazi-xunkong-row,
+.bazi-theme-colorful .bazi-shishen-row {
   background-color: #f8f0e5 !important;
+}
+
+.bazi-theme-colorful .bazi-xunkong-cell {
+  background-color: rgba(0, 0, 0, 0.03) !important;
+  color: #666 !important;
+}
+
+.bazi-theme-colorful .bazi-shishen-row {
+  color: #102c57 !important;
+}
+
+.bazi-theme-colorful .bazi-dishi-row {
+  color: #5c3d2e !important;
 }
 
 /* 设置模态框样式 */
@@ -391,6 +444,43 @@
   color: var(--text-on-accent);
 }
 
+/* 旬空单元格样式 */
+.bazi-view-dayun-table .bazi-xunkong-cell,
+.bazi-view-liunian-table .bazi-xunkong-cell,
+.bazi-view-xiaoyun-table .bazi-xunkong-cell,
+.bazi-view-liuyue-table .bazi-xunkong-cell {
+  color: var(--text-muted);
+  font-style: italic;
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+/* 纳音单元格样式 */
+.bazi-view-dayun-table .bazi-nayin-cell,
+.bazi-view-liunian-table .bazi-nayin-cell,
+.bazi-view-xiaoyun-table .bazi-nayin-cell,
+.bazi-view-liuyue-table .bazi-nayin-cell {
+  font-style: italic;
+  color: var(--text-accent);
+}
+
+/* 地势单元格样式 */
+.bazi-view-dayun-table .bazi-dishi-cell,
+.bazi-view-liunian-table .bazi-dishi-cell,
+.bazi-view-xiaoyun-table .bazi-dishi-cell,
+.bazi-view-liuyue-table .bazi-dishi-cell {
+  color: var(--text-accent);
+  font-weight: 500;
+}
+
+/* 十神单元格样式 */
+.bazi-view-dayun-table .bazi-shishen-cell,
+.bazi-view-liunian-table .bazi-shishen-cell,
+.bazi-view-xiaoyun-table .bazi-shishen-cell,
+.bazi-view-liuyue-table .bazi-shishen-cell {
+  color: var(--text-normal);
+  font-weight: 500;
+}
+
 /* 打印样式 */
 @media print {
   .bazi-view-settings-button {
@@ -475,4 +565,189 @@
   .interactive-bazi-view .bazi-view-table td {
     padding: 5px;
   }
+}
+
+/* 十神和地势标签样式 */
+.shishen-tag, .dishi-tag, .shensha-tag, .geju-tag, .wuxing-jin-tag, .wuxing-mu-tag, .wuxing-shui-tag, .wuxing-huo-tag, .wuxing-tu-tag {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin: 2px;
+  font-size: 0.85em;
+}
+
+.shishen-tag {
+  background-color: rgba(var(--interactive-accent-rgb), 0.1);
+  color: var(--text-accent);
+}
+
+.dishi-tag {
+  background-color: rgba(var(--text-accent-rgb), 0.1);
+  color: var(--text-accent);
+}
+
+/* 神煞标签样式 */
+.shensha-tag {
+  background-color: rgba(255, 0, 0, 0.1);
+  color: #e74c3c;
+  font-weight: 500;
+}
+
+/* 格局标签样式 */
+.geju-tag {
+  background-color: rgba(0, 0, 255, 0.1);
+  color: #3498db;
+  font-weight: 500;
+}
+
+.geju-detail {
+  font-size: 0.8em;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* 五行标签样式 */
+.wuxing-jin-tag {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #bdc3c7;
+  border: 1px solid #bdc3c7;
+}
+
+.wuxing-mu-tag {
+  background-color: rgba(0, 255, 0, 0.1);
+  color: #2ecc71;
+  border: 1px solid #2ecc71;
+}
+
+.wuxing-shui-tag {
+  background-color: rgba(0, 0, 255, 0.1);
+  color: #3498db;
+  border: 1px solid #3498db;
+}
+
+.wuxing-huo-tag {
+  background-color: rgba(255, 0, 0, 0.1);
+  color: #e74c3c;
+  border: 1px solid #e74c3c;
+}
+
+.wuxing-tu-tag {
+  background-color: rgba(255, 165, 0, 0.1);
+  color: #f39c12;
+  border: 1px solid #f39c12;
+}
+
+/* 日主旺衰样式 */
+.rizhu-strength {
+  font-weight: 500;
+  color: var(--text-accent);
+}
+
+/* 旬空标签样式 */
+.xunkong-tag {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin: 2px;
+  font-size: 0.85em;
+  background-color: rgba(0, 0, 0, 0.05);
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* 神煞组合标签样式 */
+.shensha-combination-container {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 5px;
+}
+
+.shensha-combination-tag {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin: 2px;
+  font-size: 0.85em;
+  background-color: rgba(255, 0, 255, 0.1);
+  color: #9b59b6;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.shensha-combination-tag:hover {
+  background-color: rgba(255, 0, 255, 0.2);
+}
+
+/* 弹窗样式 */
+.bazi-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.bazi-modal-content {
+  background-color: var(--background-primary);
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 500px;
+  width: 80%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.bazi-modal-title {
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: var(--text-normal);
+  border-bottom: 1px solid var(--background-modifier-border);
+  padding-bottom: 10px;
+}
+
+.bazi-modal-type {
+  margin-bottom: 10px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.bazi-modal-explanation {
+  margin-bottom: 15px;
+  line-height: 1.5;
+}
+
+.bazi-modal-influence {
+  margin-bottom: 20px;
+  line-height: 1.5;
+  font-style: italic;
+  color: var(--text-accent);
+}
+
+.bazi-modal-analysis {
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.bazi-modal-close {
+  display: block;
+  margin: 0 auto;
+  padding: 8px 16px;
+  background-color: var(--interactive-accent);
+  color: var(--text-on-accent);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+
+.bazi-modal-close:hover {
+  background-color: var(--interactive-accent-hover);
 }
