@@ -157,18 +157,46 @@ export class InteractiveBaziView {
     // 地支行
     const branchRow = tbody.createEl('tr', { cls: 'bazi-branch-row' });
     branchRow.createEl('td', { text: '地支', cls: 'bazi-table-label' });
-    branchRow.createEl('td', { text: this.baziInfo.yearBranch });
-    branchRow.createEl('td', { text: this.baziInfo.monthBranch });
-    branchRow.createEl('td', { text: this.baziInfo.dayBranch });
-    branchRow.createEl('td', { text: this.baziInfo.hourBranch });
+    branchRow.createEl('td', {
+      text: this.baziInfo.yearBranch,
+      cls: `wuxing-${this.getWuXingClass(this.getBranchWuXing(this.baziInfo.yearBranch))}`
+    });
+    branchRow.createEl('td', {
+      text: this.baziInfo.monthBranch,
+      cls: `wuxing-${this.getWuXingClass(this.getBranchWuXing(this.baziInfo.monthBranch))}`
+    });
+    branchRow.createEl('td', {
+      text: this.baziInfo.dayBranch,
+      cls: `wuxing-${this.getWuXingClass(this.getBranchWuXing(this.baziInfo.dayBranch))}`
+    });
+    branchRow.createEl('td', {
+      text: this.baziInfo.hourBranch,
+      cls: `wuxing-${this.getWuXingClass(this.getBranchWuXing(this.baziInfo.hourBranch))}`
+    });
 
     // 藏干行
     const hideGanRow = tbody.createEl('tr', { cls: 'bazi-hidegan-row' });
     hideGanRow.createEl('td', { text: '藏干', cls: 'bazi-table-label' });
-    hideGanRow.createEl('td', { text: Array.isArray(this.baziInfo.yearHideGan) ? this.baziInfo.yearHideGan.join('') : (this.baziInfo.yearHideGan || '') });
-    hideGanRow.createEl('td', { text: Array.isArray(this.baziInfo.monthHideGan) ? this.baziInfo.monthHideGan.join('') : (this.baziInfo.monthHideGan || '') });
-    hideGanRow.createEl('td', { text: Array.isArray(this.baziInfo.dayHideGan) ? this.baziInfo.dayHideGan.join('') : (this.baziInfo.dayHideGan || '') });
-    hideGanRow.createEl('td', { text: Array.isArray(this.baziInfo.hourHideGan) ? this.baziInfo.hourHideGan.join('') : (this.baziInfo.hourHideGan || '') });
+
+    // 年柱藏干
+    const yearHideGanText = Array.isArray(this.baziInfo.yearHideGan) ? this.baziInfo.yearHideGan.join('') : (this.baziInfo.yearHideGan || '');
+    const yearHideGanCell = hideGanRow.createEl('td');
+    this.createColoredHideGan(yearHideGanCell, yearHideGanText);
+
+    // 月柱藏干
+    const monthHideGanText = Array.isArray(this.baziInfo.monthHideGan) ? this.baziInfo.monthHideGan.join('') : (this.baziInfo.monthHideGan || '');
+    const monthHideGanCell = hideGanRow.createEl('td');
+    this.createColoredHideGan(monthHideGanCell, monthHideGanText);
+
+    // 日柱藏干
+    const dayHideGanText = Array.isArray(this.baziInfo.dayHideGan) ? this.baziInfo.dayHideGan.join('') : (this.baziInfo.dayHideGan || '');
+    const dayHideGanCell = hideGanRow.createEl('td');
+    this.createColoredHideGan(dayHideGanCell, dayHideGanText);
+
+    // 时柱藏干
+    const hourHideGanText = Array.isArray(this.baziInfo.hourHideGan) ? this.baziInfo.hourHideGan.join('') : (this.baziInfo.hourHideGan || '');
+    const hourHideGanCell = hideGanRow.createEl('td');
+    this.createColoredHideGan(hourHideGanCell, hourHideGanText);
 
     // 十神行
     const shiShenRow = tbody.createEl('tr', { cls: 'bazi-shishen-row' });
@@ -215,7 +243,7 @@ export class InteractiveBaziView {
     // 年柱地势
     const yearDiShiCell = diShiRow.createEl('td');
     if (this.baziInfo.yearDiShi) {
-      const yearDiShiTag = yearDiShiCell.createSpan({
+      yearDiShiCell.createSpan({
         text: this.baziInfo.yearDiShi,
         cls: 'dishi-tag-small'
       });
@@ -224,7 +252,7 @@ export class InteractiveBaziView {
     // 月柱地势
     const monthDiShiCell = diShiRow.createEl('td');
     if (this.baziInfo.monthDiShi) {
-      const monthDiShiTag = monthDiShiCell.createSpan({
+      monthDiShiCell.createSpan({
         text: this.baziInfo.monthDiShi,
         cls: 'dishi-tag-small'
       });
@@ -233,7 +261,7 @@ export class InteractiveBaziView {
     // 日柱地势
     const dayDiShiCell = diShiRow.createEl('td');
     if (this.baziInfo.dayDiShi) {
-      const dayDiShiTag = dayDiShiCell.createSpan({
+      dayDiShiCell.createSpan({
         text: this.baziInfo.dayDiShi,
         cls: 'dishi-tag-small'
       });
@@ -242,7 +270,7 @@ export class InteractiveBaziView {
     // 时柱地势
     const timeDiShiCell = diShiRow.createEl('td');
     if (this.baziInfo.timeDiShi) {
-      const timeDiShiTag = timeDiShiCell.createSpan({
+      timeDiShiCell.createSpan({
         text: this.baziInfo.timeDiShi,
         cls: 'dishi-tag-small'
       });
@@ -251,10 +279,51 @@ export class InteractiveBaziView {
     // 纳音行
     const naYinRow = tbody.createEl('tr', { cls: 'bazi-nayin-row' });
     naYinRow.createEl('td', { text: '纳音', cls: 'bazi-table-label' });
-    naYinRow.createEl('td', { text: this.baziInfo.yearNaYin || '' });
-    naYinRow.createEl('td', { text: this.baziInfo.monthNaYin || '' });
-    naYinRow.createEl('td', { text: this.baziInfo.dayNaYin || '' });
-    naYinRow.createEl('td', { text: this.baziInfo.hourNaYin || '' });
+
+    // 年柱纳音
+    const yearNaYin = this.baziInfo.yearNaYin || '';
+    const yearNaYinCell = naYinRow.createEl('td');
+    if (yearNaYin) {
+      // 提取五行属性（通常纳音格式为"XX五行"，如"金箔金"）
+      const wuXing = this.extractWuXingFromNaYin(yearNaYin);
+      yearNaYinCell.createSpan({
+        text: yearNaYin,
+        cls: `wuxing-${this.getWuXingClass(wuXing)}`
+      });
+    }
+
+    // 月柱纳音
+    const monthNaYin = this.baziInfo.monthNaYin || '';
+    const monthNaYinCell = naYinRow.createEl('td');
+    if (monthNaYin) {
+      const wuXing = this.extractWuXingFromNaYin(monthNaYin);
+      monthNaYinCell.createSpan({
+        text: monthNaYin,
+        cls: `wuxing-${this.getWuXingClass(wuXing)}`
+      });
+    }
+
+    // 日柱纳音
+    const dayNaYin = this.baziInfo.dayNaYin || '';
+    const dayNaYinCell = naYinRow.createEl('td');
+    if (dayNaYin) {
+      const wuXing = this.extractWuXingFromNaYin(dayNaYin);
+      dayNaYinCell.createSpan({
+        text: dayNaYin,
+        cls: `wuxing-${this.getWuXingClass(wuXing)}`
+      });
+    }
+
+    // 时柱纳音
+    const hourNaYin = this.baziInfo.hourNaYin || '';
+    const hourNaYinCell = naYinRow.createEl('td');
+    if (hourNaYin) {
+      const wuXing = this.extractWuXingFromNaYin(hourNaYin);
+      hourNaYinCell.createSpan({
+        text: hourNaYin,
+        cls: `wuxing-${this.getWuXingClass(wuXing)}`
+      });
+    }
 
     // 旬空行
     const xunKongRow = tbody.createEl('tr', { cls: 'bazi-xunkong-row' });
@@ -501,7 +570,7 @@ export class InteractiveBaziView {
       });
 
       if (this.baziInfo.geJuDetail) {
-        const detailEl = geJuItem.createSpan({
+        geJuItem.createSpan({
           text: ` (${this.baziInfo.geJuDetail})`,
           cls: 'geju-detail'
         });
@@ -616,10 +685,30 @@ export class InteractiveBaziView {
     gzRow.createEl('th', { text: '干支' });
     daYunData.slice(0, 10).forEach((dy, index) => {
       const cell = gzRow.createEl('td', {
-        text: dy.ganZhi,
         cls: 'bazi-dayun-cell',
         attr: { 'data-index': index.toString() }
       });
+
+      // 如果有干支，按五行颜色显示
+      if (dy.ganZhi && dy.ganZhi.length >= 2) {
+        const stem = dy.ganZhi[0]; // 天干
+        const branch = dy.ganZhi[1]; // 地支
+
+        // 创建天干元素并设置五行颜色
+        cell.createSpan({
+          text: stem,
+          cls: `wuxing-${this.getWuXingClass(this.getStemWuXing(stem))}`
+        });
+
+        // 创建地支元素并设置五行颜色
+        cell.createSpan({
+          text: branch,
+          cls: `wuxing-${this.getWuXingClass(this.getBranchWuXing(branch))}`
+        });
+      } else {
+        // 如果没有干支或格式不正确，直接显示原文本
+        cell.textContent = dy.ganZhi || '';
+      }
 
       // 添加点击事件
       cell.addEventListener('click', () => {
@@ -673,10 +762,18 @@ export class InteractiveBaziView {
       const naYinRow = this.daYunTable.createEl('tr');
       naYinRow.createEl('th', { text: '纳音' });
       daYunData.slice(0, 10).forEach(dy => {
-        naYinRow.createEl('td', {
-          text: dy.naYin || '',
+        const naYin = dy.naYin || '';
+        const cell = naYinRow.createEl('td', {
           cls: 'bazi-nayin-cell'
         });
+
+        if (naYin) {
+          const wuXing = this.extractWuXingFromNaYin(naYin);
+          cell.createSpan({
+            text: naYin,
+            cls: `wuxing-${this.getWuXingClass(wuXing)}`
+          });
+        }
       });
     }
   }
@@ -834,13 +931,10 @@ export class InteractiveBaziView {
   private generateLiuYueForYear(year: number): Array<{month: string, ganZhi: string, xunKong: string}> {
     // 天干地支顺序
     const stems = "甲乙丙丁戊己庚辛壬癸";
-    const branches = "子丑寅卯辰巳午未申酉戌亥";
 
     // 计算年干支
     const stemIndex = (year - 4) % 10;
-    const branchIndex = (year - 4) % 12;
     const yearStem = stems[stemIndex];
-    const yearBranch = branches[branchIndex];
 
     // 生成流月数据
     const liuYueData: Array<{month: string, ganZhi: string, xunKong: string}> = [];
@@ -957,10 +1051,30 @@ export class InteractiveBaziView {
     lnGzRow.createEl('th', { text: '流年' });
     liuNian.slice(0, 10).forEach(ln => {
       const cell = lnGzRow.createEl('td', {
-        text: ln.ganZhi,
         cls: 'bazi-liunian-cell',
         attr: { 'data-year': ln.year.toString() }
       });
+
+      // 如果有干支，按五行颜色显示
+      if (ln.ganZhi && ln.ganZhi.length >= 2) {
+        const stem = ln.ganZhi[0]; // 天干
+        const branch = ln.ganZhi[1]; // 地支
+
+        // 创建天干元素并设置五行颜色
+        cell.createSpan({
+          text: stem,
+          cls: `wuxing-${this.getWuXingClass(this.getStemWuXing(stem))}`
+        });
+
+        // 创建地支元素并设置五行颜色
+        cell.createSpan({
+          text: branch,
+          cls: `wuxing-${this.getWuXingClass(this.getBranchWuXing(branch))}`
+        });
+      } else {
+        // 如果没有干支或格式不正确，直接显示原文本
+        cell.textContent = ln.ganZhi || '';
+      }
 
       // 添加点击事件
       cell.addEventListener('click', () => {
@@ -1023,9 +1137,29 @@ export class InteractiveBaziView {
       liuNian.slice(0, 10).forEach(ln => {
         const xy = xyMap.get(ln.year);
         const cell = xyGzRow.createEl('td', {
-          text: xy ? xy.ganZhi : '',
           cls: 'bazi-xiaoyun-cell'
         });
+
+        // 如果有小运干支，按五行颜色显示
+        if (xy && xy.ganZhi && xy.ganZhi.length >= 2) {
+          const stem = xy.ganZhi[0]; // 天干
+          const branch = xy.ganZhi[1]; // 地支
+
+          // 创建天干元素并设置五行颜色
+          cell.createSpan({
+            text: stem,
+            cls: `wuxing-${this.getWuXingClass(this.getStemWuXing(stem))}`
+          });
+
+          // 创建地支元素并设置五行颜色
+          cell.createSpan({
+            text: branch,
+            cls: `wuxing-${this.getWuXingClass(this.getBranchWuXing(branch))}`
+          });
+        } else {
+          // 如果没有干支或格式不正确，直接显示原文本
+          cell.textContent = xy ? (xy.ganZhi || '') : '';
+        }
 
         // 如果对应的流年单元格被选中，也高亮小运单元格
         if (ln.year === this.selectedLiuNianYear) {
@@ -1162,10 +1296,30 @@ export class InteractiveBaziView {
       }
 
       const cell = gzRow.createEl('td', {
-        text: ly.ganZhi,
         cls: 'bazi-liuyue-cell',
         attr: { 'data-month': monthId }
       });
+
+      // 如果有干支，按五行颜色显示
+      if (ly.ganZhi && ly.ganZhi.length >= 2) {
+        const stem = ly.ganZhi[0]; // 天干
+        const branch = ly.ganZhi[1]; // 地支
+
+        // 创建天干元素并设置五行颜色
+        cell.createSpan({
+          text: stem,
+          cls: `wuxing-${this.getWuXingClass(this.getStemWuXing(stem))}`
+        });
+
+        // 创建地支元素并设置五行颜色
+        cell.createSpan({
+          text: branch,
+          cls: `wuxing-${this.getWuXingClass(this.getBranchWuXing(branch))}`
+        });
+      } else {
+        // 如果没有干支或格式不正确，直接显示原文本
+        cell.textContent = ly.ganZhi || '';
+      }
 
       // 添加点击事件
       cell.addEventListener('click', () => {
@@ -1231,10 +1385,18 @@ export class InteractiveBaziView {
       const naYinRow = this.liuYueTable.createEl('tr');
       naYinRow.createEl('th', { text: '纳音' });
       liuYue.forEach(ly => {
-        naYinRow.createEl('td', {
-          text: ly.naYin || '',
+        const naYin = ly.naYin || '';
+        const cell = naYinRow.createEl('td', {
           cls: 'bazi-nayin-cell'
         });
+
+        if (naYin) {
+          const wuXing = this.extractWuXingFromNaYin(naYin);
+          cell.createSpan({
+            text: naYin,
+            cls: `wuxing-${this.getWuXingClass(wuXing)}`
+          });
+        }
       });
     }
 
@@ -1435,6 +1597,123 @@ export class InteractiveBaziView {
   }
 
   /**
+   * 获取地支对应的五行
+   * @param branch 地支
+   * @returns 五行
+   */
+  private getBranchWuXing(branch: string | undefined): string {
+    if (!branch) return '未知';
+
+    const map: {[key: string]: string} = {
+      '子': '水',
+      '丑': '土',
+      '寅': '木',
+      '卯': '木',
+      '辰': '土',
+      '巳': '火',
+      '午': '火',
+      '未': '土',
+      '申': '金',
+      '酉': '金',
+      '戌': '土',
+      '亥': '水'
+    };
+
+    return map[branch] || '未知';
+  }
+
+  /**
+   * 从纳音中提取五行属性
+   * @param naYin 纳音
+   * @returns 五行
+   */
+  private extractWuXingFromNaYin(naYin: string): string {
+    // 纳音通常是"XX五行"的格式，如"金箔金"、"大溪水"等
+    // 我们需要提取最后一个字，即五行属性
+    if (!naYin || naYin.length < 1) {
+      return '未知';
+    }
+
+    // 提取最后一个字
+    const lastChar = naYin.charAt(naYin.length - 1);
+
+    // 检查是否是五行字
+    if (['金', '木', '水', '火', '土'].includes(lastChar)) {
+      return lastChar;
+    }
+
+    // 如果最后一个字不是五行，尝试查找纳音中包含的五行字
+    for (const wuXing of ['金', '木', '水', '火', '土']) {
+      if (naYin.includes(wuXing)) {
+        return wuXing;
+      }
+    }
+
+    return '未知';
+  }
+
+  /**
+   * 创建带颜色的藏干
+   * @param container 容器元素
+   * @param hideGanText 藏干文本
+   */
+  private createColoredHideGan(container: HTMLElement, hideGanText: string): void {
+    if (!hideGanText) {
+      container.textContent = '';
+      return;
+    }
+
+    // 如果藏干是逗号分隔的，分别处理每个藏干
+    if (hideGanText.includes(',')) {
+      const hideGans = hideGanText.split(',');
+      hideGans.forEach((gan, index) => {
+        const wuXing = this.getStemWuXing(gan);
+        container.createSpan({
+          text: gan,
+          cls: `wuxing-${this.getWuXingClass(wuXing)}`
+        });
+
+        // 如果不是最后一个，添加逗号分隔
+        if (index < hideGans.length - 1) {
+          container.createSpan({ text: ',' });
+        }
+      });
+    } else {
+      // 单个藏干
+      for (let i = 0; i < hideGanText.length; i++) {
+        const gan = hideGanText[i];
+        const wuXing = this.getStemWuXing(gan);
+        container.createSpan({
+          text: gan,
+          cls: `wuxing-${this.getWuXingClass(wuXing)}`
+        });
+      }
+    }
+  }
+
+  /**
+   * 获取天干对应的五行
+   * @param stem 天干
+   * @returns 五行
+   */
+  private getStemWuXing(stem: string): string {
+    const map: {[key: string]: string} = {
+      '甲': '木',
+      '乙': '木',
+      '丙': '火',
+      '丁': '火',
+      '戊': '土',
+      '己': '土',
+      '庚': '金',
+      '辛': '金',
+      '壬': '水',
+      '癸': '水'
+    };
+
+    return map[stem] || '未知';
+  }
+
+  /**
    * 获取十神
    * @param dayStem 日干
    * @param stem 天干
@@ -1444,8 +1723,8 @@ export class InteractiveBaziView {
     // 天干顺序
     const stems = "甲乙丙丁戊己庚辛壬癸";
 
-    // 五行属性
-    const wuxing = ["木", "木", "火", "火", "土", "土", "金", "金", "水", "水"];
+    // 五行属性（未使用）
+    // const wuxing = ["木", "木", "火", "火", "土", "土", "金", "金", "水", "水"];
 
     // 十神名称
     const shiShenNames = [
@@ -1811,7 +2090,7 @@ export class InteractiveBaziView {
    * 添加神煞信息
    * @param infoList 信息列表元素
    */
-  private addShenShaInfo(infoList: HTMLElement) {
+  private addShenShaInfo(_infoList: HTMLElement) {
     // 不再在特殊信息区域显示神煞信息，因为已经在命盘表格中显示了
     return;
   }

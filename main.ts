@@ -397,7 +397,7 @@ date: ${dateStr}
 		.bazi-view-table th,
 		.bazi-view-table td {
 			border: 1px solid rgba(0, 0, 0, 0.1);
-			padding: 12px 8px;
+			padding: 10px 6px;
 			text-align: center;
 			word-wrap: break-word; /* 允许长文本换行 */
 			overflow: visible; /* 允许内容溢出 */
@@ -423,6 +423,7 @@ date: ${dateStr}
 			font-weight: bold;
 			color: var(--text-normal);
 			border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+			padding: 8px 6px;
 		}
 
 		/* 交替行颜色 */
@@ -435,12 +436,56 @@ date: ${dateStr}
 			background-color: rgba(0, 0, 0, 0.04);
 		}
 
+		/* 主星行样式 */
+		.bazi-main-star-row td {
+			font-weight: bold;
+			color: #6200ee;
+			padding: 6px 4px;
+		}
+
 		/* 天干地支样式 */
 		.bazi-stem-row td, .bazi-branch-row td {
-			font-size: 1.8em;
+			font-size: 1.6em;
 			font-weight: bold;
-			padding: 15px 0;
+			padding: 10px 0;
 			text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+		}
+
+		/* 天干元素样式 */
+		.bazi-stem {
+			font-size: 1.2em;
+			font-weight: bold;
+			display: block;
+			margin-bottom: 2px;
+		}
+
+		/* 地支元素样式 */
+		.bazi-branch {
+			font-size: 1.2em;
+			font-weight: bold;
+			display: block;
+			margin-bottom: 2px;
+		}
+
+		/* 十神标签样式（小） */
+		.shishen-tag-small {
+			font-size: 0.8em;
+			padding: 2px 4px;
+			border-radius: 4px;
+			background-color: rgba(0, 0, 0, 0.05);
+			color: var(--text-muted);
+			margin: 0 2px;
+		}
+
+		/* 十神标签样式（极小） */
+		.shishen-tag-tiny {
+			font-size: 0.7em;
+			padding: 1px 3px;
+			border-radius: 3px;
+			background-color: rgba(0, 0, 0, 0.05);
+			color: var(--text-muted);
+			margin-top: 2px;
+			display: inline-block;
 		}
 
 		/* 纳音样式 */
@@ -448,10 +493,36 @@ date: ${dateStr}
 			font-style: italic;
 			color: var(--text-muted);
 			background-color: rgba(0, 0, 0, 0.02);
-			padding: 10px 0;
+			padding: 6px 4px;
 			border-top: 1px dashed rgba(0, 0, 0, 0.1);
 			border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
 		}
+
+		/* 旬空行样式 */
+		.bazi-xunkong-row td {
+			padding: 6px 4px;
+		}
+
+		/* 旬空标签样式 */
+		.xunkong-tag-small {
+			font-size: 0.9em;
+			padding: 2px 4px;
+			border-radius: 4px;
+			background-color: rgba(0, 0, 0, 0.05);
+			color: #9c27b0;
+			font-weight: 500;
+		}
+
+		/* 地势标签样式 */
+		.dishi-tag-small {
+			font-size: 0.9em;
+			padding: 2px 4px;
+			border-radius: 4px;
+			background-color: rgba(0, 0, 0, 0.05);
+			color: #2196f3;
+			font-weight: 500;
+		}
+
 		/* 神煞行样式 */
 		.bazi-shensha-row {
 			background-color: var(--background-primary);
@@ -463,27 +534,80 @@ date: ${dateStr}
 			background-color: rgba(0, 0, 0, 0.03);
 		}
 
-		/* 神煞行样式 */
-		.bazi-shensha-row {
-			background-color: var(--background-primary);
+		/* 神煞单元格样式 */
+		.bazi-shensha-cell {
+			padding: 6px 4px !important;
+			max-height: 2.4em;
+			overflow: hidden;
+			transition: max-height 0.3s ease;
 		}
 
-		.bazi-shensha-row td:first-child {
+		/* 神煞容器样式 */
+		.shensha-container {
+			position: relative;
+		}
+
+		/* 神煞可见区域样式 */
+		.shensha-visible-area {
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		/* 神煞隐藏区域样式 */
+		.shensha-hidden-area {
+			padding-top: 5px;
+			line-height: 1.6;
+		}
+
+		/* 神煞省略号样式 */
+		.shensha-ellipsis {
+			cursor: pointer;
+			color: var(--text-accent);
 			font-weight: bold;
-			color: #6200ee;
-			background-color: rgba(0, 0, 0, 0.03);
+		}
+
+		/* 神煞收起按钮样式 */
+		.shensha-collapse-button {
+			display: block;
+			text-align: center;
+			margin-top: 5px;
+			padding: 2px 0;
+			background-color: rgba(0, 0, 0, 0.05);
+			border-radius: 4px;
+			cursor: pointer;
+			color: var(--text-muted);
+			font-size: 0.9em;
 		}
 
 		/* 神煞标签样式 */
 		.shensha-good {
 			color: #27ae60;
 			font-weight: 500;
-			margin-right: 2px;
 			cursor: pointer;
+			padding: 1px 3px;
+			border-radius: 3px;
+			background-color: rgba(39, 174, 96, 0.1);
+		}
+
+		.shensha-bad {
+			color: #e74c3c;
+			font-weight: 500;
+			cursor: pointer;
+			padding: 1px 3px;
+			border-radius: 3px;
+			background-color: rgba(231, 76, 60, 0.1);
+		}
+
+		.shensha-mixed {
+			color: #f39c12;
+			font-weight: 500;
+			cursor: pointer;
+			padding: 1px 3px;
+			border-radius: 3px;
+			background-color: rgba(243, 156, 18, 0.1);
+			margin-right: 2px;
 			display: inline-block;
-			padding: 0 2px;
-			border-radius: 2px;
-			transition: all 0.2s ease;
 		}
 
 		.shensha-good:hover {
@@ -597,6 +721,45 @@ date: ${dateStr}
 			color: #f39c12;
 			border-color: rgba(241, 196, 15, 0.3);
 			border-left: 2px solid #f39c12;
+		}
+
+		/* 五行颜色 */
+		.wuxing-jin {
+			color: #FFD700;
+		}
+		.wuxing-mu {
+			color: #228B22;
+		}
+		.wuxing-shui {
+			color: #1E90FF;
+		}
+		.wuxing-huo {
+			color: #FF4500;
+		}
+		.wuxing-tu {
+			color: #CD853F;
+		}
+
+		/* 五行颜色（天干） */
+		.bazi-stem-row .wuxing-jin {
+			color: #FFD700;
+			text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+		}
+		.bazi-stem-row .wuxing-mu {
+			color: #27ae60;
+			text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+		}
+		.bazi-stem-row .wuxing-shui {
+			color: #3498db;
+			text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+		}
+		.bazi-stem-row .wuxing-huo {
+			color: #e74c3c;
+			text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+		}
+		.bazi-stem-row .wuxing-tu {
+			color: #f39c12;
+			text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 		}
 		`;
 

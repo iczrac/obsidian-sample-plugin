@@ -54,7 +54,7 @@
 
 /* 五行颜色 */
 .wuxing-jin {
-  color: #c0c0c0; /* 金 - 银色 */
+  color: #FFD700; /* 金 - 黄色 */
 }
 
 .wuxing-mu {
@@ -684,9 +684,9 @@
 
 /* 五行标签样式 */
 .wuxing-jin-tag {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: #bdc3c7;
-  border: 1px solid #bdc3c7;
+  background-color: rgba(255, 215, 0, 0.1);
+  color: #FFD700;
+  border: 1px solid #FFD700;
 }
 
 .wuxing-mu-tag {
