@@ -52,26 +52,7 @@
   background-color: var(--background-secondary);
 }
 
-/* 五行颜色 */
-.wuxing-jin {
-  color: #FFD700; /* 金 - 黄色 */
-}
-
-.wuxing-mu {
-  color: #2e8b57; /* 木 - 绿色 */
-}
-
-.wuxing-shui {
-  color: #1e90ff; /* 水 - 蓝色 */
-}
-
-.wuxing-huo {
-  color: #ff4500; /* 火 - 红色 */
-}
-
-.wuxing-tu {
-  color: #cd853f; /* 土 - 棕色 */
-}
+/* 五行颜色 - 已移至统一样式中 */
 
 /* 交互式八字命盘样式 */
 .bazi-view-container {
@@ -211,6 +192,58 @@
   padding: 15px 8px;
 }
 
+/* 天干行特殊样式 */
+.bazi-stem-row span.wuxing-jin {
+  color: #FFD700 !important; /* 金 - 黄色 */
+}
+
+.bazi-stem-row span.wuxing-mu {
+  color: #2e8b57 !important; /* 木 - 绿色 */
+}
+
+.bazi-stem-row span.wuxing-shui {
+  color: #1e90ff !important; /* 水 - 蓝色 */
+}
+
+.bazi-stem-row span.wuxing-huo {
+  color: #ff4500 !important; /* 火 - 红色 */
+}
+
+.bazi-stem-row span.wuxing-tu {
+  color: #cd853f !important; /* 土 - 棕色 */
+}
+
+/* 统一五行颜色样式 - 简化选择器 */
+td.wuxing-jin, span.wuxing-jin, .wuxing-jin {
+  color: #FFD700 !important; /* 金 - 黄色 */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+  font-weight: bold !important;
+}
+
+td.wuxing-mu, span.wuxing-mu, .wuxing-mu {
+  color: #2e8b57 !important; /* 木 - 绿色 */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+  font-weight: bold !important;
+}
+
+td.wuxing-shui, span.wuxing-shui, .wuxing-shui {
+  color: #1e90ff !important; /* 水 - 蓝色 */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+  font-weight: bold !important;
+}
+
+td.wuxing-huo, span.wuxing-huo, .wuxing-huo {
+  color: #ff4500 !important; /* 火 - 红色 */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+  font-weight: bold !important;
+}
+
+td.wuxing-tu, span.wuxing-tu, .wuxing-tu {
+  color: #cd853f !important; /* 土 - 棕色 */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+  font-weight: bold !important;
+}
+
 /* 地支行 */
 .bazi-branch-row {
   font-size: 1.5em;
@@ -222,6 +255,8 @@
 .bazi-branch-row td {
   padding: 15px 8px;
 }
+
+/* 地支行的五行颜色使用统一的五行颜色样式 */
 
 /* 藏干行 */
 .bazi-hidegan-row {
@@ -1150,6 +1185,18 @@
   background-color: rgba(var(--interactive-accent-rgb), 0.05);
   border-radius: 4px;
   border-left: 3px solid var(--interactive-accent);
+}
+
+.bazi-modal-calculation {
+  margin-bottom: 15px;
+  line-height: 1.5;
+  padding: 10px;
+  background-color: rgba(52, 152, 219, 0.05);
+  border-radius: 4px;
+  border-left: 3px solid #3498db;
+  font-family: var(--font-monospace);
+  font-size: 0.9em;
+  color: #2980b9;
 }
 
 /* 神煞组合级别样式 */

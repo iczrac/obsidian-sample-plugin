@@ -698,7 +698,7 @@ export class BaziService {
           }
 
           // 驿马
-          if (this.isYiMa(branch)) {
+          if (this.isYiMa(branch, yearBranch)) {
             shenSha.push('驿马');
           }
 
@@ -915,7 +915,7 @@ export class BaziService {
           }
 
           // 驿马
-          if (this.isYiMa(branch)) {
+          if (this.isYiMa(branch, yearBranch)) {
             shenSha.push('驿马');
           }
 
@@ -1190,7 +1190,7 @@ export class BaziService {
           }
 
           // 驿马
-          if (this.isYiMa(branch)) {
+          if (this.isYiMa(branch, yearBranch)) {
             shenSha.push('驿马');
           }
 
@@ -1464,7 +1464,7 @@ export class BaziService {
           }
 
           // 驿马
-          if (this.isYiMa(branch)) {
+          if (this.isYiMa(branch, yearBranch)) {
             shenSha.push('驿马');
           }
 
@@ -2060,6 +2060,18 @@ export class BaziService {
     const timeStem = eightChar.getTimeGan();
     const timeBranch = eightChar.getTimeZhi();
 
+    // 获取季节信息（用于童子煞和将军箭的判断）
+    let season = '';
+    if (['寅', '卯', '辰'].includes(monthBranch)) {
+      season = '春';
+    } else if (['巳', '午', '未'].includes(monthBranch)) {
+      season = '夏';
+    } else if (['申', '酉', '戌'].includes(monthBranch)) {
+      season = '秋';
+    } else if (['亥', '子', '丑'].includes(monthBranch)) {
+      season = '冬';
+    }
+
     // 天乙贵人
     if (this.isTianYiGuiRen(dayStem, yearBranch)) {
       yearShenSha.push('天乙贵人');
@@ -2159,16 +2171,16 @@ export class BaziService {
     }
 
     // 驿马
-    if (this.isYiMa(yearBranch)) {
+    if (this.isYiMa(yearBranch, yearBranch)) {
       yearShenSha.push('驿马');
     }
-    if (this.isYiMa(monthBranch)) {
+    if (this.isYiMa(monthBranch, yearBranch)) {
       monthShenSha.push('驿马');
     }
-    if (this.isYiMa(dayBranch)) {
+    if (this.isYiMa(dayBranch, yearBranch)) {
       dayShenSha.push('驿马');
     }
-    if (this.isYiMa(timeBranch)) {
+    if (this.isYiMa(timeBranch, yearBranch)) {
       hourShenSha.push('驿马');
     }
 
@@ -2634,6 +2646,16 @@ export class BaziService {
       hourShenSha.push('天马');
     }
 
+    // 童子煞（根据季节、纳音五行和地支判断）
+    if (season && this.isTongZiSha(eightChar, season)) {
+      shenSha.push('童子煞');
+    }
+
+    // 将军箭（根据季节、时支、冲克关系和纳音五行判断）
+    if (season && this.isJiangJunJian(eightChar, season)) {
+      hourShenSha.push('将军箭');
+    }
+
     // 将各柱神煞添加到总神煞数组中
     shenSha.push(...yearShenSha.map(s => `年柱:${s}`));
     shenSha.push(...monthShenSha.map(s => `月柱:${s}`));
@@ -2656,6 +2678,9 @@ export class BaziService {
    * @returns 是否为天乙贵人
    */
   private static isTianYiGuiRen(dayStem: string, branch: string): boolean {
+    // 天乙贵人的计算规则：
+    // 甲戊庚牛羊，乙己鼠猴乡，丙丁猪鸡位，壬癸蛇兔藏，
+    // 六辛逢虎兔，此是贵人方。
     const map: {[key: string]: string[]} = {
       '甲': ['丑', '未'],
       '乙': ['子', '申'],
@@ -2664,9 +2689,9 @@ export class BaziService {
       '戊': ['丑', '未'],
       '己': ['子', '申'],
       '庚': ['丑', '未'],
-      '辛': ['子', '申'],
-      '壬': ['卯', '巳'],
-      '癸': ['卯', '巳']
+      '辛': ['寅', '卯'], // 修正：辛日贵人在寅卯
+      '壬': ['巳', '卯'], // 修正：壬日贵人在巳卯
+      '癸': ['巳', '卯']  // 修正：癸日贵人在巳卯
     };
 
     return map[dayStem]?.includes(branch) || false;
@@ -2678,7 +2703,11 @@ export class BaziService {
    * @returns 是否为文昌
    */
   private static isWenChang(branch: string): boolean {
-    return ['巳', '午', '申', '酉'].includes(branch);
+    // 文昌星的计算规则：
+    // 寅午戌见巳，申子辰见申，
+    // 亥卯未见午，巳酉丑见寅。
+    // 这里简化处理，直接判断地支是否为文昌星
+    return ['巳', '申', '午', '寅'].includes(branch);
   }
 
   /**
@@ -2687,6 +2716,10 @@ export class BaziService {
    * @returns 是否为华盖
    */
   private static isHuaGai(branch: string): boolean {
+    // 华盖星的计算规则：
+    // 寅午戌见戌，申子辰见辰，
+    // 亥卯未见未，巳酉丑见丑。
+    // 这里简化处理，直接判断地支是否为华盖星
     return ['辰', '戌', '丑', '未'].includes(branch);
   }
 
@@ -2743,27 +2776,35 @@ export class BaziService {
   /**
    * 判断是否为驿马
    * @param branch 地支
+   * @param yearBranch 年支（可选）
    * @returns 是否为驿马
    */
-  private static isYiMa(branch: string): boolean {
-    // 驿马与地支的对应关系
-    const yiMaMap: {[key: string]: string} = {
-      '子': '午',
-      '午': '子',
-      '卯': '酉',
-      '酉': '卯',
-      '辰': '戌',
-      '戌': '辰',
-      '丑': '未',
-      '未': '丑',
-      '寅': '申',
-      '申': '寅',
-      '巳': '亥',
-      '亥': '巳'
-    };
+  private static isYiMa(branch: string, yearBranch?: string): boolean {
+    // 驿马的计算规则：
+    // 寅午戌年马在申，申子辰年马在寅，巳酉丑年马在亥，亥卯未年马在巳
 
-    // 检查是否为驿马
-    return Object.values(yiMaMap).includes(branch);
+    // 如果提供了年支，则根据年支判断
+    if (yearBranch) {
+      const yiMaMap: {[key: string]: string} = {
+        '寅': '申',
+        '午': '申',
+        '戌': '申',
+        '申': '寅',
+        '子': '寅',
+        '辰': '寅',
+        '巳': '亥',
+        '酉': '亥',
+        '丑': '亥',
+        '亥': '巳',
+        '卯': '巳',
+        '未': '巳'
+      };
+
+      return yiMaMap[yearBranch] === branch;
+    }
+
+    // 如果没有提供年支，则简化处理，直接判断地支是否为驿马星
+    return ['申', '寅', '巳', '亥'].includes(branch);
   }
 
   /**
@@ -2989,17 +3030,18 @@ export class BaziService {
    */
   private static isYangRen(dayStem: string, branch: string): boolean {
     // 羊刃与日干的对应关系
+    // 羊刃口诀：甲羊刃在卯，乙羊刃在寅。丙戊羊刃在午，丁己羊刃在巳。庚羊刃在酉，辛羊刃在申。壬羊刃在亥，癸羊刃在子。
     const yangRenMap: {[key: string]: string} = {
       '甲': '卯',
       '乙': '寅',
-      '丙': '巳',
-      '丁': '辰',
-      '戊': '巳',
-      '己': '辰',
+      '丙': '午',
+      '丁': '巳',
+      '戊': '午',
+      '己': '巳',
       '庚': '酉',
       '辛': '申',
       '壬': '亥',
-      '癸': '戌'
+      '癸': '子'
     };
 
     return yangRenMap[dayStem] === branch;
@@ -3145,6 +3187,168 @@ export class BaziService {
    */
   private static isWuGui(branch: string): boolean {
     return ['巳', '申', '亥', '寅'].includes(branch);
+  }
+
+  /**
+   * 判断是否为童子煞
+   * @param eightChar 八字对象
+   * @param season 季节（春、夏、秋、冬）
+   * @returns 是否为童子煞
+   */
+  private static isTongZiSha(eightChar: EightChar, season: string): boolean {
+    // 获取四柱干支
+    const yearStem = eightChar.getYearGan();
+    const yearBranch = eightChar.getYearZhi();
+    const monthStem = eightChar.getMonthGan();
+    const monthBranch = eightChar.getMonthZhi();
+    const dayStem = eightChar.getDayGan();
+    const dayBranch = eightChar.getDayZhi();
+    const timeStem = eightChar.getTimeGan();
+    const timeBranch = eightChar.getTimeZhi();
+
+    // 获取纳音五行
+    const yearNaYin = eightChar.getYearNaYin();
+    const monthNaYin = eightChar.getMonthNaYin();
+    const dayNaYin = eightChar.getDayNaYin();
+    const timeNaYin = eightChar.getTimeNaYin();
+
+    // 提取纳音五行属性（金木水火土）
+    const yearNaYinWuXing = this.getNaYinWuXing(yearNaYin);
+    const dayNaYinWuXing = this.getNaYinWuXing(dayNaYin);
+    const timeNaYinWuXing = this.getNaYinWuXing(timeNaYin);
+
+    // 童子煞判断口诀：
+    // "春秋寅子贵，冬夏卯未辰；金木马卯合，水火鸡犬多；土命逢辰巳，童子定不错"
+
+    // 1. 按季节和地支判断
+    let seasonCheck = false;
+    if ((season === '春' || season === '秋') && (dayBranch === '寅' || dayBranch === '子' || timeBranch === '寅' || timeBranch === '子')) {
+      seasonCheck = true;
+    } else if ((season === '冬' || season === '夏') && (dayBranch === '卯' || dayBranch === '未' || dayBranch === '辰' ||
+                                                      timeBranch === '卯' || timeBranch === '未' || timeBranch === '辰')) {
+      seasonCheck = true;
+    }
+
+    // 2. 按纳音五行和地支判断
+    let naYinCheck = false;
+    if ((yearNaYinWuXing === '金' || yearNaYinWuXing === '木' || dayNaYinWuXing === '金' || dayNaYinWuXing === '木') &&
+        (dayBranch === '午' || dayBranch === '卯' || timeBranch === '午' || timeBranch === '卯')) {
+      naYinCheck = true;
+    } else if ((yearNaYinWuXing === '水' || yearNaYinWuXing === '火' || dayNaYinWuXing === '水' || dayNaYinWuXing === '火') &&
+               (dayBranch === '酉' || dayBranch === '戌' || timeBranch === '酉' || timeBranch === '戌')) {
+      naYinCheck = true;
+    } else if ((yearNaYinWuXing === '土' || dayNaYinWuXing === '土') &&
+               (dayBranch === '辰' || dayBranch === '巳' || timeBranch === '辰' || timeBranch === '巳')) {
+      naYinCheck = true;
+    }
+
+    // 3. 综合判断：季节条件或纳音条件满足其一即可
+    return seasonCheck || naYinCheck;
+  }
+
+  /**
+   * 从纳音中提取五行属性
+   * @param naYin 纳音
+   * @returns 五行属性（金木水火土）
+   */
+  private static getNaYinWuXing(naYin: string): string {
+    if (naYin.includes('金')) {
+      return '金';
+    } else if (naYin.includes('木')) {
+      return '木';
+    } else if (naYin.includes('水')) {
+      return '水';
+    } else if (naYin.includes('火')) {
+      return '火';
+    } else if (naYin.includes('土')) {
+      return '土';
+    }
+    return '';
+  }
+
+  /**
+   * 判断是否为将军箭
+   * @param eightChar 八字对象
+   * @param season 季节（春、夏、秋、冬）
+   * @returns 是否为将军箭
+   */
+  private static isJiangJunJian(eightChar: EightChar, season: string): boolean {
+    // 获取四柱干支
+    const yearStem = eightChar.getYearGan();
+    const yearBranch = eightChar.getYearZhi();
+    const monthStem = eightChar.getMonthGan();
+    const monthBranch = eightChar.getMonthZhi();
+    const dayStem = eightChar.getDayGan();
+    const dayBranch = eightChar.getDayZhi();
+    const timeStem = eightChar.getTimeGan();
+    const timeBranch = eightChar.getTimeZhi();
+
+    // 获取纳音五行
+    const yearNaYin = eightChar.getYearNaYin();
+    const monthNaYin = eightChar.getMonthNaYin();
+    const dayNaYin = eightChar.getDayNaYin();
+    const timeNaYin = eightChar.getTimeNaYin();
+
+    // 提取纳音五行属性（金木水火土）
+    const yearNaYinWuXing = this.getNaYinWuXing(yearNaYin);
+    const dayNaYinWuXing = this.getNaYinWuXing(dayNaYin);
+    const timeNaYinWuXing = this.getNaYinWuXing(timeNaYin);
+
+    // 将军箭判断口诀：
+    // "春季酉戌辰，夏季未卯子，秋季寅申午，冬季巳亥丑"
+    // 同时需要考虑八字中的冲克关系和纳音五行
+
+    // 1. 按季节和时支判断
+    let seasonCheck = false;
+    const jiangJunJianMap: {[key: string]: string[]} = {
+      '春': ['酉', '戌', '辰'],
+      '夏': ['未', '卯', '子'],
+      '秋': ['寅', '申', '午'],
+      '冬': ['巳', '亥', '丑']
+    };
+
+    if (jiangJunJianMap[season]?.includes(timeBranch)) {
+      seasonCheck = true;
+    }
+
+    // 2. 检查八字中的冲克关系
+    // 日支与时支相冲，或者日干与时干相克
+    let chongKeCheck = false;
+    if (this.isZhiChong(dayBranch, timeBranch) || this.isWuXingKe(this.getStemWuXing(dayStem), this.getStemWuXing(timeStem))) {
+      chongKeCheck = true;
+    }
+
+    // 3. 检查纳音五行是否不调和
+    // 时柱纳音与日柱纳音相克
+    let naYinCheck = false;
+    if (this.isWuXingKe(this.getNaYinWuXing(dayNaYin), this.getNaYinWuXing(timeNaYin)) ||
+        this.isWuXingKe(this.getNaYinWuXing(timeNaYin), this.getNaYinWuXing(dayNaYin))) {
+      naYinCheck = true;
+    }
+
+    // 4. 综合判断：季节条件必须满足，且冲克关系或纳音不调和其一满足
+    return seasonCheck && (chongKeCheck || naYinCheck);
+  }
+
+  /**
+   * 判断两地支是否相冲
+   * @param zhi1 地支1
+   * @param zhi2 地支2
+   * @returns 是否相冲
+   */
+  private static isZhiChong(zhi1: string, zhi2: string): boolean {
+    const chongPairs = [
+      ['子', '午'], ['丑', '未'], ['寅', '申'], ['卯', '酉'],
+      ['辰', '戌'], ['巳', '亥']
+    ];
+
+    for (const pair of chongPairs) {
+      if ((zhi1 === pair[0] && zhi2 === pair[1]) || (zhi1 === pair[1] && zhi2 === pair[0])) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   /**
@@ -3341,19 +3545,20 @@ export class BaziService {
    */
   private static isTianMa(branch: string, yearBranch: string): boolean {
     // 天马与年支的对应关系
+    // 寅午戌年马在申，申子辰年马在寅，巳酉丑年马在亥，亥卯未年马在巳
     const tianMaMap: {[key: string]: string} = {
-      '子': '午',
-      '丑': '未',
       '寅': '申',
-      '卯': '酉',
-      '辰': '戌',
-      '巳': '亥',
-      '午': '子',
-      '未': '丑',
+      '午': '申',
+      '戌': '申',
       '申': '寅',
-      '酉': '卯',
-      '戌': '辰',
-      '亥': '巳'
+      '子': '寅',
+      '辰': '寅',
+      '巳': '亥',
+      '酉': '亥',
+      '丑': '亥',
+      '亥': '巳',
+      '卯': '巳',
+      '未': '巳'
     };
 
     return tianMaMap[yearBranch] === branch;

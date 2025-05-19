@@ -137,42 +137,36 @@ export class InteractiveBaziView {
     // 天干行
     const stemRow = tbody.createEl('tr', { cls: 'bazi-stem-row' });
     stemRow.createEl('td', { text: '天干', cls: 'bazi-table-label' });
-    stemRow.createEl('td', {
-      text: this.baziInfo.yearStem,
-      cls: `wuxing-${this.getWuXingClass(this.baziInfo.yearWuXing)}`
-    });
-    stemRow.createEl('td', {
-      text: this.baziInfo.monthStem,
-      cls: `wuxing-${this.getWuXingClass(this.baziInfo.monthWuXing)}`
-    });
-    stemRow.createEl('td', {
-      text: this.baziInfo.dayStem,
-      cls: `wuxing-${this.getWuXingClass(this.baziInfo.dayWuXing)}`
-    });
-    stemRow.createEl('td', {
-      text: this.baziInfo.hourStem,
-      cls: `wuxing-${this.getWuXingClass(this.baziInfo.hourWuXing)}`
-    });
+
+    // 天干行 - 直接在td元素上设置颜色
+    const yearStemCell = stemRow.createEl('td', { text: this.baziInfo.yearStem || '' });
+    this.applyStemWuXingColor(yearStemCell, this.baziInfo.yearStem || '');
+
+    const monthStemCell = stemRow.createEl('td', { text: this.baziInfo.monthStem || '' });
+    this.applyStemWuXingColor(monthStemCell, this.baziInfo.monthStem || '');
+
+    const dayStemCell = stemRow.createEl('td', { text: this.baziInfo.dayStem || '' });
+    this.applyStemWuXingColor(dayStemCell, this.baziInfo.dayStem || '');
+
+    const hourStemCell = stemRow.createEl('td', { text: this.baziInfo.hourStem || '' });
+    this.applyStemWuXingColor(hourStemCell, this.baziInfo.hourStem || '');
 
     // 地支行
     const branchRow = tbody.createEl('tr', { cls: 'bazi-branch-row' });
     branchRow.createEl('td', { text: '地支', cls: 'bazi-table-label' });
-    branchRow.createEl('td', {
-      text: this.baziInfo.yearBranch,
-      cls: `wuxing-${this.getWuXingClass(this.getBranchWuXing(this.baziInfo.yearBranch))}`
-    });
-    branchRow.createEl('td', {
-      text: this.baziInfo.monthBranch,
-      cls: `wuxing-${this.getWuXingClass(this.getBranchWuXing(this.baziInfo.monthBranch))}`
-    });
-    branchRow.createEl('td', {
-      text: this.baziInfo.dayBranch,
-      cls: `wuxing-${this.getWuXingClass(this.getBranchWuXing(this.baziInfo.dayBranch))}`
-    });
-    branchRow.createEl('td', {
-      text: this.baziInfo.hourBranch,
-      cls: `wuxing-${this.getWuXingClass(this.getBranchWuXing(this.baziInfo.hourBranch))}`
-    });
+
+    // 地支行 - 直接在td元素上设置颜色
+    const yearBranchCell = branchRow.createEl('td', { text: this.baziInfo.yearBranch || '' });
+    this.applyBranchWuXingColor(yearBranchCell, this.baziInfo.yearBranch || '');
+
+    const monthBranchCell = branchRow.createEl('td', { text: this.baziInfo.monthBranch || '' });
+    this.applyBranchWuXingColor(monthBranchCell, this.baziInfo.monthBranch || '');
+
+    const dayBranchCell = branchRow.createEl('td', { text: this.baziInfo.dayBranch || '' });
+    this.applyBranchWuXingColor(dayBranchCell, this.baziInfo.dayBranch || '');
+
+    const hourBranchCell = branchRow.createEl('td', { text: this.baziInfo.hourBranch || '' });
+    this.applyBranchWuXingColor(hourBranchCell, this.baziInfo.hourBranch || '');
 
     // 藏干行
     const hideGanRow = tbody.createEl('tr', { cls: 'bazi-hidegan-row' });
@@ -286,10 +280,8 @@ export class InteractiveBaziView {
     if (yearNaYin) {
       // 提取五行属性（通常纳音格式为"XX五行"，如"金箔金"）
       const wuXing = this.extractWuXingFromNaYin(yearNaYin);
-      yearNaYinCell.createSpan({
-        text: yearNaYin,
-        cls: `wuxing-${this.getWuXingClass(wuXing)}`
-      });
+      const yearNaYinSpan = yearNaYinCell.createSpan({ text: yearNaYin });
+      this.setWuXingColorDirectly(yearNaYinSpan, wuXing);
     }
 
     // 月柱纳音
@@ -297,10 +289,8 @@ export class InteractiveBaziView {
     const monthNaYinCell = naYinRow.createEl('td');
     if (monthNaYin) {
       const wuXing = this.extractWuXingFromNaYin(monthNaYin);
-      monthNaYinCell.createSpan({
-        text: monthNaYin,
-        cls: `wuxing-${this.getWuXingClass(wuXing)}`
-      });
+      const monthNaYinSpan = monthNaYinCell.createSpan({ text: monthNaYin });
+      this.setWuXingColorDirectly(monthNaYinSpan, wuXing);
     }
 
     // 日柱纳音
@@ -308,10 +298,8 @@ export class InteractiveBaziView {
     const dayNaYinCell = naYinRow.createEl('td');
     if (dayNaYin) {
       const wuXing = this.extractWuXingFromNaYin(dayNaYin);
-      dayNaYinCell.createSpan({
-        text: dayNaYin,
-        cls: `wuxing-${this.getWuXingClass(wuXing)}`
-      });
+      const dayNaYinSpan = dayNaYinCell.createSpan({ text: dayNaYin });
+      this.setWuXingColorDirectly(dayNaYinSpan, wuXing);
     }
 
     // 时柱纳音
@@ -319,10 +307,8 @@ export class InteractiveBaziView {
     const hourNaYinCell = naYinRow.createEl('td');
     if (hourNaYin) {
       const wuXing = this.extractWuXingFromNaYin(hourNaYin);
-      hourNaYinCell.createSpan({
-        text: hourNaYin,
-        cls: `wuxing-${this.getWuXingClass(wuXing)}`
-      });
+      const hourNaYinSpan = hourNaYinCell.createSpan({ text: hourNaYin });
+      this.setWuXingColorDirectly(hourNaYinSpan, wuXing);
     }
 
     // 旬空行
@@ -695,16 +681,12 @@ export class InteractiveBaziView {
         const branch = dy.ganZhi[1]; // 地支
 
         // 创建天干元素并设置五行颜色
-        cell.createSpan({
-          text: stem,
-          cls: `wuxing-${this.getWuXingClass(this.getStemWuXing(stem))}`
-        });
+        const stemSpan = cell.createSpan({ text: stem });
+        this.setWuXingColorDirectly(stemSpan, this.getStemWuXing(stem));
 
         // 创建地支元素并设置五行颜色
-        cell.createSpan({
-          text: branch,
-          cls: `wuxing-${this.getWuXingClass(this.getBranchWuXing(branch))}`
-        });
+        const branchSpan = cell.createSpan({ text: branch });
+        this.setWuXingColorDirectly(branchSpan, this.getBranchWuXing(branch));
       } else {
         // 如果没有干支或格式不正确，直接显示原文本
         cell.textContent = dy.ganZhi || '';
@@ -769,10 +751,8 @@ export class InteractiveBaziView {
 
         if (naYin) {
           const wuXing = this.extractWuXingFromNaYin(naYin);
-          cell.createSpan({
-            text: naYin,
-            cls: `wuxing-${this.getWuXingClass(wuXing)}`
-          });
+          const naYinSpan = cell.createSpan({ text: naYin });
+          this.setWuXingColorDirectly(naYinSpan, wuXing);
         }
       });
     }
@@ -1061,16 +1041,12 @@ export class InteractiveBaziView {
         const branch = ln.ganZhi[1]; // 地支
 
         // 创建天干元素并设置五行颜色
-        cell.createSpan({
-          text: stem,
-          cls: `wuxing-${this.getWuXingClass(this.getStemWuXing(stem))}`
-        });
+        const stemSpan = cell.createSpan({ text: stem });
+        this.setWuXingColorDirectly(stemSpan, this.getStemWuXing(stem));
 
         // 创建地支元素并设置五行颜色
-        cell.createSpan({
-          text: branch,
-          cls: `wuxing-${this.getWuXingClass(this.getBranchWuXing(branch))}`
-        });
+        const branchSpan = cell.createSpan({ text: branch });
+        this.setWuXingColorDirectly(branchSpan, this.getBranchWuXing(branch));
       } else {
         // 如果没有干支或格式不正确，直接显示原文本
         cell.textContent = ln.ganZhi || '';
@@ -1146,16 +1122,12 @@ export class InteractiveBaziView {
           const branch = xy.ganZhi[1]; // 地支
 
           // 创建天干元素并设置五行颜色
-          cell.createSpan({
-            text: stem,
-            cls: `wuxing-${this.getWuXingClass(this.getStemWuXing(stem))}`
-          });
+          const stemSpan = cell.createSpan({ text: stem });
+          this.setWuXingColorDirectly(stemSpan, this.getStemWuXing(stem));
 
           // 创建地支元素并设置五行颜色
-          cell.createSpan({
-            text: branch,
-            cls: `wuxing-${this.getWuXingClass(this.getBranchWuXing(branch))}`
-          });
+          const branchSpan = cell.createSpan({ text: branch });
+          this.setWuXingColorDirectly(branchSpan, this.getBranchWuXing(branch));
         } else {
           // 如果没有干支或格式不正确，直接显示原文本
           cell.textContent = xy ? (xy.ganZhi || '') : '';
@@ -1306,16 +1278,12 @@ export class InteractiveBaziView {
         const branch = ly.ganZhi[1]; // 地支
 
         // 创建天干元素并设置五行颜色
-        cell.createSpan({
-          text: stem,
-          cls: `wuxing-${this.getWuXingClass(this.getStemWuXing(stem))}`
-        });
+        const stemSpan = cell.createSpan({ text: stem });
+        this.setWuXingColorDirectly(stemSpan, this.getStemWuXing(stem));
 
         // 创建地支元素并设置五行颜色
-        cell.createSpan({
-          text: branch,
-          cls: `wuxing-${this.getWuXingClass(this.getBranchWuXing(branch))}`
-        });
+        const branchSpan = cell.createSpan({ text: branch });
+        this.setWuXingColorDirectly(branchSpan, this.getBranchWuXing(branch));
       } else {
         // 如果没有干支或格式不正确，直接显示原文本
         cell.textContent = ly.ganZhi || '';
@@ -1392,10 +1360,8 @@ export class InteractiveBaziView {
 
         if (naYin) {
           const wuXing = this.extractWuXingFromNaYin(naYin);
-          cell.createSpan({
-            text: naYin,
-            cls: `wuxing-${this.getWuXingClass(wuXing)}`
-          });
+          const naYinSpan = cell.createSpan({ text: naYin });
+          this.setWuXingColorDirectly(naYinSpan, wuXing);
         }
       });
     }
@@ -1578,23 +1544,123 @@ export class InteractiveBaziView {
     return xunKongZhi1 + xunKongZhi2;
   }
 
-  /**
-   * 获取五行对应的CSS类名
-   * @param wuXing 五行
-   * @returns CSS类名
-   */
-  private getWuXingClass(wuXing: string | undefined): string {
-    if (!wuXing) return '';
 
+
+
+
+  /**
+   * 直接在元素上设置五行颜色
+   * @param element HTML元素
+   * @param wuXing 五行
+   */
+  private setWuXingColorDirectly(element: HTMLElement, wuXing: string | undefined): void {
+    if (!wuXing) return;
+
+    // 移除所有可能的五行类
+    element.classList.remove('wuxing-jin', 'wuxing-mu', 'wuxing-shui', 'wuxing-huo', 'wuxing-tu');
+
+    // 添加对应的五行类
     switch (wuXing) {
-      case '金': return 'jin';
-      case '木': return 'mu';
-      case '水': return 'shui';
-      case '火': return 'huo';
-      case '土': return 'tu';
-      default: return '';
+      case '金':
+        element.classList.add('wuxing-jin');
+        break;
+      case '木':
+        element.classList.add('wuxing-mu');
+        break;
+      case '水':
+        element.classList.add('wuxing-shui');
+        break;
+      case '火':
+        element.classList.add('wuxing-huo');
+        break;
+      case '土':
+        element.classList.add('wuxing-tu');
+        break;
+    }
+
+    // 添加内联样式作为备份
+    switch (wuXing) {
+      case '金':
+        element.style.color = '#FFD700'; // 金 - 黄色
+        break;
+      case '木':
+        element.style.color = '#2e8b57'; // 木 - 绿色
+        break;
+      case '水':
+        element.style.color = '#1e90ff'; // 水 - 蓝色
+        break;
+      case '火':
+        element.style.color = '#ff4500'; // 火 - 红色
+        break;
+      case '土':
+        element.style.color = '#cd853f'; // 土 - 棕色
+        break;
     }
   }
+
+  /**
+   * 为天干元素应用五行颜色
+   * @param element HTML元素
+   * @param stem 天干
+   */
+  private applyStemWuXingColor(element: HTMLElement, stem: string): void {
+    // 获取天干对应的五行
+    const wuXing = this.getStemWuXing(stem);
+
+    // 直接设置内联样式
+    switch (wuXing) {
+      case '金':
+        element.style.cssText = 'color: #FFD700 !important; font-weight: bold !important;'; // 金 - 黄色
+        break;
+      case '木':
+        element.style.cssText = 'color: #2e8b57 !important; font-weight: bold !important;'; // 木 - 绿色
+        break;
+      case '水':
+        element.style.cssText = 'color: #1e90ff !important; font-weight: bold !important;'; // 水 - 蓝色
+        break;
+      case '火':
+        element.style.cssText = 'color: #ff4500 !important; font-weight: bold !important;'; // 火 - 红色
+        break;
+      case '土':
+        element.style.cssText = 'color: #cd853f !important; font-weight: bold !important;'; // 土 - 棕色
+        break;
+    }
+  }
+
+  /**
+   * 为地支元素应用五行颜色
+   * @param element HTML元素
+   * @param branch 地支
+   */
+  private applyBranchWuXingColor(element: HTMLElement, branch: string): void {
+    // 获取地支对应的五行
+    const wuXing = this.getBranchWuXing(branch);
+
+    // 直接设置内联样式
+    switch (wuXing) {
+      case '金':
+        element.style.cssText = 'color: #FFD700 !important; font-weight: bold !important;'; // 金 - 黄色
+        break;
+      case '木':
+        element.style.cssText = 'color: #2e8b57 !important; font-weight: bold !important;'; // 木 - 绿色
+        break;
+      case '水':
+        element.style.cssText = 'color: #1e90ff !important; font-weight: bold !important;'; // 水 - 蓝色
+        break;
+      case '火':
+        element.style.cssText = 'color: #ff4500 !important; font-weight: bold !important;'; // 火 - 红色
+        break;
+      case '土':
+        element.style.cssText = 'color: #cd853f !important; font-weight: bold !important;'; // 土 - 棕色
+        break;
+    }
+  }
+
+
+
+
+
+
 
   /**
    * 获取地支对应的五行
@@ -1668,10 +1734,8 @@ export class InteractiveBaziView {
       const hideGans = hideGanText.split(',');
       hideGans.forEach((gan, index) => {
         const wuXing = this.getStemWuXing(gan);
-        container.createSpan({
-          text: gan,
-          cls: `wuxing-${this.getWuXingClass(wuXing)}`
-        });
+        const ganSpan = container.createSpan({ text: gan });
+        this.setWuXingColorDirectly(ganSpan, wuXing);
 
         // 如果不是最后一个，添加逗号分隔
         if (index < hideGans.length - 1) {
@@ -1683,10 +1747,8 @@ export class InteractiveBaziView {
       for (let i = 0; i < hideGanText.length; i++) {
         const gan = hideGanText[i];
         const wuXing = this.getStemWuXing(gan);
-        container.createSpan({
-          text: gan,
-          cls: `wuxing-${this.getWuXingClass(wuXing)}`
-        });
+        const ganSpan = container.createSpan({ text: gan });
+        this.setWuXingColorDirectly(ganSpan, wuXing);
       }
     }
   }
@@ -1984,6 +2046,15 @@ export class InteractiveBaziView {
     modalContent.appendChild(type);
     modalContent.appendChild(explanationText);
     modalContent.appendChild(influence);
+
+    // 添加计算方法（如果有）
+    if (explanation.calculation) {
+      const calculation = document.createElement('div');
+      calculation.innerHTML = '<strong>【计算方法】</strong>' + explanation.calculation;
+      calculation.className = 'bazi-modal-calculation';
+      modalContent.appendChild(calculation);
+    }
+
     modalContent.appendChild(closeButton);
 
     // 添加弹窗到页面

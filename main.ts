@@ -740,26 +740,58 @@ date: ${dateStr}
 			color: #CD853F;
 		}
 
-		/* 五行颜色（天干） */
-		.bazi-stem-row .wuxing-jin {
-			color: #FFD700;
-			text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+		/* 五行颜色（天干） - 使用更具体的选择器 */
+		.bazi-view-table .bazi-stem-row td.wuxing-jin,
+		.bazi-view-table .bazi-stem-row td.wuxing-jin span {
+			color: #FFD700 !important;
+			text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
 		}
-		.bazi-stem-row .wuxing-mu {
-			color: #27ae60;
-			text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+		.bazi-view-table .bazi-stem-row td.wuxing-mu,
+		.bazi-view-table .bazi-stem-row td.wuxing-mu span {
+			color: #27ae60 !important;
+			text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
 		}
-		.bazi-stem-row .wuxing-shui {
-			color: #3498db;
-			text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+		.bazi-view-table .bazi-stem-row td.wuxing-shui,
+		.bazi-view-table .bazi-stem-row td.wuxing-shui span {
+			color: #3498db !important;
+			text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
 		}
-		.bazi-stem-row .wuxing-huo {
-			color: #e74c3c;
-			text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+		.bazi-view-table .bazi-stem-row td.wuxing-huo,
+		.bazi-view-table .bazi-stem-row td.wuxing-huo span {
+			color: #e74c3c !important;
+			text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
 		}
-		.bazi-stem-row .wuxing-tu {
-			color: #f39c12;
-			text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+		.bazi-view-table .bazi-stem-row td.wuxing-tu,
+		.bazi-view-table .bazi-stem-row td.wuxing-tu span {
+			color: #f39c12 !important;
+			text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+		}
+
+		/* 五行颜色（地支） - 使用更具体的选择器 */
+		.bazi-view-table .bazi-branch-row td.wuxing-jin,
+		.bazi-view-table .bazi-branch-row td.wuxing-jin span {
+			color: #FFD700 !important;
+			text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+		}
+		.bazi-view-table .bazi-branch-row td.wuxing-mu,
+		.bazi-view-table .bazi-branch-row td.wuxing-mu span {
+			color: #27ae60 !important;
+			text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+		}
+		.bazi-view-table .bazi-branch-row td.wuxing-shui,
+		.bazi-view-table .bazi-branch-row td.wuxing-shui span {
+			color: #3498db !important;
+			text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+		}
+		.bazi-view-table .bazi-branch-row td.wuxing-huo,
+		.bazi-view-table .bazi-branch-row td.wuxing-huo span {
+			color: #e74c3c !important;
+			text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+		}
+		.bazi-view-table .bazi-branch-row td.wuxing-tu,
+		.bazi-view-table .bazi-branch-row td.wuxing-tu span {
+			color: #f39c12 !important;
+			text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
 		}
 		`;
 
