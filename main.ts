@@ -723,6 +723,258 @@ date: ${dateStr}
 			border-left: 2px solid #f39c12;
 		}
 
+		/* 五行强度详情样式 */
+		.bazi-view-wuxing-strength {
+			margin-top: 15px;
+			border: 1px solid rgba(0, 0, 0, 0.1);
+			border-radius: 8px;
+			overflow: hidden;
+		}
+
+		.bazi-view-wuxing-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 10px 15px;
+			background-color: rgba(0, 0, 0, 0.03);
+			border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+			flex-wrap: wrap;
+		}
+
+		.bazi-view-wuxing-title {
+			font-weight: bold;
+			margin-right: 10px;
+		}
+
+		.bazi-view-wuxing-bars {
+			flex: 1;
+			margin: 0 10px;
+		}
+
+		.wuxing-bar {
+			display: flex;
+			align-items: center;
+			margin-bottom: 5px;
+		}
+
+		.wuxing-bar-inner {
+			height: 8px;
+			border-radius: 4px;
+			margin-left: 10px;
+			flex: 1;
+			opacity: 0.5;
+		}
+
+		.wuxing-clickable, .rizhu-clickable {
+			cursor: pointer;
+			transition: all 0.2s ease;
+		}
+
+		.wuxing-clickable:hover, .rizhu-clickable:hover {
+			filter: brightness(1.1);
+			transform: scale(1.05);
+		}
+
+		.bazi-view-wuxing-details {
+			padding: 15px;
+			background-color: var(--background-primary);
+		}
+
+		.bazi-view-wuxing-table {
+			width: 100%;
+			border-collapse: collapse;
+		}
+
+		.bazi-view-wuxing-table th,
+		.bazi-view-wuxing-table td {
+			padding: 8px 12px;
+			border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+			text-align: left;
+		}
+
+		.bazi-view-wuxing-table th {
+			font-weight: bold;
+			color: var(--text-muted);
+		}
+
+		.bazi-view-wuxing-table th[colspan="2"] {
+			background-color: rgba(0, 0, 0, 0.03);
+			text-align: center;
+		}
+
+		/* 日主旺衰详情样式 */
+		.bazi-view-rizhu-strength {
+			margin-top: 15px;
+			border: 1px solid rgba(0, 0, 0, 0.1);
+			border-radius: 8px;
+			overflow: hidden;
+		}
+
+		.bazi-view-rizhu-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 10px 15px;
+			background-color: rgba(0, 0, 0, 0.03);
+			border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+		}
+
+		.bazi-view-rizhu-title {
+			font-weight: bold;
+		}
+
+		.bazi-view-rizhu-toggle {
+			cursor: pointer;
+			color: var(--text-accent);
+			font-size: 0.9em;
+			padding: 3px 8px;
+			border-radius: 4px;
+			background-color: rgba(0, 0, 0, 0.05);
+			transition: background-color 0.2s;
+		}
+
+		.bazi-view-rizhu-toggle:hover {
+			background-color: rgba(0, 0, 0, 0.1);
+		}
+
+		.bazi-view-rizhu-details {
+			padding: 15px;
+			background-color: var(--background-primary);
+		}
+
+		.bazi-view-rizhu-table {
+			width: 100%;
+			border-collapse: collapse;
+		}
+
+		.bazi-view-rizhu-table th,
+		.bazi-view-rizhu-table td {
+			padding: 8px 12px;
+			border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+			text-align: left;
+		}
+
+		.bazi-view-rizhu-table th {
+			width: 30%;
+			font-weight: bold;
+			color: var(--text-muted);
+		}
+
+		/* 弹窗样式 */
+		.bazi-modal {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(0, 0, 0, 0.5);
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			z-index: 9999;
+		}
+
+		.bazi-modal-content {
+			background-color: var(--background-primary);
+			border-radius: 8px;
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+			width: 80%;
+			max-width: 600px;
+			max-height: 80vh;
+			overflow-y: auto;
+			padding: 20px;
+			position: relative;
+		}
+
+		.bazi-modal-title {
+			margin-top: 0;
+			margin-bottom: 15px;
+			font-size: 1.5em;
+			color: var(--text-normal);
+			border-bottom: 1px solid var(--background-modifier-border);
+			padding-bottom: 10px;
+		}
+
+		.bazi-modal-type {
+			display: inline-block;
+			padding: 5px 10px;
+			border-radius: 4px;
+			margin-bottom: 15px;
+			font-weight: bold;
+		}
+
+		.bazi-modal-type-jin {
+			background-color: rgba(255, 215, 0, 0.1);
+			color: #FFD700;
+			border: 1px solid rgba(255, 215, 0, 0.3);
+		}
+
+		.bazi-modal-type-mu {
+			background-color: rgba(34, 139, 34, 0.1);
+			color: #228B22;
+			border: 1px solid rgba(34, 139, 34, 0.3);
+		}
+
+		.bazi-modal-type-shui {
+			background-color: rgba(30, 144, 255, 0.1);
+			color: #1E90FF;
+			border: 1px solid rgba(30, 144, 255, 0.3);
+		}
+
+		.bazi-modal-type-huo {
+			background-color: rgba(255, 69, 0, 0.1);
+			color: #FF4500;
+			border: 1px solid rgba(255, 69, 0, 0.3);
+		}
+
+		.bazi-modal-type-tu {
+			background-color: rgba(205, 133, 63, 0.1);
+			color: #CD853F;
+			border: 1px solid rgba(205, 133, 63, 0.3);
+		}
+
+		.bazi-modal-explanation {
+			margin-bottom: 15px;
+			line-height: 1.6;
+		}
+
+		.bazi-modal-influence {
+			margin-bottom: 15px;
+			line-height: 1.6;
+			background-color: rgba(0, 0, 0, 0.03);
+			padding: 10px;
+			border-radius: 4px;
+			border-left: 3px solid var(--interactive-accent);
+		}
+
+		.bazi-modal-calculation {
+			background-color: var(--background-secondary);
+			padding: 15px;
+			border-radius: 4px;
+			margin-bottom: 15px;
+		}
+
+		.bazi-modal-calculation ul {
+			margin-left: 20px;
+		}
+
+		.bazi-modal-close {
+			display: block;
+			width: 100%;
+			padding: 8px;
+			background-color: var(--interactive-accent);
+			color: var(--text-on-accent);
+			border: none;
+			border-radius: 4px;
+			cursor: pointer;
+			font-size: 1em;
+			transition: background-color 0.2s;
+		}
+
+		.bazi-modal-close:hover {
+			background-color: var(--interactive-accent-hover);
+		}
+
 		/* 五行颜色 */
 		.wuxing-jin {
 			color: #FFD700;
@@ -738,6 +990,29 @@ date: ${dateStr}
 		}
 		.wuxing-tu {
 			color: #CD853F;
+		}
+
+		/* 可点击的五行和日主旺衰标签 */
+		.wuxing-clickable, .rizhu-clickable {
+			cursor: pointer;
+			transition: all 0.2s ease;
+			position: relative;
+		}
+
+		.wuxing-clickable:hover, .rizhu-clickable:hover {
+			filter: brightness(1.2);
+			transform: translateY(-1px);
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		}
+
+		.wuxing-clickable:active, .rizhu-clickable:active {
+			transform: translateY(0);
+			box-shadow: none;
+		}
+
+		/* 移除眼睛图标 */
+		.wuxing-clickable::after, .rizhu-clickable::after {
+			content: "";
 		}
 
 		/* 五行颜色（天干） - 使用更具体的选择器 */
@@ -881,6 +1156,22 @@ date: ${dateStr}
 	}
 
 	/**
+	 * 获取五行对应的CSS类名
+	 * @param wuXing 五行名称
+	 * @returns CSS类名
+	 */
+	getWuXingClass(wuXing: string): string {
+		switch (wuXing) {
+			case '金': return 'jin';
+			case '木': return 'mu';
+			case '水': return 'shui';
+			case '火': return 'huo';
+			case '土': return 'tu';
+			default: return '';
+		}
+	}
+
+	/**
 	 * 为表格单元格添加事件监听器
 	 * @param container 容器元素
 	 * @param baziId 八字命盘ID
@@ -892,6 +1183,42 @@ date: ${dateStr}
 		const liuNianTable = container.querySelector(`#${baziId} .bazi-view-liunian-table`);
 		const xiaoYunTable = container.querySelector(`#${baziId} .bazi-view-xiaoyun-table`);
 		const liuYueTable = container.querySelector(`#${baziId} .bazi-view-liuyue-table`);
+
+		// 为五行强度详情添加点击展开功能
+		const wuXingToggle = container.querySelector(`#${baziId} .bazi-view-wuxing-toggle`);
+		if (wuXingToggle) {
+			wuXingToggle.addEventListener('click', (e) => {
+				const detailsEl = container.querySelector(`#wuxing-details-${baziId}`);
+				if (detailsEl && detailsEl instanceof HTMLElement) {
+					// 切换显示/隐藏
+					if (detailsEl.style.display === 'none') {
+						detailsEl.style.display = 'block';
+						(e.currentTarget as HTMLElement).textContent = '收起详情 ▲';
+					} else {
+						detailsEl.style.display = 'none';
+						(e.currentTarget as HTMLElement).textContent = '查看详情 ▼';
+					}
+				}
+			});
+		}
+
+		// 为日主旺衰详情添加点击展开功能
+		const riZhuToggle = container.querySelector(`#${baziId} .bazi-view-rizhu-toggle`);
+		if (riZhuToggle) {
+			riZhuToggle.addEventListener('click', (e) => {
+				const detailsEl = container.querySelector(`#rizhu-details-${baziId}`);
+				if (detailsEl && detailsEl instanceof HTMLElement) {
+					// 切换显示/隐藏
+					if (detailsEl.style.display === 'none') {
+						detailsEl.style.display = 'block';
+						(e.currentTarget as HTMLElement).textContent = '收起详情 ▲';
+					} else {
+						detailsEl.style.display = 'none';
+						(e.currentTarget as HTMLElement).textContent = '查看详情 ▼';
+					}
+				}
+			});
+		}
 
 		// 获取存储在DOM中的数据
 		const dataEl = container.querySelector(`#${baziId} .bazi-view-data`);
@@ -1314,6 +1641,8 @@ date: ${dateStr}
 			table.appendChild(xkRow);
 		}
 	}
+
+
 
 	/**
 	 * 处理设置按钮点击事件

@@ -105,6 +105,9 @@ export interface BaziInfo {
 
   // 日主旺衰
   riZhuStrength?: string;
+
+  // 日主旺衰详情
+  riZhuStrengthDetails?: any;
 }
 
 /**
