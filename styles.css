@@ -1209,6 +1209,32 @@ td.wuxing-tu, span.wuxing-tu, .wuxing-tu {
   color: #2980b9;
 }
 
+/* 计算方法标题和复制按钮 */
+.bazi-modal-calculation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-bottom: 5px;
+  border-bottom: 1px dotted rgba(52, 152, 219, 0.3);
+}
+
+.bazi-modal-copy-button {
+  background-color: rgba(52, 152, 219, 0.1);
+  color: #3498db;
+  border: 1px solid rgba(52, 152, 219, 0.3);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 0.8em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.bazi-modal-copy-button:hover {
+  background-color: rgba(52, 152, 219, 0.2);
+  transform: translateY(-1px);
+}
+
 /* 神煞组合级别样式 */
 .bazi-combination-level-2 {
   font-size: 0.8em;

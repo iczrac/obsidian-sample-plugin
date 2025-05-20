@@ -1961,27 +1961,12 @@ export class BaziService {
     shui: number;
     huo: number;
     tu: number;
-    details?: {
-      tianGan: {
-        year: { wuXing: string; value: number; },
-        month: { wuXing: string; value: number; },
-        day: { wuXing: string; value: number; },
-        time: { wuXing: string; value: number; }
-      },
-      diZhi: {
-        year: { hideGan: string[]; values: number[]; },
-        month: { hideGan: string[]; values: number[]; },
-        day: { hideGan: string[]; values: number[]; },
-        time: { hideGan: string[]; values: number[]; }
-      },
-      naYin: {
-        year: { wuXing: string; value: number; },
-        month: { wuXing: string; value: number; },
-        day: { wuXing: string; value: number; },
-        time: { wuXing: string; value: number; }
-      },
-      seasonAdjust: { season: string; adjustments: { wuXing: string; value: number; }[] },
-      combinationAdjust: { combinations: { type: string; stems: string[]; wuXing: string; value: number; }[] }
+    details: {
+      jin: { tianGan: number; diZhiCang: number; naYin: number; season: number; monthDominant: number; combination: number; total: number },
+      mu: { tianGan: number; diZhiCang: number; naYin: number; season: number; monthDominant: number; combination: number; total: number },
+      shui: { tianGan: number; diZhiCang: number; naYin: number; season: number; monthDominant: number; combination: number; total: number },
+      huo: { tianGan: number; diZhiCang: number; naYin: number; season: number; monthDominant: number; combination: number; total: number },
+      tu: { tianGan: number; diZhiCang: number; naYin: number; season: number; monthDominant: number; combination: number; total: number }
     }
   } {
     // 初始化五行强度
@@ -1993,65 +1978,33 @@ export class BaziService {
       tu: 0    // 土
     };
 
-    // 初始化详细信息
+    // 初始化详细信息，记录各项得分
     const details = {
-      tianGan: {
-        year: { wuXing: '', value: 0 },
-        month: { wuXing: '', value: 0 },
-        day: { wuXing: '', value: 0 },
-        time: { wuXing: '', value: 0 }
-      },
-      diZhi: {
-        year: { hideGan: [] as string[], values: [] as number[] },
-        month: { hideGan: [] as string[], values: [] as number[] },
-        day: { hideGan: [] as string[], values: [] as number[] },
-        time: { hideGan: [] as string[], values: [] as number[] }
-      },
-      naYin: {
-        year: { wuXing: '', value: 0 },
-        month: { wuXing: '', value: 0 },
-        day: { wuXing: '', value: 0 },
-        time: { wuXing: '', value: 0 }
-      },
-      seasonAdjust: {
-        season: '',
-        adjustments: [] as { wuXing: string; value: number; }[]
-      },
-      combinationAdjust: {
-        combinations: [] as { type: string; stems: string[]; wuXing: string; value: number; }[]
-      }
-    };
-
-    // 根据五行增加强度的辅助函数
-    const addStrength = (wuXing: string, value: number, source?: string) => {
-      switch (wuXing) {
-        case '金': strength.jin += value; break;
-        case '木': strength.mu += value; break;
-        case '水': strength.shui += value; break;
-        case '火': strength.huo += value; break;
-        case '土': strength.tu += value; break;
-      }
+      jin: { tianGan: 0, diZhiCang: 0, naYin: 0, season: 0, monthDominant: 0, combination: 0, total: 0 },
+      mu: { tianGan: 0, diZhiCang: 0, naYin: 0, season: 0, monthDominant: 0, combination: 0, total: 0 },
+      shui: { tianGan: 0, diZhiCang: 0, naYin: 0, season: 0, monthDominant: 0, combination: 0, total: 0 },
+      huo: { tianGan: 0, diZhiCang: 0, naYin: 0, season: 0, monthDominant: 0, combination: 0, total: 0 },
+      tu: { tianGan: 0, diZhiCang: 0, naYin: 0, season: 0, monthDominant: 0, combination: 0, total: 0 }
     };
 
     // 1. 天干部分 - 按照不同柱位的权重计算
+    // 获取四柱天干
+    const yearStem = eightChar.getYearGan();
+    const monthStem = eightChar.getMonthGan();
+    const dayStem = eightChar.getDayGan();
+    const timeStem = eightChar.getTimeGan();
+
     // 获取四柱天干五行
-    const yearStemWuXing = eightChar.getYearWuXing();
-    const monthStemWuXing = eightChar.getMonthWuXing();
-    const dayStemWuXing = eightChar.getDayWuXing();
-    const timeStemWuXing = eightChar.getTimeWuXing();
+    const yearStemWuXing = this.getStemWuXing(yearStem);
+    const monthStemWuXing = this.getStemWuXing(monthStem);
+    const dayStemWuXing = this.getStemWuXing(dayStem);
+    const timeStemWuXing = this.getStemWuXing(timeStem);
 
-    // 天干权重: 年干(1.0) < 月干(2.0) < 日干(3.0) > 时干(1.0)
-    addStrength(yearStemWuXing, 1.0);
-    details.tianGan.year = { wuXing: yearStemWuXing, value: 1.0 };
-
-    addStrength(monthStemWuXing, 2.0);
-    details.tianGan.month = { wuXing: monthStemWuXing, value: 2.0 };
-
-    addStrength(dayStemWuXing, 3.0);
-    details.tianGan.day = { wuXing: dayStemWuXing, value: 3.0 };
-
-    addStrength(timeStemWuXing, 1.0);
-    details.tianGan.time = { wuXing: timeStemWuXing, value: 1.0 };
+    // 天干权重: 年干(1.0) < 月干(2.5) < 日干(3.0) > 时干(1.0)
+    this.addWuXingStrength(yearStemWuXing, 1.0, details, 'tianGan');
+    this.addWuXingStrength(monthStemWuXing, 2.5, details, 'tianGan'); // 提高月干权重
+    this.addWuXingStrength(dayStemWuXing, 3.0, details, 'tianGan');
+    this.addWuXingStrength(timeStemWuXing, 1.0, details, 'tianGan');
 
     // 2. 地支部分 - 考虑地支藏干
     // 获取四柱地支
@@ -2066,31 +2019,14 @@ export class BaziService {
     const dayHideGan = eightChar.getDayHideGan();
     const timeHideGan = eightChar.getTimeHideGan();
 
-    // 地支藏干权重: 年支藏干(0.7) < 月支藏干(1.5) < 日支藏干(2.0) > 时支藏干(0.7)
-    // 同时，每个地支的多个藏干按照不同比例计算
-    details.diZhi.year.hideGan = [...yearHideGan];
-    details.diZhi.month.hideGan = [...monthHideGan];
-    details.diZhi.day.hideGan = [...dayHideGan];
-    details.diZhi.time.hideGan = [...timeHideGan];
-
-    // 处理年支藏干
-    const yearHideGanValues = this.processHideGanWithDetails(yearHideGan, 0.7, addStrength);
-    details.diZhi.year.values = yearHideGanValues;
-
-    // 处理月支藏干
-    const monthHideGanValues = this.processHideGanWithDetails(monthHideGan, 1.5, addStrength);
-    details.diZhi.month.values = monthHideGanValues;
-
-    // 处理日支藏干
-    const dayHideGanValues = this.processHideGanWithDetails(dayHideGan, 2.0, addStrength);
-    details.diZhi.day.values = dayHideGanValues;
-
-    // 处理时支藏干
-    const timeHideGanValues = this.processHideGanWithDetails(timeHideGan, 0.7, addStrength);
-    details.diZhi.time.values = timeHideGanValues;
+    // 地支藏干权重: 年支藏干(0.7) < 月支藏干(2.0) < 日支藏干(2.0) > 时支藏干(0.7)
+    this.processHideGanForStrength(yearHideGan, 0.7, details);
+    this.processHideGanForStrength(monthHideGan, 2.0, details); // 提高月支藏干权重
+    this.processHideGanForStrength(dayHideGan, 2.0, details);
+    this.processHideGanForStrength(timeHideGan, 0.7, details);
 
     // 3. 纳音五行 - 考虑纳音的影响
-    // 获取四柱纳音五行
+    // 获取四柱纳音
     const yearNaYin = eightChar.getYearNaYin();
     const monthNaYin = eightChar.getMonthNaYin();
     const dayNaYin = eightChar.getDayNaYin();
@@ -2102,51 +2038,420 @@ export class BaziService {
     const dayNaYinWuXing = this.getNaYinWuXing(dayNaYin);
     const timeNaYinWuXing = this.getNaYinWuXing(timeNaYin);
 
-    // 纳音五行权重: 年柱纳音(0.5) < 月柱纳音(1.0) < 日柱纳音(1.5) > 时柱纳音(0.5)
-    if (yearNaYinWuXing) {
-      addStrength(yearNaYinWuXing, 0.5);
-      details.naYin.year = { wuXing: yearNaYinWuXing, value: 0.5 };
-    }
-
-    if (monthNaYinWuXing) {
-      addStrength(monthNaYinWuXing, 1.0);
-      details.naYin.month = { wuXing: monthNaYinWuXing, value: 1.0 };
-    }
-
-    if (dayNaYinWuXing) {
-      addStrength(dayNaYinWuXing, 1.5);
-      details.naYin.day = { wuXing: dayNaYinWuXing, value: 1.5 };
-    }
-
-    if (timeNaYinWuXing) {
-      addStrength(timeNaYinWuXing, 0.5);
-      details.naYin.time = { wuXing: timeNaYinWuXing, value: 0.5 };
-    }
+    // 纳音五行权重: 年柱纳音(0.5) < 月柱纳音(1.5) < 日柱纳音(1.5) > 时柱纳音(0.5)
+    this.addWuXingStrength(yearNaYinWuXing, 0.5, details, 'naYin');
+    this.addWuXingStrength(monthNaYinWuXing, 1.5, details, 'naYin'); // 提高月柱纳音权重
+    this.addWuXingStrength(dayNaYinWuXing, 1.5, details, 'naYin');
+    this.addWuXingStrength(timeNaYinWuXing, 0.5, details, 'naYin');
 
     // 4. 月令旺衰调整 - 根据月令对五行强度进行调整
-    this.adjustByMonthSeasonWithDetails(monthBranch, strength, details);
+    this.adjustByMonthSeasonForStrength(monthBranch, details);
 
-    // 5. 四柱组合调整 - 根据四柱组合关系进行调整
-    this.adjustByCombinationWithDetails(eightChar, strength, details);
+    // 5. 月令当令加成 - 新增
+    this.addMonthDominantBonus(monthBranch, details);
 
-    // 6. 四舍五入到一位小数
-    strength.jin = Math.round(strength.jin * 10) / 10;
-    strength.mu = Math.round(strength.mu * 10) / 10;
-    strength.shui = Math.round(strength.shui * 10) / 10;
-    strength.huo = Math.round(strength.huo * 10) / 10;
-    strength.tu = Math.round(strength.tu * 10) / 10;
+    // 6. 四柱组合调整 - 根据四柱组合关系进行调整
+    this.adjustByCombinationForStrength(eightChar, details);
 
-    // 创建一个新对象，包含五行强度和详细信息
-    const result = {
+    // 7. 计算各五行总得分
+    details.jin.total = details.jin.tianGan + details.jin.diZhiCang + details.jin.naYin +
+                       details.jin.season + details.jin.monthDominant + details.jin.combination;
+    details.mu.total = details.mu.tianGan + details.mu.diZhiCang + details.mu.naYin +
+                       details.mu.season + details.mu.monthDominant + details.mu.combination;
+    details.shui.total = details.shui.tianGan + details.shui.diZhiCang + details.shui.naYin +
+                         details.shui.season + details.shui.monthDominant + details.shui.combination;
+    details.huo.total = details.huo.tianGan + details.huo.diZhiCang + details.huo.naYin +
+                        details.huo.season + details.huo.monthDominant + details.huo.combination;
+    details.tu.total = details.tu.tianGan + details.tu.diZhiCang + details.tu.naYin +
+                       details.tu.season + details.tu.monthDominant + details.tu.combination;
+
+    // 7. 四舍五入到一位小数
+    details.jin.total = Math.round(details.jin.total * 10) / 10;
+    details.mu.total = Math.round(details.mu.total * 10) / 10;
+    details.shui.total = Math.round(details.shui.total * 10) / 10;
+    details.huo.total = Math.round(details.huo.total * 10) / 10;
+    details.tu.total = Math.round(details.tu.total * 10) / 10;
+
+    // 8. 更新strength对象
+    strength.jin = details.jin.total;
+    strength.mu = details.mu.total;
+    strength.shui = details.shui.total;
+    strength.huo = details.huo.total;
+    strength.tu = details.tu.total;
+
+    // 返回结果
+    return {
       jin: strength.jin,
       mu: strength.mu,
       shui: strength.shui,
       huo: strength.huo,
-      tu: strength.tu
+      tu: strength.tu,
+      details
+    };
+  }
+
+  /**
+   * 增加五行强度
+   * @param wuXing 五行
+   * @param value 增加的值
+   * @param details 详细信息对象
+   * @param category 类别（tianGan, diZhiCang, naYin, season, combination）
+   */
+  private static addWuXingStrength(wuXing: string, value: number, details: any, category: string): void {
+    if (!wuXing) return;
+
+    switch (wuXing) {
+      case '金': details.jin[category] += value; break;
+      case '木': details.mu[category] += value; break;
+      case '水': details.shui[category] += value; break;
+      case '火': details.huo[category] += value; break;
+      case '土': details.tu[category] += value; break;
+    }
+  }
+
+  /**
+   * 处理地支藏干的五行强度
+   * @param hideGan 藏干数组
+   * @param baseWeight 基础权重
+   * @param details 详细信息对象
+   * @param cangGanInnerWeight 藏干内部权重配置
+   */
+  private static processHideGanForStrength(hideGan: string[], baseWeight: number, details: any, cangGanInnerWeight?: any): void {
+    if (!hideGan || hideGan.length === 0) return;
+
+    // 根据藏干数量分配权重
+    // 使用配置中的权重或默认权重
+    let weights;
+    if (cangGanInnerWeight) {
+      weights = hideGan.length === 1 ? cangGanInnerWeight.one :
+               hideGan.length === 2 ? cangGanInnerWeight.two :
+               cangGanInnerWeight.three;
+    } else {
+      // 默认权重
+      weights = hideGan.length === 1 ? [1.0] :
+               hideGan.length === 2 ? [0.6, 0.4] :
+               [0.5, 0.3, 0.2];
+    }
+
+    // 为每个藏干增加相应权重的五行强度
+    hideGan.forEach((gan, index) => {
+      if (index < weights.length) {
+        const wuXing = this.getStemWuXing(gan);
+        const value = baseWeight * weights[index];
+        this.addWuXingStrength(wuXing, value, details, 'diZhiCang');
+      }
+    });
+  }
+
+  /**
+   * 根据月令季节调整五行强度
+   * @param monthBranch 月支
+   * @param details 详细信息对象
+   * @param seasonAdjust 季节调整系数配置
+   * @param seasonWuXingStatus 季节五行对应关系配置
+   */
+  private static adjustByMonthSeasonForStrength(
+    monthBranch: string,
+    details: any,
+    seasonAdjust?: any,
+    seasonWuXingStatus?: any
+  ): void {
+    // 使用配置或默认值
+    const adjust = seasonAdjust || {
+      wang: 2.0,   // 旺相系数
+      xiang: 1.0,  // 相旺系数
+      ping: 0.0,   // 平和系数
+      qiu: -1.0,   // 囚系数
+      si: -1.5     // 死系数
     };
 
-    // 返回结果，不直接修改 strength 对象
-    return result;
+    let season = '';
+    let wuXingStatus: any = {};
+
+    if (['寅', '卯', '辰'].includes(monthBranch)) {
+      // 春季
+      season = 'spring';
+      wuXingStatus = seasonWuXingStatus ? seasonWuXingStatus.spring : {
+        mu: 'wang',    // 木旺
+        huo: 'xiang',  // 火相
+        tu: 'ping',    // 土平
+        jin: 'qiu',    // 金囚
+        shui: 'si'     // 水死
+      };
+    } else if (['巳', '午', '未'].includes(monthBranch)) {
+      // 夏季
+      season = 'summer';
+      wuXingStatus = seasonWuXingStatus ? seasonWuXingStatus.summer : {
+        huo: 'wang',   // 火旺
+        tu: 'xiang',   // 土相
+        jin: 'ping',   // 金平
+        shui: 'qiu',   // 水囚
+        mu: 'si'       // 木死
+      };
+    } else if (['申', '酉', '戌'].includes(monthBranch)) {
+      // 秋季
+      season = 'autumn';
+      wuXingStatus = seasonWuXingStatus ? seasonWuXingStatus.autumn : {
+        jin: 'wang',   // 金旺
+        shui: 'xiang', // 水相
+        mu: 'ping',    // 木平
+        huo: 'qiu',    // 火囚
+        tu: 'si'       // 土死
+      };
+    } else if (['亥', '子', '丑'].includes(monthBranch)) {
+      // 冬季
+      season = 'winter';
+      wuXingStatus = seasonWuXingStatus ? seasonWuXingStatus.winter : {
+        shui: 'wang',  // 水旺
+        mu: 'xiang',   // 木相
+        huo: 'ping',   // 火平
+        tu: 'qiu',     // 土囚
+        jin: 'si'      // 金死
+      };
+    }
+
+    // 应用调整
+    Object.keys(wuXingStatus).forEach(wuXing => {
+      const status = wuXingStatus[wuXing];
+      if (details[wuXing] && adjust[status] !== undefined) {
+        details[wuXing].season += adjust[status];
+      }
+    });
+  }
+
+  /**
+   * 添加月令当令加成
+   * @param monthBranch 月支
+   * @param details 详细信息对象
+   * @param monthDominantBonus 月令当令加成配置
+   * @param monthDominantWuXing 月令当令五行对应关系配置
+   */
+  private static addMonthDominantBonus(
+    monthBranch: string,
+    details: any,
+    monthDominantBonus?: any,
+    monthDominantWuXing?: any
+  ): void {
+    // 使用配置或默认值
+    const bonus = monthDominantBonus || {
+      dominant: 1.5,   // 当令加成
+      related: 0.8,    // 相旺加成
+      neutral: 0.0,    // 平和加成
+      weak: -0.5,      // 囚加成
+      dead: -0.8       // 死加成
+    };
+
+    let season = '';
+    let dominantInfo: any = {};
+
+    if (['寅', '卯', '辰'].includes(monthBranch)) {
+      // 春季
+      season = 'spring';
+      dominantInfo = monthDominantWuXing ? monthDominantWuXing.spring : {
+        dominant: 'mu',    // 木当令
+        related: 'huo'     // 火相旺
+      };
+    } else if (['巳', '午', '未'].includes(monthBranch)) {
+      // 夏季
+      season = 'summer';
+      dominantInfo = monthDominantWuXing ? monthDominantWuXing.summer : {
+        dominant: 'huo',   // 火当令
+        related: 'tu'      // 土相旺
+      };
+    } else if (['申', '酉', '戌'].includes(monthBranch)) {
+      // 秋季
+      season = 'autumn';
+      dominantInfo = monthDominantWuXing ? monthDominantWuXing.autumn : {
+        dominant: 'jin',   // 金当令
+        related: 'shui'    // 水相旺
+      };
+    } else if (['亥', '子', '丑'].includes(monthBranch)) {
+      // 冬季
+      season = 'winter';
+      dominantInfo = monthDominantWuXing ? monthDominantWuXing.winter : {
+        dominant: 'shui',  // 水当令
+        related: 'mu'      // 木相旺
+      };
+    }
+
+    // 应用当令和相旺加成
+    if (dominantInfo.dominant && details[dominantInfo.dominant]) {
+      details[dominantInfo.dominant].monthDominant += bonus.dominant;
+    }
+
+    if (dominantInfo.related && details[dominantInfo.related]) {
+      details[dominantInfo.related].monthDominant += bonus.related;
+    }
+
+    // 应用囚和死的负面调整（新增）
+    // 根据季节五行旺衰关系确定囚和死的五行
+    const wuXingList = ['jin', 'mu', 'shui', 'huo', 'tu'];
+    const dominantWuXing = dominantInfo.dominant;
+    const relatedWuXing = dominantInfo.related;
+
+    // 找出平和、囚和死的五行
+    wuXingList.forEach(wuXing => {
+      if (wuXing !== dominantWuXing && wuXing !== relatedWuXing) {
+        // 根据季节确定五行状态
+        let status = 'neutral'; // 默认平和
+
+        if (season === 'spring') {
+          if (wuXing === 'jin') status = 'weak'; // 金囚
+          if (wuXing === 'shui') status = 'dead'; // 水死
+        } else if (season === 'summer') {
+          if (wuXing === 'shui') status = 'weak'; // 水囚
+          if (wuXing === 'mu') status = 'dead'; // 木死
+        } else if (season === 'autumn') {
+          if (wuXing === 'huo') status = 'weak'; // 火囚
+          if (wuXing === 'tu') status = 'dead'; // 土死
+        } else if (season === 'winter') {
+          if (wuXing === 'tu') status = 'weak'; // 土囚
+          if (wuXing === 'jin') status = 'dead'; // 金死
+        }
+
+        // 应用相应的加成
+        if (bonus[status] && details[wuXing]) {
+          details[wuXing].monthDominant += bonus[status];
+        }
+      }
+    });
+  }
+
+  /**
+   * 根据四柱组合关系调整五行强度
+   * @param eightChar 八字对象
+   * @param details 详细信息对象
+   * @param combinationWeight 组合关系权重配置
+   */
+  private static adjustByCombinationForStrength(eightChar: EightChar, details: any, combinationWeight?: any): void {
+    // 获取四柱干支
+    const yearStem = eightChar.getYearGan();
+    const yearBranch = eightChar.getYearZhi();
+    const monthStem = eightChar.getMonthGan();
+    const monthBranch = eightChar.getMonthZhi();
+    const dayStem = eightChar.getDayGan();
+    const dayBranch = eightChar.getDayZhi();
+    const timeStem = eightChar.getTimeGan();
+    const timeBranch = eightChar.getTimeZhi();
+
+    // 检查天干合化
+    this.checkStemCombinationForStrength(yearStem, monthStem, details, combinationWeight);
+    this.checkStemCombinationForStrength(yearStem, dayStem, details, combinationWeight);
+    this.checkStemCombinationForStrength(yearStem, timeStem, details, combinationWeight);
+    this.checkStemCombinationForStrength(monthStem, dayStem, details, combinationWeight);
+    this.checkStemCombinationForStrength(monthStem, timeStem, details, combinationWeight);
+    this.checkStemCombinationForStrength(dayStem, timeStem, details, combinationWeight);
+
+    // 检查地支组合（三合、三会、六合等）
+    this.checkBranchTripleForStrength(yearBranch, monthBranch, dayBranch, timeBranch, details, combinationWeight);
+  }
+
+  /**
+   * 检查天干合化
+   * @param stem1 天干1
+   * @param stem2 天干2
+   * @param details 详细信息对象
+   * @param combinationWeight 组合关系权重配置
+   */
+  private static checkStemCombinationForStrength(stem1: string, stem2: string, details: any, combinationWeight?: any): void {
+    // 使用配置或默认值
+    const tianGanWuHeValue = combinationWeight ? combinationWeight.tianGanWuHe : 0.6;
+
+    // 天干五合：甲己合化土、乙庚合化金、丙辛合化水、丁壬合化木、戊癸合化火
+    const combinations: {[key: string]: {result: string, value: number}} = {
+      '甲己': {result: '土', value: tianGanWuHeValue},
+      '己甲': {result: '土', value: tianGanWuHeValue},
+      '乙庚': {result: '金', value: tianGanWuHeValue},
+      '庚乙': {result: '金', value: tianGanWuHeValue},
+      '丙辛': {result: '水', value: tianGanWuHeValue},
+      '辛丙': {result: '水', value: tianGanWuHeValue},
+      '丁壬': {result: '木', value: tianGanWuHeValue},
+      '壬丁': {result: '木', value: tianGanWuHeValue},
+      '戊癸': {result: '火', value: tianGanWuHeValue},
+      '癸戊': {result: '火', value: tianGanWuHeValue}
+    };
+
+    const key = stem1 + stem2;
+    if (combinations[key]) {
+      const {result, value} = combinations[key];
+      this.addWuXingStrength(result, value, details, 'combination');
+    }
+  }
+
+  /**
+   * 检查地支三合和三会
+   * @param branch1 地支1
+   * @param branch2 地支2
+   * @param branch3 地支3
+   * @param branch4 地支4
+   * @param details 详细信息对象
+   * @param combinationWeight 组合关系权重配置
+   */
+  private static checkBranchTripleForStrength(
+    branch1: string,
+    branch2: string,
+    branch3: string,
+    branch4: string,
+    details: any,
+    combinationWeight?: any
+  ): void {
+    const branches = [branch1, branch2, branch3, branch4];
+
+    // 使用配置或默认值
+    const sanHeValue = combinationWeight ? combinationWeight.diZhiSanHe : 1.2;
+    const sanHuiValue = combinationWeight ? combinationWeight.diZhiSanHui : 1.0;
+    const partialSanHeValue = combinationWeight ? combinationWeight.partialSanHe : 0.9;
+    const partialSanHuiValue = combinationWeight ? combinationWeight.partialSanHui : 0.7;
+
+    // 检查三合局
+    const sanHeJu = this.checkSanHeJu(branches);
+    if (sanHeJu) {
+      // 检查是完整三合还是部分三合
+      const sanHePatterns = {
+        '火': ['寅', '午', '戌'],
+        '水': ['申', '子', '辰'],
+        '木': ['亥', '卯', '未'],
+        '金': ['巳', '酉', '丑']
+      };
+
+      const pattern = sanHePatterns[sanHeJu];
+      const matchedBranches = branches.filter(branch => pattern.includes(branch));
+      const uniqueBranches = new Set(matchedBranches);
+
+      // 根据匹配的地支数量决定使用完整值还是部分值
+      if (uniqueBranches.size === 3) {
+        // 完整三合
+        this.addWuXingStrength(sanHeJu, sanHeValue, details, 'combination');
+      } else {
+        // 部分三合
+        this.addWuXingStrength(sanHeJu, partialSanHeValue, details, 'combination');
+      }
+    }
+
+    // 检查三会局
+    const sanHuiJu = this.checkSanHuiJu(branches);
+    if (sanHuiJu) {
+      // 检查是完整三会还是部分三会
+      const sanHuiPatterns = {
+        '木': ['寅', '卯', '辰'],
+        '火': ['巳', '午', '未'],
+        '金': ['申', '酉', '戌'],
+        '水': ['亥', '子', '丑']
+      };
+
+      const pattern = sanHuiPatterns[sanHuiJu];
+      const matchedBranches = branches.filter(branch => pattern.includes(branch));
+      const uniqueBranches = new Set(matchedBranches);
+
+      // 根据匹配的地支数量决定使用完整值还是部分值
+      if (uniqueBranches.size === 3) {
+        // 完整三会
+        this.addWuXingStrength(sanHuiJu, sanHuiValue, details, 'combination');
+      } else {
+        // 部分三会
+        this.addWuXingStrength(sanHuiJu, partialSanHuiValue, details, 'combination');
+      }
+    }
   }
 
   /**
@@ -2367,16 +2672,16 @@ export class BaziService {
   private static checkStemCombination(stem1: string, stem2: string, strength: { jin: number; mu: number; shui: number; huo: number; tu: number }): void {
     // 天干五合：甲己合化土、乙庚合化金、丙辛合化水、丁壬合化木、戊癸合化火
     const combinations: {[key: string]: {result: string, value: number}} = {
-      '甲己': {result: '土', value: 0.5},
-      '己甲': {result: '土', value: 0.5},
-      '乙庚': {result: '金', value: 0.5},
-      '庚乙': {result: '金', value: 0.5},
-      '丙辛': {result: '水', value: 0.5},
-      '辛丙': {result: '水', value: 0.5},
-      '丁壬': {result: '木', value: 0.5},
-      '壬丁': {result: '木', value: 0.5},
-      '戊癸': {result: '火', value: 0.5},
-      '癸戊': {result: '火', value: 0.5}
+      '甲己': {result: '土', value: 0.6},
+      '己甲': {result: '土', value: 0.6},
+      '乙庚': {result: '金', value: 0.6},
+      '庚乙': {result: '金', value: 0.6},
+      '丙辛': {result: '水', value: 0.6},
+      '辛丙': {result: '水', value: 0.6},
+      '丁壬': {result: '木', value: 0.6},
+      '壬丁': {result: '木', value: 0.6},
+      '戊癸': {result: '火', value: 0.6},
+      '癸戊': {result: '火', value: 0.6}
     };
 
     const key = stem1 + stem2;
@@ -2407,16 +2712,16 @@ export class BaziService {
   ): void {
     // 天干五合：甲己合化土、乙庚合化金、丙辛合化水、丁壬合化木、戊癸合化火
     const combinationMap: {[key: string]: {result: string, value: number}} = {
-      '甲己': {result: '土', value: 0.5},
-      '己甲': {result: '土', value: 0.5},
-      '乙庚': {result: '金', value: 0.5},
-      '庚乙': {result: '金', value: 0.5},
-      '丙辛': {result: '水', value: 0.5},
-      '辛丙': {result: '水', value: 0.5},
-      '丁壬': {result: '木', value: 0.5},
-      '壬丁': {result: '木', value: 0.5},
-      '戊癸': {result: '火', value: 0.5},
-      '癸戊': {result: '火', value: 0.5}
+      '甲己': {result: '土', value: 0.6},
+      '己甲': {result: '土', value: 0.6},
+      '乙庚': {result: '金', value: 0.6},
+      '庚乙': {result: '金', value: 0.6},
+      '丙辛': {result: '水', value: 0.6},
+      '辛丙': {result: '水', value: 0.6},
+      '丁壬': {result: '木', value: 0.6},
+      '壬丁': {result: '木', value: 0.6},
+      '戊癸': {result: '火', value: 0.6},
+      '癸戊': {result: '火', value: 0.6}
     };
 
     const key = stem1 + stem2;
@@ -2441,7 +2746,7 @@ export class BaziService {
   }
 
   /**
-   * 检查地支三合
+   * 检查地支三合和三会
    * @param branch1 地支1
    * @param branch2 地支2
    * @param branch3 地支3
@@ -2458,29 +2763,27 @@ export class BaziService {
 
     const branches = [branch1, branch2, branch3, branch4];
 
-    // 检查寅午戌三合火局
-    if (this.containsAll(branches, ['寅', '午', '戌'])) {
-      strength.huo += 1.0;
+    // 检查三合局
+    const sanHeJu = this.checkSanHeJu(branches);
+    if (sanHeJu) {
+      if (sanHeJu === '火') strength.huo += 1.2; // 提高三合局权重
+      else if (sanHeJu === '木') strength.mu += 1.2;
+      else if (sanHeJu === '水') strength.shui += 1.2;
+      else if (sanHeJu === '金') strength.jin += 1.2;
     }
 
-    // 检查亥卯未三合木局
-    if (this.containsAll(branches, ['亥', '卯', '未'])) {
-      strength.mu += 1.0;
-    }
-
-    // 检查申子辰三合水局
-    if (this.containsAll(branches, ['申', '子', '辰'])) {
-      strength.shui += 1.0;
-    }
-
-    // 检查巳酉丑三合金局
-    if (this.containsAll(branches, ['巳', '酉', '丑'])) {
-      strength.jin += 1.0;
+    // 检查三会局
+    const sanHuiJu = this.checkSanHuiJu(branches);
+    if (sanHuiJu) {
+      if (sanHuiJu === '木') strength.mu += 1.0; // 提高三会局权重
+      else if (sanHuiJu === '火') strength.huo += 1.0;
+      else if (sanHuiJu === '金') strength.jin += 1.0;
+      else if (sanHuiJu === '水') strength.shui += 1.0;
     }
   }
 
   /**
-   * 检查地支三合并记录详细信息
+   * 检查地支三合和三会并记录详细信息
    * @param branch1 地支1
    * @param branch2 地支2
    * @param branch3 地支3
@@ -2496,55 +2799,60 @@ export class BaziService {
     strength: { jin: number; mu: number; shui: number; huo: number; tu: number },
     combinations: { type: string; stems: string[]; wuXing: string; value: number; }[]
   ): void {
-    // 地支三合：
-    // 寅午戌三合火局
-    // 亥卯未三合木局
-    // 申子辰三合水局
-    // 巳酉丑三合金局
-
     const branches = [branch1, branch2, branch3, branch4];
-    const value = 1.0;
 
-    // 检查寅午戌三合火局
-    if (this.containsAll(branches, ['寅', '午', '戌'])) {
-      strength.huo += value;
+    // 检查三合局
+    const sanHeJu = this.checkSanHeJu(branches);
+    if (sanHeJu) {
+      const value = 1.2; // 提高三合局权重
+      let sanHeBranches: string[] = [];
+
+      if (sanHeJu === '火') {
+        sanHeBranches = ['寅', '午', '戌'].filter(b => branches.includes(b)) as string[];
+        strength.huo += value;
+      } else if (sanHeJu === '木') {
+        sanHeBranches = ['亥', '卯', '未'].filter(b => branches.includes(b)) as string[];
+        strength.mu += value;
+      } else if (sanHeJu === '水') {
+        sanHeBranches = ['申', '子', '辰'].filter(b => branches.includes(b)) as string[];
+        strength.shui += value;
+      } else if (sanHeJu === '金') {
+        sanHeBranches = ['巳', '酉', '丑'].filter(b => branches.includes(b)) as string[];
+        strength.jin += value;
+      }
+
       combinations.push({
         type: '地支三合',
-        stems: ['寅', '午', '戌'].filter(b => branches.includes(b)),
-        wuXing: '火',
+        stems: sanHeBranches,
+        wuXing: sanHeJu,
         value: value
       });
     }
 
-    // 检查亥卯未三合木局
-    if (this.containsAll(branches, ['亥', '卯', '未'])) {
-      strength.mu += value;
-      combinations.push({
-        type: '地支三合',
-        stems: ['亥', '卯', '未'].filter(b => branches.includes(b)),
-        wuXing: '木',
-        value: value
-      });
-    }
+    // 检查三会局
+    const sanHuiJu = this.checkSanHuiJu(branches);
+    if (sanHuiJu) {
+      const value = 1.0; // 提高三会局权重
+      let sanHuiBranches: string[] = [];
 
-    // 检查申子辰三合水局
-    if (this.containsAll(branches, ['申', '子', '辰'])) {
-      strength.shui += value;
-      combinations.push({
-        type: '地支三合',
-        stems: ['申', '子', '辰'].filter(b => branches.includes(b)),
-        wuXing: '水',
-        value: value
-      });
-    }
+      if (sanHuiJu === '木') {
+        sanHuiBranches = ['寅', '卯', '辰'].filter(b => branches.includes(b)) as string[];
+        strength.mu += value;
+      } else if (sanHuiJu === '火') {
+        sanHuiBranches = ['巳', '午', '未'].filter(b => branches.includes(b)) as string[];
+        strength.huo += value;
+      } else if (sanHuiJu === '金') {
+        sanHuiBranches = ['申', '酉', '戌'].filter(b => branches.includes(b)) as string[];
+        strength.jin += value;
+      } else if (sanHuiJu === '水') {
+        sanHuiBranches = ['亥', '子', '丑'].filter(b => branches.includes(b)) as string[];
+        strength.shui += value;
+      }
 
-    // 检查巳酉丑三合金局
-    if (this.containsAll(branches, ['巳', '酉', '丑'])) {
-      strength.jin += value;
       combinations.push({
-        type: '地支三合',
-        stems: ['巳', '酉', '丑'].filter(b => branches.includes(b)),
-        wuXing: '金',
+        type: '地支三会',
+        stems: sanHuiBranches,
+        wuXing: sanHuiJu,
         value: value
       });
     }
@@ -2860,15 +3168,60 @@ export class BaziService {
     if (sanHeJu) {
       const sanHeWuXing = this.getSanHeWuXing(sanHeJu);
       console.log('三合局五行:', sanHeWuXing, '日主五行:', dayWuXing);
+
+      // 获取三合局中的地支
+      let sanHeBranches: string[] = [];
+      if (sanHeJu === '火') {
+        sanHeBranches = ['寅', '午', '戌'].filter(b => allBranches.includes(b));
+      } else if (sanHeJu === '水') {
+        sanHeBranches = ['申', '子', '辰'].filter(b => allBranches.includes(b));
+      } else if (sanHeJu === '木') {
+        sanHeBranches = ['亥', '卯', '未'].filter(b => allBranches.includes(b));
+      } else if (sanHeJu === '金') {
+        sanHeBranches = ['巳', '酉', '丑'].filter(b => allBranches.includes(b));
+      }
+
       if (sanHeWuXing.includes(dayWuXing) || dayWuXing.includes(sanHeWuXing)) {
         specialRelationEffect += 3;
-        specialRelationDetails.push(`日主参与寅午戌三合${sanHeJu}局，五行相同 (+3)`);
+        specialRelationDetails.push(`日主参与${sanHeBranches.join('')}三合${sanHeJu}局，五行相同 (+3)`);
       } else if (this.isWuXingSheng(sanHeWuXing, dayWuXing)) {
         specialRelationEffect += 2;
-        specialRelationDetails.push(`${sanHeJu}局五行生日主 (+2)`);
+        specialRelationDetails.push(`${sanHeBranches.join('')}三合${sanHeJu}局五行生日主 (+2)`);
       } else if (this.isWuXingKe(sanHeWuXing, dayWuXing)) {
         specialRelationEffect -= 2;
-        specialRelationDetails.push(`${sanHeJu}局五行克日主 (-2)`);
+        specialRelationDetails.push(`${sanHeBranches.join('')}三合${sanHeJu}局五行克日主 (-2)`);
+      }
+    }
+
+    // 三会局检查
+    const sanHuiJu = this.checkSanHuiJu(allBranches);
+    console.log('三会局:', sanHuiJu);
+
+    if (sanHuiJu) {
+      const sanHuiWuXing = this.getSanHuiWuXing(sanHuiJu);
+      console.log('三会局五行:', sanHuiWuXing, '日主五行:', dayWuXing);
+
+      // 获取三会局中的地支
+      let sanHuiBranches: string[] = [];
+      if (sanHuiJu === '木') {
+        sanHuiBranches = ['寅', '卯', '辰'].filter(b => allBranches.includes(b));
+      } else if (sanHuiJu === '火') {
+        sanHuiBranches = ['巳', '午', '未'].filter(b => allBranches.includes(b));
+      } else if (sanHuiJu === '金') {
+        sanHuiBranches = ['申', '酉', '戌'].filter(b => allBranches.includes(b));
+      } else if (sanHuiJu === '水') {
+        sanHuiBranches = ['亥', '子', '丑'].filter(b => allBranches.includes(b));
+      }
+
+      if (sanHuiWuXing.includes(dayWuXing) || dayWuXing.includes(sanHuiWuXing)) {
+        specialRelationEffect += 2.5;
+        specialRelationDetails.push(`日主参与${sanHuiBranches.join('')}三会${sanHuiJu}局，五行相同 (+2.5)`);
+      } else if (this.isWuXingSheng(sanHuiWuXing, dayWuXing)) {
+        specialRelationEffect += 1.5;
+        specialRelationDetails.push(`${sanHuiBranches.join('')}三会${sanHuiJu}局五行生日主 (+1.5)`);
+      } else if (this.isWuXingKe(sanHuiWuXing, dayWuXing)) {
+        specialRelationEffect -= 1.5;
+        specialRelationDetails.push(`${sanHuiBranches.join('')}三会${sanHuiJu}局五行克日主 (-1.5)`);
       }
     }
 
@@ -2952,14 +3305,13 @@ export class BaziService {
     ];
 
     for (const {pattern, type} of sanHePatterns) {
-      let count = 0;
-      for (const branch of branches) {
-        if (pattern.includes(branch)) {
-          count++;
-        }
-      }
+      // 收集实际出现的地支
+      const matchedBranches = branches.filter(branch => pattern.includes(branch));
 
-      if (count >= 2) { // 至少有两个地支形成三合
+      // 检查是否至少有两个不同的地支
+      const uniqueBranches = new Set(matchedBranches);
+
+      if (uniqueBranches.size >= 2) { // 至少有两个不同的地支形成三合
         return type;
       }
     }
@@ -2978,6 +3330,50 @@ export class BaziService {
       case '水': return '水';
       case '木': return '木';
       case '金': return '金';
+      default: return '';
+    }
+  }
+
+  /**
+   * 检查是否有三会局
+   * @param branches 地支数组
+   * @returns 三会局类型或null
+   */
+  private static checkSanHuiJu(branches: string[]): string | null {
+    // 三会局：寅卯辰三会木局，巳午未三会火局，申酉戌三会金局，亥子丑三会水局
+    const sanHuiPatterns = [
+      {pattern: ['寅', '卯', '辰'], type: '木'},
+      {pattern: ['巳', '午', '未'], type: '火'},
+      {pattern: ['申', '酉', '戌'], type: '金'},
+      {pattern: ['亥', '子', '丑'], type: '水'}
+    ];
+
+    for (const {pattern, type} of sanHuiPatterns) {
+      // 收集实际出现的地支
+      const matchedBranches = branches.filter(branch => pattern.includes(branch));
+
+      // 检查是否至少有两个不同的地支
+      const uniqueBranches = new Set(matchedBranches);
+
+      if (uniqueBranches.size >= 2) { // 至少有两个不同的地支形成三会
+        return type;
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * 获取三会局的五行属性
+   * @param sanHuiType 三会局类型
+   * @returns 五行属性
+   */
+  private static getSanHuiWuXing(sanHuiType: string): string {
+    switch (sanHuiType) {
+      case '木': return '木';
+      case '火': return '火';
+      case '金': return '金';
+      case '水': return '水';
       default: return '';
     }
   }
