@@ -7,6 +7,7 @@ export interface BaziInfo {
   solarTime?: string;
   lunarDate?: string;
   gender?: string;
+  birthYear?: string; // 出生年份
 
   // 八字信息
   yearStem?: string;
@@ -76,6 +77,14 @@ export interface BaziInfo {
   // 格局信息
   geJu?: string;
   geJuDetail?: string;
+  geJuStrength?: number | string; // 格局强度
+  yongShen?: string;       // 用神
+  yongShenDetail?: string; // 用神详情
+  geJuFactors?: { // 格局形成因素
+    factor: string;
+    description: string;
+    contribution: number;
+  }[];
 
   // 特殊信息
   taiYuan?: string;
@@ -83,7 +92,8 @@ export interface BaziInfo {
   shenGong?: string;
 
   // 大运信息
-  daYun?: DaYunInfo[];
+  daYun?: DaYunInfo[] | string; // 可以是DaYunInfo数组或者逗号分隔的干支字符串
+  daYunStartAge?: number; // 大运起始年龄
 
   // 流年信息
   liuNian?: LiuNianInfo[];

@@ -330,6 +330,25 @@ td.wuxing-tu, span.wuxing-tu, .wuxing-tu {
   border-bottom: 1px dashed rgba(0, 0, 0, 0.05);
 }
 
+/* 十神标签 */
+.shishen-tag-small {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background-color: rgba(98, 0, 238, 0.1);
+  color: #6200ee;
+  font-size: 0.9em;
+  margin: 2px;
+}
+
+/* 地支藏干十神标签 */
+.shishen-tag-hide {
+  background-color: rgba(98, 0, 238, 0.05);
+  color: #6200ee;
+  opacity: 0.8;
+  font-size: 0.8em;
+}
+
 .bazi-view-wuxing-list {
   display: flex;
   flex-wrap: wrap;
@@ -709,12 +728,316 @@ td.wuxing-tu, span.wuxing-tu, .wuxing-tu {
   background-color: rgba(0, 0, 255, 0.1);
   color: #3498db;
   font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.geju-tag:hover {
+  background-color: rgba(0, 0, 255, 0.2);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .geju-detail {
   font-size: 0.8em;
   color: var(--text-muted);
   font-style: italic;
+  margin-left: 5px;
+}
+
+.geju-analyze-button {
+  background-color: rgba(52, 152, 219, 0.1);
+  color: #3498db;
+  font-size: 0.8em;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.geju-analyze-button:hover {
+  background-color: rgba(52, 152, 219, 0.2);
+  transform: translateY(-1px);
+}
+
+.geju-detail-button {
+  background-color: rgba(155, 89, 182, 0.1);
+  color: #9b59b6;
+  font-size: 0.8em;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.geju-detail-button:hover {
+  background-color: rgba(155, 89, 182, 0.2);
+  transform: translateY(-1px);
+}
+
+.geju-strength {
+  font-size: 0.8em;
+  margin-left: 5px;
+  padding: 1px 5px;
+  border-radius: 10px;
+  display: inline-block;
+}
+
+.geju-strength-high {
+  background-color: rgba(46, 204, 113, 0.2);
+  color: #27ae60;
+}
+
+.geju-strength-medium {
+  background-color: rgba(241, 196, 15, 0.2);
+  color: #f39c12;
+}
+
+.geju-strength-low {
+  background-color: rgba(231, 76, 60, 0.2);
+  color: #c0392b;
+}
+
+/* 格局趋势图表样式 */
+.geju-trend-chart {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.geju-trend-tooltip {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  z-index: 1000;
+  pointer-events: none;
+  max-width: 300px;
+  white-space: normal;
+}
+
+.bazi-modal-large {
+  align-items: flex-start;
+  padding-top: 40px;
+}
+
+.bazi-modal-large .bazi-modal-content {
+  max-width: 90%;
+  max-height: 90%;
+}
+
+.bazi-modal-chart-container {
+  width: 100%;
+  height: 400px;
+  margin-bottom: 20px;
+  background-color: var(--background-secondary);
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.bazi-modal-description {
+  margin-bottom: 20px;
+  line-height: 1.5;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.bazi-modal-dayun-info,
+.bazi-modal-key-years {
+  margin-bottom: 20px;
+  overflow-x: auto;
+}
+
+.bazi-modal-dayun-table,
+.bazi-modal-key-years-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 10px;
+}
+
+.bazi-modal-dayun-table th,
+.bazi-modal-dayun-table td,
+.bazi-modal-key-years-table th,
+.bazi-modal-key-years-table td {
+  padding: 8px;
+  text-align: center;
+  border: 1px solid var(--background-modifier-border);
+}
+
+.bazi-modal-dayun-table th,
+.bazi-modal-key-years-table th {
+  background-color: var(--background-secondary);
+  font-weight: bold;
+}
+
+.bazi-effect-good {
+  color: #2ecc71;
+}
+
+.bazi-effect-bad {
+  color: #e74c3c;
+}
+
+.bazi-effect-mixed {
+  color: #f39c12;
+}
+
+.bazi-effect-neutral {
+  color: #95a5a6;
+}
+
+.bazi-modal-trend-analysis,
+.bazi-modal-suggestion {
+  margin-bottom: 20px;
+  line-height: 1.6;
+  padding: 10px;
+  background-color: var(--background-secondary);
+  border-radius: 6px;
+}
+
+.bazi-modal-button-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.bazi-modal-trend-button {
+  padding: 8px 16px;
+  background-color: var(--interactive-accent);
+  color: var(--text-on-accent);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.bazi-modal-trend-button:hover {
+  background-color: var(--interactive-accent-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 格局强度和因素样式 */
+.bazi-modal-strength-info {
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: var(--background-secondary);
+  border-radius: 6px;
+}
+
+.bazi-modal-strength-text {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.bazi-modal-progress-container {
+  width: 100%;
+  height: 10px;
+  background-color: var(--background-modifier-border);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.bazi-modal-progress-bar {
+  height: 100%;
+  border-radius: 5px;
+  transition: width 0.3s ease;
+}
+
+.bazi-progress-high {
+  background-color: #2ecc71;
+}
+
+.bazi-progress-medium {
+  background-color: #f39c12;
+}
+
+.bazi-progress-low {
+  background-color: #e74c3c;
+}
+
+.bazi-modal-factors-list {
+  margin-bottom: 20px;
+}
+
+.bazi-modal-factor-item {
+  margin-bottom: 15px;
+  padding: 10px;
+  background-color: var(--background-secondary);
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.bazi-modal-factor-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.bazi-modal-factor-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.bazi-modal-factor-name {
+  font-weight: 500;
+}
+
+.bazi-modal-factor-contribution {
+  font-weight: 500;
+  color: var(--text-accent);
+}
+
+.bazi-modal-factor-description {
+  margin-bottom: 10px;
+  font-size: 0.9em;
+  color: var(--text-muted);
+}
+
+.bazi-modal-factor-progress-container {
+  width: 100%;
+  height: 6px;
+  background-color: var(--background-modifier-border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.bazi-modal-factor-progress-bar {
+  height: 100%;
+  background-color: var(--text-accent);
+  border-radius: 3px;
+}
+
+/* 用神标签样式 */
+.yongshen-tag {
+  background-color: rgba(155, 89, 182, 0.1);
+  color: #9b59b6;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.yongshen-tag:hover {
+  background-color: rgba(155, 89, 182, 0.2);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.yongshen-detail {
+  font-size: 0.8em;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-left: 5px;
 }
 
 /* 五行标签样式 */
@@ -1138,6 +1461,61 @@ td.wuxing-tu, span.wuxing-tu, .wuxing-tu {
   font-size: 0.9em;
 }
 
+/* 弹窗样式 */
+.bazi-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(3px);
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.bazi-modal-content {
+  background-color: var(--background-primary);
+  padding: 25px;
+  border-radius: 12px;
+  max-width: 80%;
+  max-height: 80%;
+  overflow-y: auto;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  animation: slideUp 0.3s ease;
+  border: 1px solid var(--background-modifier-border);
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.bazi-modal-title {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 1.6em;
+  color: var(--text-normal);
+  border-bottom: 1px solid var(--background-modifier-border);
+  padding-bottom: 10px;
+}
+
+.bazi-modal-section-title {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-size: 1.2em;
+  color: var(--text-normal);
+  font-weight: 600;
+}
+
 /* 弹窗样式增强 */
 .bazi-modal-type {
   margin: 0 5px 10px 0;
@@ -1146,6 +1524,7 @@ td.wuxing-tu, span.wuxing-tu, .wuxing-tu {
   padding: 3px 8px;
   border-radius: 4px;
   display: inline-block;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .bazi-modal-type-container {
@@ -1177,6 +1556,30 @@ td.wuxing-tu, span.wuxing-tu, .wuxing-tu {
   background-color: rgba(241, 196, 15, 0.1);
   color: #f39c12;
   border: 1px solid rgba(241, 196, 15, 0.3);
+}
+
+.bazi-modal-explanation,
+.bazi-modal-influence,
+.bazi-modal-career,
+.bazi-modal-health,
+.bazi-modal-relationship,
+.bazi-modal-wealth,
+.bazi-modal-source,
+.bazi-modal-analysis,
+.bazi-modal-suggestion,
+.bazi-modal-rizhu,
+.bazi-modal-yongshen-explanation,
+.bazi-modal-principle {
+  margin-bottom: 15px;
+  line-height: 1.6;
+  color: var(--text-normal);
+  padding: 10px;
+  background-color: var(--background-secondary);
+  border-radius: 6px;
+}
+
+.bazi-modal-principle p {
+  margin: 5px 0;
 }
 
 .bazi-modal-explanation {

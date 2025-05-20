@@ -1,6 +1,10 @@
 import { BaziInfo } from '../types/BaziInfo';
 import { ShenShaService } from '../services/ShenShaService';
 import { WuXingService } from '../services/WuXingService';
+import { GeJuService } from '../services/GeJuService';
+import { GeJuTrendService } from '../services/GeJuTrendService';
+import { GeJuTrendChart } from './GeJuTrendChart';
+import { GeJuJudgeService } from '../services/GeJuJudgeService';
 
 /**
  * 交互式八字命盘视图
@@ -236,36 +240,112 @@ export class InteractiveBaziView {
 
     // 年柱十神
     const yearShiShenCell = shiShenRow.createEl('td');
+    // 天干十神
     if (this.baziInfo.yearShiShenGan) {
       yearShiShenCell.createSpan({
         text: this.baziInfo.yearShiShenGan,
         cls: 'shishen-tag-small'
       });
     }
+    // 地支藏干十神
+    if (this.baziInfo.yearShiShenZhi && Array.isArray(this.baziInfo.yearShiShenZhi) && this.baziInfo.yearShiShenZhi.length > 0) {
+      yearShiShenCell.createSpan({ text: ' ' });
+      yearShiShenCell.createSpan({
+        text: this.baziInfo.yearShiShenZhi.join(','),
+        cls: 'shishen-tag-small shishen-tag-hide'
+      });
+    } else if (this.baziInfo.yearBranch) {
+      // 如果没有提供地支藏干十神，则计算
+      const hiddenShiShen = this.getHiddenShiShen(this.baziInfo.dayStem || '', this.baziInfo.yearBranch);
+      if (hiddenShiShen.length > 0) {
+        yearShiShenCell.createSpan({ text: ' ' });
+        yearShiShenCell.createSpan({
+          text: hiddenShiShen.join(','),
+          cls: 'shishen-tag-small shishen-tag-hide'
+        });
+      }
+    }
 
     // 月柱十神
     const monthShiShenCell = shiShenRow.createEl('td');
+    // 天干十神
     if (this.baziInfo.monthShiShenGan) {
       monthShiShenCell.createSpan({
         text: this.baziInfo.monthShiShenGan,
         cls: 'shishen-tag-small'
       });
     }
+    // 地支藏干十神
+    if (this.baziInfo.monthShiShenZhi && Array.isArray(this.baziInfo.monthShiShenZhi) && this.baziInfo.monthShiShenZhi.length > 0) {
+      monthShiShenCell.createSpan({ text: ' ' });
+      monthShiShenCell.createSpan({
+        text: this.baziInfo.monthShiShenZhi.join(','),
+        cls: 'shishen-tag-small shishen-tag-hide'
+      });
+    } else if (this.baziInfo.monthBranch) {
+      // 如果没有提供地支藏干十神，则计算
+      const hiddenShiShen = this.getHiddenShiShen(this.baziInfo.dayStem || '', this.baziInfo.monthBranch);
+      if (hiddenShiShen.length > 0) {
+        monthShiShenCell.createSpan({ text: ' ' });
+        monthShiShenCell.createSpan({
+          text: hiddenShiShen.join(','),
+          cls: 'shishen-tag-small shishen-tag-hide'
+        });
+      }
+    }
 
     // 日柱十神
     const dayShiShenCell = shiShenRow.createEl('td');
+    // 日主标签
     dayShiShenCell.createSpan({
       text: '日主',
       cls: 'shishen-tag-small'
     });
+    // 地支藏干十神
+    if (this.baziInfo.dayShiShenZhi && Array.isArray(this.baziInfo.dayShiShenZhi) && this.baziInfo.dayShiShenZhi.length > 0) {
+      dayShiShenCell.createSpan({ text: ' ' });
+      dayShiShenCell.createSpan({
+        text: this.baziInfo.dayShiShenZhi.join(','),
+        cls: 'shishen-tag-small shishen-tag-hide'
+      });
+    } else if (this.baziInfo.dayBranch) {
+      // 如果没有提供地支藏干十神，则计算
+      const hiddenShiShen = this.getHiddenShiShen(this.baziInfo.dayStem || '', this.baziInfo.dayBranch);
+      if (hiddenShiShen.length > 0) {
+        dayShiShenCell.createSpan({ text: ' ' });
+        dayShiShenCell.createSpan({
+          text: hiddenShiShen.join(','),
+          cls: 'shishen-tag-small shishen-tag-hide'
+        });
+      }
+    }
 
     // 时柱十神
     const timeShiShenCell = shiShenRow.createEl('td');
+    // 天干十神
     if (this.baziInfo.timeShiShenGan) {
       timeShiShenCell.createSpan({
         text: this.baziInfo.timeShiShenGan,
         cls: 'shishen-tag-small'
       });
+    }
+    // 地支藏干十神
+    if (this.baziInfo.hourShiShenZhi && Array.isArray(this.baziInfo.hourShiShenZhi) && this.baziInfo.hourShiShenZhi.length > 0) {
+      timeShiShenCell.createSpan({ text: ' ' });
+      timeShiShenCell.createSpan({
+        text: this.baziInfo.hourShiShenZhi.join(','),
+        cls: 'shishen-tag-small shishen-tag-hide'
+      });
+    } else if (this.baziInfo.hourBranch) {
+      // 如果没有提供地支藏干十神，则计算
+      const hiddenShiShen = this.getHiddenShiShen(this.baziInfo.dayStem || '', this.baziInfo.hourBranch);
+      if (hiddenShiShen.length > 0) {
+        timeShiShenCell.createSpan({ text: ' ' });
+        timeShiShenCell.createSpan({
+          text: hiddenShiShen.join(','),
+          cls: 'shishen-tag-small shishen-tag-hide'
+        });
+      }
     }
 
     // 地势行
@@ -639,15 +719,98 @@ export class InteractiveBaziView {
     // 添加格局信息
     if (this.baziInfo.geJu) {
       const geJuItem = infoList.createEl('li');
-      geJuItem.createSpan({
+
+      // 创建格局标签，添加点击事件
+      const geJuSpan = geJuItem.createSpan({
         text: `格局: ${this.baziInfo.geJu}`,
-        cls: 'geju-tag'
+        cls: 'geju-tag geju-clickable'
       });
+
+      // 添加点击事件，显示格局详细解释
+      geJuSpan.addEventListener('click', () => {
+        if (this.baziInfo.geJu) {
+          this.showGeJuExplanation(this.baziInfo.geJu);
+        }
+      });
+
+      // 添加格局强度（如果有）
+      if (this.baziInfo.geJuStrength) {
+        const strengthValue = typeof this.baziInfo.geJuStrength === 'number'
+          ? this.baziInfo.geJuStrength
+          : parseInt(this.baziInfo.geJuStrength);
+
+        if (!isNaN(strengthValue)) {
+          const strengthSpan = geJuItem.createSpan({
+            text: `(${strengthValue}%)`,
+            cls: 'geju-strength'
+          });
+
+          // 根据强度值设置颜色
+          if (strengthValue >= 80) {
+            strengthSpan.addClass('geju-strength-high');
+          } else if (strengthValue >= 60) {
+            strengthSpan.addClass('geju-strength-medium');
+          } else {
+            strengthSpan.addClass('geju-strength-low');
+          }
+        }
+      }
 
       if (this.baziInfo.geJuDetail) {
         geJuItem.createSpan({
           text: ` (${this.baziInfo.geJuDetail})`,
           cls: 'geju-detail'
+        });
+      }
+
+      // 添加格局分析按钮
+      const analyzeButton = geJuItem.createSpan({
+        text: '分析',
+        cls: 'geju-analyze-button'
+      });
+
+      // 添加点击事件，显示格局分析
+      analyzeButton.addEventListener('click', () => {
+        if (this.baziInfo.geJu) {
+          this.showGeJuAnalysis(this.baziInfo.geJu, this.baziInfo.riZhuStrength || '平衡');
+        }
+      });
+
+      // 添加格局详情按钮（显示格局形成因素）
+      if (this.baziInfo.geJuFactors && this.baziInfo.geJuFactors.length > 0) {
+        const detailButton = geJuItem.createSpan({
+          text: '详情',
+          cls: 'geju-detail-button'
+        });
+
+        // 添加点击事件，显示格局形成因素
+        detailButton.addEventListener('click', () => {
+          this.showGeJuFactors();
+        });
+      }
+    }
+
+    // 添加用神信息
+    if (this.baziInfo.yongShen) {
+      const yongShenItem = infoList.createEl('li');
+
+      // 创建用神标签，添加点击事件
+      const yongShenSpan = yongShenItem.createSpan({
+        text: `用神: ${this.baziInfo.yongShen}`,
+        cls: 'yongshen-tag yongshen-clickable'
+      });
+
+      // 添加点击事件，显示用神详细解释
+      yongShenSpan.addEventListener('click', () => {
+        if (this.baziInfo.yongShen) {
+          this.showYongShenExplanation(this.baziInfo.yongShen, this.baziInfo.yongShenDetail || '');
+        }
+      });
+
+      if (this.baziInfo.yongShenDetail) {
+        yongShenItem.createSpan({
+          text: ` (${this.baziInfo.yongShenDetail})`,
+          cls: 'yongshen-detail'
         });
       }
     }
@@ -756,6 +919,7 @@ export class InteractiveBaziView {
       const dayWuXing = this.baziInfo.dayWuXing || '土'; // 默认为土
       const wuXingClass = this.getWuXingClassFromName(dayWuXing);
 
+      // 创建日主旺衰标签，添加点击事件
       const riZhuSpan = riZhuItem.createSpan({
         text: this.baziInfo.riZhuStrength,
         cls: `rizhu-strength rizhu-clickable wuxing-${wuXingClass}`,
@@ -765,7 +929,12 @@ export class InteractiveBaziView {
         }
       });
 
-      // 不在这里添加点击事件监听器，而是在 addTableCellListeners 方法中统一添加
+      // 添加点击事件，显示日主旺衰详细解释
+      riZhuSpan.addEventListener('click', () => {
+        if (this.baziInfo.riZhuStrength && this.baziInfo.dayWuXing) {
+          this.showRiZhuExplanation(this.baziInfo.riZhuStrength, this.baziInfo.dayWuXing);
+        }
+      });
     }
 
     // 公历、农历、性别信息已移至命盘表格前
@@ -788,61 +957,69 @@ export class InteractiveBaziView {
     this.daYunTable = tableContainer.createEl('table', { cls: 'bazi-view-table bazi-view-dayun-table' });
 
     // 获取大运数据
-    const daYunData = this.baziInfo.daYun || [];
+    // 确保 daYunData 是数组类型
+    const daYunData = Array.isArray(this.baziInfo.daYun) ? this.baziInfo.daYun : [];
 
     // 第一行：年份
     const yearRow = this.daYunTable.createEl('tr');
     yearRow.createEl('th', { text: '大运' });
-    daYunData.slice(0, 10).forEach(dy => {
-      yearRow.createEl('td', { text: dy.startYear.toString() });
-    });
+    // 确保 daYunData 是数组类型
+    if (Array.isArray(daYunData)) {
+      daYunData.slice(0, 10).forEach(dy => {
+        yearRow.createEl('td', { text: dy.startYear.toString() });
+      });
+    }
 
     // 第二行：年龄
     const ageRow = this.daYunTable.createEl('tr');
     ageRow.createEl('th', { text: '年龄' });
-    daYunData.slice(0, 10).forEach(dy => {
-      ageRow.createEl('td', { text: dy.startAge.toString() });
-    });
+    if (Array.isArray(daYunData)) {
+      daYunData.slice(0, 10).forEach(dy => {
+        ageRow.createEl('td', { text: dy.startAge.toString() });
+      });
+    }
 
     // 第三行：干支
     const gzRow = this.daYunTable.createEl('tr');
     gzRow.createEl('th', { text: '干支' });
-    daYunData.slice(0, 10).forEach((dy, index) => {
-      const cell = gzRow.createEl('td', {
-        cls: 'bazi-dayun-cell',
-        attr: { 'data-index': index.toString() }
+    if (Array.isArray(daYunData)) {
+      daYunData.slice(0, 10).forEach((dy, index) => {
+        const cell = gzRow.createEl('td', {
+          cls: 'bazi-dayun-cell',
+          attr: { 'data-index': index.toString() }
+        });
+
+        // 如果有干支，按五行颜色显示
+        if (dy.ganZhi && dy.ganZhi.length >= 2) {
+          const stem = dy.ganZhi[0]; // 天干
+          const branch = dy.ganZhi[1]; // 地支
+
+          // 创建天干元素并设置五行颜色
+          const stemSpan = cell.createSpan({ text: stem });
+          this.setWuXingColorDirectly(stemSpan, this.getStemWuXing(stem));
+
+          // 创建地支元素并设置五行颜色
+          const branchSpan = cell.createSpan({ text: branch });
+          this.setWuXingColorDirectly(branchSpan, this.getBranchWuXing(branch));
+        } else {
+          // 如果没有干支或格式不正确，直接显示原文本
+          cell.textContent = dy.ganZhi || '';
+        }
+
+        // 添加点击事件
+        cell.addEventListener('click', () => {
+          this.selectDaYun(index);
+        });
+
+        // 如果是当前选中的大运，添加选中样式
+        if (index === this.selectedDaYunIndex) {
+          cell.classList.add('selected');
+        }
       });
-
-      // 如果有干支，按五行颜色显示
-      if (dy.ganZhi && dy.ganZhi.length >= 2) {
-        const stem = dy.ganZhi[0]; // 天干
-        const branch = dy.ganZhi[1]; // 地支
-
-        // 创建天干元素并设置五行颜色
-        const stemSpan = cell.createSpan({ text: stem });
-        this.setWuXingColorDirectly(stemSpan, this.getStemWuXing(stem));
-
-        // 创建地支元素并设置五行颜色
-        const branchSpan = cell.createSpan({ text: branch });
-        this.setWuXingColorDirectly(branchSpan, this.getBranchWuXing(branch));
-      } else {
-        // 如果没有干支或格式不正确，直接显示原文本
-        cell.textContent = dy.ganZhi || '';
-      }
-
-      // 添加点击事件
-      cell.addEventListener('click', () => {
-        this.selectDaYun(index);
-      });
-
-      // 如果是当前选中的大运，添加选中样式
-      if (index === this.selectedDaYunIndex) {
-        cell.classList.add('selected');
-      }
-    });
+    }
 
     // 第四行：十神（如果有）
-    if (daYunData.some(dy => dy.shiShenGan)) {
+    if (Array.isArray(daYunData) && daYunData.some(dy => dy.shiShenGan)) {
       const shiShenRow = this.daYunTable.createEl('tr');
       shiShenRow.createEl('th', { text: '十神' });
       daYunData.slice(0, 10).forEach(dy => {
@@ -854,7 +1031,7 @@ export class InteractiveBaziView {
     }
 
     // 第五行：地势（如果有）
-    if (daYunData.some(dy => dy.diShi)) {
+    if (Array.isArray(daYunData) && daYunData.some(dy => dy.diShi)) {
       const diShiRow = this.daYunTable.createEl('tr');
       diShiRow.createEl('th', { text: '地势' });
       daYunData.slice(0, 10).forEach(dy => {
@@ -866,7 +1043,7 @@ export class InteractiveBaziView {
     }
 
     // 第六行：旬空
-    if (daYunData.some(dy => dy.xunKong)) {
+    if (Array.isArray(daYunData) && daYunData.some(dy => dy.xunKong)) {
       const xkRow = this.daYunTable.createEl('tr');
       xkRow.createEl('th', { text: '旬空' });
       daYunData.slice(0, 10).forEach(dy => {
@@ -894,7 +1071,7 @@ export class InteractiveBaziView {
     }
 
     // 第七行：纳音（如果有）
-    if (daYunData.some(dy => dy.naYin)) {
+    if (Array.isArray(daYunData) && daYunData.some(dy => dy.naYin)) {
       const naYinRow = this.daYunTable.createEl('tr');
       naYinRow.createEl('th', { text: '纳音' });
       daYunData.slice(0, 10).forEach(dy => {
@@ -971,7 +1148,14 @@ export class InteractiveBaziView {
     }
 
     // 获取选中的大运
+    if (!Array.isArray(this.baziInfo.daYun)) {
+      return;
+    }
+
     const selectedDaYun = this.baziInfo.daYun[index];
+    if (!selectedDaYun) {
+      return;
+    }
 
     // 尝试从原始八字数据中筛选出属于该大运的流年
     let liuNianData = this.baziInfo.liuNian?.filter(ln => {
@@ -987,6 +1171,7 @@ export class InteractiveBaziView {
 
     // 尝试从原始八字数据中筛选出属于该大运的小运
     let xiaoYunData = this.baziInfo.xiaoYun?.filter(xy => {
+      if (!selectedDaYun) return false;
       const startYear = selectedDaYun.startYear;
       const endYear = selectedDaYun.endYear ?? (startYear + 9);
       return xy.year >= startYear && xy.year <= endYear;
@@ -1586,7 +1771,7 @@ export class InteractiveBaziView {
    */
   private generateLiuNianForDaYun(daYun: any): Array<{year: number, age: number, ganZhi: string, xunKong: string, shiShenGan?: string, diShi?: string}> {
     // 如果没有起始年或结束年，返回空数组
-    if (!daYun.startYear) {
+    if (!daYun || !daYun.startYear) {
       return [];
     }
 
@@ -1649,7 +1834,7 @@ export class InteractiveBaziView {
    */
   private generateXiaoYunForDaYun(daYun: any): Array<{year: number, age: number, ganZhi: string, xunKong: string, shiShenGan?: string, diShi?: string}> {
     // 如果没有起始年或结束年，返回空数组
-    if (!daYun.startYear) {
+    if (!daYun || !daYun.startYear) {
       console.log('没有起始年，无法生成小运数据');
       return [];
     }
@@ -2021,14 +2206,9 @@ export class InteractiveBaziView {
     // 天干顺序
     const stems = "甲乙丙丁戊己庚辛壬癸";
 
-    // 五行属性（未使用）
-    // const wuxing = ["木", "木", "火", "火", "土", "土", "金", "金", "水", "水"];
-
-    // 十神名称
-    const shiShenNames = [
-      ["比肩", "劫财", "食神", "伤官", "偏财", "正财", "七杀", "正官", "偏印", "正印"],  // 阳干
-      ["比肩", "劫财", "食神", "伤官", "偏财", "正财", "七杀", "正官", "偏印", "正印"]   // 阴干
-    ];
+    // 阳干：甲丙戊庚壬
+    // 阴干：乙丁己辛癸
+    const yangGan = '甲丙戊庚壬';
 
     // 获取日干和目标天干的索引
     const dayStemIndex = stems.indexOf(dayStem);
@@ -2039,13 +2219,69 @@ export class InteractiveBaziView {
     }
 
     // 判断日干阴阳
-    const dayYinYang = dayStemIndex % 2 === 0 ? 0 : 1;  // 0为阳干，1为阴干
+    const isDayYang = yangGan.includes(dayStem);
 
     // 计算十神索引
     let shiShenIndex = (stemIndex - dayStemIndex + 10) % 10;
 
-    // 返回十神名称
-    return shiShenNames[dayYinYang][shiShenIndex];
+    // 十神顺序（阳干）：比肩、劫财、食神、伤官、偏财、正财、七杀、正官、偏印、正印
+    // 十神顺序（阴干）：比肩、劫财、食神、伤官、偏财、正财、七杀、正官、偏印、正印
+    const shiShenNames = [
+      "比肩", "劫财", "食神", "伤官", "偏财", "正财", "七杀", "正官", "偏印", "正印"
+    ];
+
+    return shiShenNames[shiShenIndex];
+  }
+
+  /**
+   * 获取地支藏干的十神
+   * @param dayStem 日干（日主）
+   * @param branch 地支
+   * @returns 藏干对应的十神数组
+   */
+  private getHiddenShiShen(dayStem: string, branch: string): string[] {
+    // 获取地支藏干
+    const hideGans = this.getHideGan(branch).split(',');
+
+    // 如果没有藏干，返回空数组
+    if (hideGans.length === 0 || hideGans[0] === '') {
+      return [];
+    }
+
+    // 计算每个藏干的十神
+    const shiShens: string[] = [];
+    for (const gan of hideGans) {
+      if (gan) {
+        const shiShen = this.getShiShen(dayStem, gan);
+        shiShens.push(shiShen);
+      }
+    }
+
+    return shiShens;
+  }
+
+  /**
+   * 获取地支藏干
+   * @param branch 地支
+   * @returns 藏干字符串，多个藏干用逗号分隔
+   */
+  private getHideGan(branch: string): string {
+    const hideGanMap: {[key: string]: string} = {
+      '子': '癸',
+      '丑': '己,癸,辛',
+      '寅': '甲,丙,戊',
+      '卯': '乙',
+      '辰': '戊,乙,癸',
+      '巳': '丙,庚,戊',
+      '午': '丁,己',
+      '未': '己,丁,乙',
+      '申': '庚,壬,戊',
+      '酉': '辛',
+      '戌': '戊,辛,丁',
+      '亥': '壬,甲'
+    };
+
+    return hideGanMap[branch] || '';
   }
 
   /**
@@ -3048,12 +3284,12 @@ export class InteractiveBaziView {
   }
 
   /**
-   * 显示日主旺衰详细解释
+   * 显示日主旺衰详细解释（带计算过程）
    * @param riZhu 日主旺衰状态
    * @param wuXing 日主五行
    */
-  private showRiZhuExplanation(riZhu: string, wuXing: string) {
-    console.log('showRiZhuExplanation 被调用', riZhu, wuXing);
+  private showRiZhuCalculation(riZhu: string, wuXing: string) {
+    console.log('showRiZhuCalculation 被调用', riZhu, wuXing);
 
     // 获取日主旺衰详细信息
     const riZhuInfo = {
@@ -3493,5 +3729,941 @@ export class InteractiveBaziView {
       '极弱': '日主极弱，必须用生扶之物来增强日主力量。严禁用泄秀之物，以免更加衰弱。'
     };
     return influences[riZhu] || '日主平衡，需要综合考虑八字格局。';
+  }
+
+  /**
+   * 显示日主旺衰详细解释
+   * @param riZhuStrength 日主旺衰
+   * @param dayWuXing 日主五行
+   */
+  private showRiZhuExplanation(riZhuStrength: string, dayWuXing: string) {
+    // 创建弹窗
+    const modal = document.createElement('div');
+    modal.className = 'bazi-modal';
+
+    // 创建弹窗内容
+    const modalContent = document.createElement('div');
+    modalContent.className = 'bazi-modal-content';
+
+    // 创建标题
+    const title = document.createElement('h3');
+    title.textContent = `日主旺衰详解：${riZhuStrength}`;
+    title.className = 'bazi-modal-title';
+
+    // 创建五行类型
+    const type = document.createElement('div');
+    type.textContent = `日主五行：${dayWuXing}`;
+    type.className = `bazi-modal-type bazi-modal-type-${this.getWuXingClassFromName(dayWuXing)}`;
+
+    // 创建解释
+    const explanationTitle = document.createElement('h4');
+    explanationTitle.textContent = '旺衰说明';
+    explanationTitle.className = 'bazi-modal-section-title';
+
+    const explanationText = document.createElement('div');
+    explanationText.textContent = this.getRiZhuInfluence(riZhuStrength);
+    explanationText.className = 'bazi-modal-explanation';
+
+    // 创建用神建议
+    const yongShenTitle = document.createElement('h4');
+    yongShenTitle.textContent = '用神建议';
+    yongShenTitle.className = 'bazi-modal-section-title';
+
+    const yongShenText = document.createElement('div');
+    let yongShenSuggestion = '';
+
+    if (riZhuStrength === '极旺' || riZhuStrength === '旺' || riZhuStrength === '偏旺') {
+      yongShenSuggestion = '日主旺盛，宜取官杀、财星、食伤为用神，以泄秀日主之气。忌用印星、比劫，以免日主更加旺盛。';
+    } else if (riZhuStrength === '弱' || riZhuStrength === '极弱' || riZhuStrength === '偏弱') {
+      yongShenSuggestion = '日主衰弱，宜取印星、比劫为用神，以生扶日主之气。忌用官杀、财星，以免日主更加衰弱。';
+    } else {
+      yongShenSuggestion = '日主平衡，需根据八字特点选择用神。可参考月令当令的五行或八字中最有力的五行作为用神。';
+    }
+
+    yongShenText.textContent = yongShenSuggestion;
+    yongShenText.className = 'bazi-modal-yongshen-explanation';
+
+    // 创建格局建议
+    const geJuTitle = document.createElement('h4');
+    geJuTitle.textContent = '格局建议';
+    geJuTitle.className = 'bazi-modal-section-title';
+
+    const geJuText = document.createElement('div');
+    let geJuSuggestion = '';
+
+    if (riZhuStrength === '极旺' || riZhuStrength === '旺' || riZhuStrength === '偏旺') {
+      geJuSuggestion = '日主旺盛，适合形成七杀格、正官格、正财格、偏财格、食神格、伤官格等泄秀日主之格局。';
+    } else if (riZhuStrength === '弱' || riZhuStrength === '极弱' || riZhuStrength === '偏弱') {
+      geJuSuggestion = '日主衰弱，适合形成正印格、偏印格、比肩格、劫财格等生扶日主之格局。';
+    } else {
+      geJuSuggestion = '日主平衡，可根据八字特点形成适合的格局。需综合考虑月令、大运、流年等因素。';
+    }
+
+    geJuText.textContent = geJuSuggestion;
+    geJuText.className = 'bazi-modal-geju-suggestion';
+
+    // 创建关闭按钮
+    const closeButton = document.createElement('button');
+    closeButton.textContent = '关闭';
+    closeButton.className = 'bazi-modal-close';
+    closeButton.addEventListener('click', () => {
+      document.body.removeChild(modal);
+    });
+
+    // 组装弹窗内容
+    modalContent.appendChild(title);
+    modalContent.appendChild(type);
+    modalContent.appendChild(explanationTitle);
+    modalContent.appendChild(explanationText);
+    modalContent.appendChild(yongShenTitle);
+    modalContent.appendChild(yongShenText);
+    modalContent.appendChild(geJuTitle);
+    modalContent.appendChild(geJuText);
+    modalContent.appendChild(closeButton);
+
+    // 添加弹窗内容到弹窗
+    modal.appendChild(modalContent);
+
+    // 添加弹窗到页面
+    document.body.appendChild(modal);
+
+    // 添加点击事件，点击弹窗外部关闭弹窗
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        document.body.removeChild(modal);
+      }
+    });
+  }
+
+  /**
+   * 显示格局详细解释
+   * @param geJu 格局名称
+   */
+  private showGeJuExplanation(geJu: string) {
+    // 获取格局详细信息
+    const geJuInfo = GeJuService.getGeJuExplanation(geJu);
+
+    // 创建弹窗
+    const modal = document.createElement('div');
+    modal.className = 'bazi-modal';
+
+    // 创建弹窗内容
+    const modalContent = document.createElement('div');
+    modalContent.className = 'bazi-modal-content';
+
+    // 创建标题
+    const title = document.createElement('h3');
+    title.textContent = geJuInfo.name;
+    title.className = 'bazi-modal-title';
+
+    // 创建类型
+    const type = document.createElement('div');
+    let typeText = '';
+    switch (geJuInfo.type) {
+      case 'good':
+        typeText = '吉格';
+        break;
+      case 'bad':
+        typeText = '凶格';
+        break;
+      case 'mixed':
+        typeText = '吉凶参半';
+        break;
+      default:
+        typeText = '中性';
+    }
+    type.textContent = `类型: ${typeText}`;
+    type.className = `bazi-modal-type bazi-modal-type-${geJuInfo.type}`;
+
+    // 创建解释
+    const explanationTitle = document.createElement('h4');
+    explanationTitle.textContent = '格局解释';
+    explanationTitle.className = 'bazi-modal-section-title';
+
+    const explanationText = document.createElement('div');
+    explanationText.textContent = geJuInfo.explanation;
+    explanationText.className = 'bazi-modal-explanation';
+
+    // 创建影响
+    const influenceTitle = document.createElement('h4');
+    influenceTitle.textContent = '性格影响';
+    influenceTitle.className = 'bazi-modal-section-title';
+
+    const influence = document.createElement('div');
+    influence.textContent = geJuInfo.influence;
+    influence.className = 'bazi-modal-influence';
+
+    // 创建职业建议
+    const careerTitle = document.createElement('h4');
+    careerTitle.textContent = '职业建议';
+    careerTitle.className = 'bazi-modal-section-title';
+
+    const career = document.createElement('div');
+    career.textContent = geJuInfo.career;
+    career.className = 'bazi-modal-career';
+
+    // 创建健康建议
+    const healthTitle = document.createElement('h4');
+    healthTitle.textContent = '健康建议';
+    healthTitle.className = 'bazi-modal-section-title';
+
+    const health = document.createElement('div');
+    health.textContent = geJuInfo.health;
+    health.className = 'bazi-modal-health';
+
+    // 创建人际关系建议
+    const relationshipTitle = document.createElement('h4');
+    relationshipTitle.textContent = '人际关系';
+    relationshipTitle.className = 'bazi-modal-section-title';
+
+    const relationship = document.createElement('div');
+    relationship.textContent = geJuInfo.relationship;
+    relationship.className = 'bazi-modal-relationship';
+
+    // 创建财运建议
+    const wealthTitle = document.createElement('h4');
+    wealthTitle.textContent = '财运建议';
+    wealthTitle.className = 'bazi-modal-section-title';
+
+    const wealth = document.createElement('div');
+    wealth.textContent = geJuInfo.wealth;
+    wealth.className = 'bazi-modal-wealth';
+
+    // 创建来源
+    const sourceTitle = document.createElement('h4');
+    sourceTitle.textContent = '理论来源';
+    sourceTitle.className = 'bazi-modal-section-title';
+
+    const source = document.createElement('div');
+    source.textContent = geJuInfo.source || '传统命理学';
+    source.className = 'bazi-modal-source';
+
+    // 创建关闭按钮
+    const closeButton = document.createElement('button');
+    closeButton.textContent = '关闭';
+    closeButton.className = 'bazi-modal-close';
+    closeButton.addEventListener('click', () => {
+      document.body.removeChild(modal);
+    });
+
+    // 组装弹窗内容
+    modalContent.appendChild(title);
+    modalContent.appendChild(type);
+    modalContent.appendChild(explanationTitle);
+    modalContent.appendChild(explanationText);
+    modalContent.appendChild(influenceTitle);
+    modalContent.appendChild(influence);
+    modalContent.appendChild(careerTitle);
+    modalContent.appendChild(career);
+    modalContent.appendChild(healthTitle);
+    modalContent.appendChild(health);
+    modalContent.appendChild(relationshipTitle);
+    modalContent.appendChild(relationship);
+    modalContent.appendChild(wealthTitle);
+    modalContent.appendChild(wealth);
+    modalContent.appendChild(sourceTitle);
+    modalContent.appendChild(source);
+    modalContent.appendChild(closeButton);
+
+    // 添加弹窗内容到弹窗
+    modal.appendChild(modalContent);
+
+    // 添加弹窗到页面
+    document.body.appendChild(modal);
+
+    // 添加点击事件，点击弹窗外部关闭弹窗
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        document.body.removeChild(modal);
+      }
+    });
+  }
+
+  /**
+   * 显示格局分析
+   * @param geJu 格局名称
+   * @param riZhuStrength 日主旺衰
+   */
+  private showGeJuAnalysis(geJu: string, riZhuStrength: string) {
+    // 获取格局分析
+    const analysis = GeJuService.analyzeGeJu(geJu, riZhuStrength);
+
+    // 创建弹窗
+    const modal = document.createElement('div');
+    modal.className = 'bazi-modal';
+
+    // 创建弹窗内容
+    const modalContent = document.createElement('div');
+    modalContent.className = 'bazi-modal-content';
+
+    // 创建标题
+    const title = document.createElement('h3');
+    title.textContent = `${geJu}分析`;
+    title.className = 'bazi-modal-title';
+
+    // 创建类型
+    const type = document.createElement('div');
+    let typeText = '';
+    switch (analysis.level) {
+      case 'good':
+        typeText = '吉';
+        break;
+      case 'bad':
+        typeText = '凶';
+        break;
+      case 'mixed':
+        typeText = '吉凶参半';
+        break;
+      default:
+        typeText = '中性';
+    }
+    type.textContent = `综合评价: ${typeText}`;
+    type.className = `bazi-modal-type bazi-modal-type-${analysis.level}`;
+
+    // 创建分析
+    const analysisTitle = document.createElement('h4');
+    analysisTitle.textContent = '格局分析';
+    analysisTitle.className = 'bazi-modal-section-title';
+
+    const analysisText = document.createElement('div');
+    analysisText.textContent = analysis.analysis;
+    analysisText.className = 'bazi-modal-analysis';
+
+    // 创建建议
+    const suggestionTitle = document.createElement('h4');
+    suggestionTitle.textContent = '发展建议';
+    suggestionTitle.className = 'bazi-modal-section-title';
+
+    const suggestion = document.createElement('div');
+    suggestion.textContent = analysis.suggestion;
+    suggestion.className = 'bazi-modal-suggestion';
+
+    // 创建日主旺衰信息
+    const riZhuTitle = document.createElement('h4');
+    riZhuTitle.textContent = '日主旺衰';
+    riZhuTitle.className = 'bazi-modal-section-title';
+
+    const riZhuText = document.createElement('div');
+    riZhuText.textContent = `日主${riZhuStrength}`;
+    riZhuText.className = 'bazi-modal-rizhu';
+
+    // 创建趋势分析按钮
+    const trendButton = document.createElement('button');
+    trendButton.textContent = '查看格局趋势';
+    trendButton.className = 'bazi-modal-trend-button';
+    trendButton.addEventListener('click', () => {
+      // 关闭当前弹窗
+      document.body.removeChild(modal);
+
+      // 显示格局趋势分析
+      this.showGeJuTrendAnalysis(geJu, this.baziInfo.dayWuXing || '');
+    });
+
+    // 创建关闭按钮
+    const closeButton = document.createElement('button');
+    closeButton.textContent = '关闭';
+    closeButton.className = 'bazi-modal-close';
+    closeButton.addEventListener('click', () => {
+      document.body.removeChild(modal);
+    });
+
+    // 创建按钮容器
+    const buttonContainer = document.createElement('div');
+    buttonContainer.className = 'bazi-modal-button-container';
+    buttonContainer.appendChild(trendButton);
+    buttonContainer.appendChild(closeButton);
+
+    // 组装弹窗内容
+    modalContent.appendChild(title);
+    modalContent.appendChild(type);
+    modalContent.appendChild(analysisTitle);
+    modalContent.appendChild(analysisText);
+    modalContent.appendChild(suggestionTitle);
+    modalContent.appendChild(suggestion);
+    modalContent.appendChild(riZhuTitle);
+    modalContent.appendChild(riZhuText);
+    modalContent.appendChild(buttonContainer);
+
+    // 添加弹窗内容到弹窗
+    modal.appendChild(modalContent);
+
+    // 添加弹窗到页面
+    document.body.appendChild(modal);
+
+    // 添加点击事件，点击弹窗外部关闭弹窗
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        document.body.removeChild(modal);
+      }
+    });
+  }
+
+  /**
+   * 显示格局形成因素
+   */
+  private showGeJuFactors() {
+    if (!this.baziInfo.geJuFactors || this.baziInfo.geJuFactors.length === 0) {
+      console.error('没有格局形成因素信息');
+      return;
+    }
+
+    // 创建弹窗
+    const modal = document.createElement('div');
+    modal.className = 'bazi-modal';
+
+    // 创建弹窗内容
+    const modalContent = document.createElement('div');
+    modalContent.className = 'bazi-modal-content';
+
+    // 创建标题
+    const title = document.createElement('h3');
+    title.textContent = `${this.baziInfo.geJu}形成因素`;
+    title.className = 'bazi-modal-title';
+
+    // 创建格局强度信息
+    if (this.baziInfo.geJuStrength) {
+      const strengthValue = typeof this.baziInfo.geJuStrength === 'number'
+        ? this.baziInfo.geJuStrength
+        : parseInt(this.baziInfo.geJuStrength);
+
+      if (!isNaN(strengthValue)) {
+        const strengthInfo = document.createElement('div');
+        strengthInfo.className = 'bazi-modal-strength-info';
+
+        const strengthText = document.createElement('span');
+        strengthText.textContent = `格局强度: ${strengthValue}%`;
+        strengthText.className = 'bazi-modal-strength-text';
+
+        // 创建进度条
+        const progressContainer = document.createElement('div');
+        progressContainer.className = 'bazi-modal-progress-container';
+
+        const progressBar = document.createElement('div');
+        progressBar.className = 'bazi-modal-progress-bar';
+        progressBar.style.width = `${strengthValue}%`;
+
+        // 根据强度值设置颜色
+        if (strengthValue >= 80) {
+          progressBar.classList.add('bazi-progress-high');
+        } else if (strengthValue >= 60) {
+          progressBar.classList.add('bazi-progress-medium');
+        } else {
+          progressBar.classList.add('bazi-progress-low');
+        }
+
+        progressContainer.appendChild(progressBar);
+        strengthInfo.appendChild(strengthText);
+        strengthInfo.appendChild(progressContainer);
+
+        modalContent.appendChild(strengthInfo);
+      }
+    }
+
+    // 创建因素列表
+    const factorsTitle = document.createElement('h4');
+    factorsTitle.textContent = '形成因素';
+    factorsTitle.className = 'bazi-modal-section-title';
+    modalContent.appendChild(factorsTitle);
+
+    const factorsList = document.createElement('div');
+    factorsList.className = 'bazi-modal-factors-list';
+
+    // 按贡献度排序
+    const sortedFactors = [...this.baziInfo.geJuFactors].sort((a, b) => b.contribution - a.contribution);
+
+    sortedFactors.forEach(factor => {
+      const factorItem = document.createElement('div');
+      factorItem.className = 'bazi-modal-factor-item';
+
+      // 创建因素标题
+      const factorHeader = document.createElement('div');
+      factorHeader.className = 'bazi-modal-factor-header';
+
+      const factorName = document.createElement('span');
+      factorName.textContent = factor.factor;
+      factorName.className = 'bazi-modal-factor-name';
+
+      const factorContribution = document.createElement('span');
+      factorContribution.textContent = `${factor.contribution}%`;
+      factorContribution.className = 'bazi-modal-factor-contribution';
+
+      factorHeader.appendChild(factorName);
+      factorHeader.appendChild(factorContribution);
+
+      // 创建因素描述
+      const factorDescription = document.createElement('div');
+      factorDescription.textContent = factor.description;
+      factorDescription.className = 'bazi-modal-factor-description';
+
+      // 创建因素进度条
+      const factorProgressContainer = document.createElement('div');
+      factorProgressContainer.className = 'bazi-modal-factor-progress-container';
+
+      const factorProgressBar = document.createElement('div');
+      factorProgressBar.className = 'bazi-modal-factor-progress-bar';
+      factorProgressBar.style.width = `${factor.contribution * 2}%`; // 乘以2使进度条更明显
+
+      factorProgressContainer.appendChild(factorProgressBar);
+
+      // 组装因素项
+      factorItem.appendChild(factorHeader);
+      factorItem.appendChild(factorDescription);
+      factorItem.appendChild(factorProgressContainer);
+
+      factorsList.appendChild(factorItem);
+    });
+
+    modalContent.appendChild(factorsList);
+
+    // 创建关闭按钮
+    const closeButton = document.createElement('button');
+    closeButton.textContent = '关闭';
+    closeButton.className = 'bazi-modal-close';
+    closeButton.addEventListener('click', () => {
+      document.body.removeChild(modal);
+    });
+
+    modalContent.appendChild(closeButton);
+
+    // 添加弹窗内容到弹窗
+    modal.appendChild(modalContent);
+
+    // 添加弹窗到页面
+    document.body.appendChild(modal);
+
+    // 添加点击事件，点击弹窗外部关闭弹窗
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        document.body.removeChild(modal);
+      }
+    });
+  }
+
+  /**
+   * 显示格局趋势分析
+   * @param geJu 格局名称
+   * @param riZhuWuXing 日主五行
+   */
+  private showGeJuTrendAnalysis(geJu: string, riZhuWuXing: string) {
+    if (!this.baziInfo.birthYear) {
+      console.error('缺少出生年份信息，无法分析格局趋势');
+      return;
+    }
+
+    // 创建弹窗
+    const modal = document.createElement('div');
+    modal.className = 'bazi-modal bazi-modal-large';
+
+    // 创建弹窗内容
+    const modalContent = document.createElement('div');
+    modalContent.className = 'bazi-modal-content';
+
+    // 创建标题
+    const title = document.createElement('h3');
+    title.textContent = `${geJu}趋势分析`;
+    title.className = 'bazi-modal-title';
+
+    // 创建说明
+    const description = document.createElement('div');
+    description.textContent = `以下是${geJu}在未来20年的发展趋势分析，包括大运和流年对格局的影响。`;
+    description.className = 'bazi-modal-description';
+
+    // 创建大运信息
+    const daYunTitle = document.createElement('h4');
+    daYunTitle.textContent = '大运信息';
+    daYunTitle.className = 'bazi-modal-section-title';
+
+    // 获取大运信息
+    const daYunList = this.getDaYunList();
+
+    const daYunInfo = document.createElement('div');
+    daYunInfo.className = 'bazi-modal-dayun-info';
+
+    if (daYunList.length > 0) {
+      const daYunTable = document.createElement('table');
+      daYunTable.className = 'bazi-modal-dayun-table';
+
+      // 创建表头
+      const thead = document.createElement('thead');
+      const headerRow = document.createElement('tr');
+
+      const headers = ['大运', '开始年份', '结束年份', '对格局影响'];
+      headers.forEach(header => {
+        const th = document.createElement('th');
+        th.textContent = header;
+        headerRow.appendChild(th);
+      });
+
+      thead.appendChild(headerRow);
+      daYunTable.appendChild(thead);
+
+      // 创建表体
+      const tbody = document.createElement('tbody');
+
+      daYunList.forEach(daYun => {
+        const row = document.createElement('tr');
+
+        // 大运干支
+        const ganZhiCell = document.createElement('td');
+        ganZhiCell.textContent = daYun.ganZhi;
+        row.appendChild(ganZhiCell);
+
+        // 开始年份
+        const startYearCell = document.createElement('td');
+        startYearCell.textContent = daYun.startYear.toString();
+        row.appendChild(startYearCell);
+
+        // 结束年份
+        const endYearCell = document.createElement('td');
+        endYearCell.textContent = daYun.endYear.toString();
+        row.appendChild(endYearCell);
+
+        // 对格局影响
+        const effectCell = document.createElement('td');
+        const effect = GeJuService.analyzeDaYunEffect(geJu, daYun.ganZhi, riZhuWuXing);
+
+        // 根据影响级别设置颜色
+        let effectClass = '';
+        switch (effect.level) {
+          case 'good':
+            effectClass = 'bazi-effect-good';
+            break;
+          case 'bad':
+            effectClass = 'bazi-effect-bad';
+            break;
+          case 'mixed':
+            effectClass = 'bazi-effect-mixed';
+            break;
+          default:
+            effectClass = 'bazi-effect-neutral';
+        }
+
+        effectCell.textContent = effect.effect;
+        effectCell.className = effectClass;
+        row.appendChild(effectCell);
+
+        tbody.appendChild(row);
+      });
+
+      daYunTable.appendChild(tbody);
+      daYunInfo.appendChild(daYunTable);
+    } else {
+      daYunInfo.textContent = '无法获取大运信息，请确保八字信息完整。';
+    }
+
+    // 创建趋势图容器
+    const chartTitle = document.createElement('h4');
+    chartTitle.textContent = '格局趋势图';
+    chartTitle.className = 'bazi-modal-section-title';
+
+    const chartContainer = document.createElement('div');
+    chartContainer.className = 'bazi-modal-chart-container';
+    chartContainer.style.width = '100%';
+    chartContainer.style.height = '400px';
+    chartContainer.style.marginBottom = '20px';
+
+    // 创建趋势分析
+    const trendAnalysisTitle = document.createElement('h4');
+    trendAnalysisTitle.textContent = '趋势分析';
+    trendAnalysisTitle.className = 'bazi-modal-section-title';
+
+    const trendAnalysis = document.createElement('div');
+    trendAnalysis.className = 'bazi-modal-trend-analysis';
+
+    // 获取趋势数据
+    const trendData = GeJuTrendService.generateTrendData(
+      geJu,
+      riZhuWuXing,
+      parseInt(this.baziInfo.birthYear),
+      daYunList
+    );
+
+    // 设置趋势分析内容
+    trendAnalysis.textContent = trendData.analysis;
+
+    // 创建关键年份信息
+    const keyYearsTitle = document.createElement('h4');
+    keyYearsTitle.textContent = '关键年份';
+    keyYearsTitle.className = 'bazi-modal-section-title';
+
+    const keyYearsInfo = document.createElement('div');
+    keyYearsInfo.className = 'bazi-modal-key-years';
+
+    if (trendData.keyYears.length > 0) {
+      const keyYearsTable = document.createElement('table');
+      keyYearsTable.className = 'bazi-modal-key-years-table';
+
+      // 创建表头
+      const thead = document.createElement('thead');
+      const headerRow = document.createElement('tr');
+
+      const headers = ['年份', '事件', '影响'];
+      headers.forEach(header => {
+        const th = document.createElement('th');
+        th.textContent = header;
+        headerRow.appendChild(th);
+      });
+
+      thead.appendChild(headerRow);
+      keyYearsTable.appendChild(thead);
+
+      // 创建表体
+      const tbody = document.createElement('tbody');
+
+      trendData.keyYears.forEach(keyYear => {
+        const row = document.createElement('tr');
+
+        // 年份
+        const yearCell = document.createElement('td');
+        yearCell.textContent = keyYear.year.toString();
+        row.appendChild(yearCell);
+
+        // 事件
+        const eventCell = document.createElement('td');
+        eventCell.textContent = keyYear.event;
+        row.appendChild(eventCell);
+
+        // 影响
+        const levelCell = document.createElement('td');
+
+        // 根据影响级别设置颜色
+        let levelClass = '';
+        let levelText = '';
+        switch (keyYear.level) {
+          case 'good':
+            levelClass = 'bazi-effect-good';
+            levelText = '吉';
+            break;
+          case 'bad':
+            levelClass = 'bazi-effect-bad';
+            levelText = '凶';
+            break;
+          case 'mixed':
+            levelClass = 'bazi-effect-mixed';
+            levelText = '吉凶参半';
+            break;
+          default:
+            levelClass = 'bazi-effect-neutral';
+            levelText = '中性';
+        }
+
+        levelCell.textContent = levelText;
+        levelCell.className = levelClass;
+        row.appendChild(levelCell);
+
+        tbody.appendChild(row);
+      });
+
+      keyYearsTable.appendChild(tbody);
+      keyYearsInfo.appendChild(keyYearsTable);
+    } else {
+      keyYearsInfo.textContent = '无法获取关键年份信息。';
+    }
+
+    // 创建建议
+    const suggestionTitle = document.createElement('h4');
+    suggestionTitle.textContent = '发展建议';
+    suggestionTitle.className = 'bazi-modal-section-title';
+
+    const suggestion = document.createElement('div');
+    suggestion.textContent = trendData.suggestion;
+    suggestion.className = 'bazi-modal-suggestion';
+
+    // 创建关闭按钮
+    const closeButton = document.createElement('button');
+    closeButton.textContent = '关闭';
+    closeButton.className = 'bazi-modal-close';
+    closeButton.addEventListener('click', () => {
+      document.body.removeChild(modal);
+    });
+
+    // 组装弹窗内容
+    modalContent.appendChild(title);
+    modalContent.appendChild(description);
+    modalContent.appendChild(daYunTitle);
+    modalContent.appendChild(daYunInfo);
+    modalContent.appendChild(chartTitle);
+    modalContent.appendChild(chartContainer);
+    modalContent.appendChild(trendAnalysisTitle);
+    modalContent.appendChild(trendAnalysis);
+    modalContent.appendChild(keyYearsTitle);
+    modalContent.appendChild(keyYearsInfo);
+    modalContent.appendChild(suggestionTitle);
+    modalContent.appendChild(suggestion);
+    modalContent.appendChild(closeButton);
+
+    // 添加弹窗内容到弹窗
+    modal.appendChild(modalContent);
+
+    // 添加弹窗到页面
+    document.body.appendChild(modal);
+
+    // 渲染趋势图
+    const chart = new GeJuTrendChart(
+      chartContainer,
+      trendData.trend,
+      trendData.keyYears,
+      chartContainer.clientWidth,
+      chartContainer.clientHeight
+    );
+    chart.render();
+
+    // 添加点击事件，点击弹窗外部关闭弹窗
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        document.body.removeChild(modal);
+      }
+    });
+  }
+
+  /**
+   * 获取大运列表
+   * @returns 大运列表
+   */
+  private getDaYunList(): { ganZhi: string; startYear: number; endYear: number }[] {
+    if (!this.baziInfo.daYun || !this.baziInfo.birthYear) {
+      return [];
+    }
+
+    const birthYear = parseInt(this.baziInfo.birthYear);
+    const daYunStartAge = this.baziInfo.daYunStartAge || 0;
+    const daYunList: { ganZhi: string; startYear: number; endYear: number }[] = [];
+
+    // 处理大运信息
+    if (Array.isArray(this.baziInfo.daYun)) {
+      // 如果是DaYunInfo[]类型
+      this.baziInfo.daYun.forEach(daYun => {
+        daYunList.push({
+          ganZhi: daYun.ganZhi,
+          startYear: daYun.startYear,
+          endYear: daYun.endYear || daYun.startYear + 9
+        });
+      });
+    } else if (typeof this.baziInfo.daYun === 'string') {
+      // 如果是字符串类型（兼容旧版本）
+      const daYunItems = this.baziInfo.daYun.split(',');
+
+      daYunItems.forEach((item: string, index: number) => {
+        const startAge = daYunStartAge + index * 10;
+        const endAge = startAge + 9;
+        const startYear = birthYear + startAge;
+        const endYear = birthYear + endAge;
+
+        daYunList.push({
+          ganZhi: item.trim(),
+          startYear,
+          endYear
+        });
+      });
+    }
+
+    return daYunList;
+  }
+
+  /**
+   * 显示用神详细解释
+   * @param yongShen 用神名称
+   * @param yongShenDetail 用神详情
+   */
+  private showYongShenExplanation(yongShen: string, yongShenDetail: string) {
+    // 创建弹窗
+    const modal = document.createElement('div');
+    modal.className = 'bazi-modal';
+
+    // 创建弹窗内容
+    const modalContent = document.createElement('div');
+    modalContent.className = 'bazi-modal-content';
+
+    // 创建标题
+    const title = document.createElement('h3');
+    title.textContent = `用神详解：${yongShen}`;
+    title.className = 'bazi-modal-title';
+
+    // 创建解释
+    const explanationTitle = document.createElement('h4');
+    explanationTitle.textContent = '用神说明';
+    explanationTitle.className = 'bazi-modal-section-title';
+
+    const explanationText = document.createElement('div');
+    explanationText.textContent = yongShenDetail;
+    explanationText.className = 'bazi-modal-explanation';
+
+    // 创建用神解释
+    const yongShenExplanationTitle = document.createElement('h4');
+    yongShenExplanationTitle.textContent = '用神解释';
+    yongShenExplanationTitle.className = 'bazi-modal-section-title';
+
+    const yongShenExplanation = document.createElement('div');
+
+    // 根据用神类型提供不同的解释
+    let explanation = '';
+    switch (yongShen) {
+      case '印星':
+        explanation = '印星为生我之物，代表学业、文凭、母亲、贵人等。日主弱时，印星可以生助日主，增强日主力量。';
+        break;
+      case '官杀':
+        explanation = '官杀为克我之物，代表权威、职位、规矩等。日主旺时，官杀可以克制日主，泄秀日主之气。';
+        break;
+      case '财星':
+        explanation = '财星为我生之物，代表财富、物质、享受等。日主旺时，财星可以耗泄日主之气。';
+        break;
+      case '食伤':
+        explanation = '食伤为我泄之物，代表才艺、子女、创造力等。日主旺时，食伤可以泄秀日主之气。';
+        break;
+      case '比劫':
+        explanation = '比劫为同我之物，代表兄弟、同事、竞争等。日主弱时，比劫可以帮扶日主，增强日主力量。';
+        break;
+      default:
+        explanation = '用神是八字中对日主最有利的五行，根据日主旺衰不同，用神也不同。';
+    }
+
+    yongShenExplanation.textContent = explanation;
+    yongShenExplanation.className = 'bazi-modal-yongshen-explanation';
+
+    // 创建用神取用原则
+    const principleTitle = document.createElement('h4');
+    principleTitle.textContent = '用神取用原则';
+    principleTitle.className = 'bazi-modal-section-title';
+
+    const principle = document.createElement('div');
+    principle.innerHTML = `
+      <p>1. 日主过旺，取克泄之物为用神（官杀、财星、食伤）</p>
+      <p>2. 日主过弱，取生扶之物为用神（印星、比劫）</p>
+      <p>3. 日主平衡，根据八字特点选择用神</p>
+      <p>4. 月令当令的五行，优先考虑为用神</p>
+      <p>5. 八字中最有力的五行，次之考虑为用神</p>
+    `;
+    principle.className = 'bazi-modal-principle';
+
+    // 创建关闭按钮
+    const closeButton = document.createElement('button');
+    closeButton.textContent = '关闭';
+    closeButton.className = 'bazi-modal-close';
+    closeButton.addEventListener('click', () => {
+      document.body.removeChild(modal);
+    });
+
+    // 组装弹窗内容
+    modalContent.appendChild(title);
+    modalContent.appendChild(explanationTitle);
+    modalContent.appendChild(explanationText);
+    modalContent.appendChild(yongShenExplanationTitle);
+    modalContent.appendChild(yongShenExplanation);
+    modalContent.appendChild(principleTitle);
+    modalContent.appendChild(principle);
+    modalContent.appendChild(closeButton);
+
+    // 添加弹窗内容到弹窗
+    modal.appendChild(modalContent);
+
+    // 添加弹窗到页面
+    document.body.appendChild(modal);
+
+    // 添加点击事件，点击弹窗外部关闭弹窗
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        document.body.removeChild(modal);
+      }
+    });
   }
 }
