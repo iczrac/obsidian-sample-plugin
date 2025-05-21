@@ -163,7 +163,9 @@ date: ${dateStr}
 					const blockId = 'bazi-block-' + Math.random().toString(36).substring(2, 9);
 
 					// 添加源代码属性和唯一标识符，用于编辑时恢复和准确更新
-					el.setAttribute('data-bazi-source', source);
+					// 清理source中的特殊字符，确保选择器有效
+					const cleanSource = source.replace(/[\n\r"']/g, '').replace(/\s+/g, ' ').trim();
+					el.setAttribute('data-bazi-source', cleanSource);
 					el.setAttribute('data-bazi-block-id', blockId);
 
 					if (this.settings.useInteractiveView) {
@@ -222,7 +224,9 @@ date: ${dateStr}
 					const blockId = 'bazi-block-' + Math.random().toString(36).substring(2, 9);
 
 					// 添加源代码属性和唯一标识符，用于编辑时恢复和准确更新
-					el.setAttribute('data-bazi-source', source);
+					// 清理source中的特殊字符，确保选择器有效
+					const cleanSource = source.replace(/[\n\r"']/g, '').replace(/\s+/g, ' ').trim();
+					el.setAttribute('data-bazi-source', cleanSource);
 					el.setAttribute('data-bazi-block-id', blockId);
 
 					if (this.settings.useInteractiveView) {
@@ -323,14 +327,18 @@ date: ${dateStr}
 													console.log('已触发layout-change事件，重新渲染页面');
 													// 直接重新渲染对应的视图元素
 													setTimeout(() => {
-														const el = document.querySelector(`[data-bazi-source="${source}"]`);
+														// 清理source中的特殊字符，确保选择器有效
+														const cleanSource = source.replace(/[\n\r"']/g, '').replace(/\s+/g, ' ').trim();
+														const el = document.querySelector(`[data-bazi-source="${cleanSource}"]`);
 														if (el) {
 															const blockId = el.getAttribute('data-bazi-block-id');
 															const params = this.parseCodeBlockParams(newSource);
 															const gender = params.gender || this.settings.defaultGender;
 															const baziInfo = BaziService.parseBaziString(params.bazi, gender, this.settings.baziSect, year);
 															const id = 'bazi-view-' + Math.random().toString(36).substring(2, 9);
-															el.setAttribute('data-bazi-source', newSource);
+															// 清理newSource中的特殊字符
+															const cleanNewSource = newSource.replace(/[\n\r"']/g, '').replace(/\s+/g, ' ').trim();
+															el.setAttribute('data-bazi-source', cleanNewSource);
 															if (this.settings.useInteractiveView) {
 																new InteractiveBaziView(el as HTMLElement, baziInfo, id);
 															} else {
@@ -394,7 +402,9 @@ date: ${dateStr}
 					const blockId = 'bazi-block-' + Math.random().toString(36).substring(2, 9);
 
 					// 添加源代码属性和唯一标识符，用于编辑时恢复和准确更新
-					el.setAttribute('data-bazi-source', source);
+					// 清理source中的特殊字符，确保选择器有效
+					const cleanSource = source.replace(/[\n\r"']/g, '').replace(/\s+/g, ' ').trim();
+					el.setAttribute('data-bazi-source', cleanSource);
 					el.setAttribute('data-bazi-block-id', blockId);
 
 					if (this.settings.useInteractiveView) {

@@ -128,12 +128,12 @@ export class BaziService {
     // 如果指定了年份，尝试使用指定的年份进行日期推算
     if (specifiedYear && matchingYears.includes(specifiedYear)) {
       try {
-        // 从月柱估算月份
+        // 从月柱估算农历月份
         const monthMap: {[key: string]: number} = {
           '寅': 1, '卯': 2, '辰': 3, '巳': 4, '午': 5, '未': 6,
           '申': 7, '酉': 8, '戌': 9, '亥': 10, '子': 11, '丑': 12
         };
-        const month = monthMap[monthBranch] || 1;
+        const lunarMonth = monthMap[monthBranch] || 1;
 
         // 从时柱估算小时
         const hourMap: {[key: string]: number} = {
@@ -142,21 +142,50 @@ export class BaziService {
         };
         const hour = hourMap[hourBranch] || 0;
 
-        // 使用lunar-typescript库查找符合条件的日期
-        // 这里简化处理，取月中的第15天
-        const day = 15;
+        // 使用lunar-typescript库查找符合条件的农历日期
+        // 遍历指定年份的农历月份，找到匹配八字的日期
+        let found = false;
+        for (let day = 1; day <= 30; day++) {
+          try {
+            lunar = Lunar.fromYmdHms(specifiedYear, lunarMonth, day, hour, 0, 0);
+            solar = lunar.getSolar();
+            eightChar = lunar.getEightChar();
+            const checkYearPillar = eightChar.getYearGan() + eightChar.getYearZhi();
+            const checkMonthPillar = eightChar.getMonthGan() + eightChar.getMonthZhi();
+            const checkDayPillar = eightChar.getDayGan() + eightChar.getDayZhi();
+            // 使用hourStem和hourBranch替代getHourGan和getHourZhi
+            const checkHourPillar = hourStem + hourBranch;
+            if (checkYearPillar === parts[0] && checkMonthPillar === parts[1] &&
+                checkDayPillar === parts[2] && checkHourPillar === parts[3]) {
+              found = true;
+              break;
+            }
+          } catch (e) {
+            // 如果日期无效，继续下一个日期
+            continue;
+          }
+        }
+        
+        if (!found) {
+          // 如果未找到完全匹配的日期，使用农历月份的第一天作为近似值
+          lunar = Lunar.fromYmdHms(specifiedYear, lunarMonth, 1, hour, 0, 0);
+          solar = lunar.getSolar();
+          eightChar = lunar.getEightChar();
+        }
 
-        // 创建阳历对象
-        solar = Solar.fromYmdHms(specifiedYear, month, day, hour, 0, 0);
-        // 转换为农历
-        lunar = solar.getLunar();
-        // 获取八字
-        eightChar = lunar.getEightChar();
-
-        // 格式化日期
-        solarDate = `${specifiedYear}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
-        lunarDate = lunar.toString();
-        solarTime = `${hour.toString().padStart(2, '0')}:00`;
+        // 格式化日期，确保solar和lunar不为null
+        if (solar && lunar) {
+          solarDate = `${solar.getYear()}-${solar.getMonth().toString().padStart(2, '0')}-${solar.getDay().toString().padStart(2, '0')}`;
+          lunarDate = lunar.toString();
+          solarTime = `${hour.toString().padStart(2, '0')}:00`;
+        }
+        
+        console.log('日期反推逻辑 - 指定年份:', specifiedYear);
+        console.log('日期反推逻辑 - 估算农历月份:', lunarMonth, '基于月支:', monthBranch);
+        console.log('日期反推逻辑 - 估算小时:', hour, '基于时支:', hourBranch);
+        console.log('日期反推逻辑 - 遍历农历日期寻找匹配八字:', found ? '找到匹配日期' : '未找到完全匹配，使用近似日期');
+        console.log('日期反推结果 - 阳历日期:', solarDate);
+        console.log('日期反推结果 - 农历日期:', lunarDate);
       } catch (error) {
         console.error('日期推算出错:', error);
       }
