@@ -284,10 +284,10 @@ date: ${dateStr}
 						setTimeout(() => {
 							console.log('开始添加年份选择界面');
 							// 创建提示信息和选择框，添加到视图顶部
-							const tipContainer = el.createDiv({
-								cls: 'bazi-tip-container',
-								attr: { 'style': 'background-color: rgba(255, 255, 0, 0.1); padding: 10px; border-radius: 5px; margin-bottom: 10px; font-size: 0.9em; z-index: 10; position: relative;' }
-							});
+							const tipContainer = document.createElement('div');
+							tipContainer.className = 'bazi-tip-container';
+							tipContainer.setAttribute('style', 'background-color: rgba(255, 255, 0, 0.1); padding: 10px; border-radius: 5px; margin-bottom: 10px; font-size: 0.9em; z-index: 10; position: relative; top: 0; width: 100%; box-sizing: border-box;');
+							el.prepend(tipContainer);
 							tipContainer.createDiv({
 								text: '此八字对应多个年份，请点击下方年份按钮选择：',
 								attr: { 'style': 'margin-bottom: 5px;' }
@@ -295,7 +295,7 @@ date: ${dateStr}
 
 							// 创建年份按钮容器
 							const yearsContainer = tipContainer.createDiv({
-								attr: { 'style': 'display: flex; flex-wrap: wrap; gap: 5px;' }
+								attr: { 'style': 'display: flex; flex-wrap: wrap; gap: 5px; justify-content: center;' }
 							});
 
 							// 为每个年份创建按钮
