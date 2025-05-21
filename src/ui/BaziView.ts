@@ -1,4 +1,4 @@
-import { BaziInfo } from 'src/services/BaziService';
+import { BaziInfo } from 'src/types/BaziInfo';
 
 /**
  * 八字命盘视图组件
@@ -123,19 +123,19 @@ export class BaziView {
     const stemRow = tbody.createEl('tr');
     stemRow.createEl('td', {
       text: this.baziInfo.yearStem,
-      cls: `wuxing-${this.getWuXingClass(this.baziInfo.yearWuXing)}`
+      cls: `wuxing-${this.getWuXingClass(this.baziInfo.yearWuXing || '')}`
     });
     stemRow.createEl('td', {
       text: this.baziInfo.monthStem,
-      cls: `wuxing-${this.getWuXingClass(this.baziInfo.monthWuXing)}`
+      cls: `wuxing-${this.getWuXingClass(this.baziInfo.monthWuXing || '')}`
     });
     stemRow.createEl('td', {
       text: this.baziInfo.dayStem,
-      cls: `wuxing-${this.getWuXingClass(this.baziInfo.dayWuXing)}`
+      cls: `wuxing-${this.getWuXingClass(this.baziInfo.dayWuXing || '')}`
     });
     stemRow.createEl('td', {
       text: this.baziInfo.hourStem,
-      cls: `wuxing-${this.getWuXingClass(this.baziInfo.hourWuXing)}`
+      cls: `wuxing-${this.getWuXingClass(this.baziInfo.hourWuXing || '')}`
     });
 
     // 地支行
@@ -147,10 +147,10 @@ export class BaziView {
 
     // 藏干行
     const hideGanRow = tbody.createEl('tr');
-    hideGanRow.createEl('td', { text: this.baziInfo.yearHideGan });
-    hideGanRow.createEl('td', { text: this.baziInfo.monthHideGan });
-    hideGanRow.createEl('td', { text: this.baziInfo.dayHideGan });
-    hideGanRow.createEl('td', { text: this.baziInfo.hourHideGan });
+    hideGanRow.createEl('td', { text: Array.isArray(this.baziInfo.yearHideGan) ? this.baziInfo.yearHideGan.join(', ') : this.baziInfo.yearHideGan || '' });
+    hideGanRow.createEl('td', { text: Array.isArray(this.baziInfo.monthHideGan) ? this.baziInfo.monthHideGan.join(', ') : this.baziInfo.monthHideGan || '' });
+    hideGanRow.createEl('td', { text: Array.isArray(this.baziInfo.dayHideGan) ? this.baziInfo.dayHideGan.join(', ') : this.baziInfo.dayHideGan || '' });
+    hideGanRow.createEl('td', { text: Array.isArray(this.baziInfo.hourHideGan) ? this.baziInfo.hourHideGan.join(', ') : this.baziInfo.hourHideGan || '' });
 
     // 纳音行
     const naYinRow = tbody.createEl('tr');
@@ -173,22 +173,22 @@ export class BaziView {
 
     wuxingList.createEl('span', {
       text: `${this.baziInfo.yearStem}(${this.baziInfo.yearWuXing})`,
-      cls: `wuxing-tag wuxing-${this.getWuXingClass(this.baziInfo.yearWuXing)}`
+      cls: `wuxing-tag wuxing-${this.getWuXingClass(this.baziInfo.yearWuXing || '')}`
     });
 
     wuxingList.createEl('span', {
       text: `${this.baziInfo.monthStem}(${this.baziInfo.monthWuXing})`,
-      cls: `wuxing-tag wuxing-${this.getWuXingClass(this.baziInfo.monthWuXing)}`
+      cls: `wuxing-tag wuxing-${this.getWuXingClass(this.baziInfo.monthWuXing || '')}`
     });
 
     wuxingList.createEl('span', {
       text: `${this.baziInfo.dayStem}(${this.baziInfo.dayWuXing})`,
-      cls: `wuxing-tag wuxing-${this.getWuXingClass(this.baziInfo.dayWuXing)}`
+      cls: `wuxing-tag wuxing-${this.getWuXingClass(this.baziInfo.dayWuXing || '')}`
     });
 
     wuxingList.createEl('span', {
       text: `${this.baziInfo.hourStem}(${this.baziInfo.hourWuXing})`,
-      cls: `wuxing-tag wuxing-${this.getWuXingClass(this.baziInfo.hourWuXing)}`
+      cls: `wuxing-tag wuxing-${this.getWuXingClass(this.baziInfo.hourWuXing || '')}`
     });
   }
 
@@ -244,21 +244,22 @@ export class BaziView {
     // 第一行：年份
     const yearRow = table.createEl('tr');
     yearRow.createEl('th', { text: '大运' });
-    daYunData.slice(0, 10).forEach(dy => {
+    const daYunArray = Array.isArray(daYunData) ? daYunData : [];
+    daYunArray.slice(0, 10).forEach(dy => {
       yearRow.createEl('td', { text: dy.startYear.toString() });
     });
 
     // 第二行：年龄
     const ageRow = table.createEl('tr');
     ageRow.createEl('th', { text: '年龄' });
-    daYunData.slice(0, 10).forEach(dy => {
+    daYunArray.slice(0, 10).forEach(dy => {
       ageRow.createEl('td', { text: dy.startAge.toString() });
     });
 
     // 第三行：干支
     const gzRow = table.createEl('tr');
     gzRow.createEl('th', { text: '干支' });
-    daYunData.slice(0, 10).forEach((dy, index) => {
+    daYunArray.slice(0, 10).forEach((dy, index) => {
       const cell = gzRow.createEl('td', {
         text: dy.ganZhi,
         cls: 'bazi-dayun-cell',
@@ -424,7 +425,7 @@ export class BaziView {
     const monthRow = table.createEl('tr');
     monthRow.createEl('th', { text: '流月' });
     liuYueData.forEach(ly => {
-      monthRow.createEl('td', { text: ly.month });
+      monthRow.createEl('td', { text: ly.month.toString() });
     });
 
     // 第二行：干支
@@ -472,12 +473,12 @@ export class BaziView {
 
     // 筛选该大运对应的流年
     const filteredLiuNian = allLiuNian.filter(ln => {
-      return ln.year >= selectedDaYun.startYear && ln.year <= selectedDaYun.endYear;
+      return typeof selectedDaYun !== 'string' && ln.year >= selectedDaYun.startYear && ln.year <= (selectedDaYun.endYear || Infinity);
     });
 
     // 筛选该大运对应的小运
     const filteredXiaoYun = allXiaoYun.filter(xy => {
-      return xy.year >= selectedDaYun.startYear && xy.year <= selectedDaYun.endYear;
+      return typeof selectedDaYun !== 'string' && xy.year >= selectedDaYun.startYear && xy.year <= (selectedDaYun.endYear || Infinity);
     });
 
     // 更新流年表格

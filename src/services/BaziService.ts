@@ -1,5 +1,6 @@
 import { Solar, Lunar, EightChar } from 'lunar-typescript';
 import { GeJuJudgeService } from './GeJuJudgeService';
+import { BaziInfo } from '../types/BaziInfo';
 
 /**
  * 八字服务类，封装lunar-typescript的八字功能
@@ -56,9 +57,12 @@ export class BaziService {
   /**
    * 解析八字字符串
    * @param baziStr 八字字符串，如"甲子 乙丑 丙寅 丁卯"
+   * @param gender 性别（1-男，0-女）
+   * @param sect 八字流派（1或2）
+   * @param specifiedYear 指定的年份，如果提供则使用此年份而不是反推
    * @returns 八字信息对象
    */
-  static parseBaziString(baziStr: string, gender: string = '1', sect: string = '2'): BaziInfo {
+  static parseBaziString(baziStr: string, gender: string = '1', sect: string = '2', specifiedYear?: number): BaziInfo {
     // 清理并分割八字字符串
     const parts = baziStr.replace(/\s+/g, ' ').trim().split(' ');
 
@@ -88,7 +92,7 @@ export class BaziService {
     const dayNaYin = this.getNaYin(dayStem + dayBranch);
     const hourNaYin = this.getNaYin(hourStem + hourBranch);
 
-    // 尝试反推日期
+    // 初始化日期相关变量
     let solarDate = '----年--月--日';
     let lunarDate = '农历----年--月--日';
     let solarTime = '--:--';
@@ -96,82 +100,97 @@ export class BaziService {
     let lunar: Lunar | null = null;
     let eightChar: EightChar | null = null;
 
-    try {
-      // 使用lunar-typescript库反推日期
-      // 注意：这里只是一个估算，因为同一八字可能对应多个日期
-      // 我们取最近的一个可能的日期
+    // 计算匹配的年份列表
+    let matchingYears: number[] = [];
 
-      // 1. 从年柱估算年份
-      const currentYear = new Date().getFullYear();
-      const startYear = currentYear - 80; // 从80年前开始查找
-      const endYear = currentYear + 20;   // 查找到20年后
+    // 天干序号（甲=0, 乙=1, ..., 癸=9）
+    const stemIndex = "甲乙丙丁戊己庚辛壬癸".indexOf(yearStem);
+    // 地支序号（子=0, 丑=1, ..., 亥=11）
+    const branchIndex = "子丑寅卯辰巳午未申酉戌亥".indexOf(yearBranch);
 
-      // 天干序号（甲=0, 乙=1, ..., 癸=9）
-      const stemIndex = "甲乙丙丁戊己庚辛壬癸".indexOf(yearStem);
-      // 地支序号（子=0, 丑=1, ..., 亥=11）
-      const branchIndex = "子丑寅卯辰巳午未申酉戌亥".indexOf(yearBranch);
+    // 计算匹配的年份列表
+    const currentYear = new Date().getFullYear();
+    const startYear = currentYear - 360; // 从360年前开始查找（6个甲子）
+    const endYear = currentYear + 120;   // 查找到120年后（2个甲子）
 
-      // 查找符合年柱的年份
-      let matchingYears: number[] = [];
-      for (let year = startYear; year <= endYear; year++) {
-        // 计算天干序号：年份减去4，除以10的余数
-        const stemCheck = (year - 4) % 10;
-        // 计算地支序号：年份减去4，除以12的余数
-        const branchCheck = (year - 4) % 12;
+    // 查找符合年柱的年份
+    for (let year = startYear; year <= endYear; year++) {
+      // 计算天干序号：年份减去4，除以10的余数
+      const stemCheck = (year - 4) % 10;
+      // 计算地支序号：年份减去4，除以12的余数
+      const branchCheck = (year - 4) % 12;
 
-        if (stemCheck === stemIndex && branchCheck === branchIndex) {
-          matchingYears.push(year);
-        }
+      if (stemCheck === stemIndex && branchCheck === branchIndex) {
+        matchingYears.push(year);
       }
+    }
 
-      if (matchingYears.length > 0) {
-        // 取最近的年份
-        const year = matchingYears[matchingYears.length - 1];
-
-        // 2. 从月柱估算月份
-        // 地支对应的月份（寅=1月, 卯=2月, ..., 丑=12月）
+    // 如果指定了年份，尝试使用指定的年份进行日期推算
+    if (specifiedYear && matchingYears.includes(specifiedYear)) {
+      try {
+        // 从月柱估算月份
         const monthMap: {[key: string]: number} = {
           '寅': 1, '卯': 2, '辰': 3, '巳': 4, '午': 5, '未': 6,
           '申': 7, '酉': 8, '戌': 9, '亥': 10, '子': 11, '丑': 12
         };
         const month = monthMap[monthBranch] || 1;
 
-        // 3. 从时柱估算小时
-        // 地支对应的时辰（子=23-1点, 丑=1-3点, ..., 亥=21-23点）
+        // 从时柱估算小时
         const hourMap: {[key: string]: number} = {
           '子': 0, '丑': 2, '寅': 4, '卯': 6, '辰': 8, '巳': 10,
           '午': 12, '未': 14, '申': 16, '酉': 18, '戌': 20, '亥': 22
         };
         const hour = hourMap[hourBranch] || 0;
 
-        // 4. 使用lunar-typescript库查找符合条件的日期
+        // 使用lunar-typescript库查找符合条件的日期
         // 这里简化处理，取月中的第15天
         const day = 15;
 
         // 创建阳历对象
-        solar = Solar.fromYmdHms(year, month, day, hour, 0, 0);
+        solar = Solar.fromYmdHms(specifiedYear, month, day, hour, 0, 0);
         // 转换为农历
         lunar = solar.getLunar();
         // 获取八字
         eightChar = lunar.getEightChar();
 
         // 格式化日期
-        solarDate = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+        solarDate = `${specifiedYear}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
         lunarDate = lunar.toString();
         solarTime = `${hour.toString().padStart(2, '0')}:00`;
+      } catch (error) {
+        console.error('日期推算出错:', error);
       }
-    } catch (error) {
-      console.error('反推日期出错:', error);
-      // 出错时使用默认值
     }
 
-    // 如果成功反推了日期，使用lunar-typescript库获取更多信息
-    if (solar && lunar && eightChar) {
+    // 如果有指定年份且成功推算日期，使用lunar-typescript库获取更多信息
+    if (specifiedYear && solar && lunar && eightChar) {
       // 使用formatBaziInfo获取完整的八字信息
-      return this.formatBaziInfo(solar, lunar, eightChar, gender, sect);
+      const baziInfo = this.formatBaziInfo(solar, lunar, eightChar, gender, sect);
+
+      // 保留原始八字
+      baziInfo.yearPillar = parts[0];
+      baziInfo.yearStem = yearStem;
+      baziInfo.yearBranch = yearBranch;
+
+      baziInfo.monthPillar = parts[1];
+      baziInfo.monthStem = monthStem;
+      baziInfo.monthBranch = monthBranch;
+
+      baziInfo.dayPillar = parts[2];
+      baziInfo.dayStem = dayStem;
+      baziInfo.dayBranch = dayBranch;
+
+      baziInfo.hourPillar = parts[3];
+      baziInfo.hourStem = hourStem;
+      baziInfo.hourBranch = hourBranch;
+
+      // 添加匹配年份列表
+      baziInfo.matchingYears = matchingYears;
+
+      return baziInfo;
     }
 
-    // 如果反推失败，使用传统方法计算基本信息
+    // 如果没有指定年份或者日期推算失败，使用传统方法计算基本信息
     // 计算特殊信息
     const taiYuan = this.calculateTaiYuan(monthStem, monthBranch);
     const taiYuanNaYin = this.getNaYin(taiYuan);
@@ -190,6 +209,7 @@ export class BaziService {
       solarDate,
       lunarDate,
       solarTime,
+      matchingYears, // 添加匹配年份列表
 
       // 八字信息
       yearPillar: parts[0],
@@ -5682,10 +5702,10 @@ export class BaziService {
       </thead>
       <tbody>
         <tr class="bazi-stem-row">
-          <td class="wuxing-${this.getWuXingClass(baziInfo.yearWuXing)}">${baziInfo.yearStem}</td>
-          <td class="wuxing-${this.getWuXingClass(baziInfo.monthWuXing)}">${baziInfo.monthStem}</td>
-          <td class="wuxing-${this.getWuXingClass(baziInfo.dayWuXing)}">${baziInfo.dayStem}</td>
-          <td class="wuxing-${this.getWuXingClass(baziInfo.hourWuXing)}">${baziInfo.hourStem}</td>
+          <td class="wuxing-${this.getWuXingClass(baziInfo.yearWuXing || '')}">${baziInfo.yearStem || ''}</td>
+          <td class="wuxing-${this.getWuXingClass(baziInfo.monthWuXing || '')}">${baziInfo.monthStem || ''}</td>
+          <td class="wuxing-${this.getWuXingClass(baziInfo.dayWuXing || '')}">${baziInfo.dayStem || ''}</td>
+          <td class="wuxing-${this.getWuXingClass(baziInfo.hourWuXing || '')}">${baziInfo.hourStem || ''}</td>
         </tr>
         <tr class="bazi-branch-row">
           <td>${baziInfo.yearBranch}</td>
@@ -5718,10 +5738,10 @@ export class BaziService {
   <div class="bazi-view-section">
     <h4 class="bazi-view-subtitle">五行分析</h4>
     <div class="bazi-view-wuxing-list">
-      <span class="wuxing-tag wuxing-${this.getWuXingClass(baziInfo.yearWuXing)}">${baziInfo.yearStem}(${baziInfo.yearWuXing || '未知'})</span>
-      <span class="wuxing-tag wuxing-${this.getWuXingClass(baziInfo.monthWuXing)}">${baziInfo.monthStem}(${baziInfo.monthWuXing || '未知'})</span>
-      <span class="wuxing-tag wuxing-${this.getWuXingClass(baziInfo.dayWuXing)}">${baziInfo.dayStem}(${baziInfo.dayWuXing || '未知'})</span>
-      <span class="wuxing-tag wuxing-${this.getWuXingClass(baziInfo.hourWuXing)}">${baziInfo.hourStem}(${baziInfo.hourWuXing || '未知'})</span>
+      <span class="wuxing-tag wuxing-${this.getWuXingClass(baziInfo.yearWuXing || '')}">${baziInfo.yearStem || ''}(${baziInfo.yearWuXing || '未知'})</span>
+      <span class="wuxing-tag wuxing-${this.getWuXingClass(baziInfo.monthWuXing || '')}">${baziInfo.monthStem || ''}(${baziInfo.monthWuXing || '未知'})</span>
+      <span class="wuxing-tag wuxing-${this.getWuXingClass(baziInfo.dayWuXing || '')}">${baziInfo.dayStem || ''}(${baziInfo.dayWuXing || '未知'})</span>
+      <span class="wuxing-tag wuxing-${this.getWuXingClass(baziInfo.hourWuXing || '')}">${baziInfo.hourStem || ''}(${baziInfo.hourWuXing || '未知'})</span>
     </div>
 
     ${baziInfo.wuXingStrength ? `
@@ -5830,17 +5850,17 @@ export class BaziService {
       <table class="bazi-view-table bazi-view-dayun-table">
         <tr>
           <th>大运</th>
-          ${baziInfo.daYun.slice(0, 10).map(dy => `<td>${dy.startYear}</td>`).join('')}
+          ${Array.isArray(baziInfo.daYun) ? baziInfo.daYun.slice(0, 10).map(dy => `<td>${dy.startYear}</td>`).join('') : ''}
         </tr>
         <tr>
           <th>年龄</th>
-          ${baziInfo.daYun.slice(0, 10).map(dy => `<td>${dy.startAge}</td>`).join('')}
+          ${Array.isArray(baziInfo.daYun) ? baziInfo.daYun.slice(0, 10).map(dy => `<td>${dy.startAge}</td>`).join('') : ''}
         </tr>
         <tr>
           <th>干支</th>
-          ${baziInfo.daYun.slice(0, 10).map((dy, index) => `
+          ${Array.isArray(baziInfo.daYun) ? baziInfo.daYun.slice(0, 10).map((dy, index) => `
             <td class="bazi-dayun-cell" data-index="${index}">${dy.ganZhi}</td>
-          `).join('')}
+          `).join('') : ''}
         </tr>
       </table>
     </div>
@@ -5958,183 +5978,3 @@ export class BaziService {
   }
 }
 
-/**
- * 八字信息接口
- */
-export interface BaziInfo {
-  // 基本信息
-  solarDate: string;
-  lunarDate: string;
-  solarTime: string;
-
-  // 八字信息
-  yearPillar: string;
-  yearStem: string;
-  yearBranch: string;
-  yearHideGan: string;
-  yearWuXing: string;
-  yearNaYin: string;
-
-  monthPillar: string;
-  monthStem: string;
-  monthBranch: string;
-  monthHideGan: string;
-  monthWuXing: string;
-  monthNaYin: string;
-
-  dayPillar: string;
-  dayStem: string;
-  dayBranch: string;
-  dayHideGan: string;
-  dayWuXing: string;
-  dayNaYin: string;
-
-  hourPillar: string;
-  hourStem: string;
-  hourBranch: string;
-  hourHideGan: string;
-  hourWuXing: string;
-  hourNaYin: string;
-
-  // 特殊信息
-  taiYuan: string;
-  taiYuanNaYin: string;
-  mingGong: string;
-  mingGongNaYin: string;
-  shenGong?: string;       // 身宫
-
-  // 完整信息
-  fullString: string;
-
-  // 可选属性 - 用于设置和显示
-  showWuxing?: boolean;
-  showSpecialInfo?: boolean;
-  gender?: string;
-  calculationMethod?: string;
-  baziSect?: string;       // 八字流派 1或2
-
-  // 原始日期信息 - 用于代码块更新
-  originalDate?: {
-    year: number;
-    month: number;
-    day: number;
-    hour: number;
-  };
-
-  // 扩展信息 - 参考6tail.cn API
-  // 十二长生
-  yearShengXiao?: string;  // 年生肖
-  monthShengXiao?: string; // 月生肖
-  dayShengXiao?: string;   // 日生肖
-  hourShengXiao?: string;  // 时生肖
-
-  // 十神
-  yearShiShen?: string;    // 年十神
-  monthShiShen?: string;   // 月十神
-  dayShiShen?: string;     // 日十神
-  hourShiShen?: string;    // 时十神
-
-  // 地支十神（藏干）
-  yearShiShenZhi?: string[];  // 年支十神
-  monthShiShenZhi?: string[]; // 月支十神
-  dayShiShenZhi?: string[];   // 日支十神
-  hourShiShenZhi?: string[];  // 时支十神
-
-  // 地势（长生十二神）
-  yearDiShi?: string;      // 年柱地势
-  monthDiShi?: string;     // 月柱地势
-  dayDiShi?: string;       // 日柱地势
-  timeDiShi?: string;      // 时柱地势
-
-  // 旬空（空亡）
-  yearXunKong?: string;    // 年柱旬空
-  monthXunKong?: string;   // 月柱旬空
-  dayXunKong?: string;     // 日柱旬空
-  timeXunKong?: string;    // 时柱旬空
-
-  // 星座
-  zodiac?: string;         // 星座
-
-  // 节气
-  jieQi?: string;          // 节气
-  nextJieQi?: string;      // 下一节气
-
-  // 吉凶
-  dayYi?: string[];        // 宜
-  dayJi?: string[];        // 忌
-
-  // 神煞
-  shenSha?: string[];      // 神煞
-
-  // 胎息
-  taiXi?: string;          // 胎息
-
-  // 起运信息
-  qiYunYear?: number;      // 起运年数
-  qiYunMonth?: number;     // 起运月数
-  qiYunDay?: number;       // 起运天数
-  qiYunHour?: number;      // 起运小时数
-  qiYunDate?: string;      // 起运日期
-  qiYunAge?: number;       // 起运年龄
-
-  // 大运
-  daYun?: {
-    startYear: number;     // 大运起始年
-    endYear: number;       // 大运结束年
-    startAge: number;      // 大运起始年龄
-    endAge: number;        // 大运结束年龄
-    index: number;         // 第几轮大运
-    ganZhi: string;        // 大运干支
-    naYin: string;         // 大运纳音
-    xunKong?: string;      // 旬空
-  }[];
-
-  // 流年
-  liuNian?: {
-    year: number;          // 流年
-    age: number;           // 年龄
-    index: number;         // 位于当前大运中的序号
-    ganZhi: string;        // 流年干支
-    naYin: string;         // 流年纳音
-    xunKong?: string;      // 旬空
-  }[];
-
-  // 小运
-  xiaoYun?: {
-    year: number;          // 年份
-    age: number;           // 年龄
-    index: number;         // 位于当前大运中的序号
-    ganZhi: string;        // 干支
-    xunKong?: string;      // 旬空
-  }[];
-
-  // 流月
-  liuYue?: {
-    month: string;         // 中文月份
-    index: number;         // 月序号
-    ganZhi: string;        // 干支
-    xunKong?: string;      // 旬空
-  }[];
-
-  // 四柱五行强度
-  wuXingStrength?: {
-    jin: number;           // 金
-    mu: number;            // 木
-    shui: number;          // 水
-    huo: number;           // 火
-    tu: number;            // 土
-  };
-
-  // 日主旺衰
-  riZhuStrength?: string;  // 日主旺衰
-  riZhuStrengthDetails?: {
-    dayWuXing: string;
-    season: string;
-    baseScore: number;
-    seasonEffect: string;
-    ganRelation: string;
-    zhiRelation: string;
-    specialRelation: string;
-    totalScore: number;
-  };
-}

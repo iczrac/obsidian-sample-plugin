@@ -1,5 +1,6 @@
 import { App, Modal, Setting } from 'obsidian';
-import { BaziInfo, BaziService } from '../services/BaziService';
+import { BaziInfo } from '../types/BaziInfo';
+import { BaziService } from '../services/BaziService';
 
 /**
  * 八字信息展示模态框

@@ -8,6 +8,7 @@ export interface BaziInfo {
   lunarDate?: string;
   gender?: string;
   birthYear?: string; // 出生年份
+  matchingYears?: number[]; // 匹配的年份列表
 
   // 八字信息
   yearStem?: string;
@@ -36,6 +37,8 @@ export interface BaziInfo {
   monthNaYin?: string;
   dayNaYin?: string;
   hourNaYin?: string;
+  taiYuanNaYin?: string;
+  mingGongNaYin?: string;
 
   // 生肖信息
   yearShengXiao?: string;
@@ -48,12 +51,17 @@ export interface BaziInfo {
   monthXunKong?: string;
   dayXunKong?: string;
   hourXunKong?: string;
+  timeXunKong?: string;
 
   // 十神信息
   yearShiShenGan?: string;
   monthShiShenGan?: string;
   dayShiShenGan?: string;
   timeShiShenGan?: string;
+  yearShiShen?: string;
+  monthShiShen?: string;
+  dayShiShen?: string;
+  hourShiShen?: string;
 
   // 地支十神信息
   yearShiShenZhi?: string | string[];
@@ -66,6 +74,7 @@ export interface BaziInfo {
   monthDiShi?: string;
   dayDiShi?: string;
   timeDiShi?: string;
+  hourDiShi?: string;
 
   // 神煞信息
   shenSha?: string[];
@@ -90,10 +99,22 @@ export interface BaziInfo {
   taiYuan?: string;
   mingGong?: string;
   shenGong?: string;
+  taiXi?: string; // 胎息
+  zodiac?: string; // 星座
+  jieQi?: string; // 节气
+  nextJieQi?: string; // 下一节气
+  dayYi?: string[]; // 宜
+  dayJi?: string[]; // 忌
 
   // 大运信息
   daYun?: DaYunInfo[] | string; // 可以是DaYunInfo数组或者逗号分隔的干支字符串
   daYunStartAge?: number; // 大运起始年龄
+  qiYunYear?: number; // 起运年份
+  qiYunDate?: string; // 起运日期
+  qiYunAge?: number; // 起运年龄
+  qiYunMonth?: number; // 起运月份
+  qiYunDay?: number; // 起运天数
+  qiYunHour?: number; // 起运小时数
 
   // 流年信息
   liuNian?: LiuNianInfo[];
@@ -118,6 +139,27 @@ export interface BaziInfo {
 
   // 日主旺衰详情
   riZhuStrengthDetails?: any;
+  
+  // 柱信息
+  yearPillar?: string;
+  monthPillar?: string;
+  dayPillar?: string;
+  hourPillar?: string;
+  
+  // 设置信息
+  baziSect?: string;
+  showWuxing?: boolean;
+  showSpecialInfo?: boolean;
+  calculationMethod?: string;
+  originalDate?: {
+    year: number;
+    month: number;
+    day: number;
+    hour: number;
+  };
+  
+  // 完整信息
+  fullString?: string;
 }
 
 /**

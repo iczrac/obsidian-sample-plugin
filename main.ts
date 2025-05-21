@@ -159,9 +159,12 @@ date: ${dateStr}
 
 					// 生成唯一ID
 					const id = 'bazi-view-' + Math.random().toString(36).substring(2, 9);
+					// 为代码块添加唯一标识符
+					const blockId = 'bazi-block-' + Math.random().toString(36).substring(2, 9);
 
-					// 添加源代码属性，用于编辑时恢复
+					// 添加源代码属性和唯一标识符，用于编辑时恢复和准确更新
 					el.setAttribute('data-bazi-source', source);
+					el.setAttribute('data-bazi-block-id', blockId);
 
 					if (this.settings.useInteractiveView) {
 						// 使用交互式视图
@@ -215,9 +218,12 @@ date: ${dateStr}
 
 					// 生成唯一ID
 					const id = 'bazi-view-' + Math.random().toString(36).substring(2, 9);
+					// 为代码块添加唯一标识符
+					const blockId = 'bazi-block-' + Math.random().toString(36).substring(2, 9);
 
-					// 添加源代码属性，用于编辑时恢复
+					// 添加源代码属性和唯一标识符，用于编辑时恢复和准确更新
 					el.setAttribute('data-bazi-source', source);
+					el.setAttribute('data-bazi-block-id', blockId);
 
 					if (this.settings.useInteractiveView) {
 						// 使用交互式视图
@@ -255,14 +261,141 @@ date: ${dateStr}
 						}
 					}
 
+					// 获取年份参数
+					let specifiedYear: number | undefined = undefined;
+					if (params.year) {
+						specifiedYear = parseInt(params.year);
+						if (isNaN(specifiedYear)) {
+							specifiedYear = undefined;
+						}
+					}
+
 					// 解析八字字符串
-					const baziInfo = BaziService.parseBaziString(params.bazi, gender, this.settings.baziSect);
+					const baziInfo = BaziService.parseBaziString(params.bazi, gender, this.settings.baziSect, specifiedYear);
+					console.log('解析八字字符串结果:', baziInfo);
+
+					// 如果没有指定年份且有匹配的年份列表，显示年份选择界面
+					if (!specifiedYear && baziInfo.matchingYears && baziInfo.matchingYears.length > 0) {
+						// 使用setTimeout延迟添加年份选择框，确保视图已经渲染完成
+						setTimeout(() => {
+							console.log('开始添加年份选择界面');
+							// 创建提示信息和选择框，添加到视图顶部
+							const tipContainer = el.createDiv({
+								cls: 'bazi-tip-container',
+								attr: { 'style': 'background-color: rgba(255, 255, 0, 0.1); padding: 10px; border-radius: 5px; margin-bottom: 10px; font-size: 0.9em; z-index: 10; position: relative;' }
+							});
+							tipContainer.createDiv({
+								text: '此八字对应多个年份，请点击下方年份按钮选择：',
+								attr: { 'style': 'margin-bottom: 5px;' }
+							});
+
+							// 创建年份按钮容器
+							const yearsContainer = tipContainer.createDiv({
+								attr: { 'style': 'display: flex; flex-wrap: wrap; gap: 5px;' }
+							});
+
+							// 为每个年份创建按钮
+							(baziInfo.matchingYears as number[]).forEach(year => {
+								const yearButton = yearsContainer.createEl('button', {
+									text: year.toString(),
+									attr: { 'style': 'padding: 5px 10px; cursor: pointer; background-color: #f0f0f0; border: 1px solid #ccc; border-radius: 3px;' }
+								});
+								yearButton.addEventListener('click', () => {
+									// 尝试直接更新代码块
+									const newSource = source + (source.trim().endsWith('\n') ? '' : '\n') + `year: ${year}\n`;
+									try {
+										// 获取当前活动的编辑器
+										const activeLeaf = this.app.workspace.activeLeaf;
+										if (activeLeaf && activeLeaf.view instanceof MarkdownView) {
+											const editor = activeLeaf.view.editor;
+											if (editor) {
+												// 查找当前代码块的位置
+												const sourceAttr = el.getAttribute('data-bazi-source');
+												if (sourceAttr) {
+													// 假设代码块内容可以通过属性找到
+													// 直接替换代码块内容
+													this.updateCodeBlockWithEditorAPI(newSource);
+													new Notice(`已选择年份 ${year} 并更新代码块`);
+													console.log(`已选择年份: ${year}, 更新代码块成功: ${newSource}`);
+													console.log('代码块更新成功，检查是否包含年份参数');
+													// 触发页面重新渲染
+													this.app.workspace.trigger('layout-change');
+													console.log('已触发layout-change事件，重新渲染页面');
+													// 直接重新渲染对应的视图元素
+													setTimeout(() => {
+														const el = document.querySelector(`[data-bazi-source="${source}"]`);
+														if (el) {
+															const blockId = el.getAttribute('data-bazi-block-id');
+															const params = this.parseCodeBlockParams(newSource);
+															const gender = params.gender || this.settings.defaultGender;
+															const baziInfo = BaziService.parseBaziString(params.bazi, gender, this.settings.baziSect, year);
+															const id = 'bazi-view-' + Math.random().toString(36).substring(2, 9);
+															el.setAttribute('data-bazi-source', newSource);
+															if (this.settings.useInteractiveView) {
+																new InteractiveBaziView(el as HTMLElement, baziInfo, id);
+															} else {
+																el.innerHTML = BaziService.generateBaziHTML(baziInfo, id);
+																this.addSettingsButtonListeners(el as HTMLElement);
+																this.addTableCellListeners(el as HTMLElement, id, baziInfo);
+															}
+															this.applyDisplayOptions(el as HTMLElement, params);
+															console.log('已直接重新渲染视图元素');
+															// 确保文件内容也被修改并保存，使用唯一标识符准确匹配当前代码块
+															const activeLeaf = this.app.workspace.activeLeaf;
+															if (activeLeaf && activeLeaf.view instanceof MarkdownView) {
+																const editor = activeLeaf.view.editor;
+																const file = activeLeaf.view.file;
+																if (editor && file) {
+																	this.app.vault.read(file).then(content => {
+																		// 使用正则表达式和唯一标识符准确匹配当前代码块
+																		const codeBlockRegex = new RegExp(`\`\`\`bazi\\s*${source.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, '\\$1')}\\s*\`\`\``, 'm');
+																		const updatedContent = content.replace(codeBlockRegex, `\`\`\`bazi\n${newSource}\n\`\`\``);
+																		this.app.vault.modify(file, updatedContent).then(() => {
+																			console.log('文件内容已更新并保存，使用唯一标识符准确匹配当前代码块');
+																			new Notice('文件内容已更新并保存');
+																		}).catch(error => {
+																			console.error('更新文件内容失败:', error);
+																			new Notice('更新文件内容失败');
+																		});
+																	}).catch(error => {
+																		console.error('读取文件内容失败:', error);
+																		new Notice('读取文件内容失败');
+																	});
+																}
+															}
+														} else {
+															console.log('未找到对应的视图元素，无法直接重新渲染');
+														}
+													}, 100);
+												} else {
+													throw new Error('无法找到代码块源内容');
+												}
+											} else {
+												throw new Error('无法获取编辑器实例');
+											}
+										} else {
+											throw new Error('当前活动视图不是Markdown视图');
+										}
+									} catch (error) {
+										new Notice(`更新代码块失败: ${error.message}`);
+										console.error(`更新代码块失败: ${error}`);
+									}
+								});
+							});
+							// 调试信息
+							console.log('年份选择按钮已添加到视图中', baziInfo.matchingYears);
+							console.log('年份选择界面添加完成');
+						}, 100); // 延迟100ms以确保视图渲染完成
+					}
 
 					// 生成唯一ID
 					const id = 'bazi-view-' + Math.random().toString(36).substring(2, 9);
+					// 为代码块添加唯一标识符
+					const blockId = 'bazi-block-' + Math.random().toString(36).substring(2, 9);
 
-					// 添加源代码属性，用于编辑时恢复
+					// 添加源代码属性和唯一标识符，用于编辑时恢复和准确更新
 					el.setAttribute('data-bazi-source', source);
+					el.setAttribute('data-bazi-block-id', blockId);
 
 					if (this.settings.useInteractiveView) {
 						// 使用交互式视图
@@ -279,6 +412,7 @@ date: ${dateStr}
 
 					// 应用额外的显示选项
 					this.applyDisplayOptions(el, params);
+					console.log('应用显示选项:', params);
 				} catch (error) {
 					console.error('八字命盘渲染错误:', error);
 					// 显示错误信息

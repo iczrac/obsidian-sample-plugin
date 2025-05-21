@@ -1,5 +1,6 @@
 import { App, Modal, Setting } from 'obsidian';
 import { BaziService } from 'src/services/BaziService';
+import { BaziInfo } from 'src/types/BaziInfo';
 import { DatePickerModal } from './DatePickerModal';
 
 /**
@@ -107,7 +108,7 @@ export class BaziSettingsModal extends Modal {
                 solarDate: `${this.currentDate.year}-${this.currentDate.month.toString().padStart(2, '0')}-${this.currentDate.day.toString().padStart(2, '0')}`,
                 solarTime: `${this.currentDate.hour.toString().padStart(2, '0')}:0`,
                 // 更新农历日期（简化处理，实际应该通过lunar-typescript库计算）
-                lunarDate: originalBaziInfo.lunarDate.replace(/\d{4}/, this.currentDate.year.toString()),
+                lunarDate: (originalBaziInfo.lunarDate || '').replace(/\d{4}/, this.currentDate.year.toString()),
                 // 保存原始日期信息
                 originalDate: {
                   year: this.currentDate.year,
