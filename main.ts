@@ -13,7 +13,6 @@ interface BaziPluginSettings {
 	autoUpdateCodeBlock: boolean;
 	codeBlockUpdateDelay: number;
 	baziSect: string; // 八字流派
-	defaultGender: string; // 默认性别
 }
 
 const DEFAULT_SETTINGS: BaziPluginSettings = {
@@ -23,7 +22,6 @@ const DEFAULT_SETTINGS: BaziPluginSettings = {
 	autoUpdateCodeBlock: true, // 自动更新代码块
 	codeBlockUpdateDelay: 500, // 代码块更新延迟（毫秒）
 	baziSect: '2', // 默认使用流派2（晚子时日柱算当天）
-	defaultGender: '1' // 默认为男性
 }
 
 export default class BaziPlugin extends Plugin {
@@ -37,8 +35,29 @@ export default class BaziPlugin extends Plugin {
 		this.addCommand({
 			id: 'open-date-picker',
 			name: '输入时间转八字',
-			callback: () => {
-				this.openDatePickerModal();
+			editorCallback: (editor: Editor) => {
+				this.openDatePickerModal((baziInfo) => {
+					// 获取日期字符串
+					const dateStr = `${baziInfo.solarDate} ${baziInfo.solarTime}`;
+
+					// 构建代码块内容
+					let codeBlockContent = `\`\`\`bazi\ndate: ${dateStr}\n`;
+
+					// 添加性别参数
+					if (baziInfo.gender) {
+						const genderLabel = baziInfo.gender === '1' ? '男' : '女';
+						codeBlockContent += `gender: ${genderLabel}\n`;
+					}
+
+					// 完成代码块
+					codeBlockContent += `\`\`\``;
+
+					// 在光标位置插入bazi代码块
+					editor.replaceSelection(codeBlockContent);
+
+					// 显示通知
+					new Notice('八字命盘已插入');
+				});
 			}
 		});
 
@@ -49,63 +68,67 @@ export default class BaziPlugin extends Plugin {
 			editorCallback: (editor: Editor, view: MarkdownView) => {
 				const selection = editor.getSelection();
 				if (selection) {
-					this.openBaziParserModal(selection, (baziInfo) => {
-						// 生成八字信息的HTML
-						const id = 'bazi-view-' + Math.random().toString(36).substring(2, 9);
-						const html = BaziService.generateBaziHTML(baziInfo as any, id);
+					// 清理选中的文本，去除多余的空格
+					const cleanedBazi = selection.replace(/\s+/g, ' ').trim();
 
-						// 替换选中的文本为代码块
-						const dateStr = `${baziInfo.solarDate} ${baziInfo.solarTime}`;
-						editor.replaceSelection(`\`\`\`bazi
-date: ${dateStr}
+					// 检查是否符合八字格式（四个天干地支组合，用空格分隔）
+					const baziPattern = /^([甲乙丙丁戊己庚辛壬癸][子丑寅卯辰巳午未申酉戌亥])\s+([甲乙丙丁戊己庚辛壬癸][子丑寅卯辰巳午未申酉戌亥])\s+([甲乙丙丁戊己庚辛壬癸][子丑寅卯辰巳午未申酉戌亥])\s+([甲乙丙丁戊己庚辛壬癸][子丑寅卯辰巳午未申酉戌亥])$/;
+
+					if (baziPattern.test(cleanedBazi)) {
+						// 直接解析八字，获取可能的年份
+						try {
+							const baziInfo = BaziService.parseBaziString(cleanedBazi);
+
+							// 构建代码块内容
+							let codeBlockContent = `\`\`\`bazi\nbazi: ${cleanedBazi}\n`;
+
+							// 完成代码块
+							codeBlockContent += `\`\`\``;
+
+							// 替换选中的文本为代码块
+							editor.replaceSelection(codeBlockContent);
+							new Notice('八字已转换为代码块');
+						} catch (error) {
+							// 如果解析失败，仅使用基本格式
+							editor.replaceSelection(`\`\`\`bazi
+bazi: ${cleanedBazi}
 \`\`\``);
-					});
+							new Notice('八字已转换为代码块');
+						}
+					} else {
+						// 如果不符合格式，打开解析模态框让用户修改
+						this.openBaziParserModal(selection, (baziInfo) => {
+							// 获取解析后的八字
+							const parsedBazi = `${baziInfo.yearPillar} ${baziInfo.monthPillar} ${baziInfo.dayPillar} ${baziInfo.hourPillar}`;
+
+							// 构建代码块内容
+							let codeBlockContent = `\`\`\`bazi\nbazi: ${parsedBazi}\n`;
+
+							// 添加性别参数
+							if (baziInfo.gender) {
+								const genderLabel = baziInfo.gender === '1' ? '男' : '女';
+								codeBlockContent += `gender: ${genderLabel}\n`;
+							}
+
+							// 不自动添加年份参数，让用户通过年份选择栏自行选择
+
+							// 完成代码块
+							codeBlockContent += `\`\`\``;
+
+							// 替换选中的文本为代码块
+							editor.replaceSelection(codeBlockContent);
+							new Notice('八字已转换为代码块');
+						});
+					}
 				} else {
 					new Notice('请先选择八字文本');
 				}
 			}
 		});
 
-		// 添加命令：在当前位置插入八字信息
-		this.addCommand({
-			id: 'insert-bazi-at-cursor',
-			name: '在当前位置插入八字信息',
-			editorCallback: (editor: Editor, view: MarkdownView) => {
-				this.openDatePickerModal((baziInfo) => {
-					if (this.settings.useInteractiveView) {
-						// 使用交互式视图 - 插入bazi代码块
-						const dateStr = `${baziInfo.solarDate} ${baziInfo.solarTime}`;
 
-						// 在光标位置插入bazi代码块
-						editor.replaceSelection(`\`\`\`bazi
-date: ${dateStr}
-\`\`\``);
 
-						// 显示通知
-						new Notice('八字命盘已插入');
-					}
-				});
-			}
-		});
 
-		// 添加命令：插入交互式八字命盘
-		this.addCommand({
-			id: 'insert-interactive-bazi',
-			name: '插入交互式八字命盘',
-			editorCallback: (editor: Editor) => {
-				this.openDatePickerModal((baziInfo) => {
-					const dateStr = `${baziInfo.solarDate} ${baziInfo.solarTime}`;
-
-					// 在光标位置插入bazi代码块
-					editor.replaceSelection(`\`\`\`bazi
-date: ${dateStr}
-\`\`\``);
-
-					// 显示通知
-					new Notice('八字命盘已插入');
-				});
-			}
-		});
 	}
 
 	async onload() {
@@ -118,9 +141,38 @@ date: ${dateStr}
 		this.loadStyles();
 
 		// 添加左侧图标
-		const ribbonIconEl = this.addRibbonIcon('calendar-clock', '八字命盘', (evt: MouseEvent) => {
-			// 点击图标时打开日期选择模态框
-			this.openDatePickerModal();
+		const ribbonIconEl = this.addRibbonIcon('calendar-clock', '八字命盘', () => {
+			// 获取当前活动的编辑器视图
+			const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
+			if (activeView) {
+				const editor = activeView.editor;
+				// 打开日期选择模态框，并在选择后插入八字信息
+				this.openDatePickerModal((baziInfo) => {
+					// 获取日期字符串
+					const dateStr = `${baziInfo.solarDate} ${baziInfo.solarTime}`;
+
+					// 构建代码块内容
+					let codeBlockContent = `\`\`\`bazi\ndate: ${dateStr}\n`;
+
+					// 添加性别参数
+					if (baziInfo.gender) {
+						const genderLabel = baziInfo.gender === '1' ? '男' : '女';
+						codeBlockContent += `gender: ${genderLabel}\n`;
+					}
+
+					// 完成代码块
+					codeBlockContent += `\`\`\``;
+
+					// 在光标位置插入bazi代码块
+					editor.replaceSelection(codeBlockContent);
+
+					// 显示通知
+					new Notice('八字命盘已插入');
+				});
+			} else {
+				// 如果没有活动的编辑器视图，只打开日期选择模态框
+				this.openDatePickerModal();
+			}
 		});
 		ribbonIconEl.addClass('bazi-plugin-ribbon-class');
 
@@ -167,6 +219,217 @@ date: ${dateStr}
 					const cleanSource = source.replace(/[\n\r"']/g, '').replace(/\s+/g, ' ').trim();
 					el.setAttribute('data-bazi-source', cleanSource);
 					el.setAttribute('data-bazi-block-id', blockId);
+
+					// 如果没有指定性别，显示性别选择界面
+					if (!params.gender) {
+						setTimeout(() => {
+							console.log('开始添加性别选择界面');
+							// 创建性别选择容器，添加到视图顶部
+							const genderContainer = document.createElement('div');
+							genderContainer.className = 'bazi-gender-container';
+							genderContainer.setAttribute('style', 'background-color: rgba(0, 255, 255, 0.1); padding: 10px; border-radius: 5px; margin-bottom: 10px; font-size: 0.9em; z-index: 10; position: relative; width: 100%; box-sizing: border-box;');
+							el.prepend(genderContainer);
+							genderContainer.createDiv({
+								text: '请选择性别：',
+								attr: { 'style': 'margin-bottom: 5px;' }
+							});
+
+							// 创建性别按钮容器
+							const genderButtonsContainer = genderContainer.createDiv({
+								attr: { 'style': 'display: flex; gap: 5px; justify-content: center;' }
+							});
+
+							// 创建性别按钮
+							const maleButton = genderButtonsContainer.createEl('button', {
+								text: '男',
+								attr: { 'style': 'padding: 5px 10px; cursor: pointer; background-color: #f0f0f0; border: 1px solid #ccc; border-radius: 3px;' }
+							});
+							const femaleButton = genderButtonsContainer.createEl('button', {
+								text: '女',
+								attr: { 'style': 'padding: 5px 10px; cursor: pointer; background-color: #f0f0f0; border: 1px solid #ccc; border-radius: 3px;' }
+							});
+
+							// 为性别按钮添加事件监听器
+							maleButton.addEventListener('click', () => {
+								// 处理源代码，确保格式正确
+								let cleanedSource = source.trim();
+								// 移除源代码末尾可能存在的反引号
+								if (cleanedSource.endsWith('```')) {
+									cleanedSource = cleanedSource.substring(0, cleanedSource.length - 3).trim();
+								}
+								// 确保源代码末尾有换行符
+								if (!cleanedSource.endsWith('\n')) {
+									cleanedSource += '\n';
+								}
+								// 添加性别参数
+								const newSource = cleanedSource + `gender: 男\n`;
+								updateCodeBlock(newSource, '男');
+							});
+							femaleButton.addEventListener('click', () => {
+								// 处理源代码，确保格式正确
+								let cleanedSource = source.trim();
+								// 移除源代码末尾可能存在的反引号
+								if (cleanedSource.endsWith('```')) {
+									cleanedSource = cleanedSource.substring(0, cleanedSource.length - 3).trim();
+								}
+								// 确保源代码末尾有换行符
+								if (!cleanedSource.endsWith('\n')) {
+									cleanedSource += '\n';
+								}
+								// 添加性别参数
+								const newSource = cleanedSource + `gender: 女\n`;
+								updateCodeBlock(newSource, '女');
+							});
+
+							// 更新代码块的辅助函数
+							const updateCodeBlock = (newSource: string, genderLabel: string) => {
+								try {
+									const activeLeaf = this.app.workspace.activeLeaf;
+									if (activeLeaf && activeLeaf.view instanceof MarkdownView) {
+										const editor = activeLeaf.view.editor;
+										if (editor) {
+											const sourceAttr = el.getAttribute('data-bazi-source');
+											const blockId = el.getAttribute('data-bazi-block-id');
+											if (sourceAttr && blockId) {
+												this.updateCodeBlockWithEditorAPI(newSource);
+												new Notice(`已选择性别 ${genderLabel} 并更新代码块`);
+												console.log(`已选择性别: ${genderLabel}, 更新代码块成功: ${newSource}`);
+												console.log(`尝试更新代码块，源内容: ${sourceAttr}, 唯一标识符: ${blockId}`);
+												this.app.workspace.trigger('layout-change');
+												setTimeout(() => {
+													const el = document.querySelector(`[data-bazi-block-id="${blockId}"]`);
+													if (el) {
+														const params = this.parseCodeBlockParams(newSource);
+														const gender = params.gender || '';
+														// 重新获取八字信息
+														const dateTime = params.date.trim().split(' ');
+														const dateParts = dateTime[0].split('-').map(Number);
+														const timeParts = dateTime.length > 1 ? dateTime[1].split(':').map(Number) : [0, 0];
+														const year = dateParts[0];
+														const month = dateParts[1];
+														const day = dateParts[2];
+														const hour = timeParts[0];
+														const updatedBaziInfo = BaziService.getBaziFromDate(year, month, day, hour, gender, this.settings.baziSect);
+
+														const id = 'bazi-view-' + Math.random().toString(36).substring(2, 9);
+														const cleanNewSource = newSource.replace(/[\n\r"']/g, '').replace(/\s+/g, ' ').trim();
+														el.setAttribute('data-bazi-source', cleanNewSource);
+														if (this.settings.useInteractiveView) {
+															new InteractiveBaziView(el as HTMLElement, updatedBaziInfo, id);
+														} else {
+															el.innerHTML = BaziService.generateBaziHTML(updatedBaziInfo, id);
+															this.addSettingsButtonListeners(el as HTMLElement);
+															this.addTableCellListeners(el as HTMLElement, id, updatedBaziInfo);
+														}
+														this.applyDisplayOptions(el as HTMLElement, params);
+														console.log('已直接重新渲染视图元素，唯一标识符: ' + blockId);
+														// 隐藏性别选择栏
+														const genderContainer = el.querySelector('.bazi-gender-container');
+														if (genderContainer) {
+															genderContainer.remove();
+														}
+														const activeLeaf = this.app.workspace.activeLeaf;
+														if (activeLeaf && activeLeaf.view instanceof MarkdownView) {
+															const editor = activeLeaf.view.editor;
+															const file = activeLeaf.view.file;
+															if (editor && file) {
+																// 直接使用编辑器API更新代码块，这样可以更精确地控制代码块的替换
+																// 查找文档中的所有代码块
+																const text = editor.getValue();
+																const lines = text.split('\n');
+
+																// 查找所有代码块
+																let inCodeBlock = false;
+																let startLine = -1;
+																let endLine = -1;
+																let blockLanguage = '';
+																let foundBlock = false;
+
+																for (let i = 0; i < lines.length; i++) {
+																	const line = lines[i];
+
+																	if (line.startsWith('```') && !inCodeBlock) {
+																		inCodeBlock = true;
+																		startLine = i;
+																		blockLanguage = line.substring(3).trim();
+																	} else if (line.startsWith('```') && inCodeBlock) {
+																		inCodeBlock = false;
+																		endLine = i;
+
+																		// 检查是否是我们要找的代码块
+																		if (blockLanguage === 'bazi') {
+																			// 检查代码块内容是否包含我们的唯一标识符
+																			let blockContent = '';
+																			for (let j = startLine; j <= endLine; j++) {
+																				blockContent += lines[j] + '\n';
+																			}
+
+																			if (blockContent.includes(`data-bazi-block-id="${blockId}"`)) {
+																				foundBlock = true;
+																				break;
+																			}
+																		}
+																	}
+																}
+
+																if (foundBlock && startLine >= 0 && endLine >= 0) {
+																	// 构建新的代码块内容
+																	const trimmedSource = newSource.trim();
+
+																	// 使用文件API更新文件内容
+																	// 获取当前文件
+																	const file = this.app.workspace.getActiveFile();
+																	if (file) {
+																		// 读取文件内容
+																		this.app.vault.read(file).then(content => {
+																			// 将内容分割成行
+																			const lines = content.split('\n');
+
+																			// 替换代码块
+																			const beforeBlock = lines.slice(0, startLine).join('\n');
+																			const afterBlock = lines.slice(endLine + 1).join('\n');
+																			const newBlock = '```bazi\n' + trimmedSource + '\n```';
+
+																			// 构建新的文件内容
+																			const newContent = beforeBlock + (beforeBlock ? '\n' : '') + newBlock + (afterBlock ? '\n' : '') + afterBlock;
+
+																			// 更新文件内容
+																			this.app.vault.modify(file, newContent);
+																		});
+																	}
+
+																	console.log('代码块已更新，使用文件API直接替换');
+																	new Notice(`已选择性别 ${genderLabel} 并更新代码块`);
+																} else {
+																	console.error('未找到匹配的代码块');
+																	new Notice('更新代码块失败：未找到匹配的代码块');
+																}
+															}
+														}
+													} else {
+														console.log('未找到对应的视图元素，无法直接重新渲染，唯一标识符: ' + blockId);
+													}
+												}, 100);
+											} else {
+												throw new Error('无法找到代码块源内容或唯一标识符');
+											}
+										} else {
+											throw new Error('无法获取编辑器实例');
+										}
+									} else {
+										throw new Error('当前活动视图不是Markdown视图');
+									}
+								} catch (error) {
+									new Notice(`更新代码块失败: ${error.message}`);
+									console.error(`更新代码块失败: ${error}`);
+								}
+							};
+
+							// 调试信息
+							console.log('性别选择按钮已添加到视图中');
+							console.log('性别选择界面添加完成');
+						}, 100); // 延迟100ms以确保视图渲染完成
+					}
 
 					if (this.settings.useInteractiveView) {
 						// 使用交互式视图
@@ -228,6 +491,218 @@ date: ${dateStr}
 					const cleanSource = source.replace(/[\n\r"']/g, '').replace(/\s+/g, ' ').trim();
 					el.setAttribute('data-bazi-source', cleanSource);
 					el.setAttribute('data-bazi-block-id', blockId);
+
+					// 如果没有指定性别，显示性别选择界面
+					if (!params.gender) {
+						setTimeout(() => {
+							console.log('开始添加性别选择界面');
+							// 创建性别选择容器，添加到视图顶部
+							const genderContainer = document.createElement('div');
+							genderContainer.className = 'bazi-gender-container';
+							genderContainer.setAttribute('style', 'background-color: rgba(0, 255, 255, 0.1); padding: 10px; border-radius: 5px; margin-bottom: 10px; font-size: 0.9em; z-index: 10; position: relative; width: 100%; box-sizing: border-box;');
+							el.prepend(genderContainer);
+							genderContainer.createDiv({
+								text: '请选择性别：',
+								attr: { 'style': 'margin-bottom: 5px;' }
+							});
+
+							// 创建性别按钮容器
+							const genderButtonsContainer = genderContainer.createDiv({
+								attr: { 'style': 'display: flex; gap: 5px; justify-content: center;' }
+							});
+
+							// 创建性别按钮
+							const maleButton = genderButtonsContainer.createEl('button', {
+								text: '男',
+								attr: { 'style': 'padding: 5px 10px; cursor: pointer; background-color: #f0f0f0; border: 1px solid #ccc; border-radius: 3px;' }
+							});
+							const femaleButton = genderButtonsContainer.createEl('button', {
+								text: '女',
+								attr: { 'style': 'padding: 5px 10px; cursor: pointer; background-color: #f0f0f0; border: 1px solid #ccc; border-radius: 3px;' }
+							});
+
+							// 为性别按钮添加事件监听器
+							maleButton.addEventListener('click', () => {
+								// 处理源代码，确保格式正确
+								let cleanedSource = source.trim();
+								// 移除源代码末尾可能存在的反引号
+								if (cleanedSource.endsWith('```')) {
+									cleanedSource = cleanedSource.substring(0, cleanedSource.length - 3).trim();
+								}
+								// 确保源代码末尾有换行符
+								if (!cleanedSource.endsWith('\n')) {
+									cleanedSource += '\n';
+								}
+								// 添加性别参数
+								const newSource = cleanedSource + `gender: 男\n`;
+								updateCodeBlock(newSource, '男');
+							});
+							femaleButton.addEventListener('click', () => {
+								// 处理源代码，确保格式正确
+								let cleanedSource = source.trim();
+								// 移除源代码末尾可能存在的反引号
+								if (cleanedSource.endsWith('```')) {
+									cleanedSource = cleanedSource.substring(0, cleanedSource.length - 3).trim();
+								}
+								// 确保源代码末尾有换行符
+								if (!cleanedSource.endsWith('\n')) {
+									cleanedSource += '\n';
+								}
+								// 添加性别参数
+								const newSource = cleanedSource + `gender: 女\n`;
+								updateCodeBlock(newSource, '女');
+							});
+
+							// 更新代码块的辅助函数
+							const updateCodeBlock = (newSource: string, genderLabel: string) => {
+								try {
+									const activeLeaf = this.app.workspace.activeLeaf;
+									if (activeLeaf && activeLeaf.view instanceof MarkdownView) {
+										const editor = activeLeaf.view.editor;
+										if (editor) {
+											const sourceAttr = el.getAttribute('data-bazi-source');
+											const blockId = el.getAttribute('data-bazi-block-id');
+											if (sourceAttr && blockId) {
+												this.updateCodeBlockWithEditorAPI(newSource);
+												new Notice(`已选择性别 ${genderLabel} 并更新代码块`);
+												console.log(`已选择性别: ${genderLabel}, 更新代码块成功: ${newSource}`);
+												console.log(`尝试更新代码块，源内容: ${sourceAttr}, 唯一标识符: ${blockId}`);
+												this.app.workspace.trigger('layout-change');
+												setTimeout(() => {
+													const el = document.querySelector(`[data-bazi-block-id="${blockId}"]`);
+													if (el) {
+														const params = this.parseCodeBlockParams(newSource);
+														const gender = params.gender || '';
+														// 重新获取八字信息
+														const dateTime = params.lunar.trim().split(' ');
+														const dateParts = dateTime[0].split('-').map(Number);
+														const timeParts = dateTime.length > 1 ? dateTime[1].split(':').map(Number) : [0, 0];
+														const year = dateParts[0];
+														const month = dateParts[1];
+														const day = dateParts[2];
+														const hour = timeParts[0];
+														const isLeap = params.leap === 'true';
+														const updatedBaziInfo = BaziService.getBaziFromLunarDate(year, month, day, hour, isLeap, gender, this.settings.baziSect);
+
+														const id = 'bazi-view-' + Math.random().toString(36).substring(2, 9);
+														const cleanNewSource = newSource.replace(/[\n\r"']/g, '').replace(/\s+/g, ' ').trim();
+														el.setAttribute('data-bazi-source', cleanNewSource);
+														if (this.settings.useInteractiveView) {
+															new InteractiveBaziView(el as HTMLElement, updatedBaziInfo, id);
+														} else {
+															el.innerHTML = BaziService.generateBaziHTML(updatedBaziInfo, id);
+															this.addSettingsButtonListeners(el as HTMLElement);
+															this.addTableCellListeners(el as HTMLElement, id, updatedBaziInfo);
+														}
+														this.applyDisplayOptions(el as HTMLElement, params);
+														console.log('已直接重新渲染视图元素，唯一标识符: ' + blockId);
+														// 隐藏性别选择栏
+														const genderContainer = el.querySelector('.bazi-gender-container');
+														if (genderContainer) {
+															genderContainer.remove();
+														}
+														const activeLeaf = this.app.workspace.activeLeaf;
+														if (activeLeaf && activeLeaf.view instanceof MarkdownView) {
+															const editor = activeLeaf.view.editor;
+															const file = activeLeaf.view.file;
+															if (editor && file) {
+																// 直接使用编辑器API更新代码块，这样可以更精确地控制代码块的替换
+																// 查找文档中的所有代码块
+																const text = editor.getValue();
+																const lines = text.split('\n');
+
+																// 查找所有代码块
+																let inCodeBlock = false;
+																let startLine = -1;
+																let endLine = -1;
+																let blockLanguage = '';
+																let foundBlock = false;
+
+																for (let i = 0; i < lines.length; i++) {
+																	const line = lines[i];
+
+																	if (line.startsWith('```') && !inCodeBlock) {
+																		inCodeBlock = true;
+																		startLine = i;
+																		blockLanguage = line.substring(3).trim();
+																	} else if (line.startsWith('```') && inCodeBlock) {
+																		inCodeBlock = false;
+																		endLine = i;
+
+																		// 检查是否是我们要找的代码块
+																		if (blockLanguage === 'bazi') {
+																			// 检查代码块内容是否包含我们的唯一标识符
+																			let blockContent = '';
+																			for (let j = startLine; j <= endLine; j++) {
+																				blockContent += lines[j] + '\n';
+																			}
+
+																			if (blockContent.includes(`data-bazi-block-id="${blockId}"`)) {
+																				foundBlock = true;
+																				break;
+																			}
+																		}
+																	}
+																}
+
+																if (foundBlock && startLine >= 0 && endLine >= 0) {
+																	// 构建新的代码块内容
+																	const trimmedSource = newSource.trim();
+
+																	// 使用文件API更新文件内容
+																	// 获取当前文件
+																	const file = this.app.workspace.getActiveFile();
+																	if (file) {
+																		// 读取文件内容
+																		this.app.vault.read(file).then(content => {
+																			// 将内容分割成行
+																			const lines = content.split('\n');
+
+																			// 替换代码块
+																			const beforeBlock = lines.slice(0, startLine).join('\n');
+																			const afterBlock = lines.slice(endLine + 1).join('\n');
+																			const newBlock = '```bazi\n' + trimmedSource + '\n```';
+
+																			// 构建新的文件内容
+																			const newContent = beforeBlock + (beforeBlock ? '\n' : '') + newBlock + (afterBlock ? '\n' : '') + afterBlock;
+
+																			// 更新文件内容
+																			this.app.vault.modify(file, newContent);
+																		});
+																	}
+
+																	console.log('代码块已更新，使用文件API直接替换');
+																	new Notice(`已选择性别 ${genderLabel} 并更新代码块`);
+																} else {
+																	console.error('未找到匹配的代码块');
+																	new Notice('更新代码块失败：未找到匹配的代码块');
+																}
+															}
+														}
+													} else {
+														console.log('未找到对应的视图元素，无法直接重新渲染，唯一标识符: ' + blockId);
+													}
+												}, 100);
+											} else {
+												throw new Error('无法找到代码块源内容或唯一标识符');
+											}
+										} else {
+											throw new Error('无法获取编辑器实例');
+										}
+									} else {
+										throw new Error('当前活动视图不是Markdown视图');
+									}
+								} catch (error) {
+									new Notice(`更新代码块失败: ${error.message}`);
+									console.error(`更新代码块失败: ${error}`);
+								}
+							};
+
+							// 调试信息
+							console.log('性别选择按钮已添加到视图中');
+							console.log('性别选择界面添加完成');
+						}, 100); // 延迟100ms以确保视图渲染完成
+					}
 
 					if (this.settings.useInteractiveView) {
 						// 使用交互式视图
@@ -344,7 +819,7 @@ date: ${dateStr}
 														if (el) {
 															const blockId = el.getAttribute('data-bazi-block-id');
 															const params = this.parseCodeBlockParams(newSource);
-															const gender = params.gender || this.settings.defaultGender;
+															const gender = params.gender || '';
 															const baziInfo = BaziService.parseBaziString(params.bazi, gender, this.settings.baziSect, year);
 															const id = 'bazi-view-' + Math.random().toString(36).substring(2, 9);
 															// 清理newSource中的特殊字符
@@ -726,9 +1201,223 @@ date: ${dateStr}
 
 					// 生成唯一ID
 					const id = 'bazi-view-' + Math.random().toString(36).substring(2, 9);
+					// 为代码块添加唯一标识符
+					const blockId = 'bazi-block-' + Math.random().toString(36).substring(2, 9);
 
-					// 添加源代码属性，用于编辑时恢复
-					el.setAttribute('data-bazi-source', source);
+					// 添加源代码属性和唯一标识符，用于编辑时恢复和准确更新
+					// 清理source中的特殊字符，确保选择器有效
+					const cleanSource = source.replace(/[\n\r"']/g, '').replace(/\s+/g, ' ').trim();
+					el.setAttribute('data-bazi-source', cleanSource);
+					el.setAttribute('data-bazi-block-id', blockId);
+
+					// 如果没有指定性别，显示性别选择界面
+					if (!params.gender) {
+						setTimeout(() => {
+							console.log('开始添加性别选择界面');
+							// 创建性别选择容器，添加到视图顶部
+							const genderContainer = document.createElement('div');
+							genderContainer.className = 'bazi-gender-container';
+							genderContainer.setAttribute('style', 'background-color: rgba(0, 255, 255, 0.1); padding: 10px; border-radius: 5px; margin-bottom: 10px; font-size: 0.9em; z-index: 10; position: relative; width: 100%; box-sizing: border-box;');
+							el.prepend(genderContainer);
+							genderContainer.createDiv({
+								text: '请选择性别：',
+								attr: { 'style': 'margin-bottom: 5px;' }
+							});
+
+							// 创建性别按钮容器
+							const genderButtonsContainer = genderContainer.createDiv({
+								attr: { 'style': 'display: flex; gap: 5px; justify-content: center;' }
+							});
+
+							// 创建性别按钮
+							const maleButton = genderButtonsContainer.createEl('button', {
+								text: '男',
+								attr: { 'style': 'padding: 5px 10px; cursor: pointer; background-color: #f0f0f0; border: 1px solid #ccc; border-radius: 3px;' }
+							});
+							const femaleButton = genderButtonsContainer.createEl('button', {
+								text: '女',
+								attr: { 'style': 'padding: 5px 10px; cursor: pointer; background-color: #f0f0f0; border: 1px solid #ccc; border-radius: 3px;' }
+							});
+
+							// 为性别按钮添加事件监听器
+							maleButton.addEventListener('click', () => {
+								// 处理源代码，确保格式正确
+								let cleanedSource = source.trim();
+								// 移除源代码末尾可能存在的反引号
+								if (cleanedSource.endsWith('```')) {
+									cleanedSource = cleanedSource.substring(0, cleanedSource.length - 3).trim();
+								}
+								// 确保源代码末尾有换行符
+								if (!cleanedSource.endsWith('\n')) {
+									cleanedSource += '\n';
+								}
+								// 添加性别参数
+								const newSource = cleanedSource + `gender: 男\n`;
+								updateCodeBlock(newSource, '男');
+							});
+							femaleButton.addEventListener('click', () => {
+								// 处理源代码，确保格式正确
+								let cleanedSource = source.trim();
+								// 移除源代码末尾可能存在的反引号
+								if (cleanedSource.endsWith('```')) {
+									cleanedSource = cleanedSource.substring(0, cleanedSource.length - 3).trim();
+								}
+								// 确保源代码末尾有换行符
+								if (!cleanedSource.endsWith('\n')) {
+									cleanedSource += '\n';
+								}
+								// 添加性别参数
+								const newSource = cleanedSource + `gender: 女\n`;
+								updateCodeBlock(newSource, '女');
+							});
+
+							// 更新代码块的辅助函数
+							const updateCodeBlock = (newSource: string, genderLabel: string) => {
+								try {
+									const activeLeaf = this.app.workspace.activeLeaf;
+									if (activeLeaf && activeLeaf.view instanceof MarkdownView) {
+										const editor = activeLeaf.view.editor;
+										if (editor) {
+											const sourceAttr = el.getAttribute('data-bazi-source');
+											const blockId = el.getAttribute('data-bazi-block-id');
+											if (sourceAttr && blockId) {
+												this.updateCodeBlockWithEditorAPI(newSource);
+												new Notice(`已选择性别 ${genderLabel} 并更新代码块`);
+												console.log(`已选择性别: ${genderLabel}, 更新代码块成功: ${newSource}`);
+												console.log(`尝试更新代码块，源内容: ${sourceAttr}, 唯一标识符: ${blockId}`);
+												this.app.workspace.trigger('layout-change');
+												setTimeout(() => {
+													const el = document.querySelector(`[data-bazi-block-id="${blockId}"]`);
+													if (el) {
+														const params = this.parseCodeBlockParams(newSource);
+														const gender = params.gender || '';
+														// 重新获取八字信息
+														const now = new Date();
+														const year = now.getFullYear();
+														const month = now.getMonth() + 1;
+														const day = now.getDate();
+														const hour = now.getHours();
+														const updatedBaziInfo = BaziService.getBaziFromDate(year, month, day, hour, gender, this.settings.baziSect);
+
+														const id = 'bazi-view-' + Math.random().toString(36).substring(2, 9);
+														const cleanNewSource = newSource.replace(/[\n\r"']/g, '').replace(/\s+/g, ' ').trim();
+														el.setAttribute('data-bazi-source', cleanNewSource);
+														if (this.settings.useInteractiveView) {
+															new InteractiveBaziView(el as HTMLElement, updatedBaziInfo, id);
+														} else {
+															el.innerHTML = BaziService.generateBaziHTML(updatedBaziInfo, id);
+															this.addSettingsButtonListeners(el as HTMLElement);
+															this.addTableCellListeners(el as HTMLElement, id, updatedBaziInfo);
+														}
+														this.applyDisplayOptions(el as HTMLElement, params);
+														console.log('已直接重新渲染视图元素，唯一标识符: ' + blockId);
+														// 隐藏性别选择栏
+														const genderContainer = el.querySelector('.bazi-gender-container');
+														if (genderContainer) {
+															genderContainer.remove();
+														}
+														const activeLeaf = this.app.workspace.activeLeaf;
+														if (activeLeaf && activeLeaf.view instanceof MarkdownView) {
+															const editor = activeLeaf.view.editor;
+															const file = activeLeaf.view.file;
+															if (editor && file) {
+																// 直接使用编辑器API更新代码块，这样可以更精确地控制代码块的替换
+																// 查找文档中的所有代码块
+																const text = editor.getValue();
+																const lines = text.split('\n');
+
+																// 查找所有代码块
+																let inCodeBlock = false;
+																let startLine = -1;
+																let endLine = -1;
+																let blockLanguage = '';
+																let foundBlock = false;
+
+																for (let i = 0; i < lines.length; i++) {
+																	const line = lines[i];
+
+																	if (line.startsWith('```') && !inCodeBlock) {
+																		inCodeBlock = true;
+																		startLine = i;
+																		blockLanguage = line.substring(3).trim();
+																	} else if (line.startsWith('```') && inCodeBlock) {
+																		inCodeBlock = false;
+																		endLine = i;
+
+																		// 检查是否是我们要找的代码块
+																		if (blockLanguage === 'bazi') {
+																			// 检查代码块内容是否包含我们的唯一标识符
+																			let blockContent = '';
+																			for (let j = startLine; j <= endLine; j++) {
+																				blockContent += lines[j] + '\n';
+																			}
+
+																			if (blockContent.includes(`data-bazi-block-id="${blockId}"`)) {
+																				foundBlock = true;
+																				break;
+																			}
+																		}
+																	}
+																}
+
+																if (foundBlock && startLine >= 0 && endLine >= 0) {
+																	// 构建新的代码块内容
+																	const trimmedSource = newSource.trim();
+
+																	// 使用文件API更新文件内容
+																	// 获取当前文件
+																	const file = this.app.workspace.getActiveFile();
+																	if (file) {
+																		// 读取文件内容
+																		this.app.vault.read(file).then(content => {
+																			// 将内容分割成行
+																			const lines = content.split('\n');
+
+																			// 替换代码块
+																			const beforeBlock = lines.slice(0, startLine).join('\n');
+																			const afterBlock = lines.slice(endLine + 1).join('\n');
+																			const newBlock = '```bazi\n' + trimmedSource + '\n```';
+
+																			// 构建新的文件内容
+																			const newContent = beforeBlock + (beforeBlock ? '\n' : '') + newBlock + (afterBlock ? '\n' : '') + afterBlock;
+
+																			// 更新文件内容
+																			this.app.vault.modify(file, newContent);
+																		});
+																	}
+
+																	console.log('代码块已更新，使用文件API直接替换');
+																	new Notice(`已选择性别 ${genderLabel} 并更新代码块`);
+																} else {
+																	console.error('未找到匹配的代码块');
+																	new Notice('更新代码块失败：未找到匹配的代码块');
+																}
+															}
+														}
+													} else {
+														console.log('未找到对应的视图元素，无法直接重新渲染，唯一标识符: ' + blockId);
+													}
+												}, 100);
+											} else {
+												throw new Error('无法找到代码块源内容或唯一标识符');
+											}
+										} else {
+											throw new Error('无法获取编辑器实例');
+										}
+									} else {
+										throw new Error('当前活动视图不是Markdown视图');
+									}
+								} catch (error) {
+									new Notice(`更新代码块失败: ${error.message}`);
+									console.error(`更新代码块失败: ${error}`);
+								}
+							};
+
+							// 调试信息
+							console.log('性别选择按钮已添加到视图中');
+							console.log('性别选择界面添加完成');
+						}, 100); // 延迟100ms以确保视图渲染完成
+					}
 
 					if (this.settings.useInteractiveView) {
 						// 使用交互式视图
@@ -3040,11 +3729,10 @@ class BaziSettingTab extends PluginSettingTab {
 		containerEl.createEl('h3', {text: '使用说明'});
 
 		const usageList = containerEl.createEl('ul');
-		usageList.createEl('li', {text: '点击左侧栏的八字命盘图标或使用命令面板中的"输入时间转八字"命令可以打开日期选择模态框'});
-		usageList.createEl('li', {text: '使用命令面板中的"在当前位置插入八字信息"命令可以在光标位置插入八字命盘'});
-		usageList.createEl('li', {text: '使用命令面板中的"插入交互式八字命盘"命令可以在光标位置插入交互式八字命盘'});
+		usageList.createEl('li', {text: '点击左侧栏的八字命盘图标或使用命令面板中的"输入时间转八字"命令可以在光标位置插入八字命盘'});
 		usageList.createEl('li', {text: '在交互式八字命盘中，点击右上角的设置图标可以调整参数'});
 		usageList.createEl('li', {text: '选中八字文本后，使用命令面板中的"解析选中的八字"命令可以解析八字并生成详细信息'});
+		usageList.createEl('li', {text: '所有类型的八字代码块（日期、农历、纯八字、当前时间）都支持性别选择功能，如果未指定性别，会显示性别选择按钮'});
 
 		containerEl.createEl('h3', {text: '代码块用法'});
 
@@ -3053,7 +3741,7 @@ class BaziSettingTab extends PluginSettingTab {
 		});
 		const codeExample = containerEl.createEl('pre');
 		codeExample.createEl('code', {
-			text: '```bazi\ndate: 1986-05-29 12:00\n```'
+			text: '```bazi\ndate: 1986-05-29 12:00\ngender: 男\n```'
 		});
 
 		containerEl.createEl('p', {
@@ -3061,7 +3749,7 @@ class BaziSettingTab extends PluginSettingTab {
 		});
 		const codeExample3 = containerEl.createEl('pre');
 		codeExample3.createEl('code', {
-			text: '```bazi\nlunar: 1986-4-21 12:00\nleap: false\n```'
+			text: '```bazi\nlunar: 1986-4-21 12:00\nleap: false\ngender: 女\n```'
 		});
 
 		containerEl.createEl('p', {
@@ -3069,7 +3757,7 @@ class BaziSettingTab extends PluginSettingTab {
 		});
 		const codeExample4 = containerEl.createEl('pre');
 		codeExample4.createEl('code', {
-			text: '```bazi\nnow: true\n```'
+			text: '```bazi\nnow: true\ngender: 男\n```'
 		});
 
 		containerEl.createEl('p', {
@@ -3077,7 +3765,7 @@ class BaziSettingTab extends PluginSettingTab {
 		});
 		const codeExample2 = containerEl.createEl('pre');
 		codeExample2.createEl('code', {
-			text: '```bazi\nbazi: 甲子 乙丑 丙寅 丁卯\n```'
+			text: '```bazi\nbazi: 甲子 乙丑 丙寅 丁卯\ngender: 女\nyear: 1984\n```'
 		});
 
 		containerEl.createEl('h3', {text: '高级选项'});
@@ -3087,11 +3775,25 @@ class BaziSettingTab extends PluginSettingTab {
 		});
 		const codeExample5 = containerEl.createEl('pre');
 		codeExample5.createEl('code', {
-			text: '```bazi\ndate: 1986-05-29 12:00\ntitle: 我的八字命盘\nshowWuxing: true\nshowSpecialInfo: true\ntheme: colorful\n```'
+			text: '```bazi\ndate: 1986-05-29 12:00\ngender: 男\ntitle: 我的八字命盘\nshowWuxing: true\nshowSpecialInfo: true\ntheme: colorful\n```'
 		});
 
 		containerEl.createEl('p', {
 			text: '主题选项：默认、dark（暗色）、light（亮色）、colorful（彩色）'
+		});
+
+		containerEl.createEl('h3', {text: '性别和年份参数'});
+
+		containerEl.createEl('p', {
+			text: '性别参数（gender）：用于大运计算，可以是"男"、"女"、"male"、"female"、"1"（男）、"0"（女）'
+		});
+
+		containerEl.createEl('p', {
+			text: '年份参数（year）：仅在使用纯八字（bazi）时需要，用于指定八字所在的年份，如果不指定，会显示年份选择按钮'
+		});
+
+		containerEl.createEl('p', {
+			text: '如果未指定性别，会显示性别选择按钮，点击后会自动更新代码块并添加性别参数'
 		});
 	}
 }

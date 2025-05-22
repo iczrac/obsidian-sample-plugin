@@ -11,7 +11,7 @@ export class BaziSettingsModal extends Modal {
   private baziId: string;
   private currentDate: { year: number; month: number; day: number; hour: number };
   private onUpdate: (baziInfo: any) => void;
-  private gender: string = '1'; // 默认为男性
+  private gender: string = ''; // 默认为空
   private calculationMethod: string = '0'; // 默认为传统排盘
   private baziSect: string = '2'; // 默认为流派2（晚子时日柱算当天）
   private showWuxing: boolean = true; // 默认显示五行分析
@@ -158,6 +158,7 @@ export class BaziSettingsModal extends Modal {
       .setDesc('选择性别，用于大运计算')
       .addDropdown(dropdown => {
         dropdown
+          .addOption('', '请选择')
           .addOption('1', '男')
           .addOption('0', '女')
           .setValue(this.gender)

@@ -1,3 +1,6 @@
+// 替换4：修改BaziParserModal类
+// 查找src/ui/BaziParserModal.ts文件，替换为以下代码：
+
 import { App, Modal, Setting, Notice } from 'obsidian';
 import { BaziService } from '../services/BaziService';
 
@@ -7,6 +10,8 @@ import { BaziService } from '../services/BaziService';
 export class BaziParserModal extends Modal {
   private baziString: string = '';
   private onParsed: (baziInfo: any) => void;
+  private gender: string = '1'; // 默认为男性
+  private specifiedYear: number | undefined;
 
   constructor(app: App, initialBazi: string = '', onParsed: (baziInfo: any) => void) {
     super(app);
@@ -16,12 +21,12 @@ export class BaziParserModal extends Modal {
 
   onOpen() {
     const { contentEl } = this;
-
+    
     contentEl.createEl('h2', { text: '解析八字' });
-
+    
     // 说明文本
-    contentEl.createEl('p', {
-      text: '请输入八字，格式为"年柱 月柱 日柱 时柱"，如"甲子 乙丑 丙寅 丁卯"'
+    contentEl.createEl('p', { 
+      text: '请输入八字，格式为"年柱 月柱 日柱 时柱"，如"甲子 乙丑 丙寅 丁卯"' 
     });
 
     // 八字输入
@@ -58,10 +63,9 @@ export class BaziParserModal extends Modal {
       .setDesc('选择性别，用于大运计算')
       .addDropdown(dropdown => {
         dropdown
-          .addOption('', '请选择')
           .addOption('1', '男')
           .addOption('0', '女')
-          .setValue(this.gender)
+          .setValue('1')
           .onChange(value => {
             this.gender = value;
           });
@@ -81,30 +85,26 @@ export class BaziParserModal extends Modal {
               // 清除之前的错误信息
               errorDiv.empty();
               errorDiv.hide();
-
+              
               // 解析八字，传入性别和年份参数
               const baziInfo = BaziService.parseBaziString(
-                this.baziString,
-                this.gender,
+                this.baziString, 
+                this.gender || '1', 
                 '2', // 使用默认流派
                 this.specifiedYear
               );
-
-              // 确保性别和指定年份信息被传递给回调函数
-              baziInfo.gender = this.gender;
-              baziInfo.specifiedYear = this.specifiedYear;
-
+              
               // 调用回调函数
               this.onParsed(baziInfo);
-
+              
               // 关闭模态框
               this.close();
-
+              
               // 显示成功通知
               new Notice('八字解析成功');
             } catch (error) {
               console.error('解析八字出错:', error);
-
+              
               // 显示错误信息
               errorDiv.setText(`错误: ${error.message}`);
               errorDiv.show();
@@ -117,8 +117,4 @@ export class BaziParserModal extends Modal {
     const { contentEl } = this;
     contentEl.empty();
   }
-
-  // 添加性别和年份属性
-  private gender: string = ''; // 默认为空
-  private specifiedYear: number | undefined;
 }

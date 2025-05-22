@@ -9,6 +9,7 @@ export interface BaziInfo {
   gender?: string;
   birthYear?: string; // 出生年份
   matchingYears?: number[]; // 匹配的年份列表
+  specifiedYear?: number; // 用户指定的年份
 
   // 八字信息
   yearStem?: string;
@@ -139,13 +140,13 @@ export interface BaziInfo {
 
   // 日主旺衰详情
   riZhuStrengthDetails?: any;
-  
+
   // 柱信息
   yearPillar?: string;
   monthPillar?: string;
   dayPillar?: string;
   hourPillar?: string;
-  
+
   // 设置信息
   baziSect?: string;
   showWuxing?: boolean;
@@ -157,7 +158,7 @@ export interface BaziInfo {
     day: number;
     hour: number;
   };
-  
+
   // 完整信息
   fullString?: string;
 }

@@ -8,7 +8,7 @@ export class DatePickerModal extends Modal {
   private date: moment.Moment;
   private hour: number = 0;
   private onSubmit: (baziInfo: any) => void;
-  private defaultGender: string = '1'; // 默认为男性
+  private gender: string = ''; // 性别，默认为空
   private baziSect: string = '2'; // 默认为流派2
 
   constructor(app: App, onSubmit: (baziInfo: any) => void) {
@@ -16,12 +16,11 @@ export class DatePickerModal extends Modal {
     this.date = moment();
     this.onSubmit = onSubmit;
 
-    // 尝试从插件设置中获取默认性别和流派
+    // 尝试从插件设置中获取流派
     try {
       // @ts-ignore - 忽略类型检查
       const plugin = app.plugins.plugins["bazi-obsidian"];
       if (plugin && plugin.settings) {
-        this.defaultGender = plugin.settings.defaultGender || '1';
         this.baziSect = plugin.settings.baziSect || '2';
       }
     } catch (e) {
@@ -64,6 +63,21 @@ export class DatePickerModal extends Modal {
           });
       });
 
+    // 性别选择
+    new Setting(contentEl)
+      .setName('性别')
+      .setDesc('选择性别，用于大运计算')
+      .addDropdown(dropdown => {
+        dropdown
+          .addOption('', '请选择')
+          .addOption('1', '男')
+          .addOption('0', '女')
+          .setValue(this.gender)
+          .onChange(value => {
+            this.gender = value;
+          });
+      });
+
     // 提交按钮
     new Setting(contentEl)
       .addButton(button => {
@@ -76,7 +90,10 @@ export class DatePickerModal extends Modal {
               const day = this.date.date();
 
               // 获取八字信息
-              const baziInfo = BaziService.getBaziFromDate(year, month, day, this.hour, this.defaultGender, this.baziSect);
+              const baziInfo = BaziService.getBaziFromDate(year, month, day, this.hour, this.gender, this.baziSect);
+
+              // 确保性别信息被传递给回调函数
+              baziInfo.gender = this.gender;
 
               // 调用回调函数
               this.onSubmit(baziInfo);
