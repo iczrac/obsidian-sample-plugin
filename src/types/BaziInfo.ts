@@ -59,6 +59,7 @@ export interface BaziInfo {
   monthShiShenGan?: string;
   dayShiShenGan?: string;
   timeShiShenGan?: string;
+  hourShiShenGan?: string; // 添加时柱天干十神
   yearShiShen?: string;
   monthShiShen?: string;
   dayShiShen?: string;
@@ -83,6 +84,10 @@ export interface BaziInfo {
   monthShenSha?: string[];
   dayShenSha?: string[];
   hourShenSha?: string[];
+
+  // 组合信息
+  sanHeJu?: string | null; // 三合局
+  sanHuiJu?: string | null; // 三会局
 
   // 格局信息
   geJu?: string;

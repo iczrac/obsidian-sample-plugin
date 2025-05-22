@@ -392,15 +392,22 @@ export class BaziService {
     static formatBaziInfo(solar, lunar, eightChar, gender = '1', sect = '2') {
         // 设置八字流派
         eightChar.setSect(parseInt(sect));
+
+        // 先获取日干，因为计算十神需要以日干为主
+        const dayStem = eightChar.getDayGan();
+        const dayBranch = eightChar.getDayZhi();
+
         // 年柱
         const yearStem = eightChar.getYearGan();
         const yearBranch = eightChar.getYearZhi();
         const yearPillar = yearStem + yearBranch;
-        const yearHideGan = eightChar.getYearHideGan().join(',');
+        // 使用自定义的藏干方法，而不是lunar-typescript库的方法
+        const yearHideGan = this.getHideGan(yearBranch);
         const yearWuXing = eightChar.getYearWuXing();
         const yearNaYin = eightChar.getYearNaYin();
         const yearShiShenGan = eightChar.getYearShiShenGan();
-        const yearShiShenZhi = eightChar.getYearShiShenZhi();
+        // 使用自定义的地支藏干十神方法
+        const yearShiShenZhi = this.getHiddenShiShen(dayStem, yearBranch);
         const yearDiShi = eightChar.getYearDiShi();
         // 添加错误处理，防止旬空计算失败
         let yearXunKong = '';
@@ -418,11 +425,13 @@ export class BaziService {
         const monthStem = eightChar.getMonthGan();
         const monthBranch = eightChar.getMonthZhi();
         const monthPillar = monthStem + monthBranch;
-        const monthHideGan = eightChar.getMonthHideGan().join(',');
+        // 使用自定义的藏干方法
+        const monthHideGan = this.getHideGan(monthBranch);
         const monthWuXing = eightChar.getMonthWuXing();
         const monthNaYin = eightChar.getMonthNaYin();
         const monthShiShenGan = eightChar.getMonthShiShenGan();
-        const monthShiShenZhi = eightChar.getMonthShiShenZhi();
+        // 使用自定义的地支藏干十神方法
+        const monthShiShenZhi = this.getHiddenShiShen(dayStem, monthBranch);
         const monthDiShi = eightChar.getMonthDiShi();
         // 添加错误处理，防止旬空计算失败
         let monthXunKong = '';
@@ -436,14 +445,14 @@ export class BaziService {
         catch (e) {
             console.error('计算月柱旬空出错:', e);
         }
-        // 日柱
-        const dayStem = eightChar.getDayGan();
-        const dayBranch = eightChar.getDayZhi();
+        // 日柱 (日干和日支已在前面获取)
         const dayPillar = dayStem + dayBranch;
-        const dayHideGan = eightChar.getDayHideGan().join(',');
+        // 使用自定义的藏干方法
+        const dayHideGan = this.getHideGan(dayBranch);
         const dayWuXing = eightChar.getDayWuXing();
         const dayNaYin = eightChar.getDayNaYin();
-        const dayShiShenZhi = eightChar.getDayShiShenZhi();
+        // 使用自定义的地支藏干十神方法
+        const dayShiShenZhi = this.getHiddenShiShen(dayStem, dayBranch);
         const dayDiShi = eightChar.getDayDiShi();
         // 添加错误处理，防止旬空计算失败
         let dayXunKong = '';
@@ -461,11 +470,13 @@ export class BaziService {
         const hourStem = eightChar.getTimeGan();
         const hourBranch = eightChar.getTimeZhi();
         const hourPillar = hourStem + hourBranch;
-        const hourHideGan = eightChar.getTimeHideGan().join(',');
+        // 使用自定义的藏干方法
+        const hourHideGan = this.getHideGan(hourBranch);
         const hourWuXing = eightChar.getTimeWuXing();
         const hourNaYin = eightChar.getTimeNaYin();
         const hourShiShenGan = eightChar.getTimeShiShenGan();
-        const hourShiShenZhi = eightChar.getTimeShiShenZhi();
+        // 使用自定义的地支藏干十神方法
+        const hourShiShenZhi = this.getHiddenShiShen(dayStem, hourBranch);
         const timeDiShi = eightChar.getTimeDiShi();
         // 添加错误处理，防止旬空计算失败
         let timeXunKong = '';
@@ -1502,7 +1513,7 @@ export class BaziService {
         const riZhuStrengthInfo = this.calculateRiZhuStrength(eightChar);
         const riZhuStrength = riZhuStrengthInfo.result;
         const riZhuStrengthDetails = riZhuStrengthInfo.details;
-        return Object.assign(Object.assign(Object.assign({ 
+        return Object.assign(Object.assign(Object.assign({
             // 基本信息
             solarDate,
             lunarDate,
@@ -1537,9 +1548,9 @@ export class BaziService {
             taiYuanNaYin,
             mingGong,
             mingGongNaYin,
-            shenGong, 
+            shenGong,
             // 完整信息
-            fullString: lunar.toFullString(), 
+            fullString: lunar.toFullString(),
             // 流派信息
             baziSect: sect, gender,
             // 生肖信息
@@ -1568,9 +1579,9 @@ export class BaziService {
             dayXunKong,
             timeXunKong,
             // 星座和节气
-            zodiac, jieQi: jieQi, nextJieQi: nextJieQi, 
+            zodiac, jieQi: jieQi, nextJieQi: nextJieQi,
             // 吉凶和神煞
-            dayYi: dayYi, dayJi: dayJi, shenSha: shenSha }, (geJu ? { geJu } : {})), (geJuDetail ? { geJuDetail } : {})), { 
+            dayYi: dayYi, dayJi: dayJi, shenSha: shenSha }, (geJu ? { geJu } : {})), (geJuDetail ? { geJuDetail } : {})), {
             // 起运信息
             qiYunYear,
             qiYunMonth,

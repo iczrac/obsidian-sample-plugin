@@ -5,6 +5,7 @@ import { GeJuService } from '../services/GeJuService';
 import { GeJuTrendService } from '../services/GeJuTrendService';
 import { GeJuTrendChart } from './GeJuTrendChart';
 import { GeJuJudgeService } from '../services/GeJuJudgeService';
+import { BaziService } from '../services/BaziService';
 
 /**
  * 交互式八字命盘视图
@@ -2203,34 +2204,8 @@ export class InteractiveBaziView {
    * @returns 十神
    */
   private getShiShen(dayStem: string, stem: string): string {
-    // 天干顺序
-    const stems = "甲乙丙丁戊己庚辛壬癸";
-
-    // 阳干：甲丙戊庚壬
-    // 阴干：乙丁己辛癸
-    const yangGan = '甲丙戊庚壬';
-
-    // 获取日干和目标天干的索引
-    const dayStemIndex = stems.indexOf(dayStem);
-    const stemIndex = stems.indexOf(stem);
-
-    if (dayStemIndex === -1 || stemIndex === -1) {
-      return '';
-    }
-
-    // 判断日干阴阳
-    const isDayYang = yangGan.includes(dayStem);
-
-    // 计算十神索引
-    let shiShenIndex = (stemIndex - dayStemIndex + 10) % 10;
-
-    // 十神顺序（阳干）：比肩、劫财、食神、伤官、偏财、正财、七杀、正官、偏印、正印
-    // 十神顺序（阴干）：比肩、劫财、食神、伤官、偏财、正财、七杀、正官、偏印、正印
-    const shiShenNames = [
-      "比肩", "劫财", "食神", "伤官", "偏财", "正财", "七杀", "正官", "偏印", "正印"
-    ];
-
-    return shiShenNames[shiShenIndex];
+    // 使用BaziService中的方法
+    return BaziService.getShiShen(dayStem, stem);
   }
 
   /**
@@ -2240,24 +2215,8 @@ export class InteractiveBaziView {
    * @returns 藏干对应的十神数组
    */
   private getHiddenShiShen(dayStem: string, branch: string): string[] {
-    // 获取地支藏干
-    const hideGans = this.getHideGan(branch).split(',');
-
-    // 如果没有藏干，返回空数组
-    if (hideGans.length === 0 || hideGans[0] === '') {
-      return [];
-    }
-
-    // 计算每个藏干的十神
-    const shiShens: string[] = [];
-    for (const gan of hideGans) {
-      if (gan) {
-        const shiShen = this.getShiShen(dayStem, gan);
-        shiShens.push(shiShen);
-      }
-    }
-
-    return shiShens;
+    // 使用BaziService中的方法
+    return BaziService.getHiddenShiShen(dayStem, branch);
   }
 
   /**
@@ -2266,22 +2225,8 @@ export class InteractiveBaziView {
    * @returns 藏干字符串，多个藏干用逗号分隔
    */
   private getHideGan(branch: string): string {
-    const hideGanMap: {[key: string]: string} = {
-      '子': '癸',
-      '丑': '己,癸,辛',
-      '寅': '甲,丙,戊',
-      '卯': '乙',
-      '辰': '戊,乙,癸',
-      '巳': '丙,庚,戊',
-      '午': '丁,己',
-      '未': '己,丁,乙',
-      '申': '庚,壬,戊',
-      '酉': '辛',
-      '戌': '戊,辛,丁',
-      '亥': '壬,甲'
-    };
-
-    return hideGanMap[branch] || '';
+    // 使用BaziService中的方法
+    return BaziService.getHideGan(branch);
   }
 
   /**

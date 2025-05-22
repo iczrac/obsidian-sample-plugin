@@ -110,7 +110,7 @@ export class BaziService {
 
     // 计算匹配的年份列表
     const currentYear = new Date().getFullYear();
-    const startYear = currentYear - 360; // 从360年前开始查找（6个甲子）
+    const startYear = 1700; // 从1700年开始查找，确保覆盖17XX-19XX年
     const endYear = currentYear + 120;   // 查找到120年后（2个甲子）
 
     // 查找符合年柱的年份
@@ -165,7 +165,7 @@ export class BaziService {
             continue;
           }
         }
-        
+
         if (!found) {
           // 如果未找到完全匹配的日期，使用农历月份的第一天作为近似值
           lunar = Lunar.fromYmdHms(specifiedYear, lunarMonth, 1, hour, 0, 0);
@@ -179,7 +179,7 @@ export class BaziService {
           lunarDate = lunar.toString();
           solarTime = `${hour.toString().padStart(2, '0')}:00`;
         }
-        
+
         console.log('日期反推逻辑 - 指定年份:', specifiedYear);
         console.log('日期反推逻辑 - 估算农历月份:', lunarMonth, '基于月支:', monthBranch);
         console.log('日期反推逻辑 - 估算小时:', hour, '基于时支:', hourBranch);
@@ -193,28 +193,70 @@ export class BaziService {
 
     // 如果有指定年份且成功推算日期，使用lunar-typescript库获取更多信息
     if (specifiedYear && solar && lunar && eightChar) {
-      // 使用formatBaziInfo获取完整的八字信息
+      // 使用formatBaziInfo获取完整的八字信息，但只获取日期、大运、流年等信息
       const baziInfo = this.formatBaziInfo(solar, lunar, eightChar, gender, sect);
 
-      // 保留原始八字
+      // 使用用户输入的原始八字信息，而不是反推后的八字
+      // 年柱
       baziInfo.yearPillar = parts[0];
       baziInfo.yearStem = yearStem;
       baziInfo.yearBranch = yearBranch;
+      baziInfo.yearHideGan = this.getHideGan(yearBranch);
+      baziInfo.yearWuXing = this.getStemWuXing(yearStem);
+      baziInfo.yearNaYin = this.getNaYin(yearStem + yearBranch);
+      baziInfo.yearShengXiao = this.getShengXiao(yearBranch);
+      baziInfo.yearShiShenGan = this.getShiShen(dayStem, yearStem);
+      baziInfo.yearShiShenZhi = this.getHiddenShiShen(dayStem, yearBranch);
 
+      // 月柱
       baziInfo.monthPillar = parts[1];
       baziInfo.monthStem = monthStem;
       baziInfo.monthBranch = monthBranch;
+      baziInfo.monthHideGan = this.getHideGan(monthBranch);
+      baziInfo.monthWuXing = this.getStemWuXing(monthStem);
+      baziInfo.monthNaYin = this.getNaYin(monthStem + monthBranch);
+      baziInfo.monthShengXiao = this.getShengXiao(monthBranch);
+      baziInfo.monthShiShenGan = this.getShiShen(dayStem, monthStem);
+      baziInfo.monthShiShenZhi = this.getHiddenShiShen(dayStem, monthBranch);
 
+      // 日柱
       baziInfo.dayPillar = parts[2];
       baziInfo.dayStem = dayStem;
       baziInfo.dayBranch = dayBranch;
+      baziInfo.dayHideGan = this.getHideGan(dayBranch);
+      baziInfo.dayWuXing = this.getStemWuXing(dayStem);
+      baziInfo.dayNaYin = this.getNaYin(dayStem + dayBranch);
+      baziInfo.dayShengXiao = this.getShengXiao(dayBranch);
+      baziInfo.dayShiShen = '日主'; // 日柱天干是日主自己
+      baziInfo.dayShiShenZhi = this.getHiddenShiShen(dayStem, dayBranch);
 
+      // 时柱
       baziInfo.hourPillar = parts[3];
       baziInfo.hourStem = hourStem;
       baziInfo.hourBranch = hourBranch;
+      baziInfo.hourHideGan = this.getHideGan(hourBranch);
+      baziInfo.hourWuXing = this.getStemWuXing(hourStem);
+      baziInfo.hourNaYin = this.getNaYin(hourStem + hourBranch);
+      baziInfo.hourShengXiao = this.getShengXiao(hourBranch);
+      baziInfo.hourShiShenGan = this.getShiShen(dayStem, hourStem);
+      baziInfo.hourShiShenZhi = this.getHiddenShiShen(dayStem, hourBranch);
+
+      // 特殊信息
+      baziInfo.taiYuan = this.calculateTaiYuan(monthStem, monthBranch);
+      baziInfo.taiYuanNaYin = this.getNaYin(baziInfo.taiYuan);
+      baziInfo.mingGong = this.calculateMingGong(hourStem, hourBranch);
+      baziInfo.mingGongNaYin = this.getNaYin(baziInfo.mingGong);
+
+      // 检查三合局和三会局
+      const branches = [yearBranch, monthBranch, dayBranch, hourBranch];
+      baziInfo.sanHeJu = this.checkSanHeJu(branches);
+      baziInfo.sanHuiJu = this.checkSanHuiJu(branches);
 
       // 添加匹配年份列表
       baziInfo.matchingYears = matchingYears;
+
+      // 完整信息
+      baziInfo.fullString = `八字：${parts[0]} ${parts[1]} ${parts[2]} ${parts[3]}`;
 
       return baziInfo;
     }
@@ -233,6 +275,21 @@ export class BaziService {
     const hourShengXiao = this.getShengXiao(hourBranch);
 
     // 创建一个基本的BaziInfo对象
+    // 计算十神信息 - 以日干为基准
+    const yearShiShenGan = this.getShiShen(dayStem, yearStem);
+    const yearShiShenZhi = this.getHiddenShiShen(dayStem, yearBranch);
+    const monthShiShenGan = this.getShiShen(dayStem, monthStem);
+    const monthShiShenZhi = this.getHiddenShiShen(dayStem, monthBranch);
+    const dayShiShen = '日主'; // 日柱天干是日主自己
+    const dayShiShenZhi = this.getHiddenShiShen(dayStem, dayBranch);
+    const hourShiShenGan = this.getShiShen(dayStem, hourStem);
+    const hourShiShenZhi = this.getHiddenShiShen(dayStem, hourBranch);
+
+    // 检查三合局和三会局
+    const branches = [yearBranch, monthBranch, dayBranch, hourBranch];
+    const sanHeJu = this.checkSanHeJu(branches);
+    const sanHuiJu = this.checkSanHuiJu(branches);
+
     return {
       // 基本信息
       solarDate,
@@ -248,6 +305,8 @@ export class BaziService {
       yearWuXing,
       yearNaYin,
       yearShengXiao,
+      yearShiShenGan,
+      yearShiShenZhi,
 
       monthPillar: parts[1],
       monthStem,
@@ -256,6 +315,8 @@ export class BaziService {
       monthWuXing,
       monthNaYin,
       monthShengXiao,
+      monthShiShenGan,
+      monthShiShenZhi,
 
       dayPillar: parts[2],
       dayStem,
@@ -264,6 +325,8 @@ export class BaziService {
       dayWuXing,
       dayNaYin,
       dayShengXiao,
+      dayShiShen,
+      dayShiShenZhi,
 
       hourPillar: parts[3],
       hourStem,
@@ -272,6 +335,8 @@ export class BaziService {
       hourWuXing,
       hourNaYin,
       hourShengXiao,
+      hourShiShenGan,
+      hourShiShenZhi,
 
       // 特殊信息
       taiYuan,
@@ -281,6 +346,10 @@ export class BaziService {
 
       // 完整信息
       fullString: `八字：${parts[0]} ${parts[1]} ${parts[2]} ${parts[3]}`,
+
+      // 组合信息
+      sanHeJu,
+      sanHuiJu,
 
       // 设置信息
       gender,
@@ -374,7 +443,12 @@ export class BaziService {
    * @param branch 地支
    * @returns 藏干字符串
    */
-  private static getHideGan(branch: string): string {
+  static getHideGan(branch: string): string {
+    // 检查地支是否有效
+    if (!branch) {
+      return '';
+    }
+
     const map: {[key: string]: string} = {
       '子': '癸',
       '丑': '己,癸,辛',
@@ -506,7 +580,8 @@ export class BaziService {
     const yearStem = eightChar.getYearGan();
     const yearBranch = eightChar.getYearZhi();
     const yearPillar = yearStem + yearBranch;
-    const yearHideGan = eightChar.getYearHideGan().join(',');
+    // 使用我们自己的藏干定义，而不是lunar-typescript库的定义
+    const yearHideGan = this.getHideGan(yearBranch);
     const yearWuXing = eightChar.getYearWuXing();
     const yearNaYin = eightChar.getYearNaYin();
     const yearShiShenGan = this.getShiShen(dayStem, yearStem);
@@ -529,7 +604,8 @@ export class BaziService {
     const monthStem = eightChar.getMonthGan();
     const monthBranch = eightChar.getMonthZhi();
     const monthPillar = monthStem + monthBranch;
-    const monthHideGan = eightChar.getMonthHideGan().join(',');
+    // 使用我们自己的藏干定义，而不是lunar-typescript库的定义
+    const monthHideGan = this.getHideGan(monthBranch);
     const monthWuXing = eightChar.getMonthWuXing();
     const monthNaYin = eightChar.getMonthNaYin();
     const monthShiShenGan = this.getShiShen(dayStem, monthStem);
@@ -551,7 +627,8 @@ export class BaziService {
     // 日柱
     const dayBranch = eightChar.getDayZhi();
     const dayPillar = dayStem + dayBranch;
-    const dayHideGan = eightChar.getDayHideGan().join(',');
+    // 使用我们自己的藏干定义，而不是lunar-typescript库的定义
+    const dayHideGan = this.getHideGan(dayBranch);
     const dayWuXing = eightChar.getDayWuXing();
     const dayNaYin = eightChar.getDayNaYin();
     const dayShiShenZhi = this.getHiddenShiShen(dayStem, dayBranch);
@@ -573,7 +650,8 @@ export class BaziService {
     const hourStem = eightChar.getTimeGan();
     const hourBranch = eightChar.getTimeZhi();
     const hourPillar = hourStem + hourBranch;
-    const hourHideGan = eightChar.getTimeHideGan().join(',');
+    // 使用我们自己的藏干定义，而不是lunar-typescript库的定义
+    const hourHideGan = this.getHideGan(hourBranch);
     const hourWuXing = eightChar.getTimeWuXing();
     const hourNaYin = eightChar.getTimeNaYin();
     const hourShiShenGan = this.getShiShen(dayStem, hourStem);
@@ -1695,6 +1773,11 @@ export class BaziService {
       };
     });
 
+    // 检查三合局和三会局
+    const branches = [yearBranch, monthBranch, dayBranch, hourBranch];
+    const sanHeJu = this.checkSanHeJu(branches);
+    const sanHuiJu = this.checkSanHuiJu(branches);
+
     // 计算五行强度
     const wuXingStrength = this.calculateWuXingStrength(eightChar);
 
@@ -1764,6 +1847,12 @@ export class BaziService {
       dayShiShen,
       hourShiShen,
 
+      // 天干十神（用于显示）
+      yearShiShenGan: yearShiShenGan,
+      monthShiShenGan: monthShiShenGan,
+      timeShiShenGan: hourShiShenGan,
+      hourShiShenGan: hourShiShenGan, // 添加hourShiShenGan属性，与parseBaziString保持一致
+
       // 地支十神
       yearShiShenZhi,
       monthShiShenZhi,
@@ -1814,6 +1903,10 @@ export class BaziService {
       xiaoYun,
       liuYue,
 
+      // 组合信息
+      sanHeJu,
+      sanHuiJu,
+
       // 五行强度和日主旺衰
       wuXingStrength,
       riZhuStrength,
@@ -1851,7 +1944,7 @@ export class BaziService {
    * @param otherStem 其他天干
    * @returns 十神
    */
-  private static getShiShen(dayStem: string, otherStem: string): string {
+  static getShiShen(dayStem: string, otherStem: string): string {
     // 天干顺序
     const stems = "甲乙丙丁戊己庚辛壬癸";
 
@@ -1888,9 +1981,16 @@ export class BaziService {
    * @param branch 地支
    * @returns 藏干对应的十神数组
    */
-  private static getHiddenShiShen(dayStem: string, branch: string): string[] {
+  static getHiddenShiShen(dayStem: string, branch: string): string[] {
     // 获取地支藏干
-    const hideGans = this.getHideGan(branch).split(',');
+    const hideGanStr = this.getHideGan(branch);
+
+    // 如果藏干字符串为空，返回空数组
+    if (!hideGanStr) {
+      return [];
+    }
+
+    const hideGans = hideGanStr.split(',');
 
     // 如果没有藏干，返回空数组
     if (hideGans.length === 0 || hideGans[0] === '') {
@@ -2071,11 +2171,13 @@ export class BaziService {
     const dayBranch = eightChar.getDayZhi();
     const timeBranch = eightChar.getTimeZhi();
 
-    // 获取地支藏干
-    const yearHideGan = eightChar.getYearHideGan();
-    const monthHideGan = eightChar.getMonthHideGan();
-    const dayHideGan = eightChar.getDayHideGan();
-    const timeHideGan = eightChar.getTimeHideGan();
+
+
+    // 获取地支藏干 - 使用我们自己的藏干定义，而不是lunar-typescript库的定义
+    const yearHideGan = this.getHideGan(yearBranch).split(',');
+    const monthHideGan = this.getHideGan(monthBranch).split(',');
+    const dayHideGan = this.getHideGan(dayBranch).split(',');
+    const timeHideGan = this.getHideGan(timeBranch).split(',');
 
     // 地支藏干权重: 年支藏干(0.7) < 月支藏干(2.0) < 日支藏干(2.0) > 时支藏干(0.7)
     this.processHideGanForStrength(yearHideGan, 0.7, details);
@@ -2512,31 +2614,7 @@ export class BaziService {
     }
   }
 
-  /**
-   * 处理地支藏干的五行强度
-   * @param hideGan 藏干数组
-   * @param baseWeight 基础权重
-   * @param addStrength 增加强度的函数
-   */
-  private static processHideGan(hideGan: string[], baseWeight: number, addStrength: (wuXing: string, value: number) => void): void {
-    if (!hideGan || hideGan.length === 0) return;
 
-    // 根据藏干数量分配权重
-    // 一个藏干：100%权重
-    // 两个藏干：60%和40%权重
-    // 三个藏干：50%、30%和20%权重
-    const weights = hideGan.length === 1 ? [1.0] :
-                   hideGan.length === 2 ? [0.6, 0.4] :
-                   [0.5, 0.3, 0.2];
-
-    // 为每个藏干增加相应权重的五行强度
-    hideGan.forEach((gan, index) => {
-      if (index < weights.length) {
-        const wuXing = this.getStemWuXing(gan);
-        addStrength(wuXing, baseWeight * weights[index]);
-      }
-    });
-  }
 
   /**
    * 处理地支藏干的五行强度并返回详细信息
@@ -5189,426 +5267,59 @@ export class BaziService {
     const dayBranch = eightChar.getDayZhi();
     const timeBranch = eightChar.getTimeZhi();
 
-    // 3. 使用新的格局判断服务
-    try {
-      // 创建BaziInfo对象
-      const baziInfo = {
-        // 基本信息
-        dayStem,
-        dayBranch,
-        dayWuXing: this.getStemWuXing(dayStem),
-        riZhuStrength,
+    // 使用格局判断服务
+    // 创建BaziInfo对象
+    const baziInfo = {
+      // 基本信息
+      dayStem,
+      dayBranch,
+      dayWuXing: this.getStemWuXing(dayStem),
+      riZhuStrength,
 
-        // 年柱信息
-        yearStem,
-        yearBranch,
-        yearWuXing: this.getStemWuXing(yearStem),
-        yearShiShenGan: this.getShiShen(dayStem, yearStem),
-        yearShiShenZhi: this.getHiddenShiShen(dayStem, yearBranch),
-        yearNaYin: this.getNaYin(yearStem + yearBranch),
+      // 年柱信息
+      yearStem,
+      yearBranch,
+      yearWuXing: this.getStemWuXing(yearStem),
+      yearShiShenGan: this.getShiShen(dayStem, yearStem),
+      yearShiShenZhi: this.getHiddenShiShen(dayStem, yearBranch),
+      yearNaYin: this.getNaYin(yearStem + yearBranch),
 
-        // 月柱信息
-        monthStem,
-        monthBranch,
-        monthWuXing: this.getStemWuXing(monthStem),
-        monthShiShenGan: this.getShiShen(dayStem, monthStem),
-        monthShiShenZhi: this.getHiddenShiShen(dayStem, monthBranch),
-        monthNaYin: this.getNaYin(monthStem + monthBranch),
+      // 月柱信息
+      monthStem,
+      monthBranch,
+      monthWuXing: this.getStemWuXing(monthStem),
+      monthShiShenGan: this.getShiShen(dayStem, monthStem),
+      monthShiShenZhi: this.getHiddenShiShen(dayStem, monthBranch),
+      monthNaYin: this.getNaYin(monthStem + monthBranch),
 
-        // 日柱信息
-        dayNaYin: this.getNaYin(dayStem + dayBranch),
-        dayShiShenZhi: this.getHiddenShiShen(dayStem, dayBranch),
+      // 日柱信息
+      dayNaYin: this.getNaYin(dayStem + dayBranch),
+      dayShiShenZhi: this.getHiddenShiShen(dayStem, dayBranch),
 
-        // 时柱信息
-        hourStem: timeStem,
-        hourBranch: timeBranch,
-        hourWuXing: this.getStemWuXing(timeStem),
-        timeShiShenGan: this.getShiShen(dayStem, timeStem),
-        hourShiShenZhi: this.getHiddenShiShen(dayStem, timeBranch),
-        hourNaYin: this.getNaYin(timeStem + timeBranch)
-      };
+      // 时柱信息
+      hourStem: timeStem,
+      hourBranch: timeBranch,
+      hourWuXing: this.getStemWuXing(timeStem),
+      timeShiShenGan: this.getShiShen(dayStem, timeStem),
+      hourShiShenZhi: this.getHiddenShiShen(dayStem, timeBranch),
+      hourNaYin: this.getNaYin(timeStem + timeBranch)
+    };
 
-      // 使用新的格局判断服务
-      const geJuResult = GeJuJudgeService.judgeGeJu(baziInfo);
+    // 使用格局判断服务
+    const geJuResult = GeJuJudgeService.judgeGeJu(baziInfo);
 
-      // 返回格局信息
-      return {
-        geJu: geJuResult.mainGeJu,
-        detail: geJuResult.mainGeJuDetail,
-        geJuStrength: geJuResult.mainGeJuStrength,
-        yongShen: geJuResult.yongShen,
-        yongShenDetail: geJuResult.yongShenDetail,
-        geJuFactors: geJuResult.factors
-      };
-    } catch (error) {
-      console.error('使用新的格局判断服务出错:', error);
-
-      // 如果新服务出错，回退到旧的格局判断逻辑
-      console.log('回退到旧的格局判断逻辑');
-    }
-
-    // 3. 计算十神
-    const yearShiShen = this.getShiShen(dayStem, yearStem);
-    const monthShiShen = this.getShiShen(dayStem, monthStem);
-    const timeShiShen = this.getShiShen(dayStem, timeStem);
-
-    // 4. 计算地支藏干的十神
-    const yearHideGan = eightChar.getYearHideGan();
-    const monthHideGan = eightChar.getMonthHideGan();
-    const dayHideGan = eightChar.getDayHideGan();
-    const timeHideGan = eightChar.getTimeHideGan();
-
-    const yearHideShiShen = yearHideGan.map(gan => this.getShiShen(dayStem, gan));
-    const monthHideShiShen = monthHideGan.map(gan => this.getShiShen(dayStem, gan));
-    const dayHideShiShen = dayHideGan.map(gan => this.getShiShen(dayStem, gan));
-    const timeHideShiShen = timeHideGan.map(gan => this.getShiShen(dayStem, gan));
-
-    // 5. 确定用神
-    let yongShen = '';
-    let yongShenDetail = '';
-
-    if (riZhuStrength === '极旺' || riZhuStrength === '旺' || riZhuStrength === '偏旺') {
-      // 日主旺，用神应为泄、耗或克日主的五行
-      if (this.hasStrongShiShen(['七杀', '正官'], yearShiShen, monthShiShen, timeShiShen, yearHideShiShen, monthHideShiShen, dayHideShiShen, timeHideShiShen, monthBranch)) {
-        yongShen = '官杀';
-        yongShenDetail = '日主旺盛，取官杀泄秀日主之气';
-      } else if (this.hasStrongShiShen(['偏财', '正财'], yearShiShen, monthShiShen, timeShiShen, yearHideShiShen, monthHideShiShen, dayHideShiShen, timeHideShiShen, monthBranch)) {
-        yongShen = '财星';
-        yongShenDetail = '日主旺盛，取财星耗泄日主之气';
-      } else if (this.hasStrongShiShen(['食神', '伤官'], yearShiShen, monthShiShen, timeShiShen, yearHideShiShen, monthHideShiShen, dayHideShiShen, timeHideShiShen, monthBranch)) {
-        yongShen = '食伤';
-        yongShenDetail = '日主旺盛，取食伤泄秀日主之气';
-      } else {
-        yongShen = '官杀财星';
-        yongShenDetail = '日主旺盛，取官杀或财星泄耗日主之气';
-      }
-    } else if (riZhuStrength === '弱' || riZhuStrength === '极弱' || riZhuStrength === '偏弱') {
-      // 日主弱，用神应为生、扶或同日主的五行
-      if (this.hasStrongShiShen(['偏印', '正印'], yearShiShen, monthShiShen, timeShiShen, yearHideShiShen, monthHideShiShen, dayHideShiShen, timeHideShiShen, monthBranch)) {
-        yongShen = '印星';
-        yongShenDetail = '日主衰弱，取印星生助日主之气';
-      } else if (this.hasStrongShiShen(['比肩', '劫财'], yearShiShen, monthShiShen, timeShiShen, yearHideShiShen, monthHideShiShen, dayHideShiShen, timeHideShiShen, monthBranch)) {
-        yongShen = '比劫';
-        yongShenDetail = '日主衰弱，取比劫帮扶日主之气';
-      } else {
-        yongShen = '印星比劫';
-        yongShenDetail = '日主衰弱，取印星或比劫生扶日主之气';
-      }
-    } else {
-      // 日主平衡，根据月令和命局特点选择用神
-      if (this.isMonthDominant(['偏印', '正印'], monthShiShen, monthHideShiShen, monthBranch)) {
-        yongShen = '印星';
-        yongShenDetail = '日主平衡，月令印星当令，取印星为用';
-      } else if (this.isMonthDominant(['七杀', '正官'], monthShiShen, monthHideShiShen, monthBranch)) {
-        yongShen = '官杀';
-        yongShenDetail = '日主平衡，月令官杀当令，取官杀为用';
-      } else if (this.isMonthDominant(['偏财', '正财'], monthShiShen, monthHideShiShen, monthBranch)) {
-        yongShen = '财星';
-        yongShenDetail = '日主平衡，月令财星当令，取财星为用';
-      } else if (this.isMonthDominant(['食神', '伤官'], monthShiShen, monthHideShiShen, monthBranch)) {
-        yongShen = '食伤';
-        yongShenDetail = '日主平衡，月令食伤当令，取食伤为用';
-      } else if (this.isMonthDominant(['比肩', '劫财'], monthShiShen, monthHideShiShen, monthBranch)) {
-        yongShen = '比劫';
-        yongShenDetail = '日主平衡，月令比劫当令，取比劫为用';
-      } else {
-        // 根据四柱中最强的十神确定用神
-        const strongestShiShen = this.getStrongestShiShen(yearShiShen, monthShiShen, timeShiShen, yearHideShiShen, monthHideShiShen, dayHideShiShen, timeHideShiShen);
-        yongShen = this.getYongShenFromShiShen(strongestShiShen);
-        yongShenDetail = `日主平衡，取四柱中最强的${strongestShiShen}所对应的${yongShen}为用`;
-      }
-    }
-
-    // 6. 确定格局
-    let geJu = '';
-    let detail = '';
-
-    // 根据用神确定格局
-    if (yongShen === '印星') {
-      if (this.hasStrongShiShen(['偏印'], yearShiShen, monthShiShen, timeShiShen, yearHideShiShen, monthHideShiShen, dayHideShiShen, timeHideShiShen, monthBranch)) {
-        geJu = '偏印格';
-        detail = '八字中偏印有力，且日主衰弱，取偏印为用神，为偏印格。';
-      } else {
-        geJu = '正印格';
-        detail = '八字中正印有力，且日主衰弱，取正印为用神，为正印格。';
-      }
-    } else if (yongShen === '官杀') {
-      if (this.hasStrongShiShen(['七杀'], yearShiShen, monthShiShen, timeShiShen, yearHideShiShen, monthHideShiShen, dayHideShiShen, timeHideShiShen, monthBranch)) {
-        geJu = '七杀格';
-        detail = '八字中七杀有力，且日主旺盛，取七杀为用神，为七杀格。';
-      } else {
-        geJu = '正官格';
-        detail = '八字中正官有力，且日主旺盛，取正官为用神，为正官格。';
-      }
-    } else if (yongShen === '财星') {
-      if (this.hasStrongShiShen(['偏财'], yearShiShen, monthShiShen, timeShiShen, yearHideShiShen, monthHideShiShen, dayHideShiShen, timeHideShiShen, monthBranch)) {
-        geJu = '偏财格';
-        detail = '八字中偏财有力，且日主旺盛，取偏财为用神，为偏财格。';
-      } else {
-        geJu = '正财格';
-        detail = '八字中正财有力，且日主旺盛，取正财为用神，为正财格。';
-      }
-    } else if (yongShen === '食伤') {
-      if (this.hasStrongShiShen(['食神'], yearShiShen, monthShiShen, timeShiShen, yearHideShiShen, monthHideShiShen, dayHideShiShen, timeHideShiShen, monthBranch)) {
-        geJu = '食神格';
-        detail = '八字中食神有力，且日主旺盛，取食神为用神，为食神格。';
-      } else {
-        geJu = '伤官格';
-        detail = '八字中伤官有力，且日主旺盛，取伤官为用神，为伤官格。';
-      }
-    } else if (yongShen === '比劫') {
-      if (this.hasStrongShiShen(['比肩'], yearShiShen, monthShiShen, timeShiShen, yearHideShiShen, monthHideShiShen, dayHideShiShen, timeHideShiShen, monthBranch)) {
-        geJu = '比肩格';
-        detail = '八字中比肩有力，且日主衰弱，取比肩为用神，为比肩格。';
-      } else {
-        geJu = '劫财格';
-        detail = '八字中劫财有力，且日主衰弱，取劫财为用神，为劫财格。';
-      }
-    } else {
-      // 特殊格局判断
-      if (riZhuStrength === '极旺' && this.hasMultipleShiShen(['比肩', '劫财'], yearShiShen, monthShiShen, timeShiShen, yearHideShiShen, monthHideShiShen, dayHideShiShen, timeHideShiShen)) {
-        geJu = '专旺格';
-        detail = '日主极旺，且有多个比劫帮扶，为专旺格。';
-      } else if (riZhuStrength === '极弱' && this.hasMultipleShiShen(['七杀', '正官'], yearShiShen, monthShiShen, timeShiShen, yearHideShiShen, monthHideShiShen, dayHideShiShen, timeHideShiShen)) {
-        geJu = '从弱格';
-        detail = '日主极弱，且有多个官杀克制，为从弱格。';
-      } else {
-        geJu = '杂气格';
-        detail = '八字中无明显格局特征，为杂气格。';
-      }
-    }
-
-    // 添加用神信息到详细说明中
-    detail += ` ${yongShenDetail}。`;
-
+    // 返回格局信息
     return {
-      geJu,
-      detail,
-      geJuStrength: 60, // 默认强度为60
-      yongShen,
-      yongShenDetail,
-      geJuFactors: [
-        {
-          factor: '日主旺衰',
-          description: `日主${riZhuStrength}，影响格局形成。`,
-          contribution: 25
-        },
-        {
-          factor: '月令',
-          description: `月支为${monthBranch}，影响格局形成。`,
-          contribution: 20
-        }
-      ]
+      geJu: geJuResult.mainGeJu,
+      detail: geJuResult.mainGeJuDetail,
+      geJuStrength: geJuResult.mainGeJuStrength,
+      yongShen: geJuResult.yongShen,
+      yongShenDetail: geJuResult.yongShenDetail,
+      geJuFactors: geJuResult.factors
     };
   }
 
-  /**
-   * 判断是否有强势的十神
-   * @param shiShenTypes 十神类型数组
-   * @param yearShiShen 年干十神
-   * @param monthShiShen 月干十神
-   * @param timeShiShen 时干十神
-   * @param yearHideShiShen 年支藏干十神
-   * @param monthHideShiShen 月支藏干十神
-   * @param dayHideShiShen 日支藏干十神
-   * @param timeHideShiShen 时支藏干十神
-   * @param monthBranch 月支
-   * @returns 是否有强势的十神
-   */
-  private static hasStrongShiShen(
-    shiShenTypes: string[],
-    yearShiShen: string,
-    monthShiShen: string,
-    timeShiShen: string,
-    yearHideShiShen: string[],
-    monthHideShiShen: string[],
-    dayHideShiShen: string[],
-    timeHideShiShen: string[],
-    monthBranch: string
-  ): boolean {
-    // 检查月干是否为指定十神，且当令
-    if (shiShenTypes.includes(monthShiShen)) {
-      return true;
-    }
 
-    // 检查月支藏干是否为指定十神，且当令
-    if (monthHideShiShen.some(shiShen => shiShenTypes.includes(shiShen))) {
-      return true;
-    }
-
-    // 检查年干是否为指定十神
-    if (shiShenTypes.includes(yearShiShen)) {
-      return true;
-    }
-
-    // 检查时干是否为指定十神
-    if (shiShenTypes.includes(timeShiShen)) {
-      return true;
-    }
-
-    // 检查年支藏干是否为指定十神
-    if (yearHideShiShen.some(shiShen => shiShenTypes.includes(shiShen))) {
-      return true;
-    }
-
-    // 检查日支藏干是否为指定十神
-    if (dayHideShiShen.some(shiShen => shiShenTypes.includes(shiShen))) {
-      return true;
-    }
-
-    // 检查时支藏干是否为指定十神
-    if (timeHideShiShen.some(shiShen => shiShenTypes.includes(shiShen))) {
-      return true;
-    }
-
-    return false;
-  }
-
-  /**
-   * 判断是否有多个指定十神
-   * @param shiShenTypes 十神类型数组
-   * @param yearShiShen 年干十神
-   * @param monthShiShen 月干十神
-   * @param timeShiShen 时干十神
-   * @param yearHideShiShen 年支藏干十神
-   * @param monthHideShiShen 月支藏干十神
-   * @param dayHideShiShen 日支藏干十神
-   * @param timeHideShiShen 时支藏干十神
-   * @returns 是否有多个指定十神
-   */
-  private static hasMultipleShiShen(
-    shiShenTypes: string[],
-    yearShiShen: string,
-    monthShiShen: string,
-    timeShiShen: string,
-    yearHideShiShen: string[],
-    monthHideShiShen: string[],
-    dayHideShiShen: string[],
-    timeHideShiShen: string[]
-  ): boolean {
-    let count = 0;
-
-    if (shiShenTypes.includes(yearShiShen)) count++;
-    if (shiShenTypes.includes(monthShiShen)) count++;
-    if (shiShenTypes.includes(timeShiShen)) count++;
-
-    count += yearHideShiShen.filter(shiShen => shiShenTypes.includes(shiShen)).length;
-    count += monthHideShiShen.filter(shiShen => shiShenTypes.includes(shiShen)).length;
-    count += dayHideShiShen.filter(shiShen => shiShenTypes.includes(shiShen)).length;
-    count += timeHideShiShen.filter(shiShen => shiShenTypes.includes(shiShen)).length;
-
-    return count >= 2;
-  }
-
-  /**
-   * 判断月令是否当令
-   * @param shiShenTypes 十神类型数组
-   * @param monthShiShen 月干十神
-   * @param monthHideShiShen 月支藏干十神
-   * @param monthBranch 月支
-   * @returns 是否当令
-   */
-  private static isMonthDominant(
-    shiShenTypes: string[],
-    monthShiShen: string,
-    monthHideShiShen: string[],
-    monthBranch: string
-  ): boolean {
-    // 检查月干是否为指定十神
-    if (shiShenTypes.includes(monthShiShen)) {
-      return true;
-    }
-
-    // 检查月支藏干是否为指定十神
-    if (monthHideShiShen.some(shiShen => shiShenTypes.includes(shiShen))) {
-      return true;
-    }
-
-    return false;
-  }
-
-  /**
-   * 获取四柱中最强的十神
-   * @param yearShiShen 年干十神
-   * @param monthShiShen 月干十神
-   * @param timeShiShen 时干十神
-   * @param yearHideShiShen 年支藏干十神
-   * @param monthHideShiShen 月支藏干十神
-   * @param dayHideShiShen 日支藏干十神
-   * @param timeHideShiShen 时支藏干十神
-   * @returns 最强的十神
-   */
-  private static getStrongestShiShen(
-    yearShiShen: string,
-    monthShiShen: string,
-    timeShiShen: string,
-    yearHideShiShen: string[],
-    monthHideShiShen: string[],
-    dayHideShiShen: string[],
-    timeHideShiShen: string[]
-  ): string {
-    // 优先考虑月干十神
-    if (monthShiShen !== '未知') {
-      return monthShiShen;
-    }
-
-    // 其次考虑月支藏干十神
-    if (monthHideShiShen.length > 0) {
-      return monthHideShiShen[0];
-    }
-
-    // 再次考虑年干十神
-    if (yearShiShen !== '未知') {
-      return yearShiShen;
-    }
-
-    // 再次考虑时干十神
-    if (timeShiShen !== '未知') {
-      return timeShiShen;
-    }
-
-    // 最后考虑其他藏干十神
-    if (yearHideShiShen.length > 0) {
-      return yearHideShiShen[0];
-    }
-
-    if (dayHideShiShen.length > 0) {
-      return dayHideShiShen[0];
-    }
-
-    if (timeHideShiShen.length > 0) {
-      return timeHideShiShen[0];
-    }
-
-    return '未知';
-  }
-
-  /**
-   * 根据十神获取用神类型
-   * @param shiShen 十神
-   * @returns 用神类型
-   */
-  private static getYongShenFromShiShen(shiShen: string): string {
-    switch (shiShen) {
-      case '偏印':
-      case '正印':
-        return '印星';
-      case '七杀':
-      case '正官':
-        return '官杀';
-      case '偏财':
-      case '正财':
-        return '财星';
-      case '食神':
-      case '伤官':
-        return '食伤';
-      case '比肩':
-      case '劫财':
-        return '比劫';
-      default:
-        return '未知';
-    }
-  }
 
   /**
    * 获取地支对应的五行
@@ -5747,6 +5458,12 @@ export class BaziService {
           <td><small>${baziInfo.monthHideGan || '无'}</small></td>
           <td><small>${baziInfo.dayHideGan || '无'}</small></td>
           <td><small>${baziInfo.hourHideGan || '无'}</small></td>
+        </tr>
+        <tr class="bazi-shishen-row">
+          <td><small>${baziInfo.yearShiShenGan || ''}</small></td>
+          <td><small>${baziInfo.monthShiShenGan || ''}</small></td>
+          <td><small>日主</small></td>
+          <td><small>${baziInfo.timeShiShenGan || ''}</small></td>
         </tr>
         <tr class="bazi-nayin-row">
           <td>${baziInfo.yearNaYin || '未知'}</td>
