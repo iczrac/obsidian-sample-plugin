@@ -103,89 +103,109 @@ export class BaziService {
     // 计算匹配的年份列表
     let matchingYears: number[] = [];
 
-    // 天干序号（甲=0, 乙=1, ..., 癸=9）
-    const stemIndex = "甲乙丙丁戊己庚辛壬癸".indexOf(yearStem);
-    // 地支序号（子=0, 丑=1, ..., 亥=11）
-    const branchIndex = "子丑寅卯辰巳午未申酉戌亥".indexOf(yearBranch);
+    // 使用lunar-typescript库的Solar.fromBaZi方法获取所有可能的年份
+    try {
+      // 获取所有可能的年份
+      // 我们需要多次调用Solar.fromBaZi，使用不同的基准年份，以获取所有可能的年份
+      const allYears = new Set<number>();
 
-    // 计算匹配的年份列表
-    const currentYear = new Date().getFullYear();
-    const startYear = 1700; // 从1700年开始查找，确保覆盖17XX-19XX年
-    const endYear = currentYear + 120;   // 查找到120年后（2个甲子）
+      // 使用多个基准年份，确保覆盖所有可能的年份
+      const baseYears = [1, 601, 1201, 1801, 2401];
 
-    // 查找符合年柱的年份
-    for (let year = startYear; year <= endYear; year++) {
-      // 计算天干序号：年份减去4，除以10的余数
-      const stemCheck = (year - 4) % 10;
-      // 计算地支序号：年份减去4，除以12的余数
-      const branchCheck = (year - 4) % 12;
+      for (const baseYear of baseYears) {
+        try {
+          // 获取所有可能的阳历日期
+          const solarList = Solar.fromBaZi(
+            yearStem + yearBranch,
+            monthStem + monthBranch,
+            dayStem + dayBranch,
+            hourStem + hourBranch,
+            parseInt(sect), // 流派
+            baseYear // 起始年份
+          );
 
-      if (stemCheck === stemIndex && branchCheck === branchIndex) {
-        matchingYears.push(year);
+          // 提取年份
+          for (const solar of solarList) {
+            allYears.add(solar.getYear());
+          }
+        } catch (e) {
+          console.error(`获取匹配年份出错 (基准年份 ${baseYear}):`, e);
+        }
+      }
+
+      // 转换为数组并排序
+      matchingYears = Array.from(allYears).sort((a, b) => a - b);
+
+      console.log('使用lunar-typescript库获取匹配年份:', matchingYears);
+    } catch (error) {
+      console.error('获取匹配年份出错:', error);
+
+      // 如果出错，使用传统方法作为备选
+      console.log('使用传统方法计算匹配年份');
+
+      // 天干序号（甲=0, 乙=1, ..., 癸=9）
+      const stemIndex = "甲乙丙丁戊己庚辛壬癸".indexOf(yearStem);
+      // 地支序号（子=0, 丑=1, ..., 亥=11）
+      const branchIndex = "子丑寅卯辰巳午未申酉戌亥".indexOf(yearBranch);
+
+      // 计算匹配的年份列表
+      const currentYear = new Date().getFullYear();
+      const startYear = 1700; // 从1700年开始查找，确保覆盖17XX-19XX年
+      const endYear = currentYear + 120;   // 查找到120年后（2个甲子）
+
+      // 查找符合年柱的年份
+      for (let year = startYear; year <= endYear; year++) {
+        // 计算天干序号：年份减去4，除以10的余数
+        const stemCheck = (year - 4) % 10;
+        // 计算地支序号：年份减去4，除以12的余数
+        const branchCheck = (year - 4) % 12;
+
+        if (stemCheck === stemIndex && branchCheck === branchIndex) {
+          matchingYears.push(year);
+        }
       }
     }
 
     // 如果指定了年份，尝试使用指定的年份进行日期推算
     if (specifiedYear && matchingYears.includes(specifiedYear)) {
       try {
-        // 从月柱估算农历月份
-        const monthMap: {[key: string]: number} = {
-          '寅': 1, '卯': 2, '辰': 3, '巳': 4, '午': 5, '未': 6,
-          '申': 7, '酉': 8, '戌': 9, '亥': 10, '子': 11, '丑': 12
-        };
-        const lunarMonth = monthMap[monthBranch] || 1;
+        // 使用lunar-typescript库的Solar.fromBaZi方法反推日期
+        // 这个方法可能返回多个匹配的日期
+        const solarList = Solar.fromBaZi(
+          yearStem + yearBranch,
+          monthStem + monthBranch,
+          dayStem + dayBranch,
+          hourStem + hourBranch,
+          parseInt(sect), // 流派
+          1 // 起始年份设为1，确保能找到所有可能的日期
+        );
 
-        // 从时柱估算小时
-        const hourMap: {[key: string]: number} = {
-          '子': 0, '丑': 2, '寅': 4, '卯': 6, '辰': 8, '巳': 10,
-          '午': 12, '未': 14, '申': 16, '酉': 18, '戌': 20, '亥': 22
-        };
-        const hour = hourMap[hourBranch] || 0;
-
-        // 使用lunar-typescript库查找符合条件的农历日期
-        // 遍历指定年份的农历月份，找到匹配八字的日期
-        let found = false;
-        for (let day = 1; day <= 30; day++) {
-          try {
-            lunar = Lunar.fromYmdHms(specifiedYear, lunarMonth, day, hour, 0, 0);
-            solar = lunar.getSolar();
-            eightChar = lunar.getEightChar();
-            const checkYearPillar = eightChar.getYearGan() + eightChar.getYearZhi();
-            const checkMonthPillar = eightChar.getMonthGan() + eightChar.getMonthZhi();
-            const checkDayPillar = eightChar.getDayGan() + eightChar.getDayZhi();
-            // 使用hourStem和hourBranch替代getHourGan和getHourZhi
-            const checkHourPillar = hourStem + hourBranch;
-            if (checkYearPillar === parts[0] && checkMonthPillar === parts[1] &&
-                checkDayPillar === parts[2] && checkHourPillar === parts[3]) {
-              found = true;
-              break;
-            }
-          } catch (e) {
-            // 如果日期无效，继续下一个日期
-            continue;
+        // 找到指定年份的日期
+        let matchingSolar: Solar | null = null;
+        for (const s of solarList) {
+          if (s.getYear() === specifiedYear) {
+            matchingSolar = s;
+            break;
           }
         }
 
-        if (!found) {
-          // 如果未找到完全匹配的日期，使用农历月份的第一天作为近似值
-          lunar = Lunar.fromYmdHms(specifiedYear, lunarMonth, 1, hour, 0, 0);
-          solar = lunar.getSolar();
+        // 如果找到匹配的日期
+        if (matchingSolar) {
+          solar = matchingSolar;
+          lunar = matchingSolar.getLunar();
           eightChar = lunar.getEightChar();
-        }
 
-        // 格式化日期，确保solar和lunar不为null
-        if (solar && lunar) {
-          solarDate = `${solar.getYear()}-${solar.getMonth().toString().padStart(2, '0')}-${solar.getDay().toString().padStart(2, '0')}`;
+          // 格式化日期
+          solarDate = `${matchingSolar.getYear()}-${matchingSolar.getMonth().toString().padStart(2, '0')}-${matchingSolar.getDay().toString().padStart(2, '0')}`;
           lunarDate = lunar.toString();
-          solarTime = `${hour.toString().padStart(2, '0')}:00`;
-        }
+          solarTime = `${matchingSolar.getHour().toString().padStart(2, '0')}:${matchingSolar.getMinute().toString().padStart(2, '0')}`;
 
-        console.log('日期反推逻辑 - 指定年份:', specifiedYear);
-        console.log('日期反推逻辑 - 估算农历月份:', lunarMonth, '基于月支:', monthBranch);
-        console.log('日期反推逻辑 - 估算小时:', hour, '基于时支:', hourBranch);
-        console.log('日期反推逻辑 - 遍历农历日期寻找匹配八字:', found ? '找到匹配日期' : '未找到完全匹配，使用近似日期');
-        console.log('日期反推结果 - 阳历日期:', solarDate);
-        console.log('日期反推结果 - 农历日期:', lunarDate);
+          console.log('日期反推成功 - 指定年份:', specifiedYear);
+          console.log('日期反推结果 - 阳历日期:', solarDate);
+          console.log('日期反推结果 - 农历日期:', lunarDate);
+        } else {
+          console.log('日期反推失败 - 未找到指定年份的匹配日期');
+        }
       } catch (error) {
         console.error('日期推算出错:', error);
       }
@@ -1913,6 +1933,8 @@ export class BaziService {
       riZhuStrengthDetails
     };
   }
+
+
 
   /**
    * 获取地支对应的生肖
