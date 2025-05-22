@@ -524,7 +524,7 @@ export class InteractiveBaziView {
             const span = yearCell.createSpan({
               text: shenSha,
               cls: cssClass,
-              attr: { 'title': shenShaInfo?.explanation || '' }
+              attr: { 'title': shenShaInfo?.description || '' }
             });
 
             span.addEventListener('click', () => {
@@ -557,7 +557,7 @@ export class InteractiveBaziView {
             const span = monthCell.createSpan({
               text: shenSha,
               cls: cssClass,
-              attr: { 'title': shenShaInfo?.explanation || '' }
+              attr: { 'title': shenShaInfo?.description || '' }
             });
 
             span.addEventListener('click', () => {
@@ -590,7 +590,7 @@ export class InteractiveBaziView {
             const span = dayCell.createSpan({
               text: shenSha,
               cls: cssClass,
-              attr: { 'title': shenShaInfo?.explanation || '' }
+              attr: { 'title': shenShaInfo?.description || '' }
             });
 
             span.addEventListener('click', () => {
@@ -623,7 +623,7 @@ export class InteractiveBaziView {
             const span = hourCell.createSpan({
               text: shenSha,
               cls: cssClass,
-              attr: { 'title': shenShaInfo?.explanation || '' }
+              attr: { 'title': shenShaInfo?.description || '' }
             });
 
             span.addEventListener('click', () => {
@@ -2297,45 +2297,204 @@ export class InteractiveBaziView {
    */
   private showShenShaExplanation(shenSha: string) {
     // 获取神煞详细解释
-    const explanation = ShenShaService.getShenShaExplanation(shenSha);
+    const shenShaInfo = ShenShaService.getShenShaExplanation(shenSha);
 
-    // 创建弹窗
-    const modal = document.createElement('div');
-    modal.className = 'bazi-modal';
+    // 创建一个临时容器
+    const container = document.createElement('div');
+    container.className = 'shensha-modal-container';
+    container.style.position = 'fixed';
+    container.style.top = '0';
+    container.style.left = '0';
+    container.style.width = '100%';
+    container.style.height = '100%';
+    container.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+    container.style.display = 'flex';
+    container.style.justifyContent = 'center';
+    container.style.alignItems = 'center';
+    container.style.zIndex = '1000';
+    document.body.appendChild(container);
 
-    // 创建弹窗内容
+    // 直接创建DOM元素显示神煞详情
     const modalContent = document.createElement('div');
-    modalContent.className = 'bazi-modal-content';
+    modalContent.className = 'shensha-modal-content';
+    modalContent.style.backgroundColor = 'var(--background-primary)';
+    modalContent.style.borderRadius = '8px';
+    modalContent.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+    modalContent.style.width = '90%';
+    modalContent.style.maxWidth = '600px';
+    modalContent.style.maxHeight = '90vh';
+    modalContent.style.overflowY = 'auto';
+    modalContent.style.padding = '20px';
+    container.appendChild(modalContent);
+
+    // 创建标题和类型容器
+    const headerContainer = document.createElement('div');
+    headerContainer.style.display = 'flex';
+    headerContainer.style.justifyContent = 'space-between';
+    headerContainer.style.alignItems = 'center';
+    headerContainer.style.marginBottom = '15px';
+    headerContainer.style.borderBottom = '1px solid var(--background-modifier-border)';
+    headerContainer.style.paddingBottom = '10px';
+    modalContent.appendChild(headerContainer);
 
     // 创建标题
     const title = document.createElement('h3');
-    title.textContent = explanation.name;
-    title.className = 'bazi-modal-title';
-
-    // 根据神煞类型设置不同的样式
-    let typeClass = 'bazi-modal-type';
-    if (explanation.type === '吉神') {
-      typeClass += ' bazi-modal-type-good';
-    } else if (explanation.type === '凶神') {
-      typeClass += ' bazi-modal-type-bad';
-    } else if (explanation.type === '吉凶神') {
-      typeClass += ' bazi-modal-type-mixed';
-    }
+    title.textContent = shenShaInfo.name;
+    title.style.margin = '0';
+    title.style.fontSize = '1.5em';
+    headerContainer.appendChild(title);
 
     // 创建类型
     const type = document.createElement('div');
-    type.textContent = `类型: ${explanation.type}`;
-    type.className = typeClass;
+    type.textContent = shenShaInfo.type;
+    type.style.padding = '4px 10px';
+    type.style.borderRadius = '16px';
+    type.style.fontSize = '0.9em';
+    type.style.fontWeight = 'bold';
 
-    // 创建解释
-    const explanationText = document.createElement('div');
-    explanationText.textContent = explanation.explanation;
-    explanationText.className = 'bazi-modal-explanation';
+    if (shenShaInfo.type === '吉神') {
+      type.style.backgroundColor = 'rgba(0, 128, 0, 0.1)';
+      type.style.color = '#2a9d8f';
+      type.style.border = '1px solid #2a9d8f';
+    } else if (shenShaInfo.type === '凶神') {
+      type.style.backgroundColor = 'rgba(220, 20, 60, 0.1)';
+      type.style.color = '#e76f51';
+      type.style.border = '1px solid #e76f51';
+    } else if (shenShaInfo.type === '吉凶神') {
+      type.style.backgroundColor = 'rgba(255, 165, 0, 0.1)';
+      type.style.color = '#e9c46a';
+      type.style.border = '1px solid #e9c46a';
+    }
 
-    // 创建影响
-    const influence = document.createElement('div');
-    influence.textContent = explanation.influence;
-    influence.className = 'bazi-modal-influence';
+    headerContainer.appendChild(type);
+
+    // 创建简介部分
+    const descriptionSection = document.createElement('div');
+    descriptionSection.style.marginBottom = '15px';
+    modalContent.appendChild(descriptionSection);
+
+    const descriptionTitle = document.createElement('h4');
+    descriptionTitle.textContent = '简介';
+    descriptionTitle.style.marginTop = '0';
+    descriptionTitle.style.marginBottom = '8px';
+    descriptionSection.appendChild(descriptionTitle);
+
+    const description = document.createElement('p');
+    description.textContent = shenShaInfo.description;
+    description.style.margin = '0';
+    descriptionSection.appendChild(description);
+
+    // 创建详细解释部分
+    const detailSection = document.createElement('div');
+    detailSection.style.marginBottom = '15px';
+    modalContent.appendChild(detailSection);
+
+    const detailTitle = document.createElement('h4');
+    detailTitle.textContent = '详细解释';
+    detailTitle.style.marginTop = '0';
+    detailTitle.style.marginBottom = '8px';
+    detailSection.appendChild(detailTitle);
+
+    const detailDescription = document.createElement('p');
+    detailDescription.textContent = shenShaInfo.detailDescription;
+    detailDescription.style.margin = '0';
+    detailSection.appendChild(detailDescription);
+
+    // 创建影响领域部分
+    if (shenShaInfo.influence && shenShaInfo.influence.length > 0) {
+      const influenceSection = document.createElement('div');
+      influenceSection.style.marginBottom = '15px';
+      modalContent.appendChild(influenceSection);
+
+      const influenceTitle = document.createElement('h4');
+      influenceTitle.textContent = '影响领域';
+      influenceTitle.style.marginTop = '0';
+      influenceTitle.style.marginBottom = '8px';
+      influenceSection.appendChild(influenceTitle);
+
+      const influenceTags = document.createElement('div');
+      influenceTags.style.display = 'flex';
+      influenceTags.style.flexWrap = 'wrap';
+      influenceTags.style.gap = '8px';
+
+      shenShaInfo.influence.forEach(tag => {
+        const tagElement = document.createElement('span');
+        tagElement.textContent = tag;
+        tagElement.style.backgroundColor = 'var(--background-secondary)';
+        tagElement.style.padding = '4px 10px';
+        tagElement.style.borderRadius = '16px';
+        tagElement.style.fontSize = '0.9em';
+        influenceTags.appendChild(tagElement);
+      });
+
+      influenceSection.appendChild(influenceTags);
+    }
+
+    // 创建计算方法部分
+    if (shenShaInfo.calculation) {
+      const calculationSection = document.createElement('div');
+      calculationSection.style.marginBottom = '15px';
+      modalContent.appendChild(calculationSection);
+
+      const calculationHeader = document.createElement('div');
+      calculationHeader.style.display = 'flex';
+      calculationHeader.style.justifyContent = 'space-between';
+      calculationHeader.style.alignItems = 'center';
+      calculationHeader.style.marginBottom = '8px';
+      calculationSection.appendChild(calculationHeader);
+
+      const calculationTitle = document.createElement('h4');
+      calculationTitle.textContent = '计算方法';
+      calculationTitle.style.marginTop = '0';
+      calculationTitle.style.marginBottom = '0';
+      calculationHeader.appendChild(calculationTitle);
+
+      // 创建复制按钮
+      const copyButton = document.createElement('button');
+      copyButton.textContent = '复制计算方法';
+      copyButton.style.backgroundColor = 'var(--interactive-accent)';
+      copyButton.style.color = 'var(--text-on-accent)';
+      copyButton.style.border = 'none';
+      copyButton.style.borderRadius = '4px';
+      copyButton.style.padding = '4px 8px';
+      copyButton.style.fontSize = '0.8em';
+      copyButton.style.cursor = 'pointer';
+
+      copyButton.addEventListener('click', () => {
+        // 创建一个临时元素来存储纯文本内容
+        const tempElement = document.createElement('div');
+        tempElement.innerHTML = shenShaInfo.calculation || '';
+        const plainText = tempElement.textContent || tempElement.innerText;
+
+        navigator.clipboard.writeText(plainText)
+          .then(() => {
+            copyButton.textContent = '复制成功！';
+            setTimeout(() => {
+              copyButton.textContent = '复制计算方法';
+            }, 2000);
+          })
+          .catch(err => {
+            console.error('复制失败:', err);
+            copyButton.textContent = '复制失败';
+            setTimeout(() => {
+              copyButton.textContent = '复制计算方法';
+            }, 2000);
+          });
+      });
+
+      calculationHeader.appendChild(copyButton);
+
+      const calculationContent = document.createElement('div');
+      calculationContent.innerHTML = shenShaInfo.calculation;
+      calculationContent.style.backgroundColor = 'var(--background-secondary)';
+      calculationContent.style.padding = '10px';
+      calculationContent.style.borderRadius = '4px';
+      calculationContent.style.fontFamily = 'monospace';
+      calculationContent.style.whiteSpace = 'pre-wrap';
+      calculationContent.style.overflowX = 'auto';
+      calculationContent.style.userSelect = 'text';
+      calculationSection.appendChild(calculationContent);
+    }
 
     // 查找相关的神煞组合
     if (this.baziInfo.shenSha && this.baziInfo.shenSha.length > 0) {
@@ -2346,94 +2505,129 @@ export class InteractiveBaziView {
       const relevantCombinations = combinations.filter(combo => combo.combination.includes(cleanShenSha));
 
       if (relevantCombinations.length > 0) {
-        // 创建组合分析标题
+        // 创建相关组合容器
+        const combinationsSection = document.createElement('div');
+        combinationsSection.style.marginBottom = '15px';
+        modalContent.appendChild(combinationsSection);
+
         const combinationsTitle = document.createElement('h4');
         combinationsTitle.textContent = '相关神煞组合';
-        combinationsTitle.className = 'bazi-modal-subtitle';
-        modalContent.appendChild(combinationsTitle);
+        combinationsTitle.style.marginTop = '0';
+        combinationsTitle.style.marginBottom = '8px';
+        combinationsSection.appendChild(combinationsTitle);
 
         // 按组合级别排序（4级组合优先显示，然后是3级，最后是2级）
         const sortedCombinations = [...relevantCombinations].sort((a, b) => (b.level || 2) - (a.level || 2));
 
-        // 创建组合分析列表
+        // 创建组合列表
         sortedCombinations.forEach(combo => {
           const comboContainer = document.createElement('div');
-          comboContainer.className = 'bazi-modal-combo-container';
+          comboContainer.style.marginBottom = '10px';
+          comboContainer.style.padding = '10px';
+          comboContainer.style.borderRadius = '4px';
+          comboContainer.style.backgroundColor = 'var(--background-secondary)';
 
           // 根据组合类型添加不同的样式
           if (combo.type === 'good') {
-            comboContainer.classList.add('combo-good');
+            comboContainer.style.borderLeft = '3px solid #2a9d8f';
           } else if (combo.type === 'bad') {
-            comboContainer.classList.add('combo-bad');
+            comboContainer.style.borderLeft = '3px solid #e76f51';
           } else if (combo.type === 'mixed') {
-            comboContainer.classList.add('combo-mixed');
+            comboContainer.style.borderLeft = '3px solid #e9c46a';
           }
 
+          // 创建组合标题
           const comboTitle = document.createElement('div');
+          comboTitle.style.fontWeight = 'bold';
+          comboTitle.style.marginBottom = '5px';
+          comboTitle.style.display = 'flex';
+          comboTitle.style.justifyContent = 'space-between';
+          comboTitle.style.alignItems = 'center';
+
+          // 组合名称
+          const comboName = document.createElement('span');
+          comboName.textContent = combo.combination;
+          comboTitle.appendChild(comboName);
+
+          // 组合级别和类型
+          const comboInfo = document.createElement('div');
 
           // 根据组合级别添加不同的标签
-          let levelText = '';
-          let levelClass = '';
+          const levelTag = document.createElement('span');
+          levelTag.style.padding = '2px 6px';
+          levelTag.style.borderRadius = '10px';
+          levelTag.style.fontSize = '0.8em';
+          levelTag.style.marginRight = '5px';
+
           if (combo.level === 4) {
-            levelText = '【四神煞组合】';
-            levelClass = 'bazi-combination-level-4';
+            levelTag.textContent = '四神煞组合';
+            levelTag.style.backgroundColor = 'rgba(75, 0, 130, 0.1)';
+            levelTag.style.color = '#8a2be2';
+            levelTag.style.border = '1px solid #8a2be2';
           } else if (combo.level === 3) {
-            levelText = '【三神煞组合】';
-            levelClass = 'bazi-combination-level-3';
+            levelTag.textContent = '三神煞组合';
+            levelTag.style.backgroundColor = 'rgba(0, 0, 255, 0.1)';
+            levelTag.style.color = '#0000ff';
+            levelTag.style.border = '1px solid #0000ff';
           } else {
-            levelText = '【二神煞组合】';
-            levelClass = 'bazi-combination-level-2';
+            levelTag.textContent = '二神煞组合';
+            levelTag.style.backgroundColor = 'rgba(0, 128, 128, 0.1)';
+            levelTag.style.color = '#008080';
+            levelTag.style.border = '1px solid #008080';
           }
 
-          const levelSpan = document.createElement('span');
-          levelSpan.textContent = levelText;
-          levelSpan.className = levelClass;
+          comboInfo.appendChild(levelTag);
 
           // 根据组合类型添加不同的标签
-          let typeText = '';
-          let typeClass = '';
+          const typeTag = document.createElement('span');
+          typeTag.style.padding = '2px 6px';
+          typeTag.style.borderRadius = '10px';
+          typeTag.style.fontSize = '0.8em';
+
           if (combo.type === 'good') {
-            typeText = '吉神组合';
-            typeClass = 'bazi-combo-type bazi-combo-type-good';
+            typeTag.textContent = '吉神组合';
+            typeTag.style.backgroundColor = 'rgba(0, 128, 0, 0.1)';
+            typeTag.style.color = '#2a9d8f';
+            typeTag.style.border = '1px solid #2a9d8f';
           } else if (combo.type === 'bad') {
-            typeText = '凶神组合';
-            typeClass = 'bazi-combo-type bazi-combo-type-bad';
+            typeTag.textContent = '凶神组合';
+            typeTag.style.backgroundColor = 'rgba(220, 20, 60, 0.1)';
+            typeTag.style.color = '#e76f51';
+            typeTag.style.border = '1px solid #e76f51';
           } else if (combo.type === 'mixed') {
-            typeText = '吉凶神组合';
-            typeClass = 'bazi-combo-type bazi-combo-type-mixed';
+            typeTag.textContent = '吉凶神组合';
+            typeTag.style.backgroundColor = 'rgba(255, 165, 0, 0.1)';
+            typeTag.style.color = '#e9c46a';
+            typeTag.style.border = '1px solid #e9c46a';
           }
 
-          const typeSpan = document.createElement('span');
-          typeSpan.textContent = typeText;
-          typeSpan.className = typeClass;
+          comboInfo.appendChild(typeTag);
+          comboTitle.appendChild(comboInfo);
+          comboContainer.appendChild(comboTitle);
 
-          comboTitle.textContent = combo.combination + ' ';
-          comboTitle.appendChild(levelSpan);
-          comboTitle.appendChild(typeSpan);
-          comboTitle.className = 'bazi-modal-combo-title';
-
+          // 创建组合分析
           const comboAnalysis = document.createElement('div');
           comboAnalysis.textContent = combo.analysis;
-          comboAnalysis.className = 'bazi-modal-combo-analysis';
+          comboAnalysis.style.marginBottom = '5px';
+          comboContainer.appendChild(comboAnalysis);
 
           // 添加组合来源
           if (combo.source) {
             const comboSource = document.createElement('div');
             comboSource.textContent = '【组合来源】' + combo.source;
-            comboSource.className = 'bazi-combo-source';
-            comboContainer.appendChild(comboTitle);
-            comboContainer.appendChild(comboAnalysis);
+            comboSource.style.fontSize = '0.9em';
+            comboSource.style.color = 'var(--text-muted)';
+            comboSource.style.marginTop = '5px';
             comboContainer.appendChild(comboSource);
-          } else {
-            comboContainer.appendChild(comboTitle);
-            comboContainer.appendChild(comboAnalysis);
           }
 
           // 添加组合影响
           if (combo.influence) {
             const comboInfluence = document.createElement('div');
             comboInfluence.textContent = '【组合影响】' + combo.influence;
-            comboInfluence.className = 'bazi-combo-influence';
+            comboInfluence.style.fontSize = '0.9em';
+            comboInfluence.style.color = 'var(--text-muted)';
+            comboInfluence.style.marginTop = '5px';
             comboContainer.appendChild(comboInfluence);
           }
 
@@ -2441,91 +2635,61 @@ export class InteractiveBaziView {
           if (combo.solution) {
             const comboSolution = document.createElement('div');
             comboSolution.textContent = '【应对方法】' + combo.solution;
-            comboSolution.className = 'bazi-combo-solution';
+            comboSolution.style.fontSize = '0.9em';
+            comboSolution.style.color = 'var(--text-muted)';
+            comboSolution.style.marginTop = '5px';
             comboContainer.appendChild(comboSolution);
           }
 
-          modalContent.appendChild(comboContainer);
+          combinationsSection.appendChild(comboContainer);
         });
       }
     }
 
+    // 创建底部按钮区域
+    const footerContainer = document.createElement('div');
+    footerContainer.style.display = 'flex';
+    footerContainer.style.justifyContent = 'flex-end';
+    footerContainer.style.marginTop = '20px';
+    footerContainer.style.borderTop = '1px solid var(--background-modifier-border)';
+    footerContainer.style.paddingTop = '15px';
+    modalContent.appendChild(footerContainer);
+
     // 创建关闭按钮
     const closeButton = document.createElement('button');
     closeButton.textContent = '关闭';
-    closeButton.className = 'bazi-modal-close';
+    closeButton.style.backgroundColor = 'var(--background-modifier-border)';
+    closeButton.style.color = 'var(--text-normal)';
+    closeButton.style.border = 'none';
+    closeButton.style.borderRadius = '4px';
+    closeButton.style.padding = '8px 16px';
+    closeButton.style.cursor = 'pointer';
+    closeButton.style.fontSize = '1em';
+
     closeButton.addEventListener('click', () => {
-      document.body.removeChild(modal);
+      document.body.removeChild(container);
+      document.removeEventListener('keydown', handleKeyDown);
     });
 
-    // 添加内容到弹窗
-    modalContent.appendChild(title);
-    modalContent.appendChild(type);
-    modalContent.appendChild(explanationText);
-    modalContent.appendChild(influence);
+    footerContainer.appendChild(closeButton);
 
-    // 添加计算方法（如果有）
-    if (explanation.calculation) {
-      const calculation = document.createElement('div');
-      calculation.className = 'bazi-modal-calculation';
-
-      // 创建计算方法标题和复制按钮
-      const calculationHeader = document.createElement('div');
-      calculationHeader.className = 'bazi-modal-calculation-header';
-
-      const calculationTitle = document.createElement('strong');
-      calculationTitle.textContent = '【计算方法】';
-
-      const copyButton = document.createElement('button');
-      copyButton.textContent = '复制计算过程';
-      copyButton.className = 'bazi-modal-copy-button';
-      copyButton.addEventListener('click', () => {
-        // 复制计算过程到剪贴板
-        navigator.clipboard.writeText(explanation.calculation || '')
-          .then(() => {
-            // 显示复制成功提示
-            const originalText = copyButton.textContent;
-            copyButton.textContent = '复制成功！';
-            setTimeout(() => {
-              copyButton.textContent = originalText;
-            }, 2000);
-          })
-          .catch(err => {
-            console.error('复制失败:', err);
-            copyButton.textContent = '复制失败';
-            setTimeout(() => {
-              copyButton.textContent = '复制计算过程';
-            }, 2000);
-          });
-      });
-
-      calculationHeader.appendChild(calculationTitle);
-      calculationHeader.appendChild(copyButton);
-
-      // 创建计算过程内容
-      const calculationContent = document.createElement('pre');
-      calculationContent.style.userSelect = 'text';
-      calculationContent.textContent = explanation.calculation || '无计算过程';
-
-      // 添加计算方法到弹窗
-      calculation.appendChild(calculationHeader);
-      calculation.appendChild(calculationContent);
-
-      modalContent.appendChild(calculation);
-    }
-
-    modalContent.appendChild(closeButton);
-
-    // 添加弹窗到页面
-    modal.appendChild(modalContent);
-    document.body.appendChild(modal);
-
-    // 点击弹窗外部关闭弹窗
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) {
-        document.body.removeChild(modal);
+    // 添加关闭事件监听
+    container.addEventListener('click', (e) => {
+      if (e.target === container) {
+        document.body.removeChild(container);
+        document.removeEventListener('keydown', handleKeyDown);
       }
     });
+
+    // 监听Escape键
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        document.body.removeChild(container);
+        document.removeEventListener('keydown', handleKeyDown);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
   }
 
   /**
@@ -2620,9 +2784,225 @@ export class InteractiveBaziView {
    * 添加神煞信息
    * @param infoList 信息列表元素
    */
-  private addShenShaInfo(_infoList: HTMLElement) {
-    // 不再在特殊信息区域显示神煞信息，因为已经在命盘表格中显示了
-    return;
+  private addShenShaInfo(infoList: HTMLElement) {
+    if (!this.baziInfo.shenSha || this.baziInfo.shenSha.length === 0) {
+      return;
+    }
+
+    // 创建神煞信息项
+    const shenShaItem = infoList.createEl('li', { cls: 'shensha-info-item' });
+    shenShaItem.createSpan({ text: '神煞详情: ' });
+
+    // 创建神煞详情容器
+    const shenShaContainer = shenShaItem.createDiv({ cls: 'shensha-detail-container' });
+
+    // 创建神煞标签列表
+    const shenShaList = document.createElement('div');
+    shenShaList.className = 'shensha-list';
+
+    // 分类神煞
+    const goodShenSha: string[] = [];
+    const badShenSha: string[] = [];
+    const mixedShenSha: string[] = [];
+
+    // 处理神煞列表
+    this.baziInfo.shenSha.forEach(shenSha => {
+      // 获取神煞信息
+      const shenShaInfo = ShenShaService.getShenShaInfo(shenSha);
+
+      if (shenShaInfo) {
+        // 根据类型分类
+        if (shenShaInfo.type === '吉神') {
+          goodShenSha.push(shenSha);
+        } else if (shenShaInfo.type === '凶神') {
+          badShenSha.push(shenSha);
+        } else {
+          mixedShenSha.push(shenSha);
+        }
+      }
+    });
+
+    // 创建吉神区域
+    if (goodShenSha.length > 0) {
+      const goodSection = document.createElement('div');
+      goodSection.className = 'shensha-section good-section';
+
+      const goodTitle = document.createElement('div');
+      goodTitle.className = 'shensha-section-title';
+      goodTitle.textContent = '吉神';
+      goodSection.appendChild(goodTitle);
+
+      const goodList = document.createElement('div');
+      goodList.className = 'shensha-items';
+
+      goodShenSha.forEach(shenSha => {
+        const item = document.createElement('span');
+        item.className = 'shensha-item good-shensha';
+        item.textContent = shenSha.includes(':') ? shenSha.split(':')[1] : shenSha;
+        item.addEventListener('click', () => this.showShenShaExplanation(shenSha));
+
+        // 添加提示
+        const shenShaInfo = ShenShaService.getShenShaInfo(shenSha);
+        if (shenShaInfo) {
+          item.title = shenShaInfo.description;
+        }
+
+        goodList.appendChild(item);
+      });
+
+      goodSection.appendChild(goodList);
+      shenShaList.appendChild(goodSection);
+    }
+
+    // 创建吉凶神区域
+    if (mixedShenSha.length > 0) {
+      const mixedSection = document.createElement('div');
+      mixedSection.className = 'shensha-section mixed-section';
+
+      const mixedTitle = document.createElement('div');
+      mixedTitle.className = 'shensha-section-title';
+      mixedTitle.textContent = '吉凶神';
+      mixedSection.appendChild(mixedTitle);
+
+      const mixedList = document.createElement('div');
+      mixedList.className = 'shensha-items';
+
+      mixedShenSha.forEach(shenSha => {
+        const item = document.createElement('span');
+        item.className = 'shensha-item mixed-shensha';
+        item.textContent = shenSha.includes(':') ? shenSha.split(':')[1] : shenSha;
+        item.addEventListener('click', () => this.showShenShaExplanation(shenSha));
+
+        // 添加提示
+        const shenShaInfo = ShenShaService.getShenShaInfo(shenSha);
+        if (shenShaInfo) {
+          item.title = shenShaInfo.description;
+        }
+
+        mixedList.appendChild(item);
+      });
+
+      mixedSection.appendChild(mixedList);
+      shenShaList.appendChild(mixedSection);
+    }
+
+    // 创建凶神区域
+    if (badShenSha.length > 0) {
+      const badSection = document.createElement('div');
+      badSection.className = 'shensha-section bad-section';
+
+      const badTitle = document.createElement('div');
+      badTitle.className = 'shensha-section-title';
+      badTitle.textContent = '凶神';
+      badSection.appendChild(badTitle);
+
+      const badList = document.createElement('div');
+      badList.className = 'shensha-items';
+
+      badShenSha.forEach(shenSha => {
+        const item = document.createElement('span');
+        item.className = 'shensha-item bad-shensha';
+        item.textContent = shenSha.includes(':') ? shenSha.split(':')[1] : shenSha;
+        item.addEventListener('click', () => this.showShenShaExplanation(shenSha));
+
+        // 添加提示
+        const shenShaInfo = ShenShaService.getShenShaInfo(shenSha);
+        if (shenShaInfo) {
+          item.title = shenShaInfo.description;
+        }
+
+        badList.appendChild(item);
+      });
+
+      badSection.appendChild(badList);
+      shenShaList.appendChild(badSection);
+    }
+
+    // 添加样式
+    const style = document.createElement('style');
+    style.textContent = `
+      .shensha-list {
+        margin-top: 8px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .shensha-section {
+        border-radius: 6px;
+        overflow: hidden;
+      }
+
+      .shensha-section-title {
+        padding: 4px 8px;
+        font-size: 12px;
+        font-weight: bold;
+      }
+
+      .good-section .shensha-section-title {
+        background-color: rgba(42, 157, 143, 0.1);
+        color: #2a9d8f;
+        border-left: 3px solid #2a9d8f;
+      }
+
+      .bad-section .shensha-section-title {
+        background-color: rgba(231, 111, 81, 0.1);
+        color: #e76f51;
+        border-left: 3px solid #e76f51;
+      }
+
+      .mixed-section .shensha-section-title {
+        background-color: rgba(233, 196, 106, 0.1);
+        color: #e9c46a;
+        border-left: 3px solid #e9c46a;
+      }
+
+      .shensha-items {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        padding: 6px;
+      }
+
+      .shensha-item {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 12px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+
+      .good-shensha {
+        background-color: rgba(42, 157, 143, 0.1);
+        color: #2a9d8f;
+      }
+
+      .good-shensha:hover {
+        background-color: rgba(42, 157, 143, 0.2);
+      }
+
+      .bad-shensha {
+        background-color: rgba(231, 111, 81, 0.1);
+        color: #e76f51;
+      }
+
+      .bad-shensha:hover {
+        background-color: rgba(231, 111, 81, 0.2);
+      }
+
+      .mixed-shensha {
+        background-color: rgba(233, 196, 106, 0.1);
+        color: #e9c46a;
+      }
+
+      .mixed-shensha:hover {
+        background-color: rgba(233, 196, 106, 0.2);
+      }
+    `;
+
+    shenShaContainer.appendChild(style);
+    shenShaContainer.appendChild(shenShaList);
   }
 
   /**
