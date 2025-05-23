@@ -1,56 +1,35 @@
-import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, MarkdownPostProcessorContext, debounce } from 'obsidian';
-import { BaziService } from 'src/services/BaziService';
-import { DatePickerModal } from 'src/ui/DatePickerModal';
-import { BaziInfoModal } from 'src/ui/BaziInfoModal';
-import { BaziParserModal } from 'src/ui/BaziParserModal';
-import { BaziSettingsModal } from 'src/ui/BaziSettingsModal';
-import { InteractiveBaziView } from 'src/ui/InteractiveBaziView';
+import { Editor, MarkdownView, Notice } from 'obsidian';
+import { BaziService } from '../services/BaziService';
+import type BaziPlugin from '../main';
 
-interface BaziPluginSettings {
-	defaultFormat: string;
-	useInteractiveView: boolean;
-	debugMode: boolean;
-	autoUpdateCodeBlock: boolean;
-	codeBlockUpdateDelay: number;
-	baziSect: string; // 八字流派
-	showShenSha: {
-		siZhu: boolean; // 四柱神煞
-		daYun: boolean; // 大运神煞
-		liuNian: boolean; // 流年神煞
-		xiaoYun: boolean; // 小运神煞
-		liuYue: boolean; // 流月神煞
-	};
-}
+/**
+ * 命令管理器
+ * 负责注册和管理插件的所有命令
+ */
+export class CommandManager {
+	private plugin: BaziPlugin;
 
-const DEFAULT_SETTINGS: BaziPluginSettings = {
-	defaultFormat: 'full', // 'full' 或 'simple'
-	useInteractiveView: true, // 是否使用交互式视图
-	debugMode: false, // 调试模式
-	autoUpdateCodeBlock: true, // 自动更新代码块
-	codeBlockUpdateDelay: 500, // 代码块更新延迟（毫秒）
-	baziSect: '2', // 默认使用流派2（晚子时日柱算当天）
-	showShenSha: {
-		siZhu: true, // 默认显示四柱神煞
-		daYun: true, // 默认显示大运神煞
-		liuNian: true, // 默认显示流年神煞
-		xiaoYun: true, // 默认显示小运神煞
-		liuYue: true, // 默认显示流月神煞
+	constructor(plugin: BaziPlugin) {
+		this.plugin = plugin;
 	}
-}
-
-export default class BaziPlugin extends Plugin {
-	settings: BaziPluginSettings;
 
 	/**
-	 * 添加命令
+	 * 注册所有命令
 	 */
-	addCommands() {
-		// 添加命令：输入时间转八字
-		this.addCommand({
+	registerCommands(): void {
+		this.registerDatePickerCommand();
+		this.registerBaziParserCommand();
+	}
+
+	/**
+	 * 注册日期选择命令
+	 */
+	private registerDatePickerCommand(): void {
+		this.plugin.addCommand({
 			id: 'open-date-picker',
 			name: '输入时间转八字',
 			editorCallback: (editor: Editor) => {
-				this.openDatePickerModal((baziInfo) => {
+				this.plugin.openDatePickerModal((baziInfo) => {
 					// 获取日期字符串
 					const dateStr = `${baziInfo.solarDate} ${baziInfo.solarTime}`;
 
@@ -74,9 +53,13 @@ export default class BaziPlugin extends Plugin {
 				});
 			}
 		});
+	}
 
-		// 添加命令：解析选中的八字
-		this.addCommand({
+	/**
+	 * 注册八字解析命令
+	 */
+	private registerBaziParserCommand(): void {
+		this.plugin.addCommand({
 			id: 'parse-selected-bazi',
 			name: '解析选中的八字',
 			editorCallback: (editor: Editor, view: MarkdownView) => {
@@ -111,7 +94,7 @@ bazi: ${cleanedBazi}
 						}
 					} else {
 						// 如果不符合格式，打开解析模态框让用户修改
-						this.openBaziParserModal(selection, (baziInfo) => {
+						this.plugin.openBaziParserModal(selection, (baziInfo) => {
 							// 获取解析后的八字
 							const parsedBazi = `${baziInfo.yearPillar} ${baziInfo.monthPillar} ${baziInfo.dayPillar} ${baziInfo.hourPillar}`;
 
