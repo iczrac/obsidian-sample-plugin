@@ -407,15 +407,25 @@ export class BaziSettingsModal extends Modal {
               // 调试信息
               console.log('切换四柱神煞显示状态:', value);
 
-              // 查找四柱神煞行
-              const siZhuShenShaRow = element.querySelector('.bazi-view-table tbody tr:nth-child(5)');
-              console.log('四柱神煞行元素:', siZhuShenShaRow);
-              if (siZhuShenShaRow) {
+              // 查找四柱神煞行 - 使用更精确的选择器
+              const siZhuShenShaRow = element.querySelector('.bazi-view-table tbody tr[data-row-type="shensha-row"]');
+              // 备用选择器
+              const backupSelector = element.querySelector('.bazi-view-table tbody tr:nth-child(5)');
+
+              console.log('四柱神煞行元素(精确选择器):', siZhuShenShaRow);
+              console.log('四柱神煞行元素(备用选择器):', backupSelector);
+
+              // 尝试使用精确选择器，如果找不到则使用备用选择器
+              const targetRow = siZhuShenShaRow || backupSelector;
+
+              if (targetRow) {
                 if (value) {
-                  (siZhuShenShaRow as HTMLElement).style.display = '';
+                  (targetRow as HTMLElement).style.display = '';
                 } else {
-                  (siZhuShenShaRow as HTMLElement).style.display = 'none';
+                  (targetRow as HTMLElement).style.display = 'none';
                 }
+              } else {
+                console.error('无法找到四柱神煞行元素');
               }
             }
           });
@@ -437,15 +447,25 @@ export class BaziSettingsModal extends Modal {
               // 调试信息
               console.log('切换大运神煞显示状态:', value);
 
-              // 查找大运神煞行
-              const daYunShenShaRow = element.querySelector('.bazi-view-dayun-table tr:nth-child(4)');
-              console.log('大运神煞行元素:', daYunShenShaRow);
-              if (daYunShenShaRow) {
+              // 查找大运神煞行 - 使用更精确的选择器
+              const daYunShenShaRow = element.querySelector('.bazi-view-dayun-table tr[data-row-type="shensha-row"]');
+              // 备用选择器
+              const backupSelector = element.querySelector('.bazi-view-dayun-table tr:nth-child(4)');
+
+              console.log('大运神煞行元素(精确选择器):', daYunShenShaRow);
+              console.log('大运神煞行元素(备用选择器):', backupSelector);
+
+              // 尝试使用精确选择器，如果找不到则使用备用选择器
+              const targetRow = daYunShenShaRow || backupSelector;
+
+              if (targetRow) {
                 if (value) {
-                  (daYunShenShaRow as HTMLElement).style.display = '';
+                  (targetRow as HTMLElement).style.display = '';
                 } else {
-                  (daYunShenShaRow as HTMLElement).style.display = 'none';
+                  (targetRow as HTMLElement).style.display = 'none';
                 }
+              } else {
+                console.error('无法找到大运神煞行元素');
               }
             }
           });
@@ -467,15 +487,25 @@ export class BaziSettingsModal extends Modal {
               // 调试信息
               console.log('切换流年神煞显示状态:', value);
 
-              // 查找流年神煞行
-              const liuNianShenShaRow = element.querySelector('.bazi-view-liunian-table tr:nth-child(4)');
-              console.log('流年神煞行元素:', liuNianShenShaRow);
-              if (liuNianShenShaRow) {
+              // 查找流年神煞行 - 使用更精确的选择器
+              const liuNianShenShaRow = element.querySelector('.bazi-view-liunian-table tr[data-row-type="shensha-row"]');
+              // 备用选择器
+              const backupSelector = element.querySelector('.bazi-view-liunian-table tr:nth-child(4)');
+
+              console.log('流年神煞行元素(精确选择器):', liuNianShenShaRow);
+              console.log('流年神煞行元素(备用选择器):', backupSelector);
+
+              // 尝试使用精确选择器，如果找不到则使用备用选择器
+              const targetRow = liuNianShenShaRow || backupSelector;
+
+              if (targetRow) {
                 if (value) {
-                  (liuNianShenShaRow as HTMLElement).style.display = '';
+                  (targetRow as HTMLElement).style.display = '';
                 } else {
-                  (liuNianShenShaRow as HTMLElement).style.display = 'none';
+                  (targetRow as HTMLElement).style.display = 'none';
                 }
+              } else {
+                console.error('无法找到流年神煞行元素');
               }
             }
           });
@@ -497,15 +527,25 @@ export class BaziSettingsModal extends Modal {
               // 调试信息
               console.log('切换小运神煞显示状态:', value);
 
-              // 查找小运神煞行
-              const xiaoYunShenShaRow = element.querySelector('.bazi-view-xiaoyun-table tr:nth-child(4)');
-              console.log('小运神煞行元素:', xiaoYunShenShaRow);
-              if (xiaoYunShenShaRow) {
+              // 查找小运神煞行 - 使用更精确的选择器
+              const xiaoYunShenShaRow = element.querySelector('.bazi-view-xiaoyun-table tr[data-row-type="shensha-row"]');
+              // 备用选择器
+              const backupSelector = element.querySelector('.bazi-view-xiaoyun-table tr:nth-child(4)');
+
+              console.log('小运神煞行元素(精确选择器):', xiaoYunShenShaRow);
+              console.log('小运神煞行元素(备用选择器):', backupSelector);
+
+              // 尝试使用精确选择器，如果找不到则使用备用选择器
+              const targetRow = xiaoYunShenShaRow || backupSelector;
+
+              if (targetRow) {
                 if (value) {
-                  (xiaoYunShenShaRow as HTMLElement).style.display = '';
+                  (targetRow as HTMLElement).style.display = '';
                 } else {
-                  (xiaoYunShenShaRow as HTMLElement).style.display = 'none';
+                  (targetRow as HTMLElement).style.display = 'none';
                 }
+              } else {
+                console.error('无法找到小运神煞行元素');
               }
             }
           });
@@ -527,15 +567,25 @@ export class BaziSettingsModal extends Modal {
               // 调试信息
               console.log('切换流月神煞显示状态:', value);
 
-              // 查找流月神煞行
-              const liuYueShenShaRow = element.querySelector('.bazi-view-liuyue-table tr:nth-child(3)');
-              console.log('流月神煞行元素:', liuYueShenShaRow);
-              if (liuYueShenShaRow) {
+              // 查找流月神煞行 - 使用更精确的选择器
+              const liuYueShenShaRow = element.querySelector('.bazi-view-liuyue-table tr[data-row-type="shensha-row"]');
+              // 备用选择器
+              const backupSelector = element.querySelector('.bazi-view-liuyue-table tr:nth-child(3)');
+
+              console.log('流月神煞行元素(精确选择器):', liuYueShenShaRow);
+              console.log('流月神煞行元素(备用选择器):', backupSelector);
+
+              // 尝试使用精确选择器，如果找不到则使用备用选择器
+              const targetRow = liuYueShenShaRow || backupSelector;
+
+              if (targetRow) {
                 if (value) {
-                  (liuYueShenShaRow as HTMLElement).style.display = '';
+                  (targetRow as HTMLElement).style.display = '';
                 } else {
-                  (liuYueShenShaRow as HTMLElement).style.display = 'none';
+                  (targetRow as HTMLElement).style.display = 'none';
                 }
+              } else {
+                console.error('无法找到流月神煞行元素');
               }
             }
           });

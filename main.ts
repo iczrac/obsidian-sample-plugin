@@ -442,12 +442,43 @@ bazi: ${cleanedBazi}
 														// 替换代码块内容
 														const trimmedSource = newSource.trim();
 
-														// 使用编辑器API替换代码块
-														editor.replaceRange(
-															trimmedSource,
-															{line: block.start + 1, ch: 0},
-															{line: block.end, ch: 0}
-														);
+														// 检测原始代码块的缩进
+														let indentation = '';
+														// 检查第一行的缩进
+														if (block.start + 1 < lines.length) {
+															const firstLine = lines[block.start + 1];
+															const match = firstLine.match(/^(\s+)/);
+															if (match) {
+																indentation = match[1];
+															}
+														}
+
+														// 应用缩进到每一行
+														const indentedSource = trimmedSource
+															.split('\n')
+															.map(line => line.trim() ? indentation + line : line)
+															.join('\n');
+
+														// 使用文件API更新文件内容
+														const file = this.app.workspace.getActiveFile();
+														if (file) {
+															// 读取文件内容
+															this.app.vault.read(file).then(content => {
+																// 将内容分割成行
+																const fileLines = content.split('\n');
+
+																// 替换代码块
+																const beforeBlock = fileLines.slice(0, block.start).join('\n');
+																const afterBlock = fileLines.slice(block.end + 1).join('\n');
+																const newBlock = '```bazi\n' + indentedSource + '\n```';
+
+																// 构建新的文件内容
+																const newContent = beforeBlock + (beforeBlock ? '\n' : '') + newBlock + (afterBlock ? '\n' : '') + afterBlock;
+
+																// 更新文件内容
+																this.app.vault.modify(file, newContent);
+															});
+														}
 
 														statusNotice.hide();
 														new Notice('八字命盘代码块已更新', 3000);
@@ -726,10 +757,27 @@ bazi: ${cleanedBazi}
 																			// 将内容分割成行
 																			const lines = content.split('\n');
 
+																			// 检测原始代码块的缩进
+																			let indentation = '';
+																			// 检查第一行的缩进
+																			if (startLine + 1 < lines.length) {
+																				const firstLine = lines[startLine + 1];
+																				const match = firstLine.match(/^(\s+)/);
+																				if (match) {
+																					indentation = match[1];
+																				}
+																			}
+
+																			// 应用缩进到每一行
+																			const indentedSource = trimmedSource
+																				.split('\n')
+																				.map(line => line.trim() ? indentation + line : line)
+																				.join('\n');
+
 																			// 替换代码块
 																			const beforeBlock = lines.slice(0, startLine).join('\n');
 																			const afterBlock = lines.slice(endLine + 1).join('\n');
-																			const newBlock = '```bazi\n' + trimmedSource + '\n```';
+																			const newBlock = '```bazi\n' + indentedSource + '\n```';
 
 																			// 构建新的文件内容
 																			const newContent = beforeBlock + (beforeBlock ? '\n' : '') + newBlock + (afterBlock ? '\n' : '') + afterBlock;
@@ -1106,16 +1154,47 @@ bazi: ${cleanedBazi}
 														// 替换代码块内容
 														const trimmedSource = newSource.trim();
 
-														// 使用编辑器API替换代码块
-														editor.replaceRange(
-															trimmedSource,
-															{line: block.start + 1, ch: 0},
-															{line: block.end, ch: 0}
-														);
+														// 检测原始代码块的缩进
+														let indentation = '';
+														// 检查第一行的缩进
+														if (block.start + 1 < lines.length) {
+															const firstLine = lines[block.start + 1];
+															const match = firstLine.match(/^(\s+)/);
+															if (match) {
+																indentation = match[1];
+															}
+														}
+
+														// 应用缩进到每一行
+														const indentedSource = trimmedSource
+															.split('\n')
+															.map(line => line.trim() ? indentation + line : line)
+															.join('\n');
+
+														// 使用文件API更新文件内容
+														const file = this.app.workspace.getActiveFile();
+														if (file) {
+															// 读取文件内容
+															this.app.vault.read(file).then(content => {
+																// 将内容分割成行
+																const fileLines = content.split('\n');
+
+																// 替换代码块
+																const beforeBlock = fileLines.slice(0, block.start).join('\n');
+																const afterBlock = fileLines.slice(block.end + 1).join('\n');
+																const newBlock = '```bazi\n' + indentedSource + '\n```';
+
+																// 构建新的文件内容
+																const newContent = beforeBlock + (beforeBlock ? '\n' : '') + newBlock + (afterBlock ? '\n' : '') + afterBlock;
+
+																// 更新文件内容
+																this.app.vault.modify(file, newContent);
+															});
+														}
 
 														statusNotice.hide();
 														new Notice('八字命盘代码块已更新', 3000);
-														console.log('使用编辑器API更新代码块成功');
+														console.log('使用文件API更新代码块成功');
 													} else {
 														statusNotice.hide();
 														console.log('未找到任何bazi代码块');
@@ -1192,7 +1271,7 @@ bazi: ${cleanedBazi}
 															const editor = activeLeaf.view.editor;
 															const file = activeLeaf.view.file;
 															if (editor && file) {
-																// 直接使用编辑器API更新代码块，这样可以更精确地控制代码块的替换
+																// 直接使用文件API更新代码块，这样可以更精确地控制代码块的替换
 																// 查找文档中的所有代码块
 																const text = editor.getValue();
 																const lines = text.split('\n');
@@ -1512,11 +1591,11 @@ bazi: ${cleanedBazi}
 												if (sourceAttr) {
 													// 假设代码块内容可以通过属性找到
 													// 直接替换代码块内容
-													// 手动实现 this.updateCodeBlockWithEditorAPI(newSource) 的功能
-													console.log('尝试使用编辑器API更新代码块');
+													// 手动实现 this.updateCodeBlockWithFileAPI(newSource) 的功能
+													console.log('尝试使用文件API更新代码块');
 
 													// 显示状态通知
-													const statusNotice = new Notice('尝试使用编辑器API更新代码块...', 0);
+													const statusNotice = new Notice('尝试使用文件API更新代码块...', 0);
 
 													// 获取当前活动的编辑器视图
 													const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
@@ -1592,16 +1671,47 @@ bazi: ${cleanedBazi}
 															// 替换代码块内容
 															const trimmedSource = newSource.trim();
 
-															// 使用编辑器API替换代码块
-															editor.replaceRange(
-																trimmedSource,
-																{line: block.start + 1, ch: 0},
-																{line: block.end, ch: 0}
-															);
+															// 检测原始代码块的缩进
+															let indentation = '';
+															// 检查第一行的缩进
+															if (block.start + 1 < lines.length) {
+																const firstLine = lines[block.start + 1];
+																const match = firstLine.match(/^(\s+)/);
+																if (match) {
+																	indentation = match[1];
+																}
+															}
+
+															// 应用缩进到每一行
+															const indentedSource = trimmedSource
+																.split('\n')
+																.map(line => line.trim() ? indentation + line : line)
+																.join('\n');
+
+															// 使用文件API更新文件内容
+															const file = this.app.workspace.getActiveFile();
+															if (file) {
+																// 读取文件内容
+																this.app.vault.read(file).then(content => {
+																	// 将内容分割成行
+																	const fileLines = content.split('\n');
+
+																	// 替换代码块
+																	const beforeBlock = fileLines.slice(0, block.start).join('\n');
+																	const afterBlock = fileLines.slice(block.end + 1).join('\n');
+																	const newBlock = '```bazi\n' + indentedSource + '\n```';
+
+																	// 构建新的文件内容
+																	const newContent = beforeBlock + (beforeBlock ? '\n' : '') + newBlock + (afterBlock ? '\n' : '') + afterBlock;
+
+																	// 更新文件内容
+																	this.app.vault.modify(file, newContent);
+																});
+															}
 
 															statusNotice.hide();
 															new Notice('八字命盘代码块已更新', 3000);
-															console.log('使用编辑器API更新代码块成功');
+															console.log('使用文件API更新代码块成功');
 														} else {
 															statusNotice.hide();
 															console.log('未找到任何bazi代码块');
@@ -1609,7 +1719,7 @@ bazi: ${cleanedBazi}
 														}
 													} catch (error) {
 														statusNotice.hide();
-														console.error('使用编辑器API更新代码块时出错:', error);
+														console.error('使用文件API更新代码块时出错:', error);
 														new Notice('更新代码块时出错: ' + error.message, 5000);
 													}
 													new Notice(`已选择年份 ${year} 并更新代码块`);
@@ -1790,7 +1900,7 @@ bazi: ${cleanedBazi}
 																const editor = activeLeaf.view.editor;
 																const file = activeLeaf.view.file;
 																if (editor && file) {
-																	// 直接使用编辑器API更新代码块，这样可以更精确地控制代码块的替换
+																	// 直接使用文件API更新代码块，这样可以更精确地控制代码块的替换
 																	// 查找文档中的所有代码块
 																	const text = editor.getValue();
 																	const lines = text.split('\n');
@@ -1842,10 +1952,27 @@ bazi: ${cleanedBazi}
 																				// 将内容分割成行
 																				const lines = content.split('\n');
 
+																				// 检测原始代码块的缩进
+																				let indentation = '';
+																				// 检查第一行的缩进
+																				if (startLine + 1 < lines.length) {
+																					const firstLine = lines[startLine + 1];
+																					const match = firstLine.match(/^(\s+)/);
+																					if (match) {
+																						indentation = match[1];
+																					}
+																				}
+
+																				// 应用缩进到每一行
+																				const indentedSource = trimmedSource
+																					.split('\n')
+																					.map(line => line.trim() ? indentation + line : line)
+																					.join('\n');
+
 																				// 替换代码块
 																				const beforeBlock = lines.slice(0, startLine).join('\n');
 																				const afterBlock = lines.slice(endLine + 1).join('\n');
-																				const newBlock = '```bazi\n' + trimmedSource + '\n```';
+																				const newBlock = '```bazi\n' + indentedSource + '\n```';
 
 																				// 构建新的文件内容
 																				const newContent = beforeBlock + (beforeBlock ? '\n' : '') + newBlock + (afterBlock ? '\n' : '') + afterBlock;
@@ -1855,7 +1982,7 @@ bazi: ${cleanedBazi}
 																			});
 																		}
 
-																		console.log('代码块已更新，使用编辑器API直接替换');
+																		console.log('代码块已更新，使用文件API直接替换');
 																		new Notice(`已选择年份 ${year} 并更新代码块`);
 																	} else {
 																		console.error('未找到匹配的代码块');
@@ -2108,7 +2235,7 @@ bazi: ${cleanedBazi}
 															const editor = activeLeaf.view.editor;
 															const file = activeLeaf.view.file;
 															if (editor && file) {
-																// 直接使用编辑器API更新代码块，这样可以更精确地控制代码块的替换
+																// 直接使用文件API更新代码块，这样可以更精确地控制代码块的替换
 																// 查找文档中的所有代码块
 																const text = editor.getValue();
 																const lines = text.split('\n');
@@ -2160,10 +2287,27 @@ bazi: ${cleanedBazi}
 																			// 将内容分割成行
 																			const lines = content.split('\n');
 
+																			// 检测原始代码块的缩进
+																			let indentation = '';
+																			// 检查第一行的缩进
+																			if (startLine + 1 < lines.length) {
+																				const firstLine = lines[startLine + 1];
+																				const match = firstLine.match(/^(\s+)/);
+																				if (match) {
+																					indentation = match[1];
+																				}
+																			}
+
+																			// 应用缩进到每一行
+																			const indentedSource = trimmedSource
+																				.split('\n')
+																				.map(line => line.trim() ? indentation + line : line)
+																				.join('\n');
+
 																			// 替换代码块
 																			const beforeBlock = lines.slice(0, startLine).join('\n');
 																			const afterBlock = lines.slice(endLine + 1).join('\n');
-																			const newBlock = '```bazi\n' + trimmedSource + '\n```';
+																			const newBlock = '```bazi\n' + indentedSource + '\n```';
 
 																			// 构建新的文件内容
 																			const newContent = beforeBlock + (beforeBlock ? '\n' : '') + newBlock + (afterBlock ? '\n' : '') + afterBlock;
@@ -2173,7 +2317,7 @@ bazi: ${cleanedBazi}
 																		});
 																	}
 
-																	console.log('代码块已更新，使用编辑器API直接替换');
+																	console.log('代码块已更新，使用文件API直接替换');
 																	new Notice(`已选择性别 ${genderLabel} 并更新代码块`);
 																} else {
 																	console.error('未找到匹配的代码块');
@@ -2468,11 +2612,11 @@ bazi: ${cleanedBazi}
 											const sourceAttr = el.getAttribute('data-bazi-source');
 											const blockId = el.getAttribute('data-bazi-block-id');
 											if (sourceAttr && blockId) {
-												// 手动实现 this.updateCodeBlockWithEditorAPI(newSource) 的功能
-												console.log('尝试使用编辑器API更新代码块');
+												// 手动实现 this.updateCodeBlockWithFileAPI(newSource) 的功能
+												console.log('尝试使用文件API更新代码块');
 
 												// 显示状态通知
-												const statusNotice = new Notice('尝试使用编辑器API更新代码块...', 0);
+												const statusNotice = new Notice('尝试使用文件API更新代码块...', 0);
 
 												// 获取当前活动的编辑器视图
 												const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
@@ -2548,16 +2692,47 @@ bazi: ${cleanedBazi}
 														// 替换代码块内容
 														const trimmedSource = newSource.trim();
 
-														// 使用编辑器API替换代码块
-														editor.replaceRange(
-															trimmedSource,
-															{line: block.start + 1, ch: 0},
-															{line: block.end, ch: 0}
-														);
+														// 检测原始代码块的缩进
+														let indentation = '';
+														// 检查第一行的缩进
+														if (block.start + 1 < lines.length) {
+															const firstLine = lines[block.start + 1];
+															const match = firstLine.match(/^(\s+)/);
+															if (match) {
+																indentation = match[1];
+															}
+														}
+
+														// 应用缩进到每一行
+														const indentedSource = trimmedSource
+															.split('\n')
+															.map(line => line.trim() ? indentation + line : line)
+															.join('\n');
+
+														// 使用文件API更新文件内容
+														const file = this.app.workspace.getActiveFile();
+														if (file) {
+															// 读取文件内容
+															this.app.vault.read(file).then(content => {
+																// 将内容分割成行
+																const fileLines = content.split('\n');
+
+																// 替换代码块
+																const beforeBlock = fileLines.slice(0, block.start).join('\n');
+																const afterBlock = fileLines.slice(block.end + 1).join('\n');
+																const newBlock = '```bazi\n' + indentedSource + '\n```';
+
+																// 构建新的文件内容
+																const newContent = beforeBlock + (beforeBlock ? '\n' : '') + newBlock + (afterBlock ? '\n' : '') + afterBlock;
+
+																// 更新文件内容
+																this.app.vault.modify(file, newContent);
+															});
+														}
 
 														statusNotice.hide();
 														new Notice('八字命盘代码块已更新', 3000);
-														console.log('使用编辑器API更新代码块成功');
+														console.log('使用文件API更新代码块成功');
 													} else {
 														statusNotice.hide();
 														console.log('未找到任何bazi代码块');
@@ -2750,7 +2925,7 @@ bazi: ${cleanedBazi}
 															const editor = activeLeaf.view.editor;
 															const file = activeLeaf.view.file;
 															if (editor && file) {
-																// 直接使用编辑器API更新代码块，这样可以更精确地控制代码块的替换
+																// 直接使用文件API更新代码块，这样可以更精确地控制代码块的替换
 																// 查找文档中的所有代码块
 																const text = editor.getValue();
 																const lines = text.split('\n');
@@ -4487,6 +4662,62 @@ bazi: ${cleanedBazi}
 
 						// 打开设置模态框
 						this.openBaziSettingsModal(baziId, { year, month, day, hour }, (newBaziInfo) => {
+							// 调试信息：检查神煞数据
+							console.log('更新八字命盘前，检查神煞数据:');
+							// 手动检查神煞数据
+							console.log('======= 神煞数据检查 =======');
+
+							// 检查四柱神煞
+							console.log('年柱神煞:', newBaziInfo.yearShenSha);
+							console.log('月柱神煞:', newBaziInfo.monthShenSha);
+							console.log('日柱神煞:', newBaziInfo.dayShenSha);
+							console.log('时柱神煞:', newBaziInfo.hourShenSha);
+
+							// 检查大运神煞
+							console.log('大运神煞数据:');
+							if (Array.isArray(newBaziInfo.daYun)) {
+								newBaziInfo.daYun.forEach((dy, index) => {
+									console.log(`大运${index+1} (${dy.ganZhi}) 神煞:`, dy.shenSha);
+								});
+							} else {
+								console.log('大运数据不是数组');
+							}
+
+							// 检查流年神煞
+							console.log('流年神煞数据:');
+							if (newBaziInfo.liuNian && newBaziInfo.liuNian.length > 0) {
+								newBaziInfo.liuNian.forEach((ln, index) => {
+									console.log(`流年${index+1} (${ln.year}) 神煞:`, ln.shenSha);
+								});
+							} else {
+								console.log('流年数据为空');
+							}
+
+							// 检查小运神煞
+							console.log('小运神煞数据:');
+							if (newBaziInfo.xiaoYun && newBaziInfo.xiaoYun.length > 0) {
+								newBaziInfo.xiaoYun.forEach((xy, index) => {
+									console.log(`小运${index+1} (${xy.year}) 神煞:`, xy.shenSha);
+								});
+							} else {
+								console.log('小运数据为空');
+							}
+
+							// 检查流月神煞
+							console.log('流月神煞数据:');
+							if (newBaziInfo.liuYue && newBaziInfo.liuYue.length > 0) {
+								newBaziInfo.liuYue.forEach((ly, index) => {
+									console.log(`流月${index+1} (${ly.month}) 神煞:`, ly.shenSha);
+								});
+							} else {
+								console.log('流月数据为空');
+							}
+
+							// 检查神煞显示设置
+							console.log('神煞显示设置:', newBaziInfo.showShenSha);
+
+							console.log('======= 神煞数据检查结束 =======');
+
 							// 更新八字命盘
 							const newHtml = BaziService.generateBaziHTML(newBaziInfo, baziId);
 							container.innerHTML = newHtml;
@@ -4690,9 +4921,26 @@ bazi: ${cleanedBazi}
 												// 替换代码块内容
 												const trimmedSource = newSource.trim();
 
+												// 检测原始代码块的缩进
+												let indentation = '';
+												// 检查第一行的缩进
+												if (block.start + 1 < lines.length) {
+													const firstLine = lines[block.start + 1];
+													const match = firstLine.match(/^(\s+)/);
+													if (match) {
+														indentation = match[1];
+													}
+												}
+
+												// 应用缩进到每一行
+												const indentedSource = trimmedSource
+													.split('\n')
+													.map(line => line.trim() ? indentation + line : line)
+													.join('\n');
+
 												// 使用编辑器API替换代码块
 												editor.replaceRange(
-													trimmedSource,
+													indentedSource,
 													{line: block.start + 1, ch: 0},
 													{line: block.end, ch: 0}
 												);

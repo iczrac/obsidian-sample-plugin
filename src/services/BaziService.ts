@@ -4297,12 +4297,46 @@ export class BaziService {
     shenSha.push(...dayShenSha.map(s => `日柱:${s}`));
     shenSha.push(...hourShenSha.map(s => `时柱:${s}`));
 
+    // 调试信息
+    console.log('calculateShenSha 返回结果:');
+    console.log('总神煞:', shenSha);
+    console.log('年柱神煞:', yearShenSha);
+    console.log('月柱神煞:', monthShenSha);
+    console.log('日柱神煞:', dayShenSha);
+    console.log('时柱神煞:', hourShenSha);
+
+    // 确保返回的是数组
+    const finalShenSha = Array.isArray(shenSha) ? [...shenSha] : [];
+    if (!Array.isArray(shenSha)) {
+      console.error('总神煞不是数组，强制转换为数组');
+    }
+
+    const finalYearShenSha = Array.isArray(yearShenSha) ? [...yearShenSha] : [];
+    if (!Array.isArray(yearShenSha)) {
+      console.error('年柱神煞不是数组，强制转换为数组');
+    }
+
+    const finalMonthShenSha = Array.isArray(monthShenSha) ? [...monthShenSha] : [];
+    if (!Array.isArray(monthShenSha)) {
+      console.error('月柱神煞不是数组，强制转换为数组');
+    }
+
+    const finalDayShenSha = Array.isArray(dayShenSha) ? [...dayShenSha] : [];
+    if (!Array.isArray(dayShenSha)) {
+      console.error('日柱神煞不是数组，强制转换为数组');
+    }
+
+    const finalHourShenSha = Array.isArray(hourShenSha) ? [...hourShenSha] : [];
+    if (!Array.isArray(hourShenSha)) {
+      console.error('时柱神煞不是数组，强制转换为数组');
+    }
+
     return {
-      shenSha,
-      yearShenSha,
-      monthShenSha,
-      dayShenSha,
-      hourShenSha
+      shenSha: finalShenSha,
+      yearShenSha: finalYearShenSha,
+      monthShenSha: finalMonthShenSha,
+      dayShenSha: finalDayShenSha,
+      hourShenSha: finalHourShenSha
     };
   }
 
