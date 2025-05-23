@@ -816,6 +816,10 @@ export class BaziService {
           const stem = ganZhi.charAt(0);
           const branch = ganZhi.charAt(1);
 
+          // 调试信息
+          console.log(`计算大运神煞 - 索引: ${index}, 干支: ${ganZhi}`);
+          console.log(`大运神煞计算参数 - 日干: ${dayStem}, 年支: ${yearBranch}`);
+
           // 天乙贵人
           if (this.isTianYiGuiRen(dayStem, branch)) {
             shenSha.push('天乙贵人');
@@ -887,7 +891,7 @@ export class BaziService {
           }
 
           // 天喜
-          if (this.isTianXi(branch)) {
+          if (this.isTianXi(branch, yearBranch)) {
             shenSha.push('天喜');
           }
 
@@ -965,6 +969,9 @@ export class BaziService {
         console.error('计算大运神煞出错:', e);
       }
 
+      // 调试信息
+      console.log(`大运返回数据 - 索引: ${index}, 神煞数组: `, shenSha);
+
       return {
         startYear,
         endYear,
@@ -976,7 +983,7 @@ export class BaziService {
         xunKong,
         shiShenGan,
         diShi,
-        shenSha
+        shenSha: [...shenSha] // 确保返回一个新的数组副本
       };
     });
 
@@ -1032,6 +1039,10 @@ export class BaziService {
         if (ganZhi && ganZhi.length >= 2) {
           const stem = ganZhi.charAt(0);
           const branch = ganZhi.charAt(1);
+
+          // 调试信息
+          console.log(`计算流年神煞 - 年份: ${year}, 干支: ${ganZhi}`);
+          console.log(`流年神煞计算参数 - 日干: ${dayStem}, 年支: ${yearBranch}`);
 
           // 天乙贵人
           if (this.isTianYiGuiRen(dayStem, branch)) {
@@ -1104,7 +1115,7 @@ export class BaziService {
           }
 
           // 天喜
-          if (this.isTianXi(branch)) {
+          if (this.isTianXi(branch, yearBranch)) {
             shenSha.push('天喜');
           }
 
@@ -1242,6 +1253,9 @@ export class BaziService {
         console.error('计算流年神煞出错:', e);
       }
 
+      // 调试信息
+      console.log(`流年返回数据 - 年份: ${year}, 神煞数组: `, shenSha);
+
       return {
         year,
         age,
@@ -1251,7 +1265,7 @@ export class BaziService {
         xunKong,
         shiShenGan,
         diShi,
-        shenSha
+        shenSha: [...shenSha] // 确保返回一个新的数组副本
       };
     });
 
@@ -1307,6 +1321,10 @@ export class BaziService {
         if (ganZhi && ganZhi.length >= 2) {
           const stem = ganZhi.charAt(0);
           const branch = ganZhi.charAt(1);
+
+          // 调试信息
+          console.log(`计算小运神煞 - 年份: ${year}, 干支: ${ganZhi}`);
+          console.log(`小运神煞计算参数 - 日干: ${dayStem}, 年支: ${yearBranch}`);
 
           // 天乙贵人
           if (this.isTianYiGuiRen(dayStem, branch)) {
@@ -1379,7 +1397,7 @@ export class BaziService {
           }
 
           // 天喜
-          if (this.isTianXi(branch)) {
+          if (this.isTianXi(branch, yearBranch)) {
             shenSha.push('天喜');
           }
 
@@ -1507,6 +1525,9 @@ export class BaziService {
         console.error('计算小运神煞出错:', e);
       }
 
+      // 调试信息
+      console.log(`小运返回数据 - 年份: ${year}, 神煞数组: `, shenSha);
+
       return {
         year,
         age,
@@ -1516,7 +1537,7 @@ export class BaziService {
         xunKong,
         shiShenGan,
         diShi,
-        shenSha
+        shenSha: [...shenSha] // 确保返回一个新的数组副本
       };
     });
 
@@ -1581,6 +1602,10 @@ export class BaziService {
         if (ganZhi && ganZhi.length >= 2) {
           const stem = ganZhi.charAt(0);
           const branch = ganZhi.charAt(1);
+
+          // 调试信息
+          console.log(`计算流月神煞 - 月份: ${month}, 干支: ${ganZhi}`);
+          console.log(`流月神煞计算参数 - 日干: ${dayStem}, 年支: ${yearBranch}`);
 
           // 天乙贵人
           if (this.isTianYiGuiRen(dayStem, branch)) {
@@ -1653,7 +1678,7 @@ export class BaziService {
           }
 
           // 天喜
-          if (this.isTianXi(branch)) {
+          if (this.isTianXi(branch, yearBranch)) {
             shenSha.push('天喜');
           }
 
@@ -1781,6 +1806,13 @@ export class BaziService {
         console.error('计算流月神煞出错:', e);
       }
 
+      // 调试信息
+      console.log(`流月神煞计算结果 - 月份: ${month}, 神煞: ${shenSha.join(', ')}`);
+      console.log(`流月神煞计算结果类型 - 月份: ${month}, 类型: ${typeof shenSha}, 是否数组: ${Array.isArray(shenSha)}, 长度: ${shenSha.length}`);
+
+      // 调试信息
+      console.log(`流月返回数据 - 月份: ${month}, 神煞数组: `, shenSha);
+
       return {
         month,
         index,
@@ -1789,7 +1821,7 @@ export class BaziService {
         xunKong,
         shiShenGan,
         diShi,
-        shenSha
+        shenSha: [...shenSha] // 确保返回一个新的数组副本
       };
     });
 
@@ -3872,16 +3904,16 @@ export class BaziService {
     }
 
     // 天喜
-    if (this.isTianXi(yearBranch)) {
+    if (this.isTianXi(yearBranch, yearBranch)) {
       yearShenSha.push('天喜');
     }
-    if (this.isTianXi(monthBranch)) {
+    if (this.isTianXi(monthBranch, yearBranch)) {
       monthShenSha.push('天喜');
     }
-    if (this.isTianXi(dayBranch)) {
+    if (this.isTianXi(dayBranch, yearBranch)) {
       dayShenSha.push('天喜');
     }
-    if (this.isTianXi(timeBranch)) {
+    if (this.isTianXi(timeBranch, yearBranch)) {
       hourShenSha.push('天喜');
     }
 
@@ -4576,10 +4608,11 @@ export class BaziService {
   /**
    * 判断是否为天喜
    * @param branch 地支
+   * @param yearBranch 年支
    * @returns 是否为天喜
    */
-  private static isTianXi(branch: string): boolean {
-    // 天喜与地支的对应关系
+  private static isTianXi(branch: string, yearBranch: string): boolean {
+    // 天喜与年支的对应关系
     const tianXiMap: {[key: string]: string} = {
       '子': '酉',
       '丑': '申',
@@ -4595,7 +4628,11 @@ export class BaziService {
       '亥': '戌'
     };
 
-    return Object.values(tianXiMap).includes(branch);
+    // 根据年支查找对应的天喜地支
+    const tianXiBranch = tianXiMap[yearBranch];
+
+    // 检查当前地支是否与天喜地支匹配
+    return branch === tianXiBranch;
   }
 
   /**
@@ -5630,6 +5667,37 @@ export class BaziService {
             <td class="bazi-dayun-cell" data-index="${index}">${dy.ganZhi}</td>
           `).join('') : ''}
         </tr>
+        <tr>
+          <th>神煞</th>
+          ${Array.isArray(baziInfo.daYun) ? baziInfo.daYun.slice(0, 10).map((dy, index) => {
+            // 调试信息
+            console.log(`大运数据: 索引${index}, 神煞:`, dy.shenSha);
+
+            return `
+            <td>
+              ${dy.shenSha && dy.shenSha.length > 0 ? `
+                <div class="bazi-shensha-list">
+                  ${dy.shenSha.map(shenSha => {
+                    // 调试信息
+                    console.log(`大运神煞HTML生成: ${shenSha}`);
+
+                    const type = BaziService.getShenShaType(shenSha) || '未知';
+                    let cssClass = '';
+                    if (type === '吉神') {
+                      cssClass = 'shensha-good';
+                    } else if (type === '凶神') {
+                      cssClass = 'shensha-bad';
+                    } else if (type === '吉凶神') {
+                      cssClass = 'shensha-mixed';
+                    }
+                    return `<span class="bazi-shensha ${cssClass}" data-shensha="${shenSha}" style="display:inline-block; padding:2px 4px; margin:2px; border-radius:3px; font-size:0.8em; cursor:pointer;">${shenSha}</span>`;
+                  }).join('')}
+                </div>
+              ` : '无神煞'}
+            </td>
+            `;
+          }).join('') : ''}
+        </tr>
       </table>
     </div>
   </div>
@@ -5653,6 +5721,37 @@ export class BaziService {
           ${baziInfo.liuNian.slice(0, 10).map(ln => `
             <td class="bazi-liunian-cell" data-year="${ln.year}">${ln.ganZhi}</td>
           `).join('')}
+        </tr>
+        <tr>
+          <th>神煞</th>
+          ${baziInfo.liuNian.slice(0, 10).map(ln => {
+            // 调试信息
+            console.log(`流年数据: ${ln.year}, 神煞:`, ln.shenSha);
+
+            return `
+            <td>
+              ${ln.shenSha && ln.shenSha.length > 0 ? `
+                <div class="bazi-shensha-list">
+                  ${ln.shenSha.map(shenSha => {
+                    // 调试信息
+                    console.log(`流年神煞HTML生成: ${shenSha}`);
+
+                    const type = BaziService.getShenShaType(shenSha) || '未知';
+                    let cssClass = '';
+                    if (type === '吉神') {
+                      cssClass = 'shensha-good';
+                    } else if (type === '凶神') {
+                      cssClass = 'shensha-bad';
+                    } else if (type === '吉凶神') {
+                      cssClass = 'shensha-mixed';
+                    }
+                    return `<span class="bazi-shensha ${cssClass}" data-shensha="${shenSha}" style="display:inline-block; padding:2px 4px; margin:2px; border-radius:3px; font-size:0.8em; cursor:pointer;">${shenSha}</span>`;
+                  }).join('')}
+                </div>
+              ` : '无神煞'}
+            </td>
+            `;
+          }).join('')}
         </tr>
       </table>
     </div>
@@ -5678,6 +5777,37 @@ export class BaziService {
             <td class="bazi-xiaoyun-cell" data-year="${xy.year}">${xy.ganZhi}</td>
           `).join('')}
         </tr>
+        <tr>
+          <th>神煞</th>
+          ${baziInfo.xiaoYun.slice(0, 10).map(xy => {
+            // 调试信息
+            console.log(`小运数据: ${xy.year}, 神煞:`, xy.shenSha);
+
+            return `
+            <td>
+              ${xy.shenSha && xy.shenSha.length > 0 ? `
+                <div class="bazi-shensha-list">
+                  ${xy.shenSha.map(shenSha => {
+                    // 调试信息
+                    console.log(`小运神煞HTML生成: ${shenSha}`);
+
+                    const type = BaziService.getShenShaType(shenSha) || '未知';
+                    let cssClass = '';
+                    if (type === '吉神') {
+                      cssClass = 'shensha-good';
+                    } else if (type === '凶神') {
+                      cssClass = 'shensha-bad';
+                    } else if (type === '吉凶神') {
+                      cssClass = 'shensha-mixed';
+                    }
+                    return `<span class="bazi-shensha ${cssClass}" data-shensha="${shenSha}" style="display:inline-block; padding:2px 4px; margin:2px; border-radius:3px; font-size:0.8em; cursor:pointer;">${shenSha}</span>`;
+                  }).join('')}
+                </div>
+              ` : '无神煞'}
+            </td>
+            `;
+          }).join('')}
+        </tr>
       </table>
     </div>
   </div>
@@ -5697,6 +5827,37 @@ export class BaziService {
           ${baziInfo.liuYue.map(ly => `
             <td class="bazi-liuyue-cell" data-month="${ly.month}">${ly.ganZhi}</td>
           `).join('')}
+        </tr>
+        <tr>
+          <th>神煞</th>
+          ${baziInfo.liuYue.map(ly => {
+            // 调试信息
+            console.log(`流月数据: ${ly.month}, 神煞:`, ly.shenSha);
+
+            return `
+            <td>
+              ${ly.shenSha && ly.shenSha.length > 0 ? `
+                <div class="bazi-shensha-list">
+                  ${ly.shenSha.map(shenSha => {
+                    // 调试信息
+                    console.log(`流月神煞HTML生成: ${shenSha}`);
+
+                    const type = BaziService.getShenShaType(shenSha) || '未知';
+                    let cssClass = '';
+                    if (type === '吉神') {
+                      cssClass = 'shensha-good';
+                    } else if (type === '凶神') {
+                      cssClass = 'shensha-bad';
+                    } else if (type === '吉凶神') {
+                      cssClass = 'shensha-mixed';
+                    }
+                    return `<span class="bazi-shensha ${cssClass}" data-shensha="${shenSha}" style="display:inline-block; padding:2px 4px; margin:2px; border-radius:3px; font-size:0.8em; cursor:pointer;">${shenSha}</span>`;
+                  }).join('')}
+                </div>
+              ` : '无神煞'}
+            </td>
+            `;
+          }).join('')}
         </tr>
       </table>
     </div>
@@ -5743,6 +5904,53 @@ export class BaziService {
     }
 
     return '';
+  }
+
+  /**
+   * 获取神煞类型（吉神、凶神、吉凶神）
+   * @param shenSha 神煞名称
+   * @returns 神煞类型
+   */
+  public static getShenShaType(shenSha: string): string {
+    // 吉神列表
+    const goodShenSha = [
+      '天乙贵人', '文昌', '文曲', '天德', '月德', '天福', '天官', '天厨',
+      '天巫', '天月', '天喜', '天赦', '天恩', '驿马', '禄神', '国印',
+      '天医', '天贵', '天才', '天寿', '天馨', '天钺', '天亨', '天解',
+      '天报', '天庆', '天祥', '天佑', '天富', '天爵', '天德合', '月德合'
+    ];
+
+    // 凶神列表
+    const badShenSha = [
+      '天刑', '天哭', '天虚', '咸池', '亡神', '劫煞', '灾煞', '五鬼',
+      '天罗', '地网', '地丁', '阴差', '魁罡', '孤辰', '寡宿', '白虎',
+      '天狗', '天狱', '天棒', '天姚', '天牢', '天祸', '天煞', '天吏',
+      '天奸', '天讼', '羊刃', '金神'
+    ];
+
+    // 吉凶神列表（根据不同情况可能吉可能凶）
+    const mixedShenSha = [
+      '将星', '华盖', '桃花', '三台', '八座', '恩光', '天贵', '台辅',
+      '封诰', '天使', '天伤', '天空', '截路', '旬空', '三奇', '六仪',
+      '三合', '六合', '暗合', '拱合', '三会', '三刑', '六冲', '暗冲',
+      '童子煞', '将军箭', '红艳'
+    ];
+
+    // 去除可能的前缀（如"年柱:"）
+    const pureShenSha = shenSha.includes(':') ? shenSha.split(':')[1] : shenSha;
+
+    // 调试信息
+    console.log(`判断神煞类型: ${shenSha} -> ${pureShenSha}`);
+
+    if (goodShenSha.includes(pureShenSha)) {
+      return '吉神';
+    } else if (badShenSha.includes(pureShenSha)) {
+      return '凶神';
+    } else if (mixedShenSha.includes(pureShenSha)) {
+      return '吉凶神';
+    }
+
+    return '未知';
   }
 }
 

@@ -1409,6 +1409,58 @@ td.wuxing-tu, span.wuxing-tu, .wuxing-tu {
   background-color: var(--background-modifier-hover);
 }
 
+/* 神煞列表样式 */
+.bazi-shensha-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.bazi-shensha {
+  display: inline-block !important;
+  padding: 2px 4px !important;
+  border-radius: 3px !important;
+  font-size: 0.8em !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  margin: 2px !important;
+}
+
+.bazi-shensha.shensha-good {
+  background-color: rgba(46, 204, 113, 0.1) !important;
+  color: #27ae60 !important;
+  border: 1px solid rgba(46, 204, 113, 0.3) !important;
+}
+
+.bazi-shensha.shensha-bad {
+  background-color: rgba(231, 76, 60, 0.1) !important;
+  color: #c0392b !important;
+  border: 1px solid rgba(231, 76, 60, 0.3) !important;
+}
+
+.bazi-shensha.shensha-mixed {
+  background-color: rgba(241, 196, 15, 0.1) !important;
+  color: #f39c12 !important;
+  border: 1px solid rgba(241, 196, 15, 0.3) !important;
+}
+
+.bazi-shensha:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+.bazi-shensha.shensha-good:hover {
+  background-color: rgba(46, 204, 113, 0.2);
+}
+
+.bazi-shensha.shensha-bad:hover {
+  background-color: rgba(231, 76, 60, 0.2);
+}
+
+.bazi-shensha.shensha-mixed:hover {
+  background-color: rgba(241, 196, 15, 0.2);
+}
+
 /* 神煞弹窗样式 */
 .bazi-modal-subtitle {
   margin-top: 20px;

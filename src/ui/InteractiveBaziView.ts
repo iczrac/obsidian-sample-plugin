@@ -43,6 +43,17 @@ export class InteractiveBaziView {
     this.baziInfo = baziInfo;
     this.id = id;
 
+    // 设置默认的神煞显示设置
+    if (!this.baziInfo.showShenSha) {
+      this.baziInfo.showShenSha = {
+        siZhu: true,
+        daYun: true,
+        liuNian: true,
+        xiaoYun: true,
+        liuYue: true
+      };
+    }
+
     // 初始化视图
     this.initView();
   }

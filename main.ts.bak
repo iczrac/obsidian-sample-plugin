@@ -6,37 +6,6 @@ import { BaziParserModal } from 'src/ui/BaziParserModal';
 import { BaziSettingsModal } from 'src/ui/BaziSettingsModal';
 import { InteractiveBaziView } from 'src/ui/InteractiveBaziView';
 
-/**
- * 八字代码块参数接口
- */
-interface BaziParams {
-	// 基本参数
-	date?: string;           // 公历日期
-	lunar?: string;          // 农历日期
-	bazi?: string;           // 八字
-	now?: string;            // 是否使用当前时间
-	gender?: string;         // 性别
-	year?: string;           // 年份（用于纯八字模式）
-	leap?: string;           // 是否闰月（用于农历日期）
-
-	// 显示选项
-	title?: string;          // 标题
-	theme?: string;          // 主题
-	showWuxing?: string;     // 是否显示五行
-	showSpecialInfo?: string; // 是否显示特殊信息
-	calculationMethod?: string; // 计算方法
-
-	// 神煞显示设置
-	showshensha_sizhu?: string;   // 是否显示四柱神煞
-	showshensha_dayun?: string;   // 是否显示大运神煞
-	showshensha_liunian?: string; // 是否显示流年神煞
-	showshensha_xiaoyun?: string; // 是否显示小运神煞
-	showshensha_liuyue?: string;  // 是否显示流月神煞
-
-	// 其他可能的参数
-	[key: string]: string | undefined;
-}
-
 interface BaziPluginSettings {
 	defaultFormat: string;
 	useInteractiveView: boolean;
@@ -224,7 +193,7 @@ bazi: ${cleanedBazi}
 		// 注册代码块处理器 - 类似Dataview的方式
 		this.registerMarkdownCodeBlockProcessor('bazi', (source, el, _ctx) => {
 			// 解析代码块内容
-			const params: BaziParams = {}; // 使用BaziParams接口定义
+			const params = {}; // 使用空对象替代 this.parseCodeBlockParams(source)
 
 			// 手动解析代码块内容
 			const lines = source.split('\n');
@@ -470,7 +439,7 @@ bazi: ${cleanedBazi}
 													const el = document.querySelector(`[data-bazi-block-id="${blockId}"]`);
 													if (el) {
 														// 手动解析代码块参数
-									const params: BaziParams = {};
+									const params: Record<string, string> = {};
 									const lines = newSource.split('\n');
 
 									for (const line of lines) {
@@ -489,17 +458,14 @@ bazi: ${cleanedBazi}
 									}
 														const gender = params.gender || '';
 														// 重新获取八字信息
-														let updatedBaziInfo;
-														if (params.date) {
-															const dateTime = params.date.trim().split(' ');
-															const dateParts = dateTime[0].split('-').map(Number);
-															const timeParts = dateTime.length > 1 ? dateTime[1].split(':').map(Number) : [0, 0];
-															const year = dateParts[0];
-															const month = dateParts[1];
-															const day = dateParts[2];
-															const hour = timeParts[0];
-															updatedBaziInfo = BaziService.getBaziFromDate(year, month, day, hour, gender, this.settings.baziSect);
-														}
+														const dateTime = params.date.trim().split(' ');
+														const dateParts = dateTime[0].split('-').map(Number);
+														const timeParts = dateTime.length > 1 ? dateTime[1].split(':').map(Number) : [0, 0];
+														const year = dateParts[0];
+														const month = dateParts[1];
+														const day = dateParts[2];
+														const hour = timeParts[0];
+														const updatedBaziInfo = BaziService.getBaziFromDate(year, month, day, hour, gender, this.settings.baziSect);
 
 														const id = 'bazi-view-' + Math.random().toString(36).substring(2, 9);
 														const cleanNewSource = newSource.replace(/[\n\r"']/g, '').replace(/\s+/g, ' ').trim();
@@ -1134,7 +1100,7 @@ bazi: ${cleanedBazi}
 													const el = document.querySelector(`[data-bazi-block-id="${blockId}"]`);
 													if (el) {
 														// 手动实现 this.parseCodeBlockParams(newSource) 的功能
-														const params: BaziParams = {};
+														const params: Record<string, string> = {};
 														const lines = newSource.split('\n');
 
 														for (const line of lines) {
@@ -1153,16 +1119,13 @@ bazi: ${cleanedBazi}
 														}
 														const gender = params.gender || '';
 														// 重新获取八字信息
-														let year, month, day, hour;
-														if (params.lunar) {
-															const dateTime = params.lunar.trim().split(' ');
-															const dateParts = dateTime[0].split('-').map(Number);
-															const timeParts = dateTime.length > 1 ? dateTime[1].split(':').map(Number) : [0, 0];
-															year = dateParts[0];
-															month = dateParts[1];
-															day = dateParts[2];
-															hour = timeParts[0];
-														}
+														const dateTime = params.lunar.trim().split(' ');
+														const dateParts = dateTime[0].split('-').map(Number);
+														const timeParts = dateTime.length > 1 ? dateTime[1].split(':').map(Number) : [0, 0];
+														const year = dateParts[0];
+														const month = dateParts[1];
+														const day = dateParts[2];
+														const hour = timeParts[0];
 														const isLeap = params.leap === 'true';
 														const updatedBaziInfo = BaziService.getBaziFromLunarDate(year, month, day, hour, isLeap, gender, this.settings.baziSect);
 
@@ -1626,7 +1589,7 @@ bazi: ${cleanedBazi}
 														if (el) {
 															const blockId = el.getAttribute('data-bazi-block-id');
 															// 手动解析代码块参数
-															const params: BaziParams = {};
+															const params: Record<string, string> = {};
 															const lines = newSource.split('\n');
 
 															for (const line of lines) {
@@ -1644,7 +1607,7 @@ bazi: ${cleanedBazi}
 																}
 															}
 															const gender = params.gender || '';
-															const baziInfo = BaziService.parseBaziString(params.bazi || '', gender, this.settings.baziSect, year);
+															const baziInfo = BaziService.parseBaziString(params.bazi, gender, this.settings.baziSect, year);
 															const id = 'bazi-view-' + Math.random().toString(36).substring(2, 9);
 															// 清理newSource中的特殊字符
 															const cleanNewSource = newSource.replace(/[\n\r"']/g, '').replace(/\s+/g, ' ').trim();
@@ -2067,7 +2030,7 @@ bazi: ${cleanedBazi}
 													const el = document.querySelector(`[data-bazi-block-id="${blockId}"]`);
 													if (el) {
 														// 手动解析代码块参数
-														const params: BaziParams = {};
+														const params: Record<string, string> = {};
 														const lines = newSource.split('\n');
 
 														for (const line of lines) {
@@ -2085,7 +2048,7 @@ bazi: ${cleanedBazi}
 															}
 														}
 														const gender = params.gender || '';
-														const baziInfo = BaziService.parseBaziString(params.bazi || '', gender, this.settings.baziSect, specifiedYear);
+														const baziInfo = BaziService.parseBaziString(params.bazi, gender, this.settings.baziSect, specifiedYear);
 														const id = 'bazi-view-' + Math.random().toString(36).substring(2, 9);
 														const cleanNewSource = newSource.replace(/[\n\r"']/g, '').replace(/\s+/g, ' ').trim();
 														el.setAttribute('data-bazi-source', cleanNewSource);
@@ -2576,7 +2539,7 @@ bazi: ${cleanedBazi}
 													const el = document.querySelector(`[data-bazi-block-id="${blockId}"]`);
 													if (el) {
 														// 手动实现 this.parseCodeBlockParams(newSource) 的功能
-														const params: BaziParams = {};
+														const params: Record<string, string> = {};
 														const lines = newSource.split('\n');
 
 														for (const line of lines) {
@@ -3023,130 +2986,6 @@ bazi: ${cleanedBazi}
 
 	async loadSettings() {
 		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
-	}
-
-	/**
-	 * 应用显示选项
-	 * @param container 容器元素
-	 * @param params 参数对象
-	 */
-	applyDisplayOptions(container: HTMLElement, params: BaziParams) {
-		console.log('应用显示选项:', params);
-
-		// 显示/隐藏五行分析
-		if (params.showWuxing === 'false' || params.showWuxing === '0') {
-			const wuxingSection = container.querySelector('.bazi-view-wuxing-list')?.parentElement;
-			if (wuxingSection) {
-				(wuxingSection as HTMLElement).style.display = 'none';
-			}
-		}
-
-		// 显示/隐藏特殊信息
-		if (params.showSpecialInfo === 'false' || params.showSpecialInfo === '0') {
-			const specialInfoSection = container.querySelector('.bazi-view-info-list')?.parentElement;
-			if (specialInfoSection) {
-				(specialInfoSection as HTMLElement).style.display = 'none';
-			}
-		}
-
-		// 应用神煞显示设置
-		if (params.showshensha_sizhu === 'false') {
-			// 隐藏四柱神煞
-			const siZhuShenShaRow = container.querySelector('.bazi-view-table tbody tr:nth-child(5)');
-			if (siZhuShenShaRow) {
-				(siZhuShenShaRow as HTMLElement).style.display = 'none';
-			}
-		}
-
-		if (params.showshensha_dayun === 'false') {
-			// 隐藏大运神煞
-			const daYunShenShaRow = container.querySelector('.bazi-view-dayun-table tr:nth-child(4)');
-			if (daYunShenShaRow) {
-				(daYunShenShaRow as HTMLElement).style.display = 'none';
-			}
-		}
-
-		if (params.showshensha_liunian === 'false') {
-			// 隐藏流年神煞
-			const liuNianShenShaRow = container.querySelector('.bazi-view-liunian-table tr:nth-child(4)');
-			if (liuNianShenShaRow) {
-				(liuNianShenShaRow as HTMLElement).style.display = 'none';
-			}
-		}
-
-		if (params.showshensha_xiaoyun === 'false') {
-			// 隐藏小运神煞
-			const xiaoYunShenShaRow = container.querySelector('.bazi-view-xiaoyun-table tr:nth-child(4)');
-			if (xiaoYunShenShaRow) {
-				(xiaoYunShenShaRow as HTMLElement).style.display = 'none';
-			}
-		}
-
-		if (params.showshensha_liuyue === 'false') {
-			// 隐藏流月神煞
-			const liuYueShenShaRow = container.querySelector('.bazi-view-liuyue-table tr:nth-child(3)');
-			if (liuYueShenShaRow) {
-				(liuYueShenShaRow as HTMLElement).style.display = 'none';
-			}
-		}
-
-		// 设置标题
-		if (params.title) {
-			const titleEl = container.querySelector('.bazi-view-title');
-			if (titleEl) {
-				titleEl.textContent = params.title;
-			}
-		}
-
-		// 应用主题
-		if (params.theme) {
-			container.classList.remove('bazi-theme-dark', 'bazi-theme-light', 'bazi-theme-colorful');
-			if (params.theme === 'dark') {
-				container.classList.add('bazi-theme-dark');
-			} else if (params.theme === 'light') {
-				container.classList.add('bazi-theme-light');
-			} else if (params.theme === 'colorful') {
-				container.classList.add('bazi-theme-colorful');
-			}
-		}
-
-		// 设置数据属性，用于后续操作
-		if (params.showWuxing !== undefined) {
-			container.setAttribute('data-show-wuxing', params.showWuxing);
-		}
-
-		if (params.showSpecialInfo !== undefined) {
-			container.setAttribute('data-show-special-info', params.showSpecialInfo);
-		}
-
-		if (params.gender !== undefined) {
-			container.setAttribute('data-gender', params.gender);
-		}
-
-		if (params.calculationMethod !== undefined) {
-			container.setAttribute('data-calculation-method', params.calculationMethod);
-		}
-
-		// 设置神煞显示数据属性
-		if (params.showshensha_sizhu !== undefined) {
-			container.setAttribute('data-show-shensha-sizhu', params.showshensha_sizhu);
-		}
-
-		if (params.showshensha_dayun !== undefined) {
-			container.setAttribute('data-show-shensha-dayun', params.showshensha_dayun);
-		}
-
-		if (params.showshensha_liunian !== undefined) {
-			container.setAttribute('data-show-shensha-liunian', params.showshensha_liunian);
-		}
-
-		if (params.showshensha_xiaoyun !== undefined) {
-			container.setAttribute('data-show-shensha-xiaoyun', params.showshensha_xiaoyun);
-		}
-
-		if (params.showshensha_liuyue !== undefined) {
-			container.setAttribute('data-show-shensha-liuyue', params.showshensha_liuyue);
-		}
 	}
 
 	/**
@@ -4505,7 +4344,7 @@ bazi: ${cleanedBazi}
 									// 获取原始源代码
 									const originalSource = codeBlock.getAttribute('data-bazi-source') || '';
 									// 手动实现 this.parseCodeBlockParams(originalSource) 的功能
-									const params: BaziParams = {};
+									const params: Record<string, string> = {};
 									const lines = originalSource.split('\n');
 
 									for (const line of lines) {
@@ -4720,7 +4559,6 @@ bazi: ${cleanedBazi}
 			}
 		}
 	}
-}
 
 /**
  * 插件设置选项卡
@@ -4976,5 +4814,7 @@ class BaziSettingTab extends PluginSettingTab {
 		containerEl.createEl('p', {
 			text: '如果未指定性别，会显示性别选择按钮，点击后会自动更新代码块并添加性别参数'
 		});
+});
+	}});
 	}
 }

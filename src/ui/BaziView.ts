@@ -1,4 +1,5 @@
 import { BaziInfo } from 'src/types/BaziInfo';
+import { ShenShaService } from 'src/services/ShenShaService';
 
 /**
  * 八字命盘视图组件
@@ -21,6 +22,17 @@ export class BaziView {
     this.baziInfo = baziInfo;
     this.onSettingsClick = onSettingsClick;
     this.id = 'bazi-view-' + Math.random().toString(36).substring(2, 9);
+
+    // 设置默认的神煞显示设置
+    if (!this.baziInfo.showShenSha) {
+      this.baziInfo.showShenSha = {
+        siZhu: true,
+        daYun: true,
+        liuNian: true,
+        xiaoYun: true,
+        liuYue: true
+      };
+    }
 
     this.render();
   }
@@ -158,6 +170,133 @@ export class BaziView {
     naYinRow.createEl('td', { text: this.baziInfo.monthNaYin });
     naYinRow.createEl('td', { text: this.baziInfo.dayNaYin });
     naYinRow.createEl('td', { text: this.baziInfo.hourNaYin });
+
+    // 神煞行
+    if (this.baziInfo.yearShenSha || this.baziInfo.monthShenSha ||
+        this.baziInfo.dayShenSha || this.baziInfo.hourShenSha) {
+      const shenShaRow = tbody.createEl('tr');
+
+      // 根据设置显示或隐藏神煞行
+      if (this.baziInfo.showShenSha && this.baziInfo.showShenSha.siZhu === false) {
+        shenShaRow.style.display = 'none';
+      }
+
+      // 年柱神煞
+      const yearShenShaCell = shenShaRow.createEl('td');
+      if (this.baziInfo.yearShenSha && this.baziInfo.yearShenSha.length > 0) {
+        const shenShaList = yearShenShaCell.createEl('div', { cls: 'bazi-shensha-list' });
+        this.baziInfo.yearShenSha.forEach((shenSha: string) => {
+          const shenShaInfo = this.getShenShaInfo(shenSha);
+          const type = shenShaInfo?.type || '未知';
+          let cssClass = '';
+          if (type === '吉神') {
+            cssClass = 'shensha-good';
+          } else if (type === '凶神') {
+            cssClass = 'shensha-bad';
+          } else if (type === '吉凶神') {
+            cssClass = 'shensha-mixed';
+          }
+
+          const shenShaEl = shenShaList.createEl('span', {
+            text: shenSha,
+            cls: `bazi-shensha ${cssClass}`
+          });
+
+          // 添加点击事件显示神煞详情
+          shenShaEl.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.showShenShaDetail(shenSha);
+          });
+        });
+      }
+
+      // 月柱神煞
+      const monthShenShaCell = shenShaRow.createEl('td');
+      if (this.baziInfo.monthShenSha && this.baziInfo.monthShenSha.length > 0) {
+        const shenShaList = monthShenShaCell.createEl('div', { cls: 'bazi-shensha-list' });
+        this.baziInfo.monthShenSha.forEach((shenSha: string) => {
+          const shenShaInfo = this.getShenShaInfo(shenSha);
+          const type = shenShaInfo?.type || '未知';
+          let cssClass = '';
+          if (type === '吉神') {
+            cssClass = 'shensha-good';
+          } else if (type === '凶神') {
+            cssClass = 'shensha-bad';
+          } else if (type === '吉凶神') {
+            cssClass = 'shensha-mixed';
+          }
+
+          const shenShaEl = shenShaList.createEl('span', {
+            text: shenSha,
+            cls: `bazi-shensha ${cssClass}`
+          });
+
+          // 添加点击事件显示神煞详情
+          shenShaEl.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.showShenShaDetail(shenSha);
+          });
+        });
+      }
+
+      // 日柱神煞
+      const dayShenShaCell = shenShaRow.createEl('td');
+      if (this.baziInfo.dayShenSha && this.baziInfo.dayShenSha.length > 0) {
+        const shenShaList = dayShenShaCell.createEl('div', { cls: 'bazi-shensha-list' });
+        this.baziInfo.dayShenSha.forEach((shenSha: string) => {
+          const shenShaInfo = this.getShenShaInfo(shenSha);
+          const type = shenShaInfo?.type || '未知';
+          let cssClass = '';
+          if (type === '吉神') {
+            cssClass = 'shensha-good';
+          } else if (type === '凶神') {
+            cssClass = 'shensha-bad';
+          } else if (type === '吉凶神') {
+            cssClass = 'shensha-mixed';
+          }
+
+          const shenShaEl = shenShaList.createEl('span', {
+            text: shenSha,
+            cls: `bazi-shensha ${cssClass}`
+          });
+
+          // 添加点击事件显示神煞详情
+          shenShaEl.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.showShenShaDetail(shenSha);
+          });
+        });
+      }
+
+      // 时柱神煞
+      const hourShenShaCell = shenShaRow.createEl('td');
+      if (this.baziInfo.hourShenSha && this.baziInfo.hourShenSha.length > 0) {
+        const shenShaList = hourShenShaCell.createEl('div', { cls: 'bazi-shensha-list' });
+        this.baziInfo.hourShenSha.forEach((shenSha: string) => {
+          const shenShaInfo = this.getShenShaInfo(shenSha);
+          const type = shenShaInfo?.type || '未知';
+          let cssClass = '';
+          if (type === '吉神') {
+            cssClass = 'shensha-good';
+          } else if (type === '凶神') {
+            cssClass = 'shensha-bad';
+          } else if (type === '吉凶神') {
+            cssClass = 'shensha-mixed';
+          }
+
+          const shenShaEl = shenShaList.createEl('span', {
+            text: shenSha,
+            cls: `bazi-shensha ${cssClass}`
+          });
+
+          // 添加点击事件显示神煞详情
+          shenShaEl.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.showShenShaDetail(shenSha);
+          });
+        });
+      }
+    }
   }
 
   /**
@@ -277,6 +416,57 @@ export class BaziView {
       });
     });
 
+    // 第四行：神煞
+    const shenShaRow = table.createEl('tr');
+    shenShaRow.createEl('th', { text: '神煞' });
+
+    // 根据设置显示或隐藏神煞行
+    if (this.baziInfo.showShenSha && this.baziInfo.showShenSha.daYun === false) {
+      shenShaRow.style.display = 'none';
+    }
+
+    daYunArray.slice(0, 10).forEach(dy => {
+      const cell = shenShaRow.createEl('td');
+      if (dy.shenSha && dy.shenSha.length > 0) {
+        // 调试信息
+        console.log(`大运神煞数据:`, dy.shenSha);
+
+        // 创建神煞列表
+        const shenShaList = cell.createEl('div', { cls: 'bazi-shensha-list' });
+        try {
+          dy.shenSha.forEach((shenSha: string) => {
+            const shenShaInfo = this.getShenShaInfo(shenSha);
+            const type = shenShaInfo?.type || '未知';
+            let cssClass = '';
+            if (type === '吉神') {
+              cssClass = 'shensha-good';
+            } else if (type === '凶神') {
+              cssClass = 'shensha-bad';
+            } else if (type === '吉凶神') {
+              cssClass = 'shensha-mixed';
+            }
+
+            const shenShaEl = shenShaList.createEl('span', {
+              text: shenSha,
+              cls: `bazi-shensha ${cssClass}`,
+              attr: { 'style': 'display:inline-block !important; padding:2px 4px !important; margin:2px !important; border-radius:3px !important; font-size:0.8em !important; cursor:pointer !important;' }
+            });
+
+            // 添加点击事件显示神煞详情
+            shenShaEl.addEventListener('click', (e) => {
+              e.stopPropagation();
+              this.showShenShaDetail(shenSha);
+            });
+          });
+        } catch (e) {
+          console.error('处理大运神煞出错:', e);
+          cell.setText('神煞处理错误');
+        }
+      } else {
+        cell.setText('无神煞');
+      }
+    });
+
     // 创建流年信息
     this.createLiuNianInfo();
 
@@ -346,6 +536,46 @@ export class BaziView {
         this.handleLiuNianSelect(ln.year);
       });
     });
+
+    // 第四行：神煞
+    const shenShaRow = table.createEl('tr');
+    shenShaRow.createEl('th', { text: '神煞' });
+
+    // 根据设置显示或隐藏神煞行
+    if (this.baziInfo.showShenSha && this.baziInfo.showShenSha.liuNian === false) {
+      shenShaRow.style.display = 'none';
+    }
+
+    liuNianData.slice(0, 10).forEach(ln => {
+      const cell = shenShaRow.createEl('td');
+      if (ln.shenSha && ln.shenSha.length > 0) {
+        // 创建神煞列表
+        const shenShaList = cell.createEl('div', { cls: 'bazi-shensha-list' });
+        ln.shenSha.forEach((shenSha: string) => {
+          const shenShaInfo = this.getShenShaInfo(shenSha);
+          const type = shenShaInfo?.type || '未知';
+          let cssClass = '';
+          if (type === '吉神') {
+            cssClass = 'shensha-good';
+          } else if (type === '凶神') {
+            cssClass = 'shensha-bad';
+          } else if (type === '吉凶神') {
+            cssClass = 'shensha-mixed';
+          }
+
+          const shenShaEl = shenShaList.createEl('span', {
+            text: shenSha,
+            cls: `bazi-shensha ${cssClass}`
+          });
+
+          // 添加点击事件显示神煞详情
+          shenShaEl.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.showShenShaDetail(shenSha);
+          });
+        });
+      }
+    });
   }
 
   /**
@@ -399,6 +629,46 @@ export class BaziView {
         cell.addClass('selected');
       });
     });
+
+    // 第四行：神煞
+    const shenShaRow = table.createEl('tr');
+    shenShaRow.createEl('th', { text: '神煞' });
+
+    // 根据设置显示或隐藏神煞行
+    if (this.baziInfo.showShenSha && this.baziInfo.showShenSha.xiaoYun === false) {
+      shenShaRow.style.display = 'none';
+    }
+
+    xiaoYunData.slice(0, 10).forEach(xy => {
+      const cell = shenShaRow.createEl('td');
+      if (xy.shenSha && xy.shenSha.length > 0) {
+        // 创建神煞列表
+        const shenShaList = cell.createEl('div', { cls: 'bazi-shensha-list' });
+        xy.shenSha.forEach((shenSha: string) => {
+          const shenShaInfo = this.getShenShaInfo(shenSha);
+          const type = shenShaInfo?.type || '未知';
+          let cssClass = '';
+          if (type === '吉神') {
+            cssClass = 'shensha-good';
+          } else if (type === '凶神') {
+            cssClass = 'shensha-bad';
+          } else if (type === '吉凶神') {
+            cssClass = 'shensha-mixed';
+          }
+
+          const shenShaEl = shenShaList.createEl('span', {
+            text: shenSha,
+            cls: `bazi-shensha ${cssClass}`
+          });
+
+          // 添加点击事件显示神煞详情
+          shenShaEl.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.showShenShaDetail(shenSha);
+          });
+        });
+      }
+    });
   }
 
   /**
@@ -444,6 +714,40 @@ export class BaziView {
         table.querySelectorAll('.bazi-liuyue-cell').forEach(c => c.removeClass('selected'));
         cell.addClass('selected');
       });
+    });
+
+    // 第三行：神煞
+    const shenShaRow = table.createEl('tr');
+    shenShaRow.createEl('th', { text: '神煞' });
+    liuYueData.forEach(ly => {
+      const cell = shenShaRow.createEl('td');
+      if (ly.shenSha && ly.shenSha.length > 0) {
+        // 创建神煞列表
+        const shenShaList = cell.createEl('div', { cls: 'bazi-shensha-list' });
+        ly.shenSha.forEach((shenSha: string) => {
+          const shenShaInfo = this.getShenShaInfo(shenSha);
+          const type = shenShaInfo?.type || '未知';
+          let cssClass = '';
+          if (type === '吉神') {
+            cssClass = 'shensha-good';
+          } else if (type === '凶神') {
+            cssClass = 'shensha-bad';
+          } else if (type === '吉凶神') {
+            cssClass = 'shensha-mixed';
+          }
+
+          const shenShaEl = shenShaList.createEl('span', {
+            text: shenSha,
+            cls: `bazi-shensha ${cssClass}`
+          });
+
+          // 添加点击事件显示神煞详情
+          shenShaEl.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.showShenShaDetail(shenSha);
+          });
+        });
+      }
     });
   }
 
@@ -533,6 +837,10 @@ export class BaziView {
     // 清空表格
     table.empty();
 
+    // 调试信息：输出流年数据
+    console.log('流年数据:', liuNian);
+    console.log('流年神煞数据示例:', liuNian[0]?.shenSha);
+
     // 第一行：年份
     const yearRow = table.createEl('tr');
     yearRow.createEl('th', { text: '流年' });
@@ -567,6 +875,59 @@ export class BaziView {
         this.handleLiuNianSelect(ln.year);
       });
     });
+
+    // 第四行：神煞
+    const shenShaRow = table.createEl('tr');
+    shenShaRow.createEl('th', { text: '神煞' });
+
+    // 根据设置显示或隐藏神煞行
+    if (this.baziInfo.showShenSha && this.baziInfo.showShenSha.liuNian === false) {
+      shenShaRow.style.display = 'none';
+    }
+
+    liuNian.slice(0, 10).forEach(ln => {
+      const cell = shenShaRow.createEl('td');
+      if (ln.shenSha && ln.shenSha.length > 0) {
+        // 调试信息
+        console.log(`流年 ${ln.year} 的神煞数据:`, ln.shenSha);
+
+        // 创建神煞列表
+        const shenShaList = cell.createEl('div', { cls: 'bazi-shensha-list' });
+        try {
+          ln.shenSha.forEach((shenSha: string) => {
+            const shenShaInfo = this.getShenShaInfo(shenSha);
+            const type = shenShaInfo?.type || '未知';
+            let cssClass = '';
+            if (type === '吉神') {
+              cssClass = 'shensha-good';
+            } else if (type === '凶神') {
+              cssClass = 'shensha-bad';
+            } else if (type === '吉凶神') {
+              cssClass = 'shensha-mixed';
+            }
+
+            const shenShaEl = shenShaList.createEl('span', {
+              text: shenSha,
+              cls: `bazi-shensha ${cssClass}`,
+              attr: { 'style': 'display:inline-block !important; padding:2px 4px !important; margin:2px !important; border-radius:3px !important; font-size:0.8em !important; cursor:pointer !important;' }
+            });
+
+            // 添加点击事件显示神煞详情
+            shenShaEl.addEventListener('click', (e) => {
+              e.stopPropagation();
+              this.showShenShaDetail(shenSha);
+            });
+          });
+        } catch (e) {
+          console.error('处理流年神煞出错:', e);
+          cell.setText('神煞处理错误');
+        }
+      } else {
+        cell.setText('无神煞');
+      }
+    });
+
+
   }
 
   /**
@@ -583,6 +944,10 @@ export class BaziView {
 
     // 清空表格
     table.empty();
+
+    // 调试信息：输出小运数据
+    console.log('小运数据:', xiaoYun);
+    console.log('小运神煞数据示例:', xiaoYun[0]?.shenSha);
 
     // 第一行：年份
     const yearRow = table.createEl('tr');
@@ -615,6 +980,59 @@ export class BaziView {
         cell.addClass('selected');
       });
     });
+
+    // 第四行：神煞
+    const shenShaRow = table.createEl('tr');
+    shenShaRow.createEl('th', { text: '神煞' });
+
+    // 根据设置显示或隐藏神煞行
+    if (this.baziInfo.showShenSha && this.baziInfo.showShenSha.xiaoYun === false) {
+      shenShaRow.style.display = 'none';
+    }
+
+    xiaoYun.slice(0, 10).forEach(xy => {
+      const cell = shenShaRow.createEl('td');
+      if (xy.shenSha && xy.shenSha.length > 0) {
+        // 调试信息
+        console.log(`小运 ${xy.year} 的神煞数据:`, xy.shenSha);
+
+        // 创建神煞列表
+        const shenShaList = cell.createEl('div', { cls: 'bazi-shensha-list' });
+        try {
+          xy.shenSha.forEach((shenSha: string) => {
+            const shenShaInfo = this.getShenShaInfo(shenSha);
+            const type = shenShaInfo?.type || '未知';
+            let cssClass = '';
+            if (type === '吉神') {
+              cssClass = 'shensha-good';
+            } else if (type === '凶神') {
+              cssClass = 'shensha-bad';
+            } else if (type === '吉凶神') {
+              cssClass = 'shensha-mixed';
+            }
+
+            const shenShaEl = shenShaList.createEl('span', {
+              text: shenSha,
+              cls: `bazi-shensha ${cssClass}`,
+              attr: { 'style': 'display:inline-block !important; padding:2px 4px !important; margin:2px !important; border-radius:3px !important; font-size:0.8em !important; cursor:pointer !important;' }
+            });
+
+          // 添加点击事件显示神煞详情
+          shenShaEl.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.showShenShaDetail(shenSha);
+          });
+        });
+        } catch (e) {
+          console.error('处理小运神煞出错:', e);
+          cell.setText('神煞处理错误');
+        }
+      } else {
+        cell.setText('无神煞');
+      }
+    });
+
+
   }
 
   /**
@@ -631,6 +1049,10 @@ export class BaziView {
 
     // 清空表格
     table.empty();
+
+    // 调试信息：输出流月数据
+    console.log('流月数据:', liuYue);
+    console.log('流月神煞数据示例:', liuYue[0]?.shenSha);
 
     // 第一行：月份
     const monthRow = table.createEl('tr');
@@ -656,6 +1078,60 @@ export class BaziView {
         cell.addClass('selected');
       });
     });
+
+    // 第三行：神煞
+    const shenShaRow = table.createEl('tr');
+    shenShaRow.createEl('th', { text: '神煞' });
+
+    // 根据设置显示或隐藏神煞行
+    if (this.baziInfo.showShenSha && this.baziInfo.showShenSha.liuYue === false) {
+      shenShaRow.style.display = 'none';
+    }
+
+    liuYue.forEach(ly => {
+      const cell = shenShaRow.createEl('td');
+      if (ly.shenSha && ly.shenSha.length > 0) {
+        // 调试信息：输出每个流月的神煞数据
+        console.log(`流月 ${ly.month} 的神煞数据:`, ly.shenSha);
+        console.log(`流月 ${ly.month} 的神煞数据类型:`, typeof ly.shenSha, Array.isArray(ly.shenSha));
+
+        // 创建神煞列表
+        const shenShaList = cell.createEl('div', { cls: 'bazi-shensha-list' });
+        try {
+          ly.shenSha.forEach((shenSha: string) => {
+            const shenShaInfo = this.getShenShaInfo(shenSha);
+            const type = shenShaInfo?.type || '未知';
+            let cssClass = '';
+            if (type === '吉神') {
+              cssClass = 'shensha-good';
+            } else if (type === '凶神') {
+              cssClass = 'shensha-bad';
+            } else if (type === '吉凶神') {
+              cssClass = 'shensha-mixed';
+            }
+
+            const shenShaEl = shenShaList.createEl('span', {
+              text: shenSha,
+              cls: `bazi-shensha ${cssClass}`,
+              attr: { 'style': 'display:inline-block !important; padding:2px 4px !important; margin:2px !important; border-radius:3px !important; font-size:0.8em !important; cursor:pointer !important;' }
+            });
+
+            // 添加点击事件显示神煞详情
+            shenShaEl.addEventListener('click', (e) => {
+              e.stopPropagation();
+              this.showShenShaDetail(shenSha);
+            });
+          });
+        } catch (e) {
+          console.error('处理流月神煞出错:', e);
+          cell.setText('神煞处理错误');
+        }
+      } else {
+        // 调试信息：输出没有神煞数据的流月
+        console.log(`流月 ${ly.month} 没有神煞数据或数据为空`);
+        cell.setText('无神煞');
+      }
+    });
   }
 
   /**
@@ -679,6 +1155,119 @@ export class BaziView {
     }
 
     return '';
+  }
+
+  /**
+   * 获取神煞信息
+   * @param shenSha 神煞名称
+   * @returns 神煞信息
+   */
+  private getShenShaInfo(shenSha: string) {
+    return ShenShaService.getShenShaInfo(shenSha);
+  }
+
+  /**
+   * 显示神煞详情
+   * @param shenSha 神煞名称
+   */
+  private showShenShaDetail(shenSha: string) {
+    // 获取神煞详细解释
+    const shenShaInfo = ShenShaService.getShenShaExplanation(shenSha);
+
+    // 创建一个临时容器
+    const container = document.createElement('div');
+    container.className = 'shensha-modal-container';
+    container.style.position = 'fixed';
+    container.style.top = '0';
+    container.style.left = '0';
+    container.style.width = '100%';
+    container.style.height = '100%';
+    container.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+    container.style.display = 'flex';
+    container.style.justifyContent = 'center';
+    container.style.alignItems = 'center';
+    container.style.zIndex = '1000';
+    document.body.appendChild(container);
+
+    // 创建弹窗内容
+    const modal = document.createElement('div');
+    modal.className = 'shensha-modal';
+    modal.style.backgroundColor = 'white';
+    modal.style.borderRadius = '8px';
+    modal.style.padding = '20px';
+    modal.style.maxWidth = '80%';
+    modal.style.maxHeight = '80%';
+    modal.style.overflow = 'auto';
+    modal.style.position = 'relative';
+    container.appendChild(modal);
+
+    // 创建关闭按钮
+    const closeButton = document.createElement('button');
+    closeButton.textContent = '×';
+    closeButton.style.position = 'absolute';
+    closeButton.style.top = '10px';
+    closeButton.style.right = '10px';
+    closeButton.style.border = 'none';
+    closeButton.style.background = 'none';
+    closeButton.style.fontSize = '20px';
+    closeButton.style.cursor = 'pointer';
+    closeButton.addEventListener('click', () => {
+      document.body.removeChild(container);
+    });
+    modal.appendChild(closeButton);
+
+    // 创建标题
+    const title = document.createElement('h3');
+    title.textContent = shenShaInfo.name;
+    title.style.marginTop = '0';
+    modal.appendChild(title);
+
+    // 创建类型
+    const type = document.createElement('div');
+    type.textContent = `类型: ${shenShaInfo.type}`;
+    type.style.marginBottom = '10px';
+    if (shenShaInfo.type === '吉神') {
+      type.style.color = 'green';
+    } else if (shenShaInfo.type === '凶神') {
+      type.style.color = 'red';
+    } else if (shenShaInfo.type === '吉凶神') {
+      type.style.color = 'orange';
+    }
+    modal.appendChild(type);
+
+    // 创建描述
+    const description = document.createElement('div');
+    description.textContent = shenShaInfo.description;
+    description.style.marginBottom = '10px';
+    modal.appendChild(description);
+
+    // 创建详细描述
+    const detailDescription = document.createElement('div');
+    detailDescription.textContent = shenShaInfo.detailDescription;
+    detailDescription.style.marginBottom = '10px';
+    modal.appendChild(detailDescription);
+
+    // 创建计算方法
+    if (shenShaInfo.calculation) {
+      const calculation = document.createElement('div');
+      calculation.innerHTML = `<strong>计算方法:</strong><br>${shenShaInfo.calculation}`;
+      calculation.style.marginBottom = '10px';
+      modal.appendChild(calculation);
+    }
+
+    // 创建影响
+    if (shenShaInfo.influence && shenShaInfo.influence.length > 0) {
+      const influence = document.createElement('div');
+      influence.innerHTML = `<strong>影响:</strong> ${shenShaInfo.influence.join(', ')}`;
+      modal.appendChild(influence);
+    }
+
+    // 点击弹窗外部关闭弹窗
+    container.addEventListener('click', (e) => {
+      if (e.target === container) {
+        document.body.removeChild(container);
+      }
+    });
   }
 
   /**

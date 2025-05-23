@@ -16,6 +16,19 @@ export class BaziSettingsModal extends Modal {
   private baziSect: string = '2'; // 默认为流派2（晚子时日柱算当天）
   private showWuxing: boolean = true; // 默认显示五行分析
   private showSpecialInfo: boolean = true; // 默认显示特殊信息
+  private showShenSha: {
+    siZhu: boolean;
+    daYun: boolean;
+    liuNian: boolean;
+    xiaoYun: boolean;
+    liuYue: boolean;
+  } = {
+    siZhu: true,
+    daYun: true,
+    liuNian: true,
+    xiaoYun: true,
+    liuYue: true
+  };
 
   /**
    * 创建八字命盘设置模态框
@@ -28,12 +41,63 @@ export class BaziSettingsModal extends Modal {
     app: App,
     baziId: string,
     initialDate: { year: number; month: number; day: number; hour: number },
-    onUpdate: (baziInfo: any) => void
+    onUpdate: (baziInfo: any) => void,
+    baziInfo?: BaziInfo
   ) {
     super(app);
     this.baziId = baziId;
     this.currentDate = initialDate;
     this.onUpdate = onUpdate;
+
+    // 如果有传入八字信息，从中获取设置
+    if (baziInfo) {
+      // 获取性别
+      if (baziInfo.gender !== undefined) {
+        this.gender = baziInfo.gender;
+      }
+
+      // 获取排盘方式
+      if (baziInfo.calculationMethod !== undefined) {
+        this.calculationMethod = baziInfo.calculationMethod;
+      }
+
+      // 获取八字流派
+      if (baziInfo.baziSect !== undefined) {
+        this.baziSect = baziInfo.baziSect;
+      }
+
+      // 获取显示选项
+      if (baziInfo.showWuxing !== undefined) {
+        this.showWuxing = baziInfo.showWuxing;
+      }
+
+      if (baziInfo.showSpecialInfo !== undefined) {
+        this.showSpecialInfo = baziInfo.showSpecialInfo;
+      }
+
+      // 获取神煞显示设置
+      if (baziInfo.showShenSha) {
+        if (baziInfo.showShenSha.siZhu !== undefined) {
+          this.showShenSha.siZhu = baziInfo.showShenSha.siZhu;
+        }
+
+        if (baziInfo.showShenSha.daYun !== undefined) {
+          this.showShenSha.daYun = baziInfo.showShenSha.daYun;
+        }
+
+        if (baziInfo.showShenSha.liuNian !== undefined) {
+          this.showShenSha.liuNian = baziInfo.showShenSha.liuNian;
+        }
+
+        if (baziInfo.showShenSha.xiaoYun !== undefined) {
+          this.showShenSha.xiaoYun = baziInfo.showShenSha.xiaoYun;
+        }
+
+        if (baziInfo.showShenSha.liuYue !== undefined) {
+          this.showShenSha.liuYue = baziInfo.showShenSha.liuYue;
+        }
+      }
+    }
   }
 
   onOpen() {
@@ -251,6 +315,15 @@ export class BaziSettingsModal extends Modal {
             baziInfo.gender = this.gender;
             baziInfo.calculationMethod = this.calculationMethod;
 
+            // 添加神煞显示设置
+            baziInfo.showShenSha = {
+              siZhu: this.showShenSha.siZhu,
+              daYun: this.showShenSha.daYun,
+              liuNian: this.showShenSha.liuNian,
+              xiaoYun: this.showShenSha.xiaoYun,
+              liuYue: this.showShenSha.liuYue
+            };
+
             // 添加原始日期信息
             baziInfo.originalDate = {
               year: this.currentDate.year,
@@ -315,6 +388,159 @@ export class BaziSettingsModal extends Modal {
           });
       });
 
+    // 神煞显示设置
+    contentEl.createEl('h3', { text: '神煞显示设置', cls: 'bazi-settings-subtitle' });
+
+    // 四柱神煞显示设置
+    new Setting(contentEl)
+      .setName('显示四柱神煞')
+      .setDesc('是否在四柱表格中显示神煞行')
+      .addToggle(toggle => {
+        toggle
+          .setValue(this.showShenSha.siZhu)
+          .onChange(value => {
+            this.showShenSha.siZhu = value;
+
+            // 更新显示选项
+            const element = document.getElementById(this.baziId);
+            if (element) {
+              // 调试信息
+              console.log('切换四柱神煞显示状态:', value);
+
+              // 查找四柱神煞行
+              const siZhuShenShaRow = element.querySelector('.bazi-view-table tbody tr:nth-child(5)');
+              console.log('四柱神煞行元素:', siZhuShenShaRow);
+              if (siZhuShenShaRow) {
+                if (value) {
+                  (siZhuShenShaRow as HTMLElement).style.display = '';
+                } else {
+                  (siZhuShenShaRow as HTMLElement).style.display = 'none';
+                }
+              }
+            }
+          });
+      });
+
+    // 大运神煞显示设置
+    new Setting(contentEl)
+      .setName('显示大运神煞')
+      .setDesc('是否在大运表格中显示神煞行')
+      .addToggle(toggle => {
+        toggle
+          .setValue(this.showShenSha.daYun)
+          .onChange(value => {
+            this.showShenSha.daYun = value;
+
+            // 更新显示选项
+            const element = document.getElementById(this.baziId);
+            if (element) {
+              // 调试信息
+              console.log('切换大运神煞显示状态:', value);
+
+              // 查找大运神煞行
+              const daYunShenShaRow = element.querySelector('.bazi-view-dayun-table tr:nth-child(4)');
+              console.log('大运神煞行元素:', daYunShenShaRow);
+              if (daYunShenShaRow) {
+                if (value) {
+                  (daYunShenShaRow as HTMLElement).style.display = '';
+                } else {
+                  (daYunShenShaRow as HTMLElement).style.display = 'none';
+                }
+              }
+            }
+          });
+      });
+
+    // 流年神煞显示设置
+    new Setting(contentEl)
+      .setName('显示流年神煞')
+      .setDesc('是否在流年表格中显示神煞行')
+      .addToggle(toggle => {
+        toggle
+          .setValue(this.showShenSha.liuNian)
+          .onChange(value => {
+            this.showShenSha.liuNian = value;
+
+            // 更新显示选项
+            const element = document.getElementById(this.baziId);
+            if (element) {
+              // 调试信息
+              console.log('切换流年神煞显示状态:', value);
+
+              // 查找流年神煞行
+              const liuNianShenShaRow = element.querySelector('.bazi-view-liunian-table tr:nth-child(4)');
+              console.log('流年神煞行元素:', liuNianShenShaRow);
+              if (liuNianShenShaRow) {
+                if (value) {
+                  (liuNianShenShaRow as HTMLElement).style.display = '';
+                } else {
+                  (liuNianShenShaRow as HTMLElement).style.display = 'none';
+                }
+              }
+            }
+          });
+      });
+
+    // 小运神煞显示设置
+    new Setting(contentEl)
+      .setName('显示小运神煞')
+      .setDesc('是否在小运表格中显示神煞行')
+      .addToggle(toggle => {
+        toggle
+          .setValue(this.showShenSha.xiaoYun)
+          .onChange(value => {
+            this.showShenSha.xiaoYun = value;
+
+            // 更新显示选项
+            const element = document.getElementById(this.baziId);
+            if (element) {
+              // 调试信息
+              console.log('切换小运神煞显示状态:', value);
+
+              // 查找小运神煞行
+              const xiaoYunShenShaRow = element.querySelector('.bazi-view-xiaoyun-table tr:nth-child(4)');
+              console.log('小运神煞行元素:', xiaoYunShenShaRow);
+              if (xiaoYunShenShaRow) {
+                if (value) {
+                  (xiaoYunShenShaRow as HTMLElement).style.display = '';
+                } else {
+                  (xiaoYunShenShaRow as HTMLElement).style.display = 'none';
+                }
+              }
+            }
+          });
+      });
+
+    // 流月神煞显示设置
+    new Setting(contentEl)
+      .setName('显示流月神煞')
+      .setDesc('是否在流月表格中显示神煞行')
+      .addToggle(toggle => {
+        toggle
+          .setValue(this.showShenSha.liuYue)
+          .onChange(value => {
+            this.showShenSha.liuYue = value;
+
+            // 更新显示选项
+            const element = document.getElementById(this.baziId);
+            if (element) {
+              // 调试信息
+              console.log('切换流月神煞显示状态:', value);
+
+              // 查找流月神煞行
+              const liuYueShenShaRow = element.querySelector('.bazi-view-liuyue-table tr:nth-child(3)');
+              console.log('流月神煞行元素:', liuYueShenShaRow);
+              if (liuYueShenShaRow) {
+                if (value) {
+                  (liuYueShenShaRow as HTMLElement).style.display = '';
+                } else {
+                  (liuYueShenShaRow as HTMLElement).style.display = 'none';
+                }
+              }
+            }
+          });
+      });
+
     // 按钮区域
     const buttonContainer = contentEl.createDiv({ cls: 'bazi-settings-button-container' });
 
@@ -354,7 +580,16 @@ export class BaziSettingsModal extends Modal {
             baziInfo.gender = this.gender;
             baziInfo.calculationMethod = this.calculationMethod;
 
-            // 确保保存原始日期信息，用于代码块更新
+            // 添加神煞显示设置
+            baziInfo.showShenSha = {
+              siZhu: this.showShenSha.siZhu,
+              daYun: this.showShenSha.daYun,
+              liuNian: this.showShenSha.liuNian,
+              xiaoYun: this.showShenSha.xiaoYun,
+              liuYue: this.showShenSha.liuYue
+            };
+
+            // 添加原始日期信息
             baziInfo.originalDate = {
               year: this.currentDate.year,
               month: this.currentDate.month,

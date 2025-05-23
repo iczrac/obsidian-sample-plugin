@@ -157,6 +157,13 @@ export interface BaziInfo {
   showWuxing?: boolean;
   showSpecialInfo?: boolean;
   calculationMethod?: string;
+  showShenSha?: {
+    siZhu?: boolean; // 四柱神煞
+    daYun?: boolean; // 大运神煞
+    liuNian?: boolean; // 流年神煞
+    xiaoYun?: boolean; // 小运神煞
+    liuYue?: boolean; // 流月神煞
+  };
   originalDate?: {
     year: number;
     month: number;
