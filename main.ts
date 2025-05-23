@@ -362,11 +362,11 @@ bazi: ${cleanedBazi}
 											const sourceAttr = el.getAttribute('data-bazi-source');
 											const blockId = el.getAttribute('data-bazi-block-id');
 											if (sourceAttr && blockId) {
-												// 手动实现 this.updateCodeBlockWithEditorAPI(newSource) 的功能
-												console.log('尝试使用编辑器API更新代码块');
+												// 手动实现 this.updateCodeBlockWithFileAPI(newSource) 的功能
+												console.log('尝试使用文件API更新代码块');
 
 												// 显示状态通知
-												const statusNotice = new Notice('尝试使用编辑器API更新代码块...', 0);
+												const statusNotice = new Notice('尝试使用文件API更新代码块...', 0);
 
 												// 获取当前活动的编辑器视图
 												const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
@@ -765,6 +765,9 @@ bazi: ${cleanedBazi}
 																				const match = firstLine.match(/^(\s+)/);
 																				if (match) {
 																					indentation = match[1];
+																					console.log('检测到缩进:', indentation.length, '个空格');
+																				} else {
+																					console.log('未检测到缩进');
 																				}
 																			}
 
@@ -773,6 +776,8 @@ bazi: ${cleanedBazi}
 																				.split('\n')
 																				.map(line => line.trim() ? indentation + line : line)
 																				.join('\n');
+
+																			console.log('应用缩进后的源码:', indentedSource);
 
 																			// 替换代码块
 																			const beforeBlock = lines.slice(0, startLine).join('\n');
@@ -1162,6 +1167,9 @@ bazi: ${cleanedBazi}
 															const match = firstLine.match(/^(\s+)/);
 															if (match) {
 																indentation = match[1];
+																console.log('检测到缩进:', indentation.length, '个空格');
+															} else {
+																console.log('未检测到缩进');
 															}
 														}
 
@@ -1170,6 +1178,8 @@ bazi: ${cleanedBazi}
 															.split('\n')
 															.map(line => line.trim() ? indentation + line : line)
 															.join('\n');
+
+														console.log('应用缩进后的源码:', indentedSource);
 
 														// 使用文件API更新文件内容
 														const file = this.app.workspace.getActiveFile();
@@ -1665,8 +1675,37 @@ bazi: ${cleanedBazi}
 
 														// 如果找到了多个代码块，尝试找到最匹配的
 														if (blockContents.length > 0) {
-															// 使用第一个代码块
-															const block = blockContents[0];
+															// 尝试找到匹配当前blockId的代码块
+															let matchedBlock = blockContents[0];
+															let matchedBlockIndex = 0;
+
+															// 遍历所有找到的代码块，尝试多种方式匹配
+															for (let i = 0; i < blockContents.length; i++) {
+																const blockContent = blockContents[i].content;
+																console.log(`检查代码块${i+1}内容:`, blockContent.substring(0, 50) + '...');
+
+																// 方法1: 检查代码块内容是否包含我们的唯一标识符
+																if (blockContent.includes(`data-bazi-block-id="${blockId}"`)) {
+																	matchedBlock = blockContents[i];
+																	matchedBlockIndex = i;
+																	console.log(`通过blockId找到匹配的代码块，索引: ${i}`);
+																	break;
+																}
+
+																// 方法2: 检查代码块内容是否与源代码匹配
+																const cleanSource = source.replace(/[\n\r"']/g, '').replace(/\s+/g, ' ').trim();
+																const cleanBlockContent = blockContent.replace(/[\n\r"']/g, '').replace(/\s+/g, ' ').trim();
+																if (cleanBlockContent.includes(cleanSource) || cleanSource.includes(cleanBlockContent)) {
+																	matchedBlock = blockContents[i];
+																	matchedBlockIndex = i;
+																	console.log(`通过内容匹配找到代码块，索引: ${i}`);
+																	break;
+																}
+															}
+
+															// 使用找到的匹配代码块
+															const block = matchedBlock;
+															console.log(`使用代码块索引: ${matchedBlock ? matchedBlockIndex : 0}`);
 
 															// 替换代码块内容
 															const trimmedSource = newSource.trim();
@@ -1679,6 +1718,9 @@ bazi: ${cleanedBazi}
 																const match = firstLine.match(/^(\s+)/);
 																if (match) {
 																	indentation = match[1];
+																	console.log('检测到缩进:', indentation.length, '个空格');
+																} else {
+																	console.log('未检测到缩进');
 																}
 															}
 
@@ -1687,6 +1729,8 @@ bazi: ${cleanedBazi}
 																.split('\n')
 																.map(line => line.trim() ? indentation + line : line)
 																.join('\n');
+
+															console.log('应用缩进后的源码:', indentedSource);
 
 															// 使用文件API更新文件内容
 															const file = this.app.workspace.getActiveFile();
@@ -1729,12 +1773,36 @@ bazi: ${cleanedBazi}
 													this.app.workspace.trigger('layout-change');
 													console.log('已触发layout-change事件，重新渲染页面');
 													// 直接重新渲染对应的视图元素
+													// 增加延迟时间，确保DOM更新完成
 													setTimeout(() => {
-														// 清理source中的特殊字符，确保选择器有效
-														const cleanSource = source.replace(/[\n\r"']/g, '').replace(/\s+/g, ' ').trim();
-														const el = document.querySelector(`[data-bazi-source="${cleanSource}"]`);
+														console.log('等待DOM更新完成...');
+														// 再次延迟，确保DOM已完全更新
+														setTimeout(() => {
+														console.log('尝试查找视图元素，唯一标识符:', blockId);
+														// 使用多种方式尝试定位元素
+														let el = document.querySelector(`[data-bazi-block-id="${blockId}"]`);
+
+														if (!el) {
+															console.log('通过data-bazi-block-id未找到元素，尝试其他方法');
+															// 尝试通过data-bazi-source查找
+															const cleanSource = source.replace(/[\n\r"']/g, '').replace(/\s+/g, ' ').trim();
+															el = document.querySelector(`[data-bazi-source="${cleanSource}"]`);
+															console.log('通过data-bazi-source查找结果:', el ? '成功' : '失败');
+														}
+
+														// 如果仍然找不到，尝试查找所有bazi代码块
+														if (!el) {
+															console.log('尝试查找所有bazi代码块');
+															const allBaziBlocks = document.querySelectorAll('[data-bazi-block-id]');
+															console.log('找到的bazi代码块数量:', allBaziBlocks.length);
+															// 输出所有找到的blockId
+															allBaziBlocks.forEach((block, index) => {
+																console.log(`代码块${index+1} ID:`, block.getAttribute('data-bazi-block-id'));
+															});
+														}
+
 														if (el) {
-															const blockId = el.getAttribute('data-bazi-block-id');
+															console.log(`找到匹配的视图元素，唯一标识符: ${el.getAttribute('data-bazi-block-id')}`);
 															// 手动解析代码块参数
 															const params: BaziParams = {};
 															const lines = newSource.split('\n');
@@ -1960,6 +2028,9 @@ bazi: ${cleanedBazi}
 																					const match = firstLine.match(/^(\s+)/);
 																					if (match) {
 																						indentation = match[1];
+																						console.log('检测到缩进:', indentation.length, '个空格');
+																					} else {
+																						console.log('未检测到缩进');
 																					}
 																				}
 
@@ -1968,6 +2039,8 @@ bazi: ${cleanedBazi}
 																					.split('\n')
 																					.map(line => line.trim() ? indentation + line : line)
 																					.join('\n');
+
+																				console.log('应用缩进后的源码:', indentedSource);
 
 																				// 替换代码块
 																				const beforeBlock = lines.slice(0, startLine).join('\n');
@@ -1993,7 +2066,10 @@ bazi: ${cleanedBazi}
 														} else {
 															console.log('未找到对应的视图元素，无法直接重新渲染');
 														}
-													}, 100);
+														// 结束内部setTimeout
+													}, 300);
+													// 结束外部setTimeout
+													}, 500);
 												} else {
 													throw new Error('无法找到代码块源内容');
 												}
@@ -2086,11 +2162,11 @@ bazi: ${cleanedBazi}
 											const sourceAttr = el.getAttribute('data-bazi-source');
 											const blockId = el.getAttribute('data-bazi-block-id');
 											if (sourceAttr && blockId) {
-												// 手动实现 this.updateCodeBlockWithEditorAPI(newSource) 的功能
-												console.log('尝试使用编辑器API更新代码块');
+												// 手动实现 this.updateCodeBlockWithFileAPI(newSource) 的功能
+												console.log('尝试使用文件API更新代码块');
 
 												// 显示状态通知
-												const statusNotice = new Notice('尝试使用编辑器API更新代码块...', 0);
+												const statusNotice = new Notice('尝试使用文件API更新代码块...', 0);
 
 												// 获取当前活动的编辑器视图
 												const activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
@@ -2166,16 +2242,52 @@ bazi: ${cleanedBazi}
 														// 替换代码块内容
 														const trimmedSource = newSource.trim();
 
-														// 使用编辑器API替换代码块
-														editor.replaceRange(
-															trimmedSource,
-															{line: block.start + 1, ch: 0},
-															{line: block.end, ch: 0}
-														);
+														// 检测原始代码块的缩进
+														let indentation = '';
+														// 检查第一行的缩进
+														if (block.start + 1 < lines.length) {
+															const firstLine = lines[block.start + 1];
+															const match = firstLine.match(/^(\s+)/);
+															if (match) {
+																indentation = match[1];
+																console.log('检测到缩进:', indentation.length, '个空格');
+															} else {
+																console.log('未检测到缩进');
+															}
+														}
+
+														// 应用缩进到每一行
+														const indentedSource = trimmedSource
+															.split('\n')
+															.map(line => line.trim() ? indentation + line : line)
+															.join('\n');
+
+														console.log('应用缩进后的源码:', indentedSource);
+
+														// 使用文件API更新文件内容
+														const file = this.app.workspace.getActiveFile();
+														if (file) {
+															// 读取文件内容
+															this.app.vault.read(file).then(content => {
+																// 将内容分割成行
+																const fileLines = content.split('\n');
+
+																// 替换代码块
+																const beforeBlock = fileLines.slice(0, block.start).join('\n');
+																const afterBlock = fileLines.slice(block.end + 1).join('\n');
+																const newBlock = '```bazi\n' + indentedSource + '\n```';
+
+																// 构建新的文件内容
+																const newContent = beforeBlock + (beforeBlock ? '\n' : '') + newBlock + (afterBlock ? '\n' : '') + afterBlock;
+
+																// 更新文件内容
+																this.app.vault.modify(file, newContent);
+															});
+														}
 
 														statusNotice.hide();
 														new Notice('八字命盘代码块已更新', 3000);
-														console.log('使用编辑器API更新代码块成功');
+														console.log('使用文件API更新代码块成功');
 													} else {
 														statusNotice.hide();
 														console.log('未找到任何bazi代码块');
@@ -2183,16 +2295,46 @@ bazi: ${cleanedBazi}
 													}
 												} catch (error) {
 													statusNotice.hide();
-													console.error('使用编辑器API更新代码块时出错:', error);
+													console.error('使用文件API更新代码块时出错:', error);
 													new Notice('更新代码块时出错: ' + error.message, 5000);
 												}
 												new Notice(`已选择性别 ${genderLabel} 并更新代码块`);
 												console.log(`已选择性别: ${genderLabel}, 更新代码块成功: ${newSource}`);
-												console.log(`尝试更新代码块，源内容: ${sourceAttr}, 唯一标识符: ${blockId}`);
+												console.log('代码块更新成功，检查是否包含性别参数');
+												// 触发页面重新渲染
 												this.app.workspace.trigger('layout-change');
+												console.log('已触发layout-change事件，重新渲染页面');
+												// 直接重新渲染对应的视图元素
+												// 增加延迟时间，确保DOM更新完成
 												setTimeout(() => {
-													const el = document.querySelector(`[data-bazi-block-id="${blockId}"]`);
+													console.log('等待DOM更新完成...');
+													// 再次延迟，确保DOM已完全更新
+													setTimeout(() => {
+													console.log('尝试查找视图元素，唯一标识符:', blockId);
+													// 使用多种方式尝试定位元素
+													let el = document.querySelector(`[data-bazi-block-id="${blockId}"]`);
+
+													if (!el) {
+														console.log('通过data-bazi-block-id未找到元素，尝试其他方法');
+														// 尝试通过data-bazi-source查找
+														const cleanSource = source.replace(/[\n\r"']/g, '').replace(/\s+/g, ' ').trim();
+														el = document.querySelector(`[data-bazi-source="${cleanSource}"]`);
+														console.log('通过data-bazi-source查找结果:', el ? '成功' : '失败');
+													}
+
+													// 如果仍然找不到，尝试查找所有bazi代码块
+													if (!el) {
+														console.log('尝试查找所有bazi代码块');
+														const allBaziBlocks = document.querySelectorAll('[data-bazi-block-id]');
+														console.log('找到的bazi代码块数量:', allBaziBlocks.length);
+														// 输出所有找到的blockId
+														allBaziBlocks.forEach((block, index) => {
+															console.log(`代码块${index+1} ID:`, block.getAttribute('data-bazi-block-id'));
+														});
+													}
+
 													if (el) {
+														console.log(`找到匹配的视图元素，唯一标识符: ${el.getAttribute('data-bazi-block-id')}`);
 														// 手动解析代码块参数
 														const params: BaziParams = {};
 														const lines = newSource.split('\n');
@@ -2224,111 +2366,19 @@ bazi: ${cleanedBazi}
 															this.addTableCellListeners(el as HTMLElement, id, baziInfo);
 														}
 														this.applyDisplayOptions(el as HTMLElement, params);
-														console.log('已直接重新渲染视图元素，唯一标识符: ' + blockId);
+														console.log('已直接重新渲染视图元素');
 														// 隐藏性别选择栏
 														const genderContainer = el.querySelector('.bazi-gender-container');
 														if (genderContainer) {
 															genderContainer.remove();
 														}
-														const activeLeaf = this.app.workspace.activeLeaf;
-														if (activeLeaf && activeLeaf.view instanceof MarkdownView) {
-															const editor = activeLeaf.view.editor;
-															const file = activeLeaf.view.file;
-															if (editor && file) {
-																// 直接使用文件API更新代码块，这样可以更精确地控制代码块的替换
-																// 查找文档中的所有代码块
-																const text = editor.getValue();
-																const lines = text.split('\n');
-
-																// 查找所有代码块
-																let inCodeBlock = false;
-																let startLine = -1;
-																let endLine = -1;
-																let blockLanguage = '';
-																let foundBlock = false;
-
-																for (let i = 0; i < lines.length; i++) {
-																	const line = lines[i];
-
-																	if (line.startsWith('```') && !inCodeBlock) {
-																		inCodeBlock = true;
-																		startLine = i;
-																		blockLanguage = line.substring(3).trim();
-																	} else if (line.startsWith('```') && inCodeBlock) {
-																		inCodeBlock = false;
-																		endLine = i;
-
-																		// 检查是否是我们要找的代码块
-																		if (blockLanguage === 'bazi') {
-																			// 检查代码块内容是否包含我们的唯一标识符
-																			let blockContent = '';
-																			for (let j = startLine; j <= endLine; j++) {
-																				blockContent += lines[j] + '\n';
-																			}
-
-																			if (blockContent.includes(`data-bazi-block-id="${blockId}"`)) {
-																				foundBlock = true;
-																				break;
-																			}
-																		}
-																	}
-																}
-
-																if (foundBlock && startLine >= 0 && endLine >= 0) {
-																	// 构建新的代码块内容
-																	const trimmedSource = newSource.trim();
-
-																	// 使用文件API更新文件内容
-																	// 获取当前文件
-																	const file = this.app.workspace.getActiveFile();
-																	if (file) {
-																		// 读取文件内容
-																		this.app.vault.read(file).then(content => {
-																			// 将内容分割成行
-																			const lines = content.split('\n');
-
-																			// 检测原始代码块的缩进
-																			let indentation = '';
-																			// 检查第一行的缩进
-																			if (startLine + 1 < lines.length) {
-																				const firstLine = lines[startLine + 1];
-																				const match = firstLine.match(/^(\s+)/);
-																				if (match) {
-																					indentation = match[1];
-																				}
-																			}
-
-																			// 应用缩进到每一行
-																			const indentedSource = trimmedSource
-																				.split('\n')
-																				.map(line => line.trim() ? indentation + line : line)
-																				.join('\n');
-
-																			// 替换代码块
-																			const beforeBlock = lines.slice(0, startLine).join('\n');
-																			const afterBlock = lines.slice(endLine + 1).join('\n');
-																			const newBlock = '```bazi\n' + indentedSource + '\n```';
-
-																			// 构建新的文件内容
-																			const newContent = beforeBlock + (beforeBlock ? '\n' : '') + newBlock + (afterBlock ? '\n' : '') + afterBlock;
-
-																			// 更新文件内容
-																			this.app.vault.modify(file, newContent);
-																		});
-																	}
-
-																	console.log('代码块已更新，使用文件API直接替换');
-																	new Notice(`已选择性别 ${genderLabel} 并更新代码块`);
-																} else {
-																	console.error('未找到匹配的代码块');
-																	new Notice('更新代码块失败：未找到匹配的代码块');
-																}
-															}
-														}
 													} else {
-														console.log('未找到对应的视图元素，无法直接重新渲染，唯一标识符: ' + blockId);
+														console.log('未找到对应的视图元素，无法直接重新渲染');
 													}
-												}, 100);
+													// 结束内部setTimeout
+												}, 300);
+												// 结束外部setTimeout
+												}, 500);
 											} else {
 												throw new Error('无法找到代码块源内容或唯一标识符');
 											}
@@ -2700,6 +2750,9 @@ bazi: ${cleanedBazi}
 															const match = firstLine.match(/^(\s+)/);
 															if (match) {
 																indentation = match[1];
+																console.log('检测到缩进:', indentation.length, '个空格');
+															} else {
+																console.log('未检测到缩进');
 															}
 														}
 
@@ -2708,6 +2761,8 @@ bazi: ${cleanedBazi}
 															.split('\n')
 															.map(line => line.trim() ? indentation + line : line)
 															.join('\n');
+
+														console.log('应用缩进后的源码:', indentedSource);
 
 														// 使用文件API更新文件内容
 														const file = this.app.workspace.getActiveFile();
@@ -4929,6 +4984,9 @@ bazi: ${cleanedBazi}
 													const match = firstLine.match(/^(\s+)/);
 													if (match) {
 														indentation = match[1];
+														console.log('检测到缩进:', indentation.length, '个空格');
+													} else {
+														console.log('未检测到缩进');
 													}
 												}
 
@@ -4937,6 +4995,8 @@ bazi: ${cleanedBazi}
 													.split('\n')
 													.map(line => line.trim() ? indentation + line : line)
 													.join('\n');
+
+												console.log('应用缩进后的源码:', indentedSource);
 
 												// 使用编辑器API替换代码块
 												editor.replaceRange(
