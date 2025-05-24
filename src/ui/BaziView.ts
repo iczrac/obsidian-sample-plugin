@@ -515,9 +515,9 @@ export class BaziView {
 
     // 添加旬空信息
     if (this.baziInfo.yearXunKong || this.baziInfo.monthXunKong ||
-        this.baziInfo.dayXunKong || this.baziInfo.timeXunKong) {
+        this.baziInfo.dayXunKong || this.baziInfo.hourXunKong) {
       const xunKongDiv = infoList.createEl('div', { cls: 'bazi-view-info-item' });
-      xunKongDiv.innerHTML = `旬空：年(${this.baziInfo.yearXunKong || '无'}) 月(${this.baziInfo.monthXunKong || '无'}) 日(${this.baziInfo.dayXunKong || '无'}) 时(${this.baziInfo.timeXunKong || '无'})`;
+      xunKongDiv.innerHTML = `旬空：年(${this.baziInfo.yearXunKong || '无'}) 月(${this.baziInfo.monthXunKong || '无'}) 日(${this.baziInfo.dayXunKong || '无'}) 时(${this.baziInfo.hourXunKong || '无'})`;
     }
 
     // 创建大运信息

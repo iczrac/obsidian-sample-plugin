@@ -52,7 +52,6 @@ export interface BaziInfo {
   monthXunKong?: string;
   dayXunKong?: string;
   hourXunKong?: string;
-  timeXunKong?: string;
 
   // 十神信息
   yearShiShenGan?: string;

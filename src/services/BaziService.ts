@@ -359,6 +359,12 @@ export class BaziService {
       hourShiShenGan,
       hourShiShenZhi,
 
+      // 旬空信息
+      yearXunKong: this.calculateXunKong(yearStem, yearBranch),
+      monthXunKong: this.calculateXunKong(monthStem, monthBranch),
+      dayXunKong: this.calculateXunKong(dayStem, dayBranch),
+      hourXunKong: this.calculateXunKong(hourStem, hourBranch),
+
       // 特殊信息
       taiYuan,
       taiYuanNaYin,
@@ -680,22 +686,22 @@ export class BaziService {
     const timeDiShi = eightChar.getTimeDiShi();
 
     // 添加错误处理，防止旬空计算失败
-    let timeXunKong = '';
+    let hourXunKong = '';
     try {
       // 先获取旬，再获取旬空
       const timeXun = eightChar.getTimeXun();
       if (timeXun) {
-        timeXunKong = eightChar.getTimeXunKong();
+        hourXunKong = eightChar.getTimeXunKong();
       }
 
       // 如果通过API获取失败，则手动计算
-      if (!timeXunKong) {
-        timeXunKong = this.calculateXunKong(hourStem, hourBranch);
+      if (!hourXunKong) {
+        hourXunKong = this.calculateXunKong(hourStem, hourBranch);
       }
     } catch (e) {
       console.error('计算时柱旬空出错:', e);
       // 出错时手动计算
-      timeXunKong = this.calculateXunKong(hourStem, hourBranch);
+      hourXunKong = this.calculateXunKong(hourStem, hourBranch);
     }
 
     // 特殊信息
@@ -1922,7 +1928,7 @@ export class BaziService {
       yearXunKong,
       monthXunKong,
       dayXunKong,
-      timeXunKong,
+      hourXunKong,
 
       // 星座和节气
       zodiac,
@@ -5535,7 +5541,7 @@ export class BaziService {
           <td><small>${baziInfo.yearXunKong || '无'}</small></td>
           <td><small>${baziInfo.monthXunKong || '无'}</small></td>
           <td><small>${baziInfo.dayXunKong || '无'}</small></td>
-          <td><small>${baziInfo.timeXunKong || '无'}</small></td>
+          <td><small>${baziInfo.hourXunKong || '无'}</small></td>
         </tr>
       </tbody>
     </table>
