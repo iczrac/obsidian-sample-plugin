@@ -151,12 +151,12 @@ export class CodeBlockProcessor {
 			console.log('🎨 开始渲染八字命盘');
 			this.renderBaziChart(el, baziInfo, params);
 
-			// 如果没有指定性别，在八字命盘上方添加性别选择界面
-			if (!params.gender) {
-				console.log('✨ 没有性别参数，显示性别选择界面');
+			// 检查是否需要显示性别选择界面
+			if (this.shouldShowGenderSelection(params)) {
+				console.log('✨ 需要显示性别选择界面');
 				this.addGenderSelection(el, source, '日期');
 			} else {
-				console.log('✅ 已有性别参数:', params.gender);
+				console.log('✅ 不需要显示性别选择界面，参数:', params.gender);
 			}
 
 		} catch (error) {
@@ -214,12 +214,12 @@ export class CodeBlockProcessor {
 				console.log('ℹ️ 无需年份选择（只有一个匹配年份或无匹配年份）');
 			}
 
-			// 如果没有指定性别，在八字命盘上方添加性别选择界面
-			if (!params.gender) {
-				console.log('✨ 没有性别参数，显示性别选择界面');
+			// 检查是否需要显示性别选择界面
+			if (this.shouldShowGenderSelection(params)) {
+				console.log('✨ 需要显示性别选择界面');
 				this.addGenderSelection(el, source, '八字');
 			} else {
-				console.log('✅ 已有性别参数:', params.gender);
+				console.log('✅ 不需要显示性别选择界面，参数:', params.gender);
 			}
 
 		} catch (error) {
@@ -278,12 +278,12 @@ export class CodeBlockProcessor {
 			console.log('🎨 开始渲染农历八字命盘');
 			this.renderBaziChart(el, baziInfo, params);
 
-			// 如果没有指定性别，在八字命盘上方添加性别选择界面
-			if (!params.gender) {
-				console.log('✨ 没有性别参数，显示性别选择界面');
+			// 检查是否需要显示性别选择界面
+			if (this.shouldShowGenderSelection(params)) {
+				console.log('✨ 需要显示性别选择界面');
 				this.addGenderSelection(el, source, '农历');
 			} else {
-				console.log('✅ 已有性别参数:', params.gender);
+				console.log('✅ 不需要显示性别选择界面，参数:', params.gender);
 			}
 
 		} catch (error) {
@@ -339,12 +339,12 @@ export class CodeBlockProcessor {
 			console.log('🎨 开始渲染当前时间八字命盘');
 			this.renderBaziChart(el, baziInfo, params);
 
-			// 如果没有指定性别，在八字命盘上方添加性别选择界面
-			if (!params.gender) {
-				console.log('✨ 没有性别参数，显示性别选择界面');
+			// 检查是否需要显示性别选择界面
+			if (this.shouldShowGenderSelection(params)) {
+				console.log('✨ 需要显示性别选择界面');
 				this.addGenderSelection(el, source, '当前时间');
 			} else {
-				console.log('✅ 已有性别参数:', params.gender);
+				console.log('✅ 不需要显示性别选择界面，参数:', params.gender);
 			}
 
 		} catch (error) {
@@ -356,6 +356,32 @@ export class CodeBlockProcessor {
 				attr: { style: 'color: red; padding: 10px; border: 1px solid red; border-radius: 5px;' }
 			});
 		}
+	}
+
+	/**
+	 * 检查是否需要显示性别选择栏
+	 */
+	private shouldShowGenderSelection(params: BaziParams): boolean {
+		// 如果没有性别参数，需要显示性别选择栏
+		if (!params.gender) {
+			return true;
+		}
+
+		// 如果性别参数是 'no'，不显示性别选择栏
+		const genderValue = params.gender.trim().toLowerCase();
+		if (genderValue === 'no' || genderValue === 'none' || genderValue === '无') {
+			console.log('⏰ 性别参数设置为不需要，跳过性别选择');
+			return false;
+		}
+
+		// 如果已经设置了具体的性别值，不显示性别选择栏
+		if (genderValue === '男' || genderValue === 'male' || genderValue === '1' ||
+			genderValue === '女' || genderValue === 'female' || genderValue === '0') {
+			return false;
+		}
+
+		// 其他情况显示性别选择栏
+		return true;
 	}
 
 	/**
