@@ -1,6 +1,7 @@
 import { BaziInfo } from '../types/BaziInfo';
 import { ShenShaService } from '../services/ShenShaService';
 import { WuXingService } from '../services/WuXingService';
+import { MarkdownView, Notice } from 'obsidian';
 import { GeJuService } from '../services/GeJuService';
 import { GeJuTrendService } from '../services/GeJuTrendService';
 import { GeJuTrendChart } from './GeJuTrendChart';
@@ -15,6 +16,7 @@ export class InteractiveBaziView {
   private container: HTMLElement;
   private baziInfo: BaziInfo;
   private id: string;
+  private plugin: any;
 
   // 当前选中的大运、流年索引
   private selectedDaYunIndex: number = 0;
@@ -38,10 +40,11 @@ export class InteractiveBaziView {
    * @param baziInfo 八字信息
    * @param id 唯一ID
    */
-  constructor(container: HTMLElement, baziInfo: BaziInfo, id: string) {
+  constructor(container: HTMLElement, baziInfo: BaziInfo, id: string, plugin?: any) {
     this.container = container;
     this.baziInfo = baziInfo;
     this.id = id;
+    this.plugin = plugin;
 
     // 在容器元素上存储实例引用，以便设置页面可以找到并更新
     (this.container as any).__baziViewInstance = this;
@@ -71,6 +74,182 @@ export class InteractiveBaziView {
 
     // 初始化视图
     this.initView();
+  }
+
+  /**
+   * 切换样式
+   */
+  private switchStyle() {
+    console.log('🎨 切换样式按钮点击');
+
+    // 获取当前样式
+    const currentStyle = this.getCurrentStyle();
+    console.log('当前样式:', currentStyle);
+
+    // 计算下一个样式
+    const nextStyle = this.getNextStyle(currentStyle);
+    console.log('下一个样式:', nextStyle);
+
+    // 更新代码块
+    this.updateCodeBlockWithStyle(nextStyle);
+  }
+
+  /**
+   * 获取当前样式
+   */
+  private getCurrentStyle(): string {
+    // 从容器的class或其他地方获取当前样式
+    // 由于这是InteractiveBaziView，当前样式应该是3（完整样式）
+    return '3';
+  }
+
+  /**
+   * 获取下一个样式
+   */
+  private getNextStyle(currentStyle: string): string {
+    switch (currentStyle) {
+      case '1':
+        return '2';
+      case '2':
+        return '3';
+      case '3':
+        return '1';
+      default:
+        return '1';
+    }
+  }
+
+  /**
+   * 更新代码块的样式参数
+   */
+  private updateCodeBlockWithStyle(newStyle: string) {
+    try {
+      console.log('🔄 开始更新代码块样式为:', newStyle);
+
+      const activeView = this.plugin.app.workspace.getActiveViewOfType(MarkdownView);
+      if (!activeView) {
+        console.log('❌ 无法获取活动的编辑器视图');
+        new Notice('更新样式失败：无法获取活动的编辑器视图', 3000);
+        return;
+      }
+
+      const editor = activeView.editor;
+      if (!editor) {
+        console.log('❌ 无法获取编辑器实例');
+        new Notice('更新样式失败：无法获取编辑器实例', 3000);
+        return;
+      }
+
+      // 查找当前代码块
+      const cursor = editor.getCursor();
+      const totalLines = editor.lineCount();
+      let startLine = -1;
+      let endLine = -1;
+      let foundTargetBlock = false;
+
+      // 向上查找代码块开始
+      for (let i = cursor.line; i >= 0; i--) {
+        const line = editor.getLine(i);
+        if (line.trim() === '```bazi') {
+          startLine = i;
+          break;
+        }
+      }
+
+      // 向下查找代码块结束
+      if (startLine !== -1) {
+        for (let i = startLine + 1; i < totalLines; i++) {
+          const line = editor.getLine(i);
+          if (line.trim() === '```') {
+            endLine = i;
+            foundTargetBlock = true;
+            break;
+          }
+        }
+      }
+
+      if (foundTargetBlock) {
+        // 获取代码块内容
+        let blockContent = '';
+        for (let i = startLine + 1; i < endLine; i++) {
+          blockContent += editor.getLine(i) + '\n';
+        }
+
+        console.log('原始代码块内容:', blockContent);
+
+        // 解析现有参数
+        const lines = blockContent.trim().split('\n');
+        const newLines: string[] = [];
+        let styleUpdated = false;
+
+        // 处理每一行
+        for (const line of lines) {
+          const trimmedLine = line.trim();
+          if (trimmedLine.startsWith('style:')) {
+            // 更新样式参数
+            newLines.push(`style: ${newStyle}`);
+            styleUpdated = true;
+          } else if (trimmedLine) {
+            // 保留其他参数
+            newLines.push(trimmedLine);
+          }
+        }
+
+        // 如果没有找到style参数，添加一个
+        if (!styleUpdated) {
+          newLines.push(`style: ${newStyle}`);
+        }
+
+        const newSource = newLines.join('\n');
+        console.log('新的代码块内容:', newSource);
+
+        // 使用文件API更新
+        const file = this.plugin.app.workspace.getActiveFile();
+        if (file) {
+          this.plugin.app.vault.read(file).then(content => {
+            const fileLines = content.split('\n');
+
+            // 检测缩进
+            let indentation = '';
+            if (startLine + 1 < fileLines.length) {
+              const firstLine = fileLines[startLine + 1];
+              const match = firstLine.match(/^(\s+)/);
+              if (match) {
+                indentation = match[1];
+              }
+            }
+
+            // 应用缩进
+            const indentedSource = newSource
+              .split('\n')
+              .map(line => line.trim() ? indentation + line : line)
+              .join('\n');
+
+            // 替换代码块
+            const beforeBlock = fileLines.slice(0, startLine).join('\n');
+            const afterBlock = fileLines.slice(endLine + 1).join('\n');
+            const newBlock = '```bazi\n' + indentedSource + '\n```';
+
+            // 构建新的文件内容
+            const newContent = beforeBlock + (beforeBlock ? '\n' : '') + newBlock + (afterBlock ? '\n' : '') + afterBlock;
+
+            // 更新文件内容
+            this.plugin.app.vault.modify(file, newContent);
+            console.log('✅ 样式更新成功');
+
+            // 显示通知
+            const styleNames = { '1': '简洁样式', '2': '标准样式', '3': '完整样式' };
+            new Notice(`已切换到${styleNames[newStyle as keyof typeof styleNames]}`);
+          });
+        }
+      } else {
+        console.log('❌ 未找到目标代码块');
+        new Notice('更新样式失败：未找到目标代码块', 3000);
+      }
+    } catch (error) {
+      console.error('❌ 更新样式时出错:', error);
+      new Notice('更新样式时出错: ' + error.message, 5000);
+    }
   }
 
   /**
@@ -263,12 +442,27 @@ export class InteractiveBaziView {
     const header = this.container.createDiv({ cls: 'bazi-view-header' });
     header.createEl('h3', { text: '八字命盘', cls: 'bazi-view-title' });
 
+    // 创建按钮容器
+    const buttonContainer = header.createDiv({ cls: 'bazi-view-header-buttons' });
+
+    // 创建样式切换按钮
+    const styleButton = buttonContainer.createEl('button', {
+      cls: 'bazi-view-style-button',
+      attr: { 'data-bazi-id': this.id, 'aria-label': '切换样式' }
+    });
+    styleButton.innerHTML = '🎨';
+
     // 创建设置按钮
-    const settingsButton = header.createEl('button', {
+    const settingsButton = buttonContainer.createEl('button', {
       cls: 'bazi-view-settings-button',
       attr: { 'data-bazi-id': this.id, 'aria-label': '设置' }
     });
-    settingsButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-settings"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>';
+    settingsButton.innerHTML = '⚙️';
+
+    // 添加样式切换按钮点击事件
+    styleButton.addEventListener('click', () => {
+      this.switchStyle();
+    });
 
     // 添加设置按钮点击事件
     settingsButton.addEventListener('click', () => {

@@ -625,14 +625,14 @@ export class CodeBlockProcessor {
 		// 根据样式选择对应的视图组件
 		switch (displayStyle) {
 			case BaziDisplayStyle.SIMPLE:
-				new SimpleBaziView(el, baziInfo, id);
+				new SimpleBaziView(el, baziInfo, id, this.plugin);
 				break;
 			case BaziDisplayStyle.STANDARD:
-				new StandardBaziView(el, baziInfo, id);
+				new StandardBaziView(el, baziInfo, id, this.plugin);
 				break;
 			case BaziDisplayStyle.COMPLETE:
 			default:
-				new InteractiveBaziView(el, baziInfo, id);
+				new InteractiveBaziView(el, baziInfo, id, this.plugin);
 				break;
 		}
 

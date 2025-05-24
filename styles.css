@@ -365,6 +365,13 @@
   color: var(--text-normal);
 }
 
+.bazi-view-header-buttons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.bazi-view-style-button,
 .bazi-view-settings-button {
   background: transparent;
   border: none;
@@ -372,12 +379,25 @@
   padding: 5px;
   border-radius: 4px;
   color: var(--text-muted);
-  transition: color 0.2s, background-color 0.2s;
+  transition: color 0.2s, background-color 0.2s, transform 0.2s;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  min-height: 32px;
 }
 
+.bazi-view-style-button:hover,
 .bazi-view-settings-button:hover {
   color: var(--text-normal);
   background-color: var(--background-modifier-hover);
+  transform: scale(1.1);
+}
+
+.bazi-view-style-button:active,
+.bazi-view-settings-button:active {
+  transform: scale(0.95);
 }
 
 .bazi-view-section {

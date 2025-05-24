@@ -1,4 +1,5 @@
 import { BaziInfo } from '../types/BaziInfo';
+import { MarkdownView, Notice } from 'obsidian';
 
 /**
  * 标准八字视图组件
@@ -9,11 +10,13 @@ export class StandardBaziView {
   private baziInfo: BaziInfo;
   private id: string;
   private currentLiuYueYear: number | null = null;
+  private plugin: any;
 
-  constructor(container: HTMLElement, baziInfo: BaziInfo, id: string) {
+  constructor(container: HTMLElement, baziInfo: BaziInfo, id: string, plugin?: any) {
     this.container = container;
     this.baziInfo = baziInfo;
     this.id = id;
+    this.plugin = plugin;
 
     this.render();
   }
@@ -27,8 +30,8 @@ export class StandardBaziView {
     this.container.addClass('standard-bazi-view');
     this.container.setAttribute('id', this.id);
 
-    // 创建简化标题
-    this.createSimpleHeader();
+    // 创建标题和样式切换按钮
+    this.createHeader();
 
     // 创建基本信息
     this.createBasicInfo();
@@ -44,14 +47,78 @@ export class StandardBaziView {
 
     // 创建流月信息
     this.createLiuYueInfo();
+
+    // 在所有容器创建完成后，默认选中第一个大运
+    this.initializeDefaultSelection();
   }
 
   /**
-   * 创建简化标题
+   * 初始化默认选中状态
    */
-  private createSimpleHeader() {
-    const header = this.container.createDiv({ cls: 'bazi-view-header simple' });
-    header.createEl('h4', { text: '八字分析', cls: 'bazi-view-title simple' });
+  private initializeDefaultSelection() {
+    console.log('🎯 开始初始化默认选中状态');
+
+    // 检查是否有大运数据
+    if (!this.baziInfo.daYun || this.baziInfo.daYun.length === 0) {
+      console.log('❌ 没有大运数据，跳过默认选中');
+      return;
+    }
+
+    // 查找大运表格和第一个大运单元格
+    const daYunTable = this.container.querySelector('.bazi-view-dayun-table');
+    if (!daYunTable) {
+      console.log('❌ 未找到大运表格');
+      return;
+    }
+
+    const firstDaYunCell = daYunTable.querySelector('.bazi-dayun-cell');
+    if (!firstDaYunCell) {
+      console.log('❌ 未找到第一个大运单元格');
+      return;
+    }
+
+    // 选中第一个大运
+    firstDaYunCell.classList.add('selected');
+    console.log('✅ 已选中第一个大运');
+
+    // 获取第一个大运数据并更新流年
+    const firstDaYun = this.baziInfo.daYun[0];
+    console.log('第一个大运数据:', firstDaYun);
+
+    // 确保流年容器已创建
+    const liuNianContainer = this.container.querySelector('.bazi-liunian-container');
+    if (!liuNianContainer) {
+      console.log('❌ 未找到流年容器');
+      return;
+    }
+
+    // 更新流年显示
+    this.updateLiuNianForDaYun(firstDaYun);
+    console.log('✅ 已更新第一个大运的流年显示');
+  }
+
+  /**
+   * 创建标题和样式切换按钮
+   */
+  private createHeader() {
+    const header = this.container.createDiv({ cls: 'bazi-view-header standard' });
+
+    // 创建标题
+    header.createEl('h4', { text: '八字命盘', cls: 'bazi-view-title standard' });
+
+    // 如果有plugin，创建样式切换按钮
+    if (this.plugin) {
+      const styleButton = header.createEl('button', {
+        cls: 'bazi-view-style-button',
+        attr: { 'data-bazi-id': this.id, 'aria-label': '切换样式' }
+      });
+      styleButton.innerHTML = '🎨';
+
+      // 添加样式切换按钮点击事件
+      styleButton.addEventListener('click', () => {
+        this.switchStyle();
+      });
+    }
   }
 
   /**
@@ -225,15 +292,7 @@ export class StandardBaziView {
       yearRow.createEl('td', { text: `${dayun.startYear}-${dayun.endYear}` });
     });
 
-    // 默认选中第一个大运
-    if (daYunData.length > 0) {
-      const firstCell = table.querySelector('.bazi-dayun-cell');
-      if (firstCell) {
-        firstCell.classList.add('selected');
-        // 默认显示第一个大运的流年
-        this.updateLiuNianForDaYun(daYunData[0]);
-      }
-    }
+    // 默认选中逻辑移到initializeDefaultSelection方法中
   }
 
   /**
@@ -256,6 +315,7 @@ export class StandardBaziView {
   private updateLiuNianForDaYun(selectedDaYun: any) {
     console.log('选中的大运:', selectedDaYun);
     console.log('大运起止年份:', selectedDaYun.startYear, '-', selectedDaYun.endYear);
+    console.log('大运年龄范围:', selectedDaYun.startAge, '-', selectedDaYun.endAge);
 
     // 使用大运的年份范围生成流年数据
     const startYear = typeof selectedDaYun.startYear === 'number' ? selectedDaYun.startYear : parseInt(selectedDaYun.startYear);
@@ -263,12 +323,22 @@ export class StandardBaziView {
 
     console.log('转换后的大运年份范围:', startYear, '-', endYear);
 
+    // 验证年份范围的有效性
+    if (isNaN(startYear) || isNaN(endYear) || startYear > endYear) {
+      console.log('❌ 大运年份范围无效:', startYear, '-', endYear);
+      const tableContainer = this.container.querySelector('.bazi-liunian-container');
+      if (tableContainer) {
+        this.renderLiuNianTable(tableContainer as HTMLElement, []);
+      }
+      return;
+    }
+
     // 生成该大运期间的流年数据
     const liuNianData = [];
     for (let year = startYear; year <= endYear; year++) {
-      // 计算年龄（假设出生年份）
+      // 计算年龄
       const birthYear = this.baziInfo.originalDate?.year || startYear - selectedDaYun.startAge;
-      const age = year - birthYear + 1;
+      const age = selectedDaYun.startAge + (year - startYear);
 
       // 计算该年的干支
       const ganZhi = this.calculateYearGanZhi(year);
@@ -283,6 +353,7 @@ export class StandardBaziView {
     }
 
     console.log('生成的流年数据:', liuNianData);
+    console.log('流年数量:', liuNianData.length);
 
     // 更新流年表格
     const tableContainer = this.container.querySelector('.bazi-liunian-container');
@@ -574,5 +645,154 @@ export class StandardBaziView {
       '申': '金', '酉': '金', '戌': '土', '亥': '水'
     };
     return map[branch] || '';
+  }
+
+  /**
+   * 切换样式
+   */
+  private switchStyle() {
+    if (!this.plugin) return;
+
+    console.log('🎨 标准样式切换按钮点击');
+
+    // 当前是样式2，切换到样式3
+    const nextStyle = '3';
+    console.log('从样式2切换到样式3');
+
+    // 更新代码块
+    this.updateCodeBlockWithStyle(nextStyle);
+  }
+
+  /**
+   * 更新代码块的样式参数
+   */
+  private updateCodeBlockWithStyle(newStyle: string) {
+    try {
+      console.log('🔄 开始更新代码块样式为:', newStyle);
+
+      const activeView = this.plugin.app.workspace.getActiveViewOfType(MarkdownView);
+      if (!activeView) {
+        console.log('❌ 无法获取活动的编辑器视图');
+        new Notice('更新样式失败：无法获取活动的编辑器视图', 3000);
+        return;
+      }
+
+      const editor = activeView.editor;
+      if (!editor) {
+        console.log('❌ 无法获取编辑器实例');
+        new Notice('更新样式失败：无法获取编辑器实例', 3000);
+        return;
+      }
+
+      // 查找当前代码块
+      const cursor = editor.getCursor();
+      const totalLines = editor.lineCount();
+      let startLine = -1;
+      let endLine = -1;
+      let foundTargetBlock = false;
+
+      // 向上查找代码块开始
+      for (let i = cursor.line; i >= 0; i--) {
+        const line = editor.getLine(i);
+        if (line.trim() === '```bazi') {
+          startLine = i;
+          break;
+        }
+      }
+
+      // 向下查找代码块结束
+      if (startLine !== -1) {
+        for (let i = startLine + 1; i < totalLines; i++) {
+          const line = editor.getLine(i);
+          if (line.trim() === '```') {
+            endLine = i;
+            foundTargetBlock = true;
+            break;
+          }
+        }
+      }
+
+      if (foundTargetBlock) {
+        // 获取代码块内容
+        let blockContent = '';
+        for (let i = startLine + 1; i < endLine; i++) {
+          blockContent += editor.getLine(i) + '\n';
+        }
+
+        console.log('原始代码块内容:', blockContent);
+
+        // 解析现有参数
+        const lines = blockContent.trim().split('\n');
+        const newLines: string[] = [];
+        let styleUpdated = false;
+
+        // 处理每一行
+        for (const line of lines) {
+          const trimmedLine = line.trim();
+          if (trimmedLine.startsWith('style:')) {
+            // 更新样式参数
+            newLines.push(`style: ${newStyle}`);
+            styleUpdated = true;
+          } else if (trimmedLine) {
+            // 保留其他参数
+            newLines.push(trimmedLine);
+          }
+        }
+
+        // 如果没有找到style参数，添加一个
+        if (!styleUpdated) {
+          newLines.push(`style: ${newStyle}`);
+        }
+
+        const newSource = newLines.join('\n');
+        console.log('新的代码块内容:', newSource);
+
+        // 使用文件API更新
+        const file = this.plugin.app.workspace.getActiveFile();
+        if (file) {
+          this.plugin.app.vault.read(file).then((content: string) => {
+            const fileLines = content.split('\n');
+
+            // 检测缩进
+            let indentation = '';
+            if (startLine + 1 < fileLines.length) {
+              const firstLine = fileLines[startLine + 1];
+              const match = firstLine.match(/^(\s+)/);
+              if (match) {
+                indentation = match[1];
+              }
+            }
+
+            // 应用缩进
+            const indentedSource = newSource
+              .split('\n')
+              .map(line => line.trim() ? indentation + line : line)
+              .join('\n');
+
+            // 替换代码块
+            const beforeBlock = fileLines.slice(0, startLine).join('\n');
+            const afterBlock = fileLines.slice(endLine + 1).join('\n');
+            const newBlock = '```bazi\n' + indentedSource + '\n```';
+
+            // 构建新的文件内容
+            const newContent = beforeBlock + (beforeBlock ? '\n' : '') + newBlock + (afterBlock ? '\n' : '') + afterBlock;
+
+            // 更新文件内容
+            this.plugin.app.vault.modify(file, newContent);
+            console.log('✅ 样式更新成功');
+
+            // 显示通知
+            const styleNames = { '1': '简洁样式', '2': '标准样式', '3': '完整样式' };
+            new Notice(`已切换到${styleNames[newStyle as keyof typeof styleNames]}`);
+          });
+        }
+      } else {
+        console.log('❌ 未找到目标代码块');
+        new Notice('更新样式失败：未找到目标代码块', 3000);
+      }
+    } catch (error) {
+      console.error('❌ 更新样式时出错:', error);
+      new Notice('更新样式时出错: ' + error.message, 5000);
+    }
   }
 }
