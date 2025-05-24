@@ -500,6 +500,110 @@ td.wuxing-tu, span.wuxing-tu, .wuxing-tu {
   padding-top: 15px;
 }
 
+.bazi-settings-subtitle {
+  color: var(--text-normal);
+  margin: 20px 0 10px 0;
+  font-size: 1.2em;
+  border-bottom: 1px solid var(--background-modifier-border);
+  padding-bottom: 5px;
+}
+
+/* 使用说明样式 */
+.bazi-settings-instructions {
+  margin-top: 15px;
+  padding: 15px;
+  background-color: var(--background-secondary);
+  border-radius: 8px;
+  border: 1px solid var(--background-modifier-border);
+}
+
+.bazi-instructions-section {
+  margin-bottom: 20px;
+}
+
+.bazi-instructions-title {
+  color: var(--text-normal);
+  margin: 0 0 10px 0;
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+.bazi-instructions-list {
+  margin: 10px 0;
+  padding-left: 20px;
+}
+
+.bazi-instructions-list li {
+  margin-bottom: 5px;
+  color: var(--text-normal);
+  line-height: 1.4;
+}
+
+/* 代码块示例样式 */
+.bazi-code-example {
+  margin: 15px 0;
+  padding: 15px;
+  background-color: var(--background-primary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 6px;
+}
+
+.bazi-code-example-title {
+  color: var(--text-normal);
+  margin: 0 0 10px 0;
+  font-size: 1em;
+  font-weight: bold;
+}
+
+.bazi-code-container {
+  position: relative;
+  margin: 10px 0;
+}
+
+.bazi-code-block {
+  background-color: var(--background-secondary-alt);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 4px;
+  padding: 12px;
+  margin: 0;
+  font-family: var(--font-monospace);
+  font-size: 0.9em;
+  overflow-x: auto;
+  position: relative;
+}
+
+.bazi-code-block code {
+  background: none;
+  padding: 0;
+  color: var(--text-normal);
+  white-space: pre;
+}
+
+.bazi-copy-button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background-color: var(--interactive-accent);
+  color: var(--text-on-accent);
+  border: none;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 0.8em;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.bazi-copy-button:hover {
+  background-color: var(--interactive-accent-hover);
+}
+
+.bazi-code-description {
+  color: var(--text-muted);
+  margin: 10px 0 0 0;
+  font-size: 0.9em;
+  line-height: 1.4;
+}
+
 /* 大运和流年表格样式 */
 .bazi-view-table-container {
   overflow-x: auto;

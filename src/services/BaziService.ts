@@ -758,18 +758,38 @@ export class BaziService {
     const geJuFactors = geJuInfo?.geJuFactors;
 
     // 起运信息
-    const genderNum = gender === '1' ? 1 : 0;
-    const sectNum = parseInt(sect);
-    const yun = eightChar.getYun(genderNum, sectNum);
-    const qiYunYear = yun.getStartYear();
-    const qiYunMonth = yun.getStartMonth();
-    const qiYunDay = yun.getStartDay();
-    const qiYunHour = yun.getStartHour();
-    const qiYunDate = yun.getStartSolar().toYmd();
-    const qiYunAge = qiYunYear; // 简化处理，实际应该计算虚岁
+    // 只有当性别明确指定时才计算大运，否则跳过大运计算
+    let yun = null;
+    let genderNum = -1; // 默认值表示未指定性别
 
-    // 大运信息
-    const daYunArr = yun.getDaYun();
+    if (gender === '1' || gender === '0') {
+      genderNum = gender === '1' ? 1 : 0;
+      const sectNum = parseInt(sect);
+      try {
+        yun = eightChar.getYun(genderNum, sectNum);
+      } catch (e) {
+        console.error('计算大运出错:', e);
+        yun = null;
+      }
+    }
+
+    // 起运信息（只有当yun不为null时才获取）
+    let qiYunYear = 0, qiYunMonth = 0, qiYunDay = 0, qiYunHour = 0, qiYunDate = '', qiYunAge = 0;
+    if (yun) {
+      try {
+        qiYunYear = yun.getStartYear();
+        qiYunMonth = yun.getStartMonth();
+        qiYunDay = yun.getStartDay();
+        qiYunHour = yun.getStartHour();
+        qiYunDate = yun.getStartSolar().toYmd();
+        qiYunAge = qiYunYear; // 简化处理，实际应该计算虚岁
+      } catch (e) {
+        console.error('获取起运信息出错:', e);
+      }
+    }
+
+    // 大运信息（只有当yun不为null时才获取）
+    const daYunArr = yun ? yun.getDaYun() : [];
     const daYun = daYunArr.map(dy => {
       // 添加错误处理，防止旬空计算失败
       let xunKong = '';

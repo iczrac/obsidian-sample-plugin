@@ -74,6 +74,54 @@ export class InteractiveBaziView {
   }
 
   /**
+   * 打开设置模态框
+   */
+  private openSettingsModal(): void {
+    console.log('🎯 打开设置模态框');
+
+    // 导入BaziSettingsModal
+    import('../ui/BaziSettingsModal').then(({ BaziSettingsModal }) => {
+      // 获取当前日期信息
+      const currentDate = {
+        year: this.baziInfo.originalDate?.year || new Date().getFullYear(),
+        month: this.baziInfo.originalDate?.month || new Date().getMonth() + 1,
+        day: this.baziInfo.originalDate?.day || new Date().getDate(),
+        hour: this.baziInfo.originalDate?.hour || new Date().getHours()
+      };
+
+      // 创建设置模态框
+      const settingsModal = new BaziSettingsModal(
+        (window as any).app, // 获取Obsidian app实例
+        this.id,
+        currentDate,
+        (updatedBaziInfo: any) => {
+          console.log('🎯 设置更新回调，更新八字信息:', updatedBaziInfo);
+          this.updateBaziInfo(updatedBaziInfo);
+        },
+        this.baziInfo
+      );
+
+      settingsModal.open();
+    }).catch(error => {
+      console.error('加载设置模态框失败:', error);
+    });
+  }
+
+  /**
+   * 更新八字信息
+   * @param updatedBaziInfo 更新后的八字信息
+   */
+  private updateBaziInfo(updatedBaziInfo: any): void {
+    console.log('🎯 更新八字信息:', updatedBaziInfo);
+
+    // 更新内部八字信息
+    this.baziInfo = updatedBaziInfo;
+
+    // 重新渲染整个视图
+    this.initView();
+  }
+
+  /**
    * 更新神煞显示设置
    * @param showShenSha 神煞显示设置
    */
@@ -221,6 +269,11 @@ export class InteractiveBaziView {
       attr: { 'data-bazi-id': this.id, 'aria-label': '设置' }
     });
     settingsButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-settings"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>';
+
+    // 添加设置按钮点击事件
+    settingsButton.addEventListener('click', () => {
+      this.openSettingsModal();
+    });
   }
 
   /**
