@@ -33,8 +33,6 @@ export interface BaziParams {
  * 插件设置接口
  */
 export interface BaziPluginSettings {
-	defaultFormat: string;
-	useInteractiveView: boolean;
 	debugMode: boolean;
 	autoUpdateCodeBlock: boolean;
 	codeBlockUpdateDelay: number;

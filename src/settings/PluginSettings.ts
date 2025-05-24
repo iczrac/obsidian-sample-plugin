@@ -5,8 +5,6 @@ import { BaziPluginSettings } from '../types/PluginTypes';
  * 默认设置
  */
 export const DEFAULT_SETTINGS: BaziPluginSettings = {
-	defaultFormat: 'full', // 'full' 或 'simple'
-	useInteractiveView: true, // 是否使用交互式视图
 	debugMode: false, // 调试模式
 	autoUpdateCodeBlock: true, // 自动更新代码块
 	codeBlockUpdateDelay: 500, // 代码块更新延迟（毫秒）
@@ -37,31 +35,7 @@ export class BaziSettingTab extends PluginSettingTab {
 		containerEl.empty();
 		containerEl.createEl('h2', {text: '八字命盘插件设置'});
 
-		new Setting(containerEl)
-			.setName('默认格式')
-			.setDesc('选择八字信息的默认显示格式')
-			.addDropdown(dropdown => {
-				dropdown
-					.addOption('full', '完整格式')
-					.addOption('simple', '简洁格式')
-					.setValue(this.plugin.settings.defaultFormat)
-					.onChange(async (value) => {
-						this.plugin.settings.defaultFormat = value;
-						await this.plugin.saveSettings();
-					});
-			});
 
-		new Setting(containerEl)
-			.setName('使用交互式视图')
-			.setDesc('启用后，插入的八字命盘将使用交互式视图，可以点击右上角的设置图标调整参数')
-			.addToggle(toggle => {
-				toggle
-					.setValue(this.plugin.settings.useInteractiveView)
-					.onChange(async (value) => {
-						this.plugin.settings.useInteractiveView = value;
-						await this.plugin.saveSettings();
-					});
-			});
 
 		new Setting(containerEl)
 			.setName('八字流派')
