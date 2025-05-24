@@ -105,68 +105,22 @@ export class BaziSettingsModal extends Modal {
 
     contentEl.createEl('h2', { text: '八字命盘设置' });
 
-    // 排盘方式设置
+    // 子时处理方式设置
     new Setting(contentEl)
-      .setName('排盘方式')
-      .setDesc('选择八字排盘的计算方式')
+      .setName('子时处理方式')
+      .setDesc('选择子时的处理方式。流派1：晚子时（23-24点）日柱算明天；流派2：晚子时日柱算当天')
       .addDropdown(dropdown => {
         dropdown
-          .addOption('0', '传统排盘')
-          .addOption('1', '新派排盘')
-          .setValue(this.calculationMethod)
+          .addOption('1', '流派1（晚子时日柱算明天）')
+          .addOption('2', '流派2（晚子时日柱算当天）')
+          .setValue(this.baziSect)
           .onChange(value => {
-            this.calculationMethod = value;
+            this.baziSect = value;
+            this.calculationMethod = value === '1' ? '0' : '1'; // 同步更新
+            console.log('切换子时处理方式:', value === '1' ? '流派1' : '流派2');
 
-            // 获取当前八字信息
-            const tempBaziInfo = BaziService.getBaziFromDate(
-              this.currentDate.year,
-              this.currentDate.month,
-              this.currentDate.day,
-              this.currentDate.hour
-            );
-
-            // 获取原始八字
-            const yearPillar = tempBaziInfo.yearPillar;
-            const monthPillar = tempBaziInfo.monthPillar;
-            const dayPillar = tempBaziInfo.dayPillar;
-            const hourPillar = tempBaziInfo.hourPillar;
-
-            // 构建八字字符串
-            const baziString = `${yearPillar} ${monthPillar} ${dayPillar} ${hourPillar}`;
-
-            // 解析八字字符串，保持八字不变
-            const baziInfo = BaziService.parseBaziString(baziString);
-
-            // 更新日期信息
-            baziInfo.solarDate = `${this.currentDate.year}-${this.currentDate.month.toString().padStart(2, '0')}-${this.currentDate.day.toString().padStart(2, '0')}`;
-            baziInfo.solarTime = `${this.currentDate.hour}:0`;
-
-            // 添加显示选项
-            baziInfo.showWuxing = this.showWuxing;
-            baziInfo.showSpecialInfo = this.showSpecialInfo;
-            baziInfo.gender = this.gender;
-            baziInfo.calculationMethod = this.calculationMethod;
-
-            // 添加神煞显示设置
-            baziInfo.showShenSha = {
-              siZhu: this.showShenSha.siZhu,
-              daYun: this.showShenSha.daYun,
-              liuNian: this.showShenSha.liuNian,
-              xiaoYun: this.showShenSha.xiaoYun,
-              liuYue: this.showShenSha.liuYue
-            };
-
-            // 添加原始日期信息
-            baziInfo.originalDate = {
-              year: this.currentDate.year,
-              month: this.currentDate.month,
-              day: this.currentDate.day,
-              hour: this.currentDate.hour
-            };
-
-            // TODO: 设置排盘方式并重新计算
-
-            this.onUpdate(baziInfo);
+            // 重新渲染八字命盘以应用子时处理方式变化
+            this.updateBaziWithCurrentSettings();
           });
       });
 
@@ -389,6 +343,45 @@ export class BaziSettingsModal extends Modal {
     basicList.createEl('li', { text: '可以选择排盘方式，控制显示选项' });
     basicList.createEl('li', { text: '可以控制各种神煞的显示和隐藏' });
     basicList.createEl('li', { text: '所有设置修改后立即生效，无需额外操作' });
+
+    // 子时处理方式说明
+    const ziShiSection = instructionsDiv.createDiv({ cls: 'bazi-instructions-section' });
+    ziShiSection.createEl('h4', { text: '子时处理方式说明', cls: 'bazi-instructions-title' });
+
+    const ziShiList = ziShiSection.createEl('ul', { cls: 'bazi-instructions-list' });
+
+    // 流派1说明
+    const liupai1Li = ziShiList.createEl('li');
+    liupai1Li.createEl('strong', { text: '流派1（晚子时日柱算明天）：' });
+    liupai1Li.createSpan({ text: ' 晚子时（23:00-24:00）日柱算第二天。认为晚子时属于新的一天的开始。' });
+
+    // 流派2说明
+    const liupai2Li = ziShiList.createEl('li');
+    liupai2Li.createEl('strong', { text: '流派2（晚子时日柱算当天）：' });
+    liupai2Li.createSpan({ text: ' 晚子时（23:00-24:00）日柱算当天。认为晚子时仍属于当天。' });
+
+    // 实例说明
+    const exampleLi = ziShiList.createEl('li');
+    exampleLi.createEl('strong', { text: '举例：' });
+    exampleLi.createSpan({ text: ' 2024年1月1日晚上23:30出生，流派1会算作2024年1月2日子时，流派2会算作2024年1月1日子时。' });
+
+    // 权威依据说明
+    const authoritySection = instructionsDiv.createDiv({ cls: 'bazi-instructions-section' });
+    authoritySection.createEl('h4', { text: '权威依据', cls: 'bazi-instructions-title' });
+
+    const authorityList = authoritySection.createEl('ul', { cls: 'bazi-instructions-list' });
+
+    const authority1Li = authorityList.createEl('li');
+    authority1Li.createEl('strong', { text: '历史证据：' });
+    authority1Li.createSpan({ text: ' 根据唐代李淳风与傅仁均的历法争论，子时处理方式是一个统一的概念，不存在"早子时"和"晚子时"的分别用于日常八字排盘。' });
+
+    const authority2Li = authorityList.createEl('li');
+    authority2Li.createEl('strong', { text: '学术共识：' });
+    authority2Li.createSpan({ text: ' 权威学者认为，早晚子时的概念仅存在于历法计算的特殊规则设定中，而非日常八字排盘的标准。' });
+
+    const authority3Li = authorityList.createEl('li');
+    authority3Li.createEl('strong', { text: '实践应用：' });
+    authority3Li.createSpan({ text: ' 在八字命理实践中，子时就是子时，23:00-01:00整个时段都是子时，日柱的确定有统一的标准。' });
 
     // 代码块使用说明
     const codeBlockSection = instructionsDiv.createDiv({ cls: 'bazi-instructions-section' });
