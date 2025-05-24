@@ -90,6 +90,7 @@ export class BaziSettingTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						this.plugin.settings.showShenSha.siZhu = value;
 						await this.plugin.saveSettings();
+						this.updateAllBaziViews();
 					});
 			});
 
@@ -102,6 +103,7 @@ export class BaziSettingTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						this.plugin.settings.showShenSha.daYun = value;
 						await this.plugin.saveSettings();
+						this.updateAllBaziViews();
 					});
 			});
 
@@ -114,6 +116,7 @@ export class BaziSettingTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						this.plugin.settings.showShenSha.liuNian = value;
 						await this.plugin.saveSettings();
+						this.updateAllBaziViews();
 					});
 			});
 
@@ -126,6 +129,7 @@ export class BaziSettingTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						this.plugin.settings.showShenSha.xiaoYun = value;
 						await this.plugin.saveSettings();
+						this.updateAllBaziViews();
 					});
 			});
 
@@ -138,6 +142,7 @@ export class BaziSettingTab extends PluginSettingTab {
 					.onChange(async (value) => {
 						this.plugin.settings.showShenSha.liuYue = value;
 						await this.plugin.saveSettings();
+						this.updateAllBaziViews();
 					});
 			});
 
@@ -186,6 +191,29 @@ export class BaziSettingTab extends PluginSettingTab {
 
 		// 添加使用说明（放在设置后面）
 		this.addUsageInstructions(containerEl);
+	}
+
+	/**
+	 * 更新所有八字视图的神煞显示设置
+	 */
+	private updateAllBaziViews(): void {
+		console.log('🎯 开始更新所有八字视图的神煞显示设置');
+
+		// 查找所有交互式八字视图
+		const baziViews = document.querySelectorAll('.interactive-bazi-view');
+		console.log(`🎯 找到 ${baziViews.length} 个八字视图`);
+
+		baziViews.forEach((viewElement, index) => {
+			// 尝试从元素上获取视图实例
+			// 这需要在InteractiveBaziView中存储实例引用
+			const viewInstance = (viewElement as any).__baziViewInstance;
+			if (viewInstance && typeof viewInstance.updateShenShaSettings === 'function') {
+				console.log(`🎯 更新第 ${index + 1} 个八字视图的神煞设置`);
+				viewInstance.updateShenShaSettings(this.plugin.settings.showShenSha);
+			} else {
+				console.log(`🎯 第 ${index + 1} 个八字视图没有找到实例或更新方法`);
+			}
+		});
 	}
 
 	/**

@@ -43,7 +43,13 @@ export class InteractiveBaziView {
     this.baziInfo = baziInfo;
     this.id = id;
 
-    // 设置默认的神煞显示设置
+    // 在容器元素上存储实例引用，以便设置页面可以找到并更新
+    (this.container as any).__baziViewInstance = this;
+
+    console.log('🎯 InteractiveBaziView构造函数开始');
+    console.log('🎯 接收到的baziInfo.showShenSha:', this.baziInfo.showShenSha);
+
+    // 设置默认的神煞显示设置（只在没有设置时才使用默认值）
     if (!this.baziInfo.showShenSha) {
       this.baziInfo.showShenSha = {
         siZhu: true,
@@ -52,10 +58,88 @@ export class InteractiveBaziView {
         xiaoYun: true,
         liuYue: true
       };
+      console.log('🎯 使用默认神煞显示设置:', this.baziInfo.showShenSha);
+    } else {
+      console.log('🎯 使用传递的神煞显示设置:', this.baziInfo.showShenSha);
+      console.log('🎯 各项设置详情:');
+      console.log('  - siZhu:', this.baziInfo.showShenSha.siZhu);
+      console.log('  - daYun:', this.baziInfo.showShenSha.daYun);
+      console.log('  - liuNian:', this.baziInfo.showShenSha.liuNian);
+      console.log('  - xiaoYun:', this.baziInfo.showShenSha.xiaoYun);
+      console.log('  - liuYue:', this.baziInfo.showShenSha.liuYue);
     }
 
     // 初始化视图
     this.initView();
+  }
+
+  /**
+   * 更新神煞显示设置
+   * @param showShenSha 神煞显示设置
+   */
+  public updateShenShaSettings(showShenSha: any): void {
+    this.baziInfo.showShenSha = showShenSha;
+    console.log('🎯 更新神煞显示设置:', showShenSha);
+
+    // 更新四柱神煞行
+    const siZhuShenShaRow = this.container.querySelector('.bazi-table tbody tr:last-child');
+    if (siZhuShenShaRow && siZhuShenShaRow.textContent?.includes('神煞')) {
+      if (showShenSha.siZhu === false) {
+        (siZhuShenShaRow as HTMLElement).style.display = 'none';
+        console.log('🎯 隐藏四柱神煞行');
+      } else {
+        (siZhuShenShaRow as HTMLElement).style.display = '';
+        console.log('🎯 显示四柱神煞行');
+      }
+    }
+
+    // 更新大运神煞行
+    const daYunShenShaRow = this.container.querySelector('.bazi-dayun-shensha-row');
+    if (daYunShenShaRow) {
+      if (showShenSha.daYun === false) {
+        (daYunShenShaRow as HTMLElement).style.display = 'none';
+        console.log('🎯 隐藏大运神煞行');
+      } else {
+        (daYunShenShaRow as HTMLElement).style.display = '';
+        console.log('🎯 显示大运神煞行');
+      }
+    }
+
+    // 更新流年神煞行
+    const liuNianShenShaRow = this.container.querySelector('.bazi-liunian-shensha-row');
+    if (liuNianShenShaRow) {
+      if (showShenSha.liuNian === false) {
+        (liuNianShenShaRow as HTMLElement).style.display = 'none';
+        console.log('🎯 隐藏流年神煞行');
+      } else {
+        (liuNianShenShaRow as HTMLElement).style.display = '';
+        console.log('🎯 显示流年神煞行');
+      }
+    }
+
+    // 更新小运神煞行
+    const xiaoYunShenShaRow = this.container.querySelector('.bazi-xiaoyun-shensha-row');
+    if (xiaoYunShenShaRow) {
+      if (showShenSha.xiaoYun === false) {
+        (xiaoYunShenShaRow as HTMLElement).style.display = 'none';
+        console.log('🎯 隐藏小运神煞行');
+      } else {
+        (xiaoYunShenShaRow as HTMLElement).style.display = '';
+        console.log('🎯 显示小运神煞行');
+      }
+    }
+
+    // 更新流月神煞行
+    const liuYueShenShaRow = this.container.querySelector('.bazi-liuyue-shensha-row');
+    if (liuYueShenShaRow) {
+      if (showShenSha.liuYue === false) {
+        (liuYueShenShaRow as HTMLElement).style.display = 'none';
+        console.log('🎯 隐藏流月神煞行');
+      } else {
+        (liuYueShenShaRow as HTMLElement).style.display = '';
+        console.log('🎯 显示流月神煞行');
+      }
+    }
   }
 
   /**
@@ -957,12 +1041,14 @@ export class InteractiveBaziView {
    */
   private createDaYunInfo() {
     if (!this.baziInfo.daYun || this.baziInfo.daYun.length === 0) {
+      console.log('🎯 没有大运数据');
       return;
     }
 
-    // 创建大运部分
+    // 创建大运部分（始终创建，不受神煞设置影响）
     const daYunSection = this.container.createDiv({ cls: 'bazi-view-section bazi-dayun-section' });
     daYunSection.createEl('h4', { text: '大运信息', cls: 'bazi-view-subtitle' });
+    console.log('🎯 大运信息区域已创建');
 
     // 创建大运表格
     const tableContainer = daYunSection.createDiv({ cls: 'bazi-view-table-container' });
@@ -1099,13 +1185,70 @@ export class InteractiveBaziView {
         }
       });
     }
+
+    // 第八行：神煞（根据设置显示）
+    if (Array.isArray(daYunData) && daYunData.some(dy => dy.shenSha && dy.shenSha.length > 0)) {
+      const shenShaRow = this.daYunTable.createEl('tr', {
+        cls: 'bazi-dayun-shensha-row'
+      });
+      shenShaRow.createEl('th', { text: '神煞' });
+
+      // 根据设置控制神煞行的显示
+      if (this.baziInfo.showShenSha && this.baziInfo.showShenSha.daYun === false) {
+        shenShaRow.style.display = 'none';
+        console.log('🎯 隐藏大运神煞行');
+      } else {
+        console.log('🎯 显示大运神煞行');
+      }
+
+      daYunData.slice(0, 10).forEach(dy => {
+        const cell = shenShaRow.createEl('td', {
+          cls: 'bazi-shensha-cell'
+        });
+
+        if (dy.shenSha && dy.shenSha.length > 0) {
+          const shenShaList = cell.createDiv({ cls: 'bazi-shensha-list' });
+          dy.shenSha.forEach((shenSha: string) => {
+            const shenShaInfo = ShenShaService.getShenShaInfo(shenSha);
+            const type = shenShaInfo?.type || '未知';
+
+            let cssClass = '';
+            if (type === '吉神') {
+              cssClass = 'shensha-good';
+            } else if (type === '凶神') {
+              cssClass = 'shensha-bad';
+            } else if (type === '吉凶神') {
+              cssClass = 'shensha-mixed';
+            }
+
+            const shenShaEl = shenShaList.createEl('span', {
+              text: shenSha,
+              cls: `bazi-shensha ${cssClass}`,
+              attr: {
+                'data-shensha': shenSha,
+                'data-type': type,
+                'title': shenShaInfo?.description || ''
+              }
+            });
+
+            // 添加点击事件显示神煞详情
+            shenShaEl.addEventListener('click', (e) => {
+              e.stopPropagation();
+              this.showShenShaExplanation(shenSha);
+            });
+          });
+        } else {
+          cell.textContent = '无';
+        }
+      });
+    }
   }
 
   /**
    * 创建流年和小运信息
    */
   private createLiuNianInfo() {
-    // 创建流年和小运部分
+    // 创建流年和小运部分（始终创建，不受神煞设置影响）
     const liuNianSection = this.container.createDiv({ cls: 'bazi-view-section bazi-liunian-section' });
     liuNianSection.createEl('h4', { text: '流年与小运信息', cls: 'bazi-view-subtitle' });
 
@@ -1114,6 +1257,7 @@ export class InteractiveBaziView {
     this.liuNianTable = tableContainer.createEl('table', { cls: 'bazi-view-table bazi-view-liunian-table' });
 
     // 表格内容将在selectDaYun方法中动态更新
+    console.log('🎯 流年信息区域已创建');
   }
 
   /**
@@ -1121,10 +1265,10 @@ export class InteractiveBaziView {
    */
   private createLiuYueInfo() {
     if (!this.baziInfo.liuYue || this.baziInfo.liuYue.length === 0) {
-      return;
+      console.log('🎯 没有流月数据，但会在选择流年时动态生成');
     }
 
-    // 创建流月部分
+    // 创建流月部分（始终创建，不受神煞设置影响）
     const liuYueSection = this.container.createDiv({ cls: 'bazi-view-section bazi-liuyue-section' });
     liuYueSection.createEl('h4', { text: '流月信息', cls: 'bazi-view-subtitle' });
 
@@ -1133,6 +1277,7 @@ export class InteractiveBaziView {
     this.liuYueTable = tableContainer.createEl('table', { cls: 'bazi-view-table bazi-view-liuyue-table' });
 
     // 表格内容将在selectLiuNian方法中动态更新
+    console.log('🎯 流月信息区域已创建');
   }
 
   /**
@@ -1262,7 +1407,7 @@ export class InteractiveBaziView {
    * @param year 年份
    * @returns 流月数据数组
    */
-  private generateLiuYueForYear(year: number): Array<{month: string, ganZhi: string, xunKong: string}> {
+  private generateLiuYueForYear(year: number): Array<{month: string, ganZhi: string, xunKong: string, shenSha?: string[]}> {
     // 天干地支顺序
     const stems = "甲乙丙丁戊己庚辛壬癸";
 
@@ -1271,7 +1416,11 @@ export class InteractiveBaziView {
     const yearStem = stems[stemIndex];
 
     // 生成流月数据
-    const liuYueData: Array<{month: string, ganZhi: string, xunKong: string}> = [];
+    const liuYueData: Array<{month: string, ganZhi: string, xunKong: string, shenSha?: string[]}> = [];
+
+    // 获取日干和年支，用于计算神煞
+    const dayStem = this.baziInfo.dayStem;
+    const yearBranch = this.baziInfo.yearBranch;
 
     // 根据八字命理学规则，流月干支的计算方法：
     // 月支固定对应：寅卯辰巳午未申酉戌亥子丑
@@ -1314,10 +1463,62 @@ export class InteractiveBaziView {
       const chineseMonths = ['', '正', '二', '三', '四', '五', '六', '七', '八', '九', '十', '冬', '腊'];
       const monthText = chineseMonths[month] + '月';
 
+      // 计算神煞
+      const shenSha: string[] = [];
+      if (dayStem && yearBranch) {
+        // 天乙贵人
+        if (this.isTianYiGuiRen(dayStem, monthBranch)) {
+          shenSha.push('天乙贵人');
+        }
+
+        // 文昌
+        if (this.isWenChang(monthBranch)) {
+          shenSha.push('文昌');
+        }
+
+        // 华盖
+        if (this.isHuaGai(monthBranch)) {
+          shenSha.push('华盖');
+        }
+
+        // 桃花
+        if (this.isTaoHua(monthBranch)) {
+          shenSha.push('桃花');
+        }
+
+        // 驿马
+        if (this.isYiMa(monthBranch, yearBranch)) {
+          shenSha.push('驿马');
+        }
+
+        // 禄神
+        if (this.isLuShen(monthStem, monthBranch)) {
+          shenSha.push('禄神');
+        }
+
+        // 羊刃
+        if (this.isYangRen(monthStem, monthBranch)) {
+          shenSha.push('羊刃');
+        }
+
+        // 孤辰
+        if (this.isGuChen(monthBranch)) {
+          shenSha.push('孤辰');
+        }
+
+        // 寡宿
+        if (this.isGuaSu(monthBranch)) {
+          shenSha.push('寡宿');
+        }
+
+        console.log(`生成流月 ${monthText} (${ganZhi}) 神煞:`, shenSha);
+      }
+
       liuYueData.push({
         month: monthText,
         ganZhi,
-        xunKong
+        xunKong,
+        shenSha: [...shenSha]
       });
     }
 
@@ -1584,6 +1785,127 @@ export class InteractiveBaziView {
       });
     }
 
+    // 第十一行：流年神煞（根据设置显示）
+    if (liuNian.some(ln => ln.shenSha && ln.shenSha.length > 0)) {
+      const lnShenShaRow = this.liuNianTable.createEl('tr', {
+        cls: 'bazi-liunian-shensha-row'
+      });
+      lnShenShaRow.createEl('th', { text: '流年神煞' });
+
+      // 根据设置控制神煞行的显示
+      if (this.baziInfo.showShenSha && this.baziInfo.showShenSha.liuNian === false) {
+        lnShenShaRow.style.display = 'none';
+        console.log('🎯 隐藏流年神煞行');
+      } else {
+        console.log('🎯 显示流年神煞行');
+      }
+
+      liuNian.slice(0, 10).forEach(ln => {
+        const cell = lnShenShaRow.createEl('td', {
+          cls: 'bazi-shensha-cell'
+        });
+
+        if (ln.shenSha && ln.shenSha.length > 0) {
+          const shenShaList = cell.createDiv({ cls: 'bazi-shensha-list' });
+          ln.shenSha.forEach((shenSha: string) => {
+            const shenShaInfo = ShenShaService.getShenShaInfo(shenSha);
+            const type = shenShaInfo?.type || '未知';
+
+            let cssClass = '';
+            if (type === '吉神') {
+              cssClass = 'shensha-good';
+            } else if (type === '凶神') {
+              cssClass = 'shensha-bad';
+            } else if (type === '吉凶神') {
+              cssClass = 'shensha-mixed';
+            }
+
+            const shenShaEl = shenShaList.createEl('span', {
+              text: shenSha,
+              cls: `bazi-shensha ${cssClass}`,
+              attr: {
+                'data-shensha': shenSha,
+                'data-type': type,
+                'title': shenShaInfo?.description || ''
+              }
+            });
+
+            // 添加点击事件显示神煞详情
+            shenShaEl.addEventListener('click', (e) => {
+              e.stopPropagation();
+              this.showShenShaExplanation(shenSha);
+            });
+          });
+        } else {
+          cell.textContent = '无';
+        }
+      });
+    }
+
+    // 第十二行：小运神煞（根据设置显示）
+    if (xiaoYun.length > 0 && xiaoYun.some(xy => xy.shenSha && xy.shenSha.length > 0)) {
+      const xyShenShaRow = this.liuNianTable.createEl('tr', {
+        cls: 'bazi-xiaoyun-shensha-row'
+      });
+      xyShenShaRow.createEl('th', { text: '小运神煞' });
+
+      // 根据设置控制神煞行的显示
+      if (this.baziInfo.showShenSha && this.baziInfo.showShenSha.xiaoYun === false) {
+        xyShenShaRow.style.display = 'none';
+        console.log('🎯 隐藏小运神煞行');
+      } else {
+        console.log('🎯 显示小运神煞行');
+      }
+
+      // 创建一个映射，用于快速查找特定年份的小运
+      const xyMap = new Map();
+      xiaoYun.forEach(xy => {
+        xyMap.set(xy.year, xy);
+      });
+
+      liuNian.slice(0, 10).forEach(ln => {
+        const xy = xyMap.get(ln.year);
+        const cell = xyShenShaRow.createEl('td', {
+          cls: 'bazi-shensha-cell'
+        });
+
+        if (xy && xy.shenSha && xy.shenSha.length > 0) {
+          const shenShaList = cell.createDiv({ cls: 'bazi-shensha-list' });
+          xy.shenSha.forEach((shenSha: string) => {
+            const shenShaInfo = ShenShaService.getShenShaInfo(shenSha);
+            const type = shenShaInfo?.type || '未知';
+
+            let cssClass = '';
+            if (type === '吉神') {
+              cssClass = 'shensha-good';
+            } else if (type === '凶神') {
+              cssClass = 'shensha-bad';
+            } else if (type === '吉凶神') {
+              cssClass = 'shensha-mixed';
+            }
+
+            const shenShaEl = shenShaList.createEl('span', {
+              text: shenSha,
+              cls: `bazi-shensha ${cssClass}`,
+              attr: {
+                'data-shensha': shenSha,
+                'data-type': type,
+                'title': shenShaInfo?.description || ''
+              }
+            });
+
+            // 添加点击事件显示神煞详情
+            shenShaEl.addEventListener('click', (e) => {
+              e.stopPropagation();
+              this.showShenShaExplanation(shenSha);
+            });
+          });
+        } else {
+          cell.textContent = '无';
+        }
+      });
+    }
+
     // 显示表格（带动画）
     setTimeout(() => {
       if (this.liuNianTable) {
@@ -1768,6 +2090,63 @@ export class InteractiveBaziView {
       });
     }
 
+    // 第七行：流月神煞（根据设置显示）
+    if (liuYue.some(ly => ly.shenSha && ly.shenSha.length > 0)) {
+      const shenShaRow = this.liuYueTable.createEl('tr', {
+        cls: 'bazi-liuyue-shensha-row'
+      });
+      shenShaRow.createEl('th', { text: '神煞' });
+
+      // 根据设置控制神煞行的显示
+      if (this.baziInfo.showShenSha && this.baziInfo.showShenSha.liuYue === false) {
+        shenShaRow.style.display = 'none';
+        console.log('🎯 隐藏流月神煞行');
+      } else {
+        console.log('🎯 显示流月神煞行');
+      }
+
+      liuYue.forEach(ly => {
+        const cell = shenShaRow.createEl('td', {
+          cls: 'bazi-shensha-cell'
+        });
+
+        if (ly.shenSha && ly.shenSha.length > 0) {
+          const shenShaList = cell.createDiv({ cls: 'bazi-shensha-list' });
+          ly.shenSha.forEach((shenSha: string) => {
+            const shenShaInfo = ShenShaService.getShenShaInfo(shenSha);
+            const type = shenShaInfo?.type || '未知';
+
+            let cssClass = '';
+            if (type === '吉神') {
+              cssClass = 'shensha-good';
+            } else if (type === '凶神') {
+              cssClass = 'shensha-bad';
+            } else if (type === '吉凶神') {
+              cssClass = 'shensha-mixed';
+            }
+
+            const shenShaEl = shenShaList.createEl('span', {
+              text: shenSha,
+              cls: `bazi-shensha ${cssClass}`,
+              attr: {
+                'data-shensha': shenSha,
+                'data-type': type,
+                'title': shenShaInfo?.description || ''
+              }
+            });
+
+            // 添加点击事件显示神煞详情
+            shenShaEl.addEventListener('click', (e) => {
+              e.stopPropagation();
+              this.showShenShaExplanation(shenSha);
+            });
+          });
+        } else {
+          cell.textContent = '无';
+        }
+      });
+    }
+
     // 显示表格（带动画）
     setTimeout(() => {
       if (this.liuYueTable) {
@@ -1781,7 +2160,7 @@ export class InteractiveBaziView {
    * @param daYun 大运数据
    * @returns 流年数据数组
    */
-  private generateLiuNianForDaYun(daYun: any): Array<{year: number, age: number, ganZhi: string, xunKong: string, shiShenGan?: string, diShi?: string}> {
+  private generateLiuNianForDaYun(daYun: any): Array<{year: number, age: number, ganZhi: string, xunKong: string, shiShenGan?: string, diShi?: string, shenSha?: string[]}> {
     // 如果没有起始年或结束年，返回空数组
     if (!daYun || !daYun.startYear) {
       return [];
@@ -1791,11 +2170,12 @@ export class InteractiveBaziView {
     const endYear = daYun.endYear ?? (daYun.startYear + 9);
 
     // 生成流年数据
-    const liuNianData: Array<{year: number, age: number, ganZhi: string, xunKong: string, shiShenGan?: string, diShi?: string}> = [];
+    const liuNianData: Array<{year: number, age: number, ganZhi: string, xunKong: string, shiShenGan?: string, diShi?: string, shenSha?: string[]}> = [];
     let age = daYun.startAge;
 
-    // 获取日干，用于计算十神
+    // 获取日干和年支，用于计算十神和神煞
     const dayStem = this.baziInfo.dayStem;
+    const yearBranch = this.baziInfo.yearBranch;
 
     for (let year = daYun.startYear; year <= endYear; year++, age++) {
       // 计算干支
@@ -1826,13 +2206,65 @@ export class InteractiveBaziView {
         diShi = this.getDiShi(dayStem, branch);
       }
 
+      // 计算神煞
+      const shenSha: string[] = [];
+      if (dayStem && yearBranch) {
+        // 天乙贵人
+        if (this.isTianYiGuiRen(dayStem, branch)) {
+          shenSha.push('天乙贵人');
+        }
+
+        // 文昌
+        if (this.isWenChang(branch)) {
+          shenSha.push('文昌');
+        }
+
+        // 华盖
+        if (this.isHuaGai(branch)) {
+          shenSha.push('华盖');
+        }
+
+        // 桃花
+        if (this.isTaoHua(branch)) {
+          shenSha.push('桃花');
+        }
+
+        // 驿马
+        if (this.isYiMa(branch, yearBranch)) {
+          shenSha.push('驿马');
+        }
+
+        // 禄神
+        if (this.isLuShen(stem, branch)) {
+          shenSha.push('禄神');
+        }
+
+        // 羊刃
+        if (this.isYangRen(stem, branch)) {
+          shenSha.push('羊刃');
+        }
+
+        // 孤辰
+        if (this.isGuChen(branch)) {
+          shenSha.push('孤辰');
+        }
+
+        // 寡宿
+        if (this.isGuaSu(branch)) {
+          shenSha.push('寡宿');
+        }
+
+        console.log(`生成流年 ${year} (${ganZhi}) 神煞:`, shenSha);
+      }
+
       liuNianData.push({
         year,
         age,
         ganZhi,
         xunKong,
         shiShenGan,
-        diShi
+        diShi,
+        shenSha: [...shenSha]
       });
     }
 
@@ -1844,7 +2276,7 @@ export class InteractiveBaziView {
    * @param daYun 大运数据
    * @returns 小运数据数组
    */
-  private generateXiaoYunForDaYun(daYun: any): Array<{year: number, age: number, ganZhi: string, xunKong: string, shiShenGan?: string, diShi?: string}> {
+  private generateXiaoYunForDaYun(daYun: any): Array<{year: number, age: number, ganZhi: string, xunKong: string, shiShenGan?: string, diShi?: string, shenSha?: string[]}> {
     // 如果没有起始年或结束年，返回空数组
     if (!daYun || !daYun.startYear) {
       console.log('没有起始年，无法生成小运数据');
@@ -1856,7 +2288,7 @@ export class InteractiveBaziView {
     console.log(`小运年份范围: ${daYun.startYear} - ${endYear}`);
 
     // 生成小运数据
-    const xiaoYunData: Array<{year: number, age: number, ganZhi: string, xunKong: string, shiShenGan?: string, diShi?: string}> = [];
+    const xiaoYunData: Array<{year: number, age: number, ganZhi: string, xunKong: string, shiShenGan?: string, diShi?: string, shenSha?: string[]}> = [];
     let age = daYun.startAge;
 
     // 获取大运干支
@@ -1881,8 +2313,9 @@ export class InteractiveBaziView {
       return [];
     }
 
-    // 获取日干，用于计算十神
+    // 获取日干和年支，用于计算十神和神煞
     const dayStem = this.baziInfo.dayStem;
+    const yearBranch = this.baziInfo.yearBranch;
 
     // 使用月柱干支作为小运起点
     const monthStem = this.baziInfo.monthStem;
@@ -1917,13 +2350,65 @@ export class InteractiveBaziView {
           diShi = this.getDiShi(dayStem, branch);
         }
 
+        // 计算神煞
+        const shenSha: string[] = [];
+        if (dayStem && yearBranch) {
+          // 天乙贵人
+          if (this.isTianYiGuiRen(dayStem, branch)) {
+            shenSha.push('天乙贵人');
+          }
+
+          // 文昌
+          if (this.isWenChang(branch)) {
+            shenSha.push('文昌');
+          }
+
+          // 华盖
+          if (this.isHuaGai(branch)) {
+            shenSha.push('华盖');
+          }
+
+          // 桃花
+          if (this.isTaoHua(branch)) {
+            shenSha.push('桃花');
+          }
+
+          // 驿马
+          if (this.isYiMa(branch, yearBranch)) {
+            shenSha.push('驿马');
+          }
+
+          // 禄神
+          if (this.isLuShen(stem, branch)) {
+            shenSha.push('禄神');
+          }
+
+          // 羊刃
+          if (this.isYangRen(stem, branch)) {
+            shenSha.push('羊刃');
+          }
+
+          // 孤辰
+          if (this.isGuChen(branch)) {
+            shenSha.push('孤辰');
+          }
+
+          // 寡宿
+          if (this.isGuaSu(branch)) {
+            shenSha.push('寡宿');
+          }
+
+          console.log(`生成小运 ${year} (${ganZhi}) 神煞:`, shenSha);
+        }
+
         xiaoYunData.push({
           year,
           age,
           ganZhi,
           xunKong,
           shiShenGan,
-          diShi
+          diShi,
+          shenSha: [...shenSha]
         });
       }
     } else {
@@ -1957,13 +2442,65 @@ export class InteractiveBaziView {
           diShi = this.getDiShi(dayStem, branch);
         }
 
+        // 计算神煞
+        const shenSha: string[] = [];
+        if (dayStem && yearBranch) {
+          // 天乙贵人
+          if (this.isTianYiGuiRen(dayStem, branch)) {
+            shenSha.push('天乙贵人');
+          }
+
+          // 文昌
+          if (this.isWenChang(branch)) {
+            shenSha.push('文昌');
+          }
+
+          // 华盖
+          if (this.isHuaGai(branch)) {
+            shenSha.push('华盖');
+          }
+
+          // 桃花
+          if (this.isTaoHua(branch)) {
+            shenSha.push('桃花');
+          }
+
+          // 驿马
+          if (this.isYiMa(branch, yearBranch)) {
+            shenSha.push('驿马');
+          }
+
+          // 禄神
+          if (this.isLuShen(stem, branch)) {
+            shenSha.push('禄神');
+          }
+
+          // 羊刃
+          if (this.isYangRen(stem, branch)) {
+            shenSha.push('羊刃');
+          }
+
+          // 孤辰
+          if (this.isGuChen(branch)) {
+            shenSha.push('孤辰');
+          }
+
+          // 寡宿
+          if (this.isGuaSu(branch)) {
+            shenSha.push('寡宿');
+          }
+
+          console.log(`生成小运 ${year} (${ganZhi}) 神煞:`, shenSha);
+        }
+
         xiaoYunData.push({
           year,
           age,
           ganZhi,
           xunKong,
           shiShenGan,
-          diShi
+          diShi,
+          shenSha: [...shenSha]
         });
       }
     }
@@ -3983,6 +4520,141 @@ export class InteractiveBaziView {
       '戊癸': '火'
     };
     return map[wuHe] || '';
+  }
+
+  /**
+   * 判断是否为天乙贵人
+   * @param dayStem 日干
+   * @param branch 地支
+   * @returns 是否为天乙贵人
+   */
+  private isTianYiGuiRen(dayStem: string, branch: string): boolean {
+    const map: {[key: string]: string[]} = {
+      '甲': ['丑', '未'],
+      '乙': ['子', '申'],
+      '丙': ['亥', '酉'],
+      '丁': ['亥', '酉'],
+      '戊': ['丑', '未'],
+      '己': ['子', '申'],
+      '庚': ['丑', '未'],
+      '辛': ['寅', '卯'],
+      '壬': ['巳', '卯'],
+      '癸': ['巳', '卯']
+    };
+    return map[dayStem]?.includes(branch) || false;
+  }
+
+  /**
+   * 判断是否为文昌
+   * @param branch 地支
+   * @returns 是否为文昌
+   */
+  private isWenChang(branch: string): boolean {
+    return ['巳', '申', '午', '寅'].includes(branch);
+  }
+
+  /**
+   * 判断是否为华盖
+   * @param branch 地支
+   * @returns 是否为华盖
+   */
+  private isHuaGai(branch: string): boolean {
+    return ['辰', '戌', '丑', '未'].includes(branch);
+  }
+
+  /**
+   * 判断是否为桃花
+   * @param branch 地支
+   * @returns 是否为桃花
+   */
+  private isTaoHua(branch: string): boolean {
+    return ['卯', '酉', '子', '午'].includes(branch);
+  }
+
+  /**
+   * 判断是否为驿马
+   * @param branch 地支
+   * @param yearBranch 年支
+   * @returns 是否为驿马
+   */
+  private isYiMa(branch: string, yearBranch: string): boolean {
+    const map: {[key: string]: string[]} = {
+      '申': ['寅'],
+      '子': ['寅'],
+      '辰': ['寅'],
+      '亥': ['巳'],
+      '卯': ['巳'],
+      '未': ['巳'],
+      '寅': ['申'],
+      '午': ['申'],
+      '戌': ['申'],
+      '巳': ['亥'],
+      '酉': ['亥'],
+      '丑': ['亥']
+    };
+    return map[yearBranch]?.includes(branch) || false;
+  }
+
+  /**
+   * 判断是否为禄神
+   * @param stem 天干
+   * @param branch 地支
+   * @returns 是否为禄神
+   */
+  private isLuShen(stem: string, branch: string): boolean {
+    const map: {[key: string]: string} = {
+      '甲': '寅',
+      '乙': '卯',
+      '丙': '巳',
+      '丁': '午',
+      '戊': '巳',
+      '己': '午',
+      '庚': '申',
+      '辛': '酉',
+      '壬': '亥',
+      '癸': '子'
+    };
+    return map[stem] === branch;
+  }
+
+  /**
+   * 判断是否为羊刃
+   * @param stem 天干
+   * @param branch 地支
+   * @returns 是否为羊刃
+   */
+  private isYangRen(stem: string, branch: string): boolean {
+    const map: {[key: string]: string} = {
+      '甲': '卯',
+      '乙': '寅',
+      '丙': '午',
+      '丁': '巳',
+      '戊': '午',
+      '己': '巳',
+      '庚': '酉',
+      '辛': '申',
+      '壬': '子',
+      '癸': '亥'
+    };
+    return map[stem] === branch;
+  }
+
+  /**
+   * 判断是否为孤辰
+   * @param branch 地支
+   * @returns 是否为孤辰
+   */
+  private isGuChen(branch: string): boolean {
+    return ['寅', '巳', '申', '亥'].includes(branch);
+  }
+
+  /**
+   * 判断是否为寡宿
+   * @param branch 地支
+   * @returns 是否为寡宿
+   */
+  private isGuaSu(branch: string): boolean {
+    return ['辰', '戌', '丑', '未'].includes(branch);
   }
 
   /**

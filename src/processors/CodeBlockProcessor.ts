@@ -594,6 +594,15 @@ export class CodeBlockProcessor {
 		// 生成唯一ID
 		const id = 'bazi-view-' + Math.random().toString(36).substring(2, 9);
 
+		// 详细调试插件设置
+		console.log('🎨 插件完整设置:', this.plugin.settings);
+		console.log('🎨 插件神煞设置:', this.plugin.settings.showShenSha);
+
+		// 将插件设置传递给baziInfo
+		baziInfo.showShenSha = this.plugin.settings.showShenSha;
+		console.log('🎨 传递神煞显示设置到baziInfo:', baziInfo.showShenSha);
+		console.log('🎨 baziInfo完整内容:', baziInfo);
+
 		// 使用交互式视图渲染八字命盘
 		const interactiveView = new InteractiveBaziView(
 			el,
