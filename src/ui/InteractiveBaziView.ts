@@ -573,8 +573,9 @@ export class InteractiveBaziView {
     shengXiaoRow.createEl('td', { text: this.baziInfo.dayShengXiao || '' });
     shengXiaoRow.createEl('td', { text: this.baziInfo.hourShengXiao || '' });
 
-    // 创建神煞行
-    if (this.baziInfo.shenSha && this.baziInfo.shenSha.length > 0) {
+    // 创建神煞行（检查设置）
+    if (this.baziInfo.shenSha && this.baziInfo.shenSha.length > 0 &&
+        this.baziInfo.showShenSha && this.baziInfo.showShenSha.siZhu !== false) {
       // 按柱位分组神煞
       const yearShenSha: string[] = [];
       const monthShenSha: string[] = [];
@@ -601,7 +602,9 @@ export class InteractiveBaziView {
         shenShaRow.createEl('td', { text: '神煞', cls: 'bazi-table-label' });
 
         // 年柱神煞单元格
-        const yearCell = shenShaRow.createEl('td');
+        const yearCell = shenShaRow.createEl('td', { cls: 'bazi-shensha-cell' });
+        const yearShenShaList = yearCell.createDiv({ cls: 'bazi-shensha-list' });
+
         if (yearShenSha.length > 0) {
           yearShenSha.forEach(shenSha => {
             const shenShaInfo = ShenShaService.getShenShaInfo(shenSha);
@@ -616,25 +619,28 @@ export class InteractiveBaziView {
               cssClass = 'shensha-mixed';
             }
 
-            const span = yearCell.createSpan({
+            const shenShaEl = yearShenShaList.createEl('span', {
               text: shenSha,
-              cls: cssClass,
-              attr: { 'title': shenShaInfo?.description || '' }
+              cls: `bazi-shensha ${cssClass}`,
+              attr: {
+                'data-shensha': shenSha,
+                'data-type': type,
+                'title': shenShaInfo?.description || ''
+              }
             });
 
-            span.addEventListener('click', () => {
+            shenShaEl.addEventListener('click', () => {
               this.showShenShaExplanation(shenSha);
             });
-
-            // 添加空格分隔
-            yearCell.createSpan({ text: ' ' });
           });
         } else {
           yearCell.textContent = '无';
         }
 
         // 月柱神煞单元格
-        const monthCell = shenShaRow.createEl('td');
+        const monthCell = shenShaRow.createEl('td', { cls: 'bazi-shensha-cell' });
+        const monthShenShaList = monthCell.createDiv({ cls: 'bazi-shensha-list' });
+
         if (monthShenSha.length > 0) {
           monthShenSha.forEach(shenSha => {
             const shenShaInfo = ShenShaService.getShenShaInfo(shenSha);
@@ -649,25 +655,28 @@ export class InteractiveBaziView {
               cssClass = 'shensha-mixed';
             }
 
-            const span = monthCell.createSpan({
+            const shenShaEl = monthShenShaList.createEl('span', {
               text: shenSha,
-              cls: cssClass,
-              attr: { 'title': shenShaInfo?.description || '' }
+              cls: `bazi-shensha ${cssClass}`,
+              attr: {
+                'data-shensha': shenSha,
+                'data-type': type,
+                'title': shenShaInfo?.description || ''
+              }
             });
 
-            span.addEventListener('click', () => {
+            shenShaEl.addEventListener('click', () => {
               this.showShenShaExplanation(shenSha);
             });
-
-            // 添加空格分隔
-            monthCell.createSpan({ text: ' ' });
           });
         } else {
           monthCell.textContent = '无';
         }
 
         // 日柱神煞单元格
-        const dayCell = shenShaRow.createEl('td');
+        const dayCell = shenShaRow.createEl('td', { cls: 'bazi-shensha-cell' });
+        const dayShenShaList = dayCell.createDiv({ cls: 'bazi-shensha-list' });
+
         if (dayShenSha.length > 0) {
           dayShenSha.forEach(shenSha => {
             const shenShaInfo = ShenShaService.getShenShaInfo(shenSha);
@@ -682,25 +691,28 @@ export class InteractiveBaziView {
               cssClass = 'shensha-mixed';
             }
 
-            const span = dayCell.createSpan({
+            const shenShaEl = dayShenShaList.createEl('span', {
               text: shenSha,
-              cls: cssClass,
-              attr: { 'title': shenShaInfo?.description || '' }
+              cls: `bazi-shensha ${cssClass}`,
+              attr: {
+                'data-shensha': shenSha,
+                'data-type': type,
+                'title': shenShaInfo?.description || ''
+              }
             });
 
-            span.addEventListener('click', () => {
+            shenShaEl.addEventListener('click', () => {
               this.showShenShaExplanation(shenSha);
             });
-
-            // 添加空格分隔
-            dayCell.createSpan({ text: ' ' });
           });
         } else {
           dayCell.textContent = '无';
         }
 
         // 时柱神煞单元格
-        const hourCell = shenShaRow.createEl('td');
+        const hourCell = shenShaRow.createEl('td', { cls: 'bazi-shensha-cell' });
+        const hourShenShaList = hourCell.createDiv({ cls: 'bazi-shensha-list' });
+
         if (hourShenSha.length > 0) {
           hourShenSha.forEach(shenSha => {
             const shenShaInfo = ShenShaService.getShenShaInfo(shenSha);
@@ -715,18 +727,19 @@ export class InteractiveBaziView {
               cssClass = 'shensha-mixed';
             }
 
-            const span = hourCell.createSpan({
+            const shenShaEl = hourShenShaList.createEl('span', {
               text: shenSha,
-              cls: cssClass,
-              attr: { 'title': shenShaInfo?.description || '' }
+              cls: `bazi-shensha ${cssClass}`,
+              attr: {
+                'data-shensha': shenSha,
+                'data-type': type,
+                'title': shenShaInfo?.description || ''
+              }
             });
 
-            span.addEventListener('click', () => {
+            shenShaEl.addEventListener('click', () => {
               this.showShenShaExplanation(shenSha);
             });
-
-            // 添加空格分隔
-            hourCell.createSpan({ text: ' ' });
           });
         } else {
           hourCell.textContent = '无';
