@@ -15,8 +15,11 @@ export default class BaziPlugin extends Plugin {
 	private codeBlockProcessor: CodeBlockProcessor;
 
 	async onload() {
+		console.log('🚀 八字命盘插件开始加载...');
+
 		// 加载设置
 		await this.loadSettings();
+		console.log('⚙️ 设置已加载:', this.settings);
 
 		// 初始化管理器
 		this.commandManager = new CommandManager(this);
@@ -24,9 +27,11 @@ export default class BaziPlugin extends Plugin {
 
 		// 注册命令
 		this.commandManager.registerCommands();
+		console.log('📋 命令已注册');
 
 		// 注册代码块处理器
 		this.codeBlockProcessor.register();
+		console.log('🔧 代码块处理器已注册');
 
 		// 加载CSS样式
 		this.loadStyles();

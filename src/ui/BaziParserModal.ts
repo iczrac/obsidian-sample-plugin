@@ -82,12 +82,12 @@ export class BaziParserModal extends Modal {
               errorDiv.empty();
               errorDiv.hide();
 
-              // 解析八字，传入性别和年份参数
+              // 解析八字，传入年份和性别参数
               const baziInfo = BaziService.parseBaziString(
                 this.baziString,
+                this.specifiedYear ? this.specifiedYear.toString() : undefined,
                 this.gender,
-                '2', // 使用默认流派
-                this.specifiedYear
+                '2' // 使用默认流派
               );
 
               // 确保性别和指定年份信息被传递给回调函数

@@ -14,7 +14,7 @@ export class BaziService {
    * @param hour 时（0-23）
    * @returns 八字信息对象
    */
-  static getBaziFromDate(year: number, month: number, day: number, hour: number = 0, gender: string = '1', sect: string = '2'): BaziInfo {
+  static getBaziFromDate(year: number, month: number, day: number, hour: number = 0, gender: string = '', sect: string = '2'): BaziInfo {
     // 创建阳历对象
     const solar = Solar.fromYmdHms(year, month, day, hour, 0, 0);
     // 转换为农历
@@ -34,7 +34,7 @@ export class BaziService {
    * @param isLeapMonth 是否闰月
    * @returns 八字信息对象
    */
-  static getBaziFromLunarDate(year: number, month: number, day: number, hour: number = 0, isLeapMonth: boolean = false, gender: string = '1', sect: string = '2'): BaziInfo {
+  static getBaziFromLunarDate(year: number, month: number, day: number, hour: number = 0, isLeapMonth: boolean = false, gender: string = '', sect: string = '2'): BaziInfo {
     // 创建农历对象
     // Lunar.fromYmdHms只接受6个参数，不支持isLeapMonth参数
     // 需要使用其他方法处理闰月
@@ -62,7 +62,7 @@ export class BaziService {
    * @param specifiedYear 指定的年份，如果提供则使用此年份而不是反推
    * @returns 八字信息对象
    */
-  static parseBaziString(baziStr: string, gender: string = '1', sect: string = '2', specifiedYear?: number): BaziInfo {
+  static parseBaziString(baziStr: string, specifiedYear?: string, gender: string = '', sect: string = '2'): BaziInfo {
     // 清理并分割八字字符串
     const parts = baziStr.replace(/\s+/g, ' ').trim().split(' ');
 
@@ -167,7 +167,8 @@ export class BaziService {
     }
 
     // 如果指定了年份，尝试使用指定的年份进行日期推算
-    if (specifiedYear && matchingYears.includes(specifiedYear)) {
+    const yearNum = specifiedYear ? parseInt(specifiedYear) : undefined;
+    if (yearNum && matchingYears.includes(yearNum)) {
       try {
         // 使用lunar-typescript库的Solar.fromBaZi方法反推日期
         // 这个方法可能返回多个匹配的日期
@@ -183,7 +184,7 @@ export class BaziService {
         // 找到指定年份的日期
         let matchingSolar: Solar | null = null;
         for (const s of solarList) {
-          if (s.getYear() === specifiedYear) {
+          if (s.getYear() === yearNum) {
             matchingSolar = s;
             break;
           }
@@ -200,7 +201,7 @@ export class BaziService {
           lunarDate = lunar.toString();
           solarTime = `${matchingSolar.getHour().toString().padStart(2, '0')}:${matchingSolar.getMinute().toString().padStart(2, '0')}`;
 
-          console.log('日期反推成功 - 指定年份:', specifiedYear);
+          console.log('日期反推成功 - 指定年份:', yearNum);
           console.log('日期反推结果 - 阳历日期:', solarDate);
           console.log('日期反推结果 - 农历日期:', lunarDate);
         } else {
@@ -212,7 +213,7 @@ export class BaziService {
     }
 
     // 如果有指定年份且成功推算日期，使用lunar-typescript库获取更多信息
-    if (specifiedYear && solar && lunar && eightChar) {
+    if (yearNum && solar && lunar && eightChar) {
       // 使用formatBaziInfo获取完整的八字信息，但只获取日期、大运、流年等信息
       const baziInfo = this.formatBaziInfo(solar, lunar, eightChar, gender, sect);
 
@@ -589,7 +590,7 @@ export class BaziService {
    * @param sect 八字流派（1或2）
    * @returns 格式化后的八字信息
    */
-  private static formatBaziInfo(solar: Solar, lunar: Lunar, eightChar: EightChar, gender: string = '1', sect: string = '2'): BaziInfo {
+  private static formatBaziInfo(solar: Solar, lunar: Lunar, eightChar: EightChar, gender: string = '', sect: string = '2'): BaziInfo {
     // 设置八字流派
     eightChar.setSect(parseInt(sect));
 
@@ -4297,46 +4298,12 @@ export class BaziService {
     shenSha.push(...dayShenSha.map(s => `日柱:${s}`));
     shenSha.push(...hourShenSha.map(s => `时柱:${s}`));
 
-    // 调试信息
-    console.log('calculateShenSha 返回结果:');
-    console.log('总神煞:', shenSha);
-    console.log('年柱神煞:', yearShenSha);
-    console.log('月柱神煞:', monthShenSha);
-    console.log('日柱神煞:', dayShenSha);
-    console.log('时柱神煞:', hourShenSha);
-
-    // 确保返回的是数组
-    const finalShenSha = Array.isArray(shenSha) ? [...shenSha] : [];
-    if (!Array.isArray(shenSha)) {
-      console.error('总神煞不是数组，强制转换为数组');
-    }
-
-    const finalYearShenSha = Array.isArray(yearShenSha) ? [...yearShenSha] : [];
-    if (!Array.isArray(yearShenSha)) {
-      console.error('年柱神煞不是数组，强制转换为数组');
-    }
-
-    const finalMonthShenSha = Array.isArray(monthShenSha) ? [...monthShenSha] : [];
-    if (!Array.isArray(monthShenSha)) {
-      console.error('月柱神煞不是数组，强制转换为数组');
-    }
-
-    const finalDayShenSha = Array.isArray(dayShenSha) ? [...dayShenSha] : [];
-    if (!Array.isArray(dayShenSha)) {
-      console.error('日柱神煞不是数组，强制转换为数组');
-    }
-
-    const finalHourShenSha = Array.isArray(hourShenSha) ? [...hourShenSha] : [];
-    if (!Array.isArray(hourShenSha)) {
-      console.error('时柱神煞不是数组，强制转换为数组');
-    }
-
     return {
-      shenSha: finalShenSha,
-      yearShenSha: finalYearShenSha,
-      monthShenSha: finalMonthShenSha,
-      dayShenSha: finalDayShenSha,
-      hourShenSha: finalHourShenSha
+      shenSha,
+      yearShenSha,
+      monthShenSha,
+      dayShenSha,
+      hourShenSha
     };
   }
 
