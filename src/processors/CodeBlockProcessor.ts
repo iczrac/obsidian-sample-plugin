@@ -1,7 +1,9 @@
 import { MarkdownView, Notice } from 'obsidian';
-import { BaziParams } from '../types/PluginTypes';
+import { BaziParams, BaziDisplayStyle } from '../types/PluginTypes';
 import { BaziService } from '../services/BaziService';
 import { InteractiveBaziView } from '../ui/InteractiveBaziView';
+import { SimpleBaziView } from '../ui/SimpleBaziView';
+import { StandardBaziView } from '../ui/StandardBaziView';
 import type BaziPlugin from '../main';
 
 /**
@@ -603,12 +605,38 @@ export class CodeBlockProcessor {
 		console.log('🎨 传递神煞显示设置到baziInfo:', baziInfo.showShenSha);
 		console.log('🎨 baziInfo完整内容:', baziInfo);
 
-		// 使用交互式视图渲染八字命盘
-		const interactiveView = new InteractiveBaziView(
-			el,
-			baziInfo,
-			id
-		);
+		// 确定显示样式
+		let displayStyle = this.plugin.settings.defaultDisplayStyle;
+
+		// 检查代码块中是否指定了样式
+		if (params.style) {
+			const styleValue = params.style.toLowerCase().trim();
+			if (styleValue === 'simple' || styleValue === '简洁' || styleValue === '1') {
+				displayStyle = BaziDisplayStyle.SIMPLE;
+			} else if (styleValue === 'standard' || styleValue === '标准' || styleValue === '2') {
+				displayStyle = BaziDisplayStyle.STANDARD;
+			} else if (styleValue === 'complete' || styleValue === '完整' || styleValue === '3') {
+				displayStyle = BaziDisplayStyle.COMPLETE;
+			}
+		}
+
+		console.log('🎨 使用显示样式:', displayStyle);
+
+		// 根据样式选择对应的视图组件
+		switch (displayStyle) {
+			case BaziDisplayStyle.SIMPLE:
+				new SimpleBaziView(el, baziInfo, id);
+				break;
+			case BaziDisplayStyle.STANDARD:
+				new StandardBaziView(el, baziInfo, id);
+				break;
+			case BaziDisplayStyle.COMPLETE:
+			default:
+				new InteractiveBaziView(el, baziInfo, id);
+				break;
+		}
+
+		console.log('✅ 八字命盘渲染完成');
 	}
 
 	/**

@@ -1,10 +1,11 @@
 import { App, PluginSettingTab, Setting, Notice, Plugin } from 'obsidian';
-import { BaziPluginSettings } from '../types/PluginTypes';
+import { BaziPluginSettings, BaziDisplayStyle } from '../types/PluginTypes';
 
 /**
  * 默认设置
  */
 export const DEFAULT_SETTINGS: BaziPluginSettings = {
+	defaultDisplayStyle: BaziDisplayStyle.COMPLETE, // 默认使用完整专业样式
 	debugMode: false, // 调试模式
 	autoUpdateCodeBlock: true, // 自动更新代码块
 	codeBlockUpdateDelay: 500, // 代码块更新延迟（毫秒）
@@ -35,7 +36,21 @@ export class BaziSettingTab extends PluginSettingTab {
 		containerEl.empty();
 		containerEl.createEl('h2', {text: '八字命盘插件设置'});
 
-
+		new Setting(containerEl)
+			.setName('默认显示样式')
+			.setDesc('选择八字命盘的默认显示样式。简洁样式：仅显示八字和基本信息；标准样式：包含大运流年；完整样式：包含所有分析功能')
+			.addDropdown(dropdown => {
+				dropdown
+					.addOption(BaziDisplayStyle.SIMPLE, '简洁样式（仅八字）')
+					.addOption(BaziDisplayStyle.STANDARD, '标准样式（含大运流年）')
+					.addOption(BaziDisplayStyle.COMPLETE, '完整样式（专业分析）')
+					.setValue(this.plugin.settings.defaultDisplayStyle)
+					.onChange(async (value) => {
+						this.plugin.settings.defaultDisplayStyle = value as BaziDisplayStyle;
+						await this.plugin.saveSettings();
+						new Notice('默认显示样式已更改为: ' + this.getStyleDisplayName(value as BaziDisplayStyle), 3000);
+					});
+			});
 
 		new Setting(containerEl)
 			.setName('八字流派')
@@ -204,29 +219,74 @@ export class BaziSettingTab extends PluginSettingTab {
 			}
 		});
 
+		// 基本使用说明
+		const basicUsage = instructionsContainer.createEl('p', {
+			text: '在Obsidian中创建代码块，语言设置为 "bazi"，然后在代码块中输入相应的参数即可生成八字命盘。支持三种显示样式，可通过全局设置或代码块参数控制。',
+			attr: { style: 'margin-bottom: 20px; color: var(--text-normal); font-family: var(--font-text);' }
+		});
+
+		// 三种样式说明
+		instructionsContainer.createEl('h4', {text: '🎨 三种显示样式'});
+
+		const styles = [
+			{
+				name: '样式1 - 简洁样式',
+				param: 'style: 1',
+				desc: '仅显示八字表格和基本信息，无标题，适合快速记录和嵌入使用'
+			},
+			{
+				name: '样式2 - 标准样式',
+				param: 'style: 2',
+				desc: '包含八字、大运、流年、流月信息，有简化标题，适合日常分析'
+			},
+			{
+				name: '样式3 - 完整样式',
+				param: 'style: 3',
+				desc: '包含所有专业分析功能，交互式界面，适合详细研究和专业分析'
+			}
+		];
+
+		styles.forEach(style => {
+			const styleContainer = instructionsContainer.createDiv({
+				attr: { style: 'margin-bottom: 12px; padding: 10px; background-color: var(--background-primary); border-radius: 5px;' }
+			});
+
+			styleContainer.createEl('strong', {text: style.name});
+			styleContainer.createEl('br');
+			styleContainer.createEl('code', {
+				text: style.param,
+				attr: { style: 'background-color: var(--code-background); padding: 2px 6px; border-radius: 3px; margin: 5px 0; display: inline-block;' }
+			});
+			styleContainer.createEl('br');
+			styleContainer.createEl('span', {
+				text: style.desc,
+				attr: { style: 'color: var(--text-muted); font-size: 0.9em;' }
+			});
+		});
+
 		// 代码块类型说明
 		instructionsContainer.createEl('h4', {text: '🎯 支持的代码块类型'});
 
 		const codeBlockTypes = [
 			{
 				title: '1. 日期类型',
-				code: 'date: 2025-05-24 10:30',
-				desc: '使用阳历日期和时间'
+				code: 'date: 2025-05-24 10:30\ngender: 男\nstyle: 2',
+				desc: '使用阳历日期和时间，可指定性别和样式'
 			},
 			{
 				title: '2. 纯八字类型',
-				code: 'bazi: 乙丑 壬午 丙午 癸巳',
-				desc: '直接输入八字，支持年份选择'
+				code: 'bazi: 乙丑 壬午 丙午 癸巳\nyear: 1985\ngender: 女\nstyle: 1',
+				desc: '直接输入八字，支持年份选择和样式设置'
 			},
 			{
 				title: '3. 农历日期类型',
-				code: 'lunar: 2025-04-27 10:30',
-				desc: '使用农历日期和时间'
+				code: 'lunar: 2025-04-27 10:30\ngender: 女\nstyle: 3',
+				desc: '使用农历日期和时间，支持完整样式'
 			},
 			{
 				title: '4. 当前时间类型',
-				code: 'now: true',
-				desc: '自动获取当前时间的八字'
+				code: 'now: true\ngender: no\nstyle: simple',
+				desc: '自动获取当前时间的八字，可跳过性别选择'
 			}
 		];
 
@@ -260,6 +320,11 @@ export class BaziSettingTab extends PluginSettingTab {
 				name: 'year',
 				values: ['具体年份 (如: 1985)'],
 				desc: ['指定年份（仅纯八字类型）']
+			},
+			{
+				name: 'style',
+				values: ['1 / simple / 简洁', '2 / standard / 标准', '3 / complete / 完整'],
+				desc: ['简洁样式（仅八字和基本信息）', '标准样式（含大运流年流月）', '完整样式（专业分析功能）']
 			}
 		];
 
@@ -290,20 +355,24 @@ export class BaziSettingTab extends PluginSettingTab {
 
 		const examples = [
 			{
-				title: '完整八字分析',
+				title: '完整八字分析（默认样式）',
 				code: 'date: 1985-07-06 10:30\ngender: 男'
 			},
 			{
-				title: '纯八字 + 年份选择',
-				code: 'bazi: 乙丑 壬午 丙午 癸巳\nyear: 1985\ngender: 女'
+				title: '简洁样式八字',
+				code: 'date: 1985-07-06 10:30\ngender: 男\nstyle: 1'
 			},
 			{
-				title: '观察当前时间（无性别）',
-				code: 'now: true\ngender: no'
+				title: '标准样式八字',
+				code: 'bazi: 乙丑 壬午 丙午 癸巳\nyear: 1985\ngender: 女\nstyle: 2'
 			},
 			{
-				title: '农历日期分析',
-				code: 'lunar: 2025-04-27 10:30\ngender: 女'
+				title: '完整样式八字',
+				code: 'lunar: 2025-04-27 10:30\ngender: 女\nstyle: 3'
+			},
+			{
+				title: '观察当前时间（简洁样式）',
+				code: 'now: true\ngender: no\nstyle: simple'
 			}
 		];
 
@@ -326,9 +395,11 @@ export class BaziSettingTab extends PluginSettingTab {
 			'🎯 智能性别选择：没有性别参数时自动显示选择栏',
 			'📅 年份选择：纯八字类型支持多年份选择（基于lunar-typescript库）',
 			'🔄 自动更新：选择性别或年份后自动更新代码块',
-			'🎨 交互式界面：支持点击展开详细信息',
+			'🎨 三种显示样式：简洁(1)、标准(2)、完整(3)样式可选',
+			'🎭 交互式界面：支持点击展开详细信息（完整样式）',
 			'🌟 神煞分析：支持四柱、大运、流年、小运、流月神煞',
-			'⚡ 实时观察：支持当前时间八字的实时显示'
+			'⚡ 实时观察：支持当前时间八字的实时显示',
+			'🔧 灵活配置：支持全局默认样式和单独指定样式'
 		];
 
 		const featuresList = instructionsContainer.createEl('ul', {
@@ -345,14 +416,29 @@ export class BaziSettingTab extends PluginSettingTab {
 		// 提示信息
 		const tipContainer = instructionsContainer.createDiv({
 			attr: {
-				style: 'background-color: var(--background-modifier-success); padding: 10px; border-radius: 6px; margin-top: 15px; border-left: 4px solid var(--color-green);'
+				style: 'background-color: var(--background-modifier-success); padding: 15px; border-radius: 6px; margin-top: 15px; border-left: 4px solid var(--color-green);'
 			}
 		});
 
-		tipContainer.createEl('strong', {text: '💡 提示：'});
-		tipContainer.createEl('span', {
-			text: '如果代码块没有显示性别选择栏，请检查是否已经设置了gender参数。使用 gender: no 可以跳过性别选择，仅观察八字信息。',
-			attr: { style: 'margin-left: 8px;' }
+		tipContainer.createEl('strong', {text: '💡 使用提示'});
+		tipContainer.createEl('br');
+		tipContainer.createEl('br');
+
+		const tips = [
+			'🎯 样式选择：使用 style: 1/2/3 快速设置样式，或使用 simple/standard/complete',
+			'👤 性别设置：使用 gender: no 可以跳过性别选择，仅观察八字信息',
+			'📅 年份选择：纯八字类型会自动显示可选年份，也可以直接指定 year 参数',
+			'🔧 全局设置：可在插件设置中配置默认样式，代码块参数会覆盖全局设置'
+		];
+
+		tips.forEach(tip => {
+			const tipItem = tipContainer.createDiv({
+				attr: { style: 'margin-bottom: 8px; font-size: 0.9em;' }
+			});
+			tipItem.createEl('span', {
+				text: tip,
+				attr: { style: 'color: var(--text-normal);' }
+			});
 		});
 	}
 
@@ -431,5 +517,21 @@ export class BaziSettingTab extends PluginSettingTab {
 				}, 2000);
 			}
 		});
+	}
+
+	/**
+	 * 获取样式显示名称
+	 */
+	private getStyleDisplayName(style: BaziDisplayStyle): string {
+		switch (style) {
+			case BaziDisplayStyle.SIMPLE:
+				return '简洁样式';
+			case BaziDisplayStyle.STANDARD:
+				return '标准样式';
+			case BaziDisplayStyle.COMPLETE:
+				return '完整样式';
+			default:
+				return '未知样式';
+		}
 	}
 }

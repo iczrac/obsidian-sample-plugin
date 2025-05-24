@@ -30,9 +30,19 @@ export interface BaziParams {
 }
 
 /**
+ * 八字显示样式枚举
+ */
+export enum BaziDisplayStyle {
+	SIMPLE = 'simple',     // 样式1：简洁八字样式
+	STANDARD = 'standard', // 样式2：标准分析样式
+	COMPLETE = 'complete'  // 样式3：完整专业样式
+}
+
+/**
  * 插件设置接口
  */
 export interface BaziPluginSettings {
+	defaultDisplayStyle: BaziDisplayStyle; // 默认显示样式
 	debugMode: boolean;
 	autoUpdateCodeBlock: boolean;
 	codeBlockUpdateDelay: number;

@@ -65,6 +65,291 @@
   font-family: var(--font-family);
 }
 
+/* 简洁样式 */
+.simple-bazi-view {
+  font-family: 'Microsoft YaHei', 'SimHei', sans-serif;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 6px;
+  padding: 12px;
+  margin: 8px 0;
+  background-color: var(--background-primary);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.simple-bazi-view .bazi-basic-info.simple {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+  font-size: 0.9em;
+  color: var(--text-muted);
+}
+
+.simple-bazi-view .bazi-view-section.simple {
+  margin: 0;
+}
+
+.simple-bazi-view .bazi-view-table.simple {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1.1em;
+}
+
+.simple-bazi-view .bazi-view-table.simple th,
+.simple-bazi-view .bazi-view-table.simple td {
+  padding: 8px 12px;
+  text-align: center;
+  border: 1px solid var(--background-modifier-border);
+}
+
+.simple-bazi-view .bazi-view-table.simple th {
+  background-color: var(--background-secondary);
+  font-weight: 600;
+  font-size: 0.9em;
+}
+
+/* 标准样式 */
+.standard-bazi-view {
+  font-family: 'Microsoft YaHei', 'SimHei', sans-serif;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 8px;
+  padding: 16px;
+  margin: 10px 0;
+  background-color: var(--background-primary);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.standard-bazi-view .bazi-view-header.simple {
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--background-modifier-border);
+  padding-bottom: 8px;
+}
+
+.standard-bazi-view .bazi-view-title.simple {
+  margin: 0;
+  font-size: 1.2em;
+  color: var(--text-normal);
+  font-weight: 600;
+}
+
+.standard-bazi-view .bazi-basic-info.standard {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  font-size: 0.9em;
+  color: var(--text-muted);
+}
+
+.standard-bazi-view .bazi-view-section.standard {
+  margin-bottom: 20px;
+}
+
+.standard-bazi-view .bazi-section-title {
+  margin: 0 0 10px 0;
+  font-size: 1em;
+  font-weight: 600;
+  color: var(--text-normal);
+}
+
+.standard-bazi-view .bazi-view-table.standard,
+.standard-bazi-view .bazi-dayun-table.standard,
+.standard-bazi-view .bazi-liunian-table.standard,
+.standard-bazi-view .bazi-liuyue-table.standard {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9em;
+}
+
+.standard-bazi-view .bazi-view-table.standard th,
+.standard-bazi-view .bazi-view-table.standard td,
+.standard-bazi-view .bazi-dayun-table.standard th,
+.standard-bazi-view .bazi-dayun-table.standard td,
+.standard-bazi-view .bazi-liunian-table.standard th,
+.standard-bazi-view .bazi-liunian-table.standard td {
+  padding: 6px 10px;
+  text-align: center;
+  border: 1px solid var(--background-modifier-border);
+}
+
+.standard-bazi-view .bazi-view-table.standard th,
+.standard-bazi-view .bazi-dayun-table.standard th,
+.standard-bazi-view .bazi-liunian-table.standard th {
+  background-color: var(--background-secondary);
+  font-weight: 600;
+  font-size: 0.85em;
+}
+
+.standard-bazi-view .bazi-liuyue-table.standard td {
+  padding: 8px;
+  border: 1px solid var(--background-modifier-border);
+  vertical-align: top;
+}
+
+.standard-bazi-view .bazi-liuyue-cell.standard {
+  text-align: center;
+}
+
+.standard-bazi-view .liuyue-month {
+  font-size: 0.8em;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+
+.standard-bazi-view .liuyue-ganzhi {
+  font-weight: 600;
+  font-size: 0.9em;
+}
+
+/* 标准样式交互式功能 */
+.standard-bazi-view .bazi-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.standard-bazi-view .bazi-nav-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.standard-bazi-view .bazi-nav-button {
+  background-color: var(--interactive-normal);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 0.8em;
+  cursor: pointer;
+  color: var(--text-normal);
+  transition: all 0.2s ease;
+}
+
+.standard-bazi-view .bazi-nav-button:hover {
+  background-color: var(--interactive-hover);
+  border-color: var(--interactive-accent);
+}
+
+.standard-bazi-view .bazi-nav-button:active {
+  background-color: var(--interactive-active);
+}
+
+.standard-bazi-view .bazi-nav-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.standard-bazi-view .bazi-year-display {
+  font-weight: 600;
+  font-size: 0.9em;
+  color: var(--text-normal);
+  min-width: 60px;
+  text-align: center;
+}
+
+.standard-bazi-view .bazi-page-info {
+  text-align: center;
+  margin-top: 8px;
+  font-size: 0.8em;
+  color: var(--text-muted);
+  padding: 4px;
+}
+
+.standard-bazi-view .bazi-dayun-container,
+.standard-bazi-view .bazi-liunian-container,
+.standard-bazi-view .bazi-liuyue-container {
+  transition: opacity 0.2s ease;
+}
+
+.standard-bazi-view .bazi-dayun-container:empty,
+.standard-bazi-view .bazi-liunian-container:empty,
+.standard-bazi-view .bazi-liuyue-container:empty {
+  opacity: 0.5;
+}
+
+/* 标准样式使用与完整样式相同的表格样式 */
+.standard-bazi-view .bazi-view-dayun-table,
+.standard-bazi-view .bazi-view-liunian-table,
+.standard-bazi-view .bazi-view-liuyue-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  margin-bottom: 10px;
+}
+
+.standard-bazi-view .bazi-view-dayun-table th,
+.standard-bazi-view .bazi-view-dayun-table td,
+.standard-bazi-view .bazi-view-liunian-table th,
+.standard-bazi-view .bazi-view-liunian-table td,
+.standard-bazi-view .bazi-view-liuyue-table td {
+  padding: 6px 8px;
+  text-align: center;
+  border: 1px solid var(--background-modifier-border);
+  min-width: 60px;
+}
+
+.standard-bazi-view .bazi-view-dayun-table th,
+.standard-bazi-view .bazi-view-liunian-table th {
+  background-color: var(--background-secondary);
+  font-weight: 600;
+  font-size: 0.85em;
+  width: 80px;
+}
+
+.standard-bazi-view .bazi-dayun-cell,
+.standard-bazi-view .bazi-liunian-cell {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.standard-bazi-view .bazi-dayun-cell:hover,
+.standard-bazi-view .bazi-liunian-cell:hover {
+  background-color: var(--background-modifier-hover);
+}
+
+.standard-bazi-view .bazi-dayun-cell.selected,
+.standard-bazi-view .bazi-liunian-cell.selected {
+  background-color: var(--interactive-accent);
+  color: var(--text-on-accent);
+  font-weight: 600;
+}
+
+.standard-bazi-view .bazi-dayun-cell.selected span,
+.standard-bazi-view .bazi-liunian-cell.selected span {
+  color: var(--text-on-accent) !important;
+}
+
+.standard-bazi-view .bazi-liuyue-cell {
+  text-align: center;
+  padding: 8px;
+  border: 1px solid var(--background-modifier-border);
+  vertical-align: top;
+}
+
+.standard-bazi-view .liuyue-month {
+  font-size: 0.8em;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+
+.standard-bazi-view .liuyue-ganzhi {
+  font-weight: 600;
+  font-size: 0.9em;
+}
+
+.standard-bazi-view .bazi-empty-message {
+  text-align: center;
+  color: var(--text-muted);
+  font-style: italic;
+  padding: 20px;
+}
+
+.standard-bazi-view .bazi-liuyue-year-title {
+  text-align: center;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: var(--text-normal);
+}
+
 .bazi-view-header {
   display: flex;
   justify-content: space-between;
