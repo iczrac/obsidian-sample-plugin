@@ -1,6 +1,7 @@
 import { BaziInfo } from 'src/types/BaziInfo';
 import { ShenShaService } from 'src/services/ShenShaService';
-import { Notice } from 'obsidian';
+import { LinkService } from 'src/services/LinkService';
+import { Notice, App } from 'obsidian';
 
 /**
  * 八字命盘视图组件

@@ -7,6 +7,7 @@ export interface BaziInfo {
   solarTime?: string;
   lunarDate?: string;
   gender?: string;
+  name?: string; // 姓名
   birthYear?: string; // 出生年份
   matchingYears?: number[]; // 匹配的年份列表
   specifiedYear?: number; // 用户指定的年份

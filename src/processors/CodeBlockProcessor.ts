@@ -5,6 +5,7 @@ import { InteractiveBaziView } from '../ui/InteractiveBaziView';
 import { SimpleBaziView } from '../ui/SimpleBaziView';
 import { StandardBaziView } from '../ui/StandardBaziView';
 import type BaziPlugin from '../main';
+import { BaziLinkToolbar, BaziTableEnhancer } from '../components/BaziLinkPanel';
 
 /**
  * 代码块处理器
@@ -134,8 +135,12 @@ export class CodeBlockProcessor {
 			const baziInfo = BaziService.getBaziFromDate(year, month, day, hour, gender, this.plugin.settings.baziSect);
 			console.log('📊 BaziService返回结果:', baziInfo);
 
-			// 生成唯一ID
-			const id = 'bazi-view-' + Math.random().toString(36).substring(2, 9);
+			// 添加姓名信息
+			if (params.name) {
+				baziInfo.name = params.name;
+				console.log('👤 添加姓名信息:', baziInfo.name);
+			}
+
 			// 为代码块添加唯一标识符
 			const blockId = 'bazi-block-' + Math.random().toString(36).substring(2, 9);
 
@@ -152,6 +157,18 @@ export class CodeBlockProcessor {
 			// 先渲染八字命盘
 			console.log('🎨 开始渲染八字命盘');
 			this.renderBaziChart(el, baziInfo, params);
+
+		// 添加双链工具栏（如果有姓名）
+		if (baziInfo.name) {
+			console.log('🔗 发现姓名参数，双链功能可用:', baziInfo.name);
+			new BaziLinkToolbar(el, baziInfo, this.plugin.app);
+
+			// 增强八字表格的双链功能
+			const tables = el.querySelectorAll('table');
+			tables.forEach(table => {
+				BaziTableEnhancer.enhanceTable(table as HTMLTableElement, baziInfo, this.plugin.app);
+			});
+		}
 
 			// 检查是否需要显示性别选择界面
 			if (this.shouldShowGenderSelection(params)) {
@@ -199,6 +216,12 @@ export class CodeBlockProcessor {
 					baziInfo.gender = '0';
 				}
 				console.log('🎴 已设置性别:', baziInfo.gender);
+			}
+
+			// 添加姓名信息
+			if (params.name) {
+				baziInfo.name = params.name;
+				console.log('👤 添加姓名信息:', baziInfo.name);
 			}
 
 			// 先渲染八字命盘
@@ -688,7 +711,7 @@ export class CodeBlockProcessor {
 		});
 
 		// 显示年份统计信息
-		const yearInfo = yearContainer.createDiv({
+		yearContainer.createDiv({
 			text: `共找到 ${matchingYears.length} 个匹配年份（基于lunar-typescript库反推）`,
 			attr: { 'style': 'font-size: 0.75em; color: #666; margin-top: 5px; text-align: center;' }
 		});

@@ -8,6 +8,7 @@ export interface BaziParams {
 	bazi?: string;           // 八字
 	now?: string;            // 是否使用当前时间
 	gender?: string;         // 性别
+	name?: string;           // 姓名
 	year?: string;           // 年份（用于纯八字模式）
 	leap?: string;           // 是否闰月（用于农历日期）
 

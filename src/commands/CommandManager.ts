@@ -17,14 +17,33 @@ export class CommandManager {
 	 * 注册所有命令
 	 */
 	registerCommands(): void {
+		console.log('🎯 开始注册命令...');
+		this.registerTestCommand(); // 添加测试命令
 		this.registerDatePickerCommand();
 		this.registerBaziParserCommand();
+		console.log('✅ 所有命令注册完成');
+	}
+
+	/**
+	 * 注册测试命令 - 用于验证命令系统是否正常工作
+	 */
+	private registerTestCommand(): void {
+		console.log('🧪 注册测试命令: test-bazi-plugin');
+		this.plugin.addCommand({
+			id: 'test-bazi-plugin',
+			name: '🧪 测试八字插件命令',
+			callback: () => {
+				new Notice('✅ 八字插件命令系统正常工作！', 3000);
+				console.log('✅ 测试命令执行成功');
+			}
+		});
 	}
 
 	/**
 	 * 注册日期选择命令
 	 */
 	private registerDatePickerCommand(): void {
+		console.log('📅 注册日期选择命令: open-date-picker');
 		this.plugin.addCommand({
 			id: 'open-date-picker',
 			name: '输入时间转八字',
@@ -59,6 +78,7 @@ export class CommandManager {
 	 * 注册八字解析命令
 	 */
 	private registerBaziParserCommand(): void {
+		console.log('🔍 注册八字解析命令: parse-selected-bazi');
 		this.plugin.addCommand({
 			id: 'parse-selected-bazi',
 			name: '解析选中的八字',

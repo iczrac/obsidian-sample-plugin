@@ -54,6 +54,113 @@
 
 /* 五行颜色 - 已移至统一样式中 */
 
+/* 双链工具栏样式 */
+.bazi-link-toolbar {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  margin-bottom: 8px;
+  padding: 4px;
+  background-color: var(--background-secondary);
+  border-radius: 4px;
+  border: 1px solid var(--background-modifier-border);
+}
+
+.bazi-toolbar-button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 3px;
+  color: var(--text-muted);
+  transition: all 0.2s ease;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  min-height: 24px;
+}
+
+.bazi-toolbar-button:hover {
+  color: var(--text-normal);
+  background-color: var(--background-modifier-hover);
+  transform: scale(1.05);
+}
+
+.bazi-toolbar-button:active {
+  transform: scale(0.95);
+}
+
+/* 双链面板样式 */
+.bazi-link-section {
+  margin-bottom: 16px;
+  padding: 12px;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 6px;
+  background-color: var(--background-primary);
+}
+
+.bazi-link-section-title {
+  margin: 0 0 8px 0;
+  font-size: 1em;
+  font-weight: 600;
+  color: var(--text-normal);
+  border-bottom: 1px solid var(--background-modifier-border);
+  padding-bottom: 4px;
+}
+
+.bazi-link-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bazi-link-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px;
+  border-radius: 3px;
+  transition: background-color 0.2s ease;
+}
+
+.bazi-link-item:hover {
+  background-color: var(--background-modifier-hover);
+}
+
+.bazi-link-button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--link-color);
+  text-decoration: underline;
+  font-size: 0.9em;
+  padding: 2px 4px;
+  border-radius: 2px;
+  transition: all 0.2s ease;
+}
+
+.bazi-link-button:hover {
+  background-color: var(--background-modifier-hover);
+  color: var(--link-color-hover);
+}
+
+.bazi-link-description {
+  font-size: 0.8em;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.bazi-link-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--background-modifier-border);
+}
+
 /* 交互式八字命盘样式 */
 .bazi-view-container {
   border: 1px solid var(--background-modifier-border);

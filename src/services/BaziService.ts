@@ -759,7 +759,7 @@ export class BaziService {
 
     // 起运信息
     // 只有当性别明确指定时才计算大运，否则跳过大运计算
-    let yun = null;
+    let yun: any = null;
     let genderNum = -1; // 默认值表示未指定性别
 
     if (gender === '1' || gender === '0') {

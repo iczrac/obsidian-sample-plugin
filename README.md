@@ -1,30 +1,48 @@
-# Obsidian Sample Plugin
+# 八字命盘 Obsidian 插件
 
-This is a sample plugin for Obsidian (https://obsidian.md).
+基于 lunar-typescript 的专业八字命盘插件，为 Obsidian 用户提供完整的八字分析功能。
 
-This project uses TypeScript to provide type checking and documentation.
-The repo depends on the latest plugin API (obsidian.d.ts) in TypeScript Definition format, which contains TSDoc comments describing what it does.
+## ✨ 主要功能
 
-This sample plugin demonstrates some of the basic functionality the plugin API can do.
-- Adds a ribbon icon, which shows a Notice when clicked.
-- Adds a command "Open Sample Modal" which opens a Modal.
-- Adds a plugin setting tab to the settings page.
-- Registers a global click event and output 'click' to the console.
-- Registers a global interval which logs 'setInterval' to the console.
+- **八字计算** - 支持公历/农历日期输入，自动计算四柱八字
+- **多种显示样式** - 简单、标准、完整三种显示模式
+- **神煞分析** - 支持30种传统神煞的计算与显示
+- **大运流年** - 完整的大运、流年、流月分析
+- **五行分析** - 详细的五行强度计算与可视化
+- **格局判断** - 智能的八字格局识别与分析
+- **交互式界面** - 现代化的用户界面，支持点击交互
 
-## First time developing plugins?
+## 🚀 快速开始
 
-Quick starting guide for new plugin devs:
+### 安装方法
 
-- Check if [someone already developed a plugin for what you want](https://obsidian.md/plugins)! There might be an existing plugin similar enough that you can partner up with.
-- Make a copy of this repo as a template with the "Use this template" button (login to GitHub if you don't see it).
-- Clone your repo to a local development folder. For convenience, you can place this folder in your `.obsidian/plugins/your-plugin-name` folder.
-- Install NodeJS, then run `npm i` in the command line under your repo folder.
-- Run `npm run dev` to compile your plugin from `main.ts` to `main.js`.
-- Make changes to `main.ts` (or create new `.ts` files). Those changes should be automatically compiled into `main.js`.
-- Reload Obsidian to load the new version of your plugin.
-- Enable plugin in settings window.
-- For updates to the Obsidian API run `npm update` in the command line under your repo folder.
+1. **手动安装**
+   - 下载最新版本的 `main.js`、`manifest.json` 和 `styles.css`
+   - 复制到你的 vault 目录：`VaultFolder/.obsidian/plugins/bazi-obsidian/`
+   - 在 Obsidian 设置中启用插件
+
+2. **开发安装**
+   - 克隆此仓库到 `.obsidian/plugins/bazi-obsidian/`
+   - 运行 `npm install` 安装依赖
+   - 运行 `npm run dev` 开始开发模式
+   - 在 Obsidian 中启用插件
+
+### 使用方法
+
+1. **创建八字代码块**
+   ```markdown
+   ```bazi
+   date: 1990-01-01 08:00
+   gender: 男
+   ```
+
+2. **支持的参数**
+   - `date`: 公历日期时间
+   - `lunar`: 农历日期
+   - `bazi`: 直接输入八字
+   - `gender`: 性别（男/女）
+   - `style`: 显示样式（1-简单，2-标准，3-完整）
+   - `year`: 指定年份（用于八字反推）
 
 ## Releasing new releases
 
@@ -56,7 +74,7 @@ Quick starting guide for new plugin devs:
 - Copy over `main.js`, `styles.css`, `manifest.json` to your vault `VaultFolder/.obsidian/plugins/your-plugin-id/`.
 
 ## Improve code quality with eslint (optional)
-- [ESLint](https://eslint.org/) is a tool that analyzes your code to quickly find problems. You can run ESLint against your plugin to find common bugs and ways to improve your code. 
+- [ESLint](https://eslint.org/) is a tool that analyzes your code to quickly find problems. You can run ESLint against your plugin to find common bugs and ways to improve your code.
 - To use eslint with this project, make sure to install eslint from terminal:
   - `npm install -g eslint`
 - To use eslint to analyze this project use this command:

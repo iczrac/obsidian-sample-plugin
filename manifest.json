@@ -3,8 +3,11 @@
 	"name": "八字命盘",
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
-	"description": "基于lunar-typescript的八字命盘插件，支持输入时间转换为八字信息，解析笔记中的八字。",
-	"author": "您的名字",
-	"authorUrl": "https://github.com/yourusername",
-	"isDesktopOnly": false
+	"description": "基于lunar-typescript的专业八字命盘插件，支持八字计算、神煞分析、大运流年等完整功能。",
+	"author": "八字命盘开发团队",
+	"authorUrl": "https://github.com/bazi-obsidian/bazi-plugin",
+	"isDesktopOnly": false,
+	"fundingUrl": {
+		"Buy Me a Coffee": "https://buymeacoffee.com/bazi-plugin"
+	}
 }
