@@ -6,6 +6,7 @@ import { SimpleBaziView } from '../ui/SimpleBaziView';
 import { StandardBaziView } from '../ui/StandardBaziView';
 import type BaziPlugin from '../main';
 import { BaziLinkToolbar, BaziTableEnhancer } from '../components/BaziLinkToolbar';
+import { LinkService } from '../services/LinkService';
 
 /**
  * 代码块处理器
@@ -175,6 +176,8 @@ export class CodeBlockProcessor {
 						this.plugin.doubleLinkTagSettingsManager
 					);
 				});
+
+
 			}
 		}
 
@@ -756,4 +759,6 @@ export class CodeBlockProcessor {
 		this.updateSpecificCodeBlock(el, newSource);
 		new Notice(`已选择年份 ${year} 并更新代码块`);
 	}
+
+
 }

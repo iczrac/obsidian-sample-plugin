@@ -45,22 +45,40 @@ export class LinkService {
 
         // 为每个内容项判断使用双链还是标签
         allContent.forEach(content => {
-            if (this.configManager.shouldUseDoubleLink(content)) {
+            // 检查双链匹配
+            const shouldUseDoubleLink = this.configManager.shouldUseDoubleLink(content);
+
+            if (shouldUseDoubleLink) {
                 const suggestions = this.configManager.getDoubleLinkSuggestions(content);
                 result.doubleLinks.push(...suggestions);
                 result.suggestions.doubleLinks.push(...suggestions);
             }
 
-            if (this.configManager.shouldUseTag(content)) {
+            // 检查标签匹配
+            const shouldUseTag = this.configManager.shouldUseTag(content);
+
+            if (shouldUseTag) {
                 const suggestions = this.configManager.getTagSuggestions(content);
                 result.tags.push(...suggestions);
                 result.suggestions.tags.push(...suggestions);
+            }
+
+            // 如果都不匹配，尝试创建基础标签
+            if (!shouldUseDoubleLink && !shouldUseTag) {
+                // 为基础内容创建标签
+                if (this.isBasicTagContent(content)) {
+                    const basicTag = `#${content}`;
+                    result.tags.push(basicTag);
+                    result.suggestions.tags.push(basicTag);
+                }
             }
         });
 
         // 去重
         result.doubleLinks = [...new Set(result.doubleLinks)];
         result.tags = [...new Set(result.tags)];
+
+
         result.suggestions.doubleLinks = [...new Set(result.suggestions.doubleLinks)];
         result.suggestions.tags = [...new Set(result.suggestions.tags)];
 
@@ -80,26 +98,24 @@ export class LinkService {
     private collectBaziContent(baziInfo: BaziInfo): string[] {
         const content: string[] = [];
 
+
+
         // 人名（双链）
         if (baziInfo.name) {
             content.push(baziInfo.name);
         }
 
-        // 神煞（双链）
-        if (baziInfo.shenSha) {
-            Object.values(baziInfo.shenSha).flat().forEach((shenSha: any) => {
-                if (shenSha && shenSha.name) {
-                    content.push(shenSha.name);
-                }
-            });
-        }
+        // 神煞（双链）- 统一收集所有神煞
+        const allShenSha = this.collectAllShenSha(baziInfo);
+        content.push(...allShenSha);
 
         // 日主强弱（标签）
         if (baziInfo.dayStem && baziInfo.riZhuStrength) {
-            content.push(`${baziInfo.dayStem}${this.getStemWuXing(baziInfo.dayStem)}日主${baziInfo.riZhuStrength}`);
+            const strengthTag = `${baziInfo.dayStem}${this.getStemWuXing(baziInfo.dayStem)}日主${baziInfo.riZhuStrength}`;
+            content.push(strengthTag);
         }
 
-        // 格局（标签）
+        // 格局（双链）
         if (baziInfo.geJu) {
             content.push(baziInfo.geJu);
         }
@@ -109,19 +125,66 @@ export class LinkService {
             content.push(baziInfo.yearShengXiao);
         }
 
+        // 性别（标签）
+        if (baziInfo.gender) {
+            const genderText = baziInfo.gender === '1' ? '男性' : baziInfo.gender === '0' ? '女性' : baziInfo.gender;
+            content.push(genderText);
+        }
+
+        // 年份相关（标签）
+        if (baziInfo.solarDate) {
+            const year = baziInfo.solarDate.split('-')[0];
+            if (year) {
+                // 年代标签
+                const decade = Math.floor(parseInt(year) / 10) * 10;
+                content.push(`${decade}年代`);
+
+                // 世纪标签
+                const century = Math.floor(parseInt(year) / 100) + 1;
+                content.push(`${century}世纪`);
+            }
+        }
+
         // 年代特征（标签）
         if (baziInfo.solarDate) {
             const year = parseInt(baziInfo.solarDate.split('-')[0]);
-            if (year >= 1950 && year <= 1960) content.push('50后');
-            else if (year >= 1960 && year <= 1970) content.push('60后');
-            else if (year >= 1970 && year <= 1980) content.push('70后');
-            else if (year >= 1980 && year <= 1990) content.push('80后');
-            else if (year >= 1990 && year <= 2000) content.push('90后');
-            else if (year >= 2000 && year <= 2010) content.push('00后');
-            else if (year >= 2010 && year <= 2020) content.push('10后');
+            if (year >= 1950 && year <= 1960) {
+                content.push('50后');
+            } else if (year >= 1960 && year <= 1970) {
+                content.push('60后');
+            } else if (year >= 1970 && year <= 1980) {
+                content.push('70后');
+            } else if (year >= 1980 && year <= 1990) {
+                content.push('80后');
+            } else if (year >= 1990 && year <= 2000) {
+                content.push('90后');
+            } else if (year >= 2000 && year <= 2010) {
+                content.push('00后');
+            } else if (year >= 2010 && year <= 2020) {
+                content.push('10后');
+            }
         }
 
         return content;
+    }
+
+    /**
+     * 判断是否为基础标签内容
+     */
+    private isBasicTagContent(content: string): boolean {
+        // 基础标签类型：性别、年代、生肖、世纪等
+        const basicPatterns = [
+            /^(男性|女性)$/,                    // 性别
+            /^\d{4}年代$/,                     // 年代：1990年代
+            /^\d+世纪$/,                       // 世纪：20世纪
+            /^\d{2}后$/,                       // 年代特征：90后
+            /^(鼠|牛|虎|兔|龙|蛇|马|羊|猴|鸡|狗|猪)$/, // 生肖
+            /日主(旺|弱|中和)$/,                // 日主强弱
+            /格$/,                             // 格局
+            /^(甲|乙|丙|丁|戊|己|庚|辛|壬|癸)(木|火|土|金|水)日主(旺|弱|中和)$/ // 具体日主强弱
+        ];
+
+        return basicPatterns.some(pattern => pattern.test(content));
     }
 
     /**
@@ -136,6 +199,54 @@ export class LinkService {
             '壬': '水', '癸': '水'
         };
         return map[stem] || '';
+    }
+    /**
+     * 统一收集所有神煞
+     */
+    private collectAllShenSha(baziInfo: any): string[] {
+        const shenShaList: string[] = [];
+
+        // 从主神煞字段收集
+        if (baziInfo.shenSha) {
+            if (Array.isArray(baziInfo.shenSha)) {
+                baziInfo.shenSha.forEach((shenSha: any) => {
+                    if (typeof shenSha === 'string') {
+                        shenShaList.push(shenSha);
+                    } else if (shenSha && shenSha.name) {
+                        shenShaList.push(shenSha.name);
+                    }
+                });
+            } else if (typeof baziInfo.shenSha === 'object') {
+                Object.values(baziInfo.shenSha).forEach((shenShaArray: any) => {
+                    if (Array.isArray(shenShaArray)) {
+                        shenShaArray.forEach((shenSha: any) => {
+                            if (typeof shenSha === 'string') {
+                                shenShaList.push(shenSha);
+                            } else if (shenSha && shenSha.name) {
+                                shenShaList.push(shenSha.name);
+                            }
+                        });
+                    }
+                });
+            }
+        }
+
+        // 从各柱神煞字段收集（不区分柱位）
+        ['yearShenSha', 'monthShenSha', 'dayShenSha', 'hourShenSha'].forEach(key => {
+            const shenShaArray = baziInfo[key];
+            if (Array.isArray(shenShaArray)) {
+                shenShaArray.forEach((shenSha: any) => {
+                    if (typeof shenSha === 'string') {
+                        shenShaList.push(shenSha);
+                    } else if (shenSha && shenSha.name) {
+                        shenShaList.push(shenSha.name);
+                    }
+                });
+            }
+        });
+
+        // 去重并返回
+        return [...new Set(shenShaList)];
     }
 
     /**

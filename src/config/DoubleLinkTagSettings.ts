@@ -75,17 +75,26 @@ export class DoubleLinkTagSettingsManager {
      * 加载设置
      */
     async loadSettings(): Promise<void> {
-        const data = await this.plugin.loadData();
-        const savedSettings = data?.doubleLinkTagSettings || {};
+        try {
+            const data = await this.plugin.loadData();
+            const savedSettings = data?.doubleLinkTagSettings || {};
 
-        // 深度合并配置，确保默认配置不被覆盖
-        this.settings = this.deepMergeSettings(DEFAULT_DOUBLELINK_TAG_SETTINGS, savedSettings);
+            // 深度合并配置，确保默认配置不被覆盖
+            this.settings = this.deepMergeSettings(DEFAULT_DOUBLELINK_TAG_SETTINGS, savedSettings);
 
-        console.log('🔗 双链标签设置加载完成:', {
-            globalEnabled: this.settings.globalEnabled,
-            locationFields: this.settings.globalConfig.doubleLinks.location.fields.length,
-            booksFields: this.settings.globalConfig.doubleLinks.books.fields.length
-        });
+            console.log('🔗 双链标签设置加载完成:', {
+                globalEnabled: this.settings.globalEnabled,
+                locationFields: this.settings.globalConfig.doubleLinks.location.fields.length,
+                booksFields: this.settings.globalConfig.doubleLinks.books.fields.length,
+                shenShaFields: this.settings.globalConfig.doubleLinks.shenSha.fields.length,
+                patternFields: this.settings.globalConfig.doubleLinks.pattern.fields.length
+            });
+        } catch (error) {
+            console.error('❌ 双链标签设置加载失败:', error);
+            // 使用默认设置
+            this.settings = JSON.parse(JSON.stringify(DEFAULT_DOUBLELINK_TAG_SETTINGS));
+            console.log('🔄 已使用默认配置');
+        }
     }
 
     /**
@@ -135,6 +144,26 @@ export class DoubleLinkTagSettingsManager {
                         }
                     }
                 });
+
+                // 处理旧的person配置 - 迁移到职业标签
+                if (savedSettings.globalConfig.doubleLinks.person) {
+                    const personConfig = savedSettings.globalConfig.doubleLinks.person;
+                    if (personConfig.fields && Array.isArray(personConfig.fields)) {
+                        // 过滤掉通用字段，保留职业相关字段
+                        const professionFields = personConfig.fields.filter((field: string) =>
+                            !['人名', '姓名', 'name'].includes(field)
+                        );
+                        if (professionFields.length > 0) {
+                            // 合并到职业标签
+                            const existingFields = result.globalConfig.tags.profession.fields;
+                            result.globalConfig.tags.profession.fields = [
+                                ...existingFields,
+                                ...professionFields.filter((field: string) => !existingFields.includes(field))
+                            ];
+                        }
+                    }
+                    console.log('🔄 已迁移旧的person配置到职业标签');
+                }
             }
 
             // 合并标签配置（包括字段和启用状态）
@@ -152,6 +181,23 @@ export class DoubleLinkTagSettingsManager {
                         }
                     }
                 });
+
+                // 处理旧的pattern标签配置 - 迁移到双链
+                if (savedSettings.globalConfig.tags.pattern) {
+                    const patternConfig = savedSettings.globalConfig.tags.pattern;
+                    if (patternConfig.enabled !== undefined) {
+                        result.globalConfig.doubleLinks.pattern.enabled = patternConfig.enabled;
+                    }
+                    if (patternConfig.fields && Array.isArray(patternConfig.fields)) {
+                        // 合并到双链pattern字段
+                        const existingFields = result.globalConfig.doubleLinks.pattern.fields;
+                        result.globalConfig.doubleLinks.pattern.fields = [
+                            ...existingFields,
+                            ...patternConfig.fields.filter((field: string) => !existingFields.includes(field))
+                        ];
+                    }
+                    console.log('🔄 已迁移旧的pattern标签配置到双链');
+                }
             }
 
             // 合并混合配置
@@ -164,7 +210,8 @@ export class DoubleLinkTagSettingsManager {
             globalEnabled: result.globalEnabled,
             locationFields: result.globalConfig.doubleLinks.location.fields.length,
             booksFields: result.globalConfig.doubleLinks.books.fields.length,
-            personFields: result.globalConfig.doubleLinks.person.fields.length
+            shenShaFields: result.globalConfig.doubleLinks.shenSha.fields.length,
+            patternFields: result.globalConfig.doubleLinks.pattern.fields.length
         });
 
         return result;
@@ -177,7 +224,8 @@ export class DoubleLinkTagSettingsManager {
         console.log('💾 开始保存双链标签设置:', {
             locationFields: this.settings.globalConfig.doubleLinks.location.fields.length,
             booksFields: this.settings.globalConfig.doubleLinks.books.fields.length,
-            personFields: this.settings.globalConfig.doubleLinks.person.fields.length
+            shenShaFields: this.settings.globalConfig.doubleLinks.shenSha.fields.length,
+            patternFields: this.settings.globalConfig.doubleLinks.pattern.fields.length
         });
 
         const data = await this.plugin.loadData() || {};
@@ -278,8 +326,8 @@ export class DoubleLinkTagSettingsManager {
             smartDetection: false,
             showConfigButton: false,
             doubleLinks: {
-                person: { enabled: false, fields: [] },
                 shenSha: { enabled: false, fields: [] },
+                pattern: { enabled: false, fields: [] },
                 location: { enabled: false, fields: [] },
                 books: { enabled: false, fields: [] },
                 custom: { enabled: false, fields: [] }
@@ -288,8 +336,8 @@ export class DoubleLinkTagSettingsManager {
                 profession: { enabled: false, fields: [] },
                 personality: { enabled: false, fields: [] },
                 wuxingStrength: { enabled: false, fields: [] },
-                pattern: { enabled: false, fields: [] },
                 era: { enabled: false, fields: [] },
+            relations: { enabled: false, fields: [] },
                 custom: { enabled: false, fields: [] }
             },
             hybrid: { flexibleFields: [] }
