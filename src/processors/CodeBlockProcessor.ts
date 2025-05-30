@@ -5,7 +5,7 @@ import { InteractiveBaziView } from '../ui/InteractiveBaziView';
 import { SimpleBaziView } from '../ui/SimpleBaziView';
 import { StandardBaziView } from '../ui/StandardBaziView';
 import type BaziPlugin from '../main';
-import { BaziLinkToolbar, BaziTableEnhancer } from '../components/BaziLinkPanel';
+import { BaziLinkToolbar, BaziTableEnhancer } from '../components/BaziLinkToolbar';
 
 /**
  * 代码块处理器
@@ -158,16 +158,24 @@ export class CodeBlockProcessor {
 			console.log('🎨 开始渲染八字命盘');
 			this.renderBaziChart(el, baziInfo, params);
 
-		// 添加双链工具栏（如果有姓名）
-		if (baziInfo.name) {
-			console.log('🔗 发现姓名参数，双链功能可用:', baziInfo.name);
-			new BaziLinkToolbar(el, baziInfo, this.plugin.app);
+		// 添加双链工具栏（如果有姓名且功能启用）
+		if (baziInfo.name && this.plugin.doubleLinkTagSettingsManager) {
+			const globalSettings = this.plugin.doubleLinkTagSettingsManager.getGlobalSettings();
+			if (globalSettings.globalEnabled) {
+				console.log('🔗 发现姓名参数，双链功能可用:', baziInfo.name);
+				new BaziLinkToolbar(el, baziInfo, this.plugin.app, this.plugin.doubleLinkTagSettingsManager);
 
-			// 增强八字表格的双链功能
-			const tables = el.querySelectorAll('table');
-			tables.forEach(table => {
-				BaziTableEnhancer.enhanceTable(table as HTMLTableElement, baziInfo, this.plugin.app);
-			});
+				// 增强八字表格的双链功能
+				const tables = el.querySelectorAll('table');
+				tables.forEach(table => {
+					BaziTableEnhancer.enhanceTable(
+						table as HTMLTableElement,
+						baziInfo,
+						this.plugin.app,
+						this.plugin.doubleLinkTagSettingsManager
+					);
+				});
+			}
 		}
 
 			// 检查是否需要显示性别选择界面

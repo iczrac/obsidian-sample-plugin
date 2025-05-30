@@ -1,6 +1,8 @@
 import { App, TFile } from 'obsidian';
 import { BaziInfo } from '../types/BaziInfo';
 import { TagService } from './TagService';
+import { DoubleLinkTagConfigManager, DoubleLinkTagConfig } from '../config/DoubleLinkTagConfig';
+import { DoubleLinkTagSettingsManager } from '../config/DoubleLinkTagSettings';
 
 /**
  * 双链服务 - 处理八字相关的Obsidian双链功能
@@ -8,14 +10,136 @@ import { TagService } from './TagService';
 export class LinkService {
     private app: App;
     private tagService: TagService;
+    private configManager: DoubleLinkTagConfigManager;
+    private settingsManager: DoubleLinkTagSettingsManager;
 
-    constructor(app: App) {
+    constructor(app: App, settingsManager?: DoubleLinkTagSettingsManager) {
         this.app = app;
         this.tagService = new TagService(app);
+        this.settingsManager = settingsManager || new DoubleLinkTagSettingsManager(app as any);
+        // 使用设置管理器的全局配置初始化配置管理器
+        this.configManager = new DoubleLinkTagConfigManager(this.settingsManager.getGlobalSettings().globalConfig);
     }
 
     /**
-     * 为八字信息生成相关链接
+     * 智能生成双链和标签（基于有效配置）
+     */
+    generateSmartLinksAndTags(baziInfo: BaziInfo, baziId?: string): SmartLinksAndTags {
+        const result: SmartLinksAndTags = {
+            doubleLinks: [],
+            tags: [],
+            suggestions: {
+                doubleLinks: [],
+                tags: []
+            }
+        };
+
+        // 获取有效配置（考虑优先级）
+        const effectiveConfig = this.settingsManager.getEffectiveConfig(baziId);
+
+        // 更新配置管理器使用有效配置
+        this.configManager = new DoubleLinkTagConfigManager(effectiveConfig);
+
+        // 收集所有相关内容
+        const allContent = this.collectBaziContent(baziInfo);
+
+        // 为每个内容项判断使用双链还是标签
+        allContent.forEach(content => {
+            if (this.configManager.shouldUseDoubleLink(content)) {
+                const suggestions = this.configManager.getDoubleLinkSuggestions(content);
+                result.doubleLinks.push(...suggestions);
+                result.suggestions.doubleLinks.push(...suggestions);
+            }
+
+            if (this.configManager.shouldUseTag(content)) {
+                const suggestions = this.configManager.getTagSuggestions(content);
+                result.tags.push(...suggestions);
+                result.suggestions.tags.push(...suggestions);
+            }
+        });
+
+        // 去重
+        result.doubleLinks = [...new Set(result.doubleLinks)];
+        result.tags = [...new Set(result.tags)];
+        result.suggestions.doubleLinks = [...new Set(result.suggestions.doubleLinks)];
+        result.suggestions.tags = [...new Set(result.suggestions.tags)];
+
+        return result;
+    }
+
+    /**
+     * 设置设置管理器
+     */
+    setSettingsManager(settingsManager: DoubleLinkTagSettingsManager): void {
+        this.settingsManager = settingsManager;
+    }
+
+    /**
+     * 收集八字相关的所有内容
+     */
+    private collectBaziContent(baziInfo: BaziInfo): string[] {
+        const content: string[] = [];
+
+        // 人名（双链）
+        if (baziInfo.name) {
+            content.push(baziInfo.name);
+        }
+
+        // 神煞（双链）
+        if (baziInfo.shenSha) {
+            Object.values(baziInfo.shenSha).flat().forEach((shenSha: any) => {
+                if (shenSha && shenSha.name) {
+                    content.push(shenSha.name);
+                }
+            });
+        }
+
+        // 日主强弱（标签）
+        if (baziInfo.dayStem && baziInfo.riZhuStrength) {
+            content.push(`${baziInfo.dayStem}${this.getStemWuXing(baziInfo.dayStem)}日主${baziInfo.riZhuStrength}`);
+        }
+
+        // 格局（标签）
+        if (baziInfo.geJu) {
+            content.push(baziInfo.geJu);
+        }
+
+        // 生肖和年代（标签）
+        if (baziInfo.yearShengXiao) {
+            content.push(baziInfo.yearShengXiao);
+        }
+
+        // 年代特征（标签）
+        if (baziInfo.solarDate) {
+            const year = parseInt(baziInfo.solarDate.split('-')[0]);
+            if (year >= 1950 && year <= 1960) content.push('50后');
+            else if (year >= 1960 && year <= 1970) content.push('60后');
+            else if (year >= 1970 && year <= 1980) content.push('70后');
+            else if (year >= 1980 && year <= 1990) content.push('80后');
+            else if (year >= 1990 && year <= 2000) content.push('90后');
+            else if (year >= 2000 && year <= 2010) content.push('00后');
+            else if (year >= 2010 && year <= 2020) content.push('10后');
+        }
+
+        return content;
+    }
+
+    /**
+     * 获取天干对应的五行
+     */
+    private getStemWuXing(stem: string): string {
+        const map: { [key: string]: string } = {
+            '甲': '木', '乙': '木',
+            '丙': '火', '丁': '火',
+            '戊': '土', '己': '土',
+            '庚': '金', '辛': '金',
+            '壬': '水', '癸': '水'
+        };
+        return map[stem] || '';
+    }
+
+    /**
+     * 为八字信息生成相关链接（保持向后兼容）
      */
     generateBaziLinks(baziInfo: BaziInfo): BaziLinks {
         return {
@@ -544,4 +668,14 @@ interface DayunLinks {
     period: string;
     ganZhi: string;
     analysis: string;
+}
+
+// 新的智能链接和标签类型
+interface SmartLinksAndTags {
+    doubleLinks: string[];
+    tags: string[];
+    suggestions: {
+        doubleLinks: string[];
+        tags: string[];
+    };
 }

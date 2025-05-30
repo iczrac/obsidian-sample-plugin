@@ -5,12 +5,15 @@ import { CommandManager } from './commands/CommandManager';
 import { CodeBlockProcessor } from './processors/CodeBlockProcessor';
 import { DatePickerModal } from './ui/DatePickerModal';
 import { BaziParserModal } from './ui/BaziParserModal';
+import { DoubleLinkTagSettingsManager } from './config/DoubleLinkTagSettings';
+import { DoubleLinkTagSettingTab } from './settings/DoubleLinkTagSettingTab';
 
 /**
  * 八字命盘插件主类
  */
 export default class BaziPlugin extends Plugin {
 	settings: BaziPluginSettings;
+	doubleLinkTagSettingsManager: DoubleLinkTagSettingsManager;
 	private commandManager: CommandManager;
 	private codeBlockProcessor: CodeBlockProcessor;
 
@@ -20,6 +23,11 @@ export default class BaziPlugin extends Plugin {
 		// 加载设置
 		await this.loadSettings();
 		console.log('⚙️ 设置已加载:', this.settings);
+
+		// 初始化双链标签设置管理器
+		this.doubleLinkTagSettingsManager = new DoubleLinkTagSettingsManager(this);
+		await this.doubleLinkTagSettingsManager.loadSettings();
+		console.log('🔗 双链标签设置已加载');
 
 		// 初始化管理器
 		this.commandManager = new CommandManager(this);
@@ -41,6 +49,7 @@ export default class BaziPlugin extends Plugin {
 
 		// 添加设置选项卡
 		this.addSettingTab(new BaziSettingTab(this.app, this));
+		this.addSettingTab(new DoubleLinkTagSettingTab(this.app, this, this.doubleLinkTagSettingsManager));
 
 		// 输出调试信息
 		if (this.settings.debugMode) {
