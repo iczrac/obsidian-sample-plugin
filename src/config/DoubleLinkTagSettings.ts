@@ -94,7 +94,7 @@ export class DoubleLinkTagSettingsManager {
     private deepMergeSettings(defaultSettings: DoubleLinkTagSettings, savedSettings: any): DoubleLinkTagSettings {
         const result = JSON.parse(JSON.stringify(defaultSettings)); // 深拷贝默认设置
 
-        // 只合并基本设置，保持默认的globalConfig
+        // 合并基本设置
         if (savedSettings.globalEnabled !== undefined) {
             result.globalEnabled = savedSettings.globalEnabled;
         }
@@ -107,31 +107,65 @@ export class DoubleLinkTagSettingsManager {
             result.advanced = { ...result.advanced, ...savedSettings.advanced };
         }
 
-        // 如果有保存的globalConfig，只合并自定义字段
+        // 如果有保存的globalConfig，进行完整合并
         if (savedSettings.globalConfig) {
-            // 合并自定义双链字段
-            if (savedSettings.globalConfig.doubleLinks?.custom?.fields) {
-                result.globalConfig.doubleLinks.custom.fields = savedSettings.globalConfig.doubleLinks.custom.fields;
+            // 合并基础设置
+            if (savedSettings.globalConfig.autoSuggest !== undefined) {
+                result.globalConfig.autoSuggest = savedSettings.globalConfig.autoSuggest;
+            }
+            if (savedSettings.globalConfig.smartDetection !== undefined) {
+                result.globalConfig.smartDetection = savedSettings.globalConfig.smartDetection;
+            }
+            if (savedSettings.globalConfig.showConfigButton !== undefined) {
+                result.globalConfig.showConfigButton = savedSettings.globalConfig.showConfigButton;
             }
 
-            // 合并自定义标签字段
-            if (savedSettings.globalConfig.tags?.custom?.fields) {
-                result.globalConfig.tags.custom.fields = savedSettings.globalConfig.tags.custom.fields;
+            // 合并双链配置（包括字段和启用状态）
+            if (savedSettings.globalConfig.doubleLinks) {
+                Object.keys(result.globalConfig.doubleLinks).forEach(key => {
+                    const savedCategory = savedSettings.globalConfig.doubleLinks[key];
+                    if (savedCategory) {
+                        // 合并启用状态
+                        if (savedCategory.enabled !== undefined) {
+                            result.globalConfig.doubleLinks[key].enabled = savedCategory.enabled;
+                        }
+                        // 合并字段（如果有保存的字段，使用保存的；否则保持默认）
+                        if (savedCategory.fields && Array.isArray(savedCategory.fields)) {
+                            result.globalConfig.doubleLinks[key].fields = savedCategory.fields;
+                        }
+                    }
+                });
             }
 
-            // 合并启用状态
-            Object.keys(result.globalConfig.doubleLinks).forEach(key => {
-                if (savedSettings.globalConfig.doubleLinks?.[key]?.enabled !== undefined) {
-                    result.globalConfig.doubleLinks[key].enabled = savedSettings.globalConfig.doubleLinks[key].enabled;
-                }
-            });
+            // 合并标签配置（包括字段和启用状态）
+            if (savedSettings.globalConfig.tags) {
+                Object.keys(result.globalConfig.tags).forEach(key => {
+                    const savedCategory = savedSettings.globalConfig.tags[key];
+                    if (savedCategory) {
+                        // 合并启用状态
+                        if (savedCategory.enabled !== undefined) {
+                            result.globalConfig.tags[key].enabled = savedCategory.enabled;
+                        }
+                        // 合并字段（如果有保存的字段，使用保存的；否则保持默认）
+                        if (savedCategory.fields && Array.isArray(savedCategory.fields)) {
+                            result.globalConfig.tags[key].fields = savedCategory.fields;
+                        }
+                    }
+                });
+            }
 
-            Object.keys(result.globalConfig.tags).forEach(key => {
-                if (savedSettings.globalConfig.tags?.[key]?.enabled !== undefined) {
-                    result.globalConfig.tags[key].enabled = savedSettings.globalConfig.tags[key].enabled;
-                }
-            });
+            // 合并混合配置
+            if (savedSettings.globalConfig.hybrid) {
+                result.globalConfig.hybrid = { ...result.globalConfig.hybrid, ...savedSettings.globalConfig.hybrid };
+            }
         }
+
+        console.log('🔧 配置合并完成:', {
+            globalEnabled: result.globalEnabled,
+            locationFields: result.globalConfig.doubleLinks.location.fields.length,
+            booksFields: result.globalConfig.doubleLinks.books.fields.length,
+            personFields: result.globalConfig.doubleLinks.person.fields.length
+        });
 
         return result;
     }
@@ -140,9 +174,17 @@ export class DoubleLinkTagSettingsManager {
      * 保存设置
      */
     async saveSettings(): Promise<void> {
+        console.log('💾 开始保存双链标签设置:', {
+            locationFields: this.settings.globalConfig.doubleLinks.location.fields.length,
+            booksFields: this.settings.globalConfig.doubleLinks.books.fields.length,
+            personFields: this.settings.globalConfig.doubleLinks.person.fields.length
+        });
+
         const data = await this.plugin.loadData() || {};
         data.doubleLinkTagSettings = this.settings;
         await this.plugin.saveData(data);
+
+        console.log('✅ 双链标签设置保存完成');
     }
 
     /**
@@ -203,7 +245,7 @@ export class DoubleLinkTagSettingsManager {
      * 获取全局设置
      */
     getGlobalSettings(): DoubleLinkTagSettings {
-        return { ...this.settings };
+        return this.settings; // 返回原始引用，允许直接修改
     }
 
     /**
@@ -232,6 +274,9 @@ export class DoubleLinkTagSettingsManager {
      */
     private createEmptyConfig(): DoubleLinkTagConfig {
         return {
+            autoSuggest: false,
+            smartDetection: false,
+            showConfigButton: false,
             doubleLinks: {
                 person: { enabled: false, fields: [] },
                 shenSha: { enabled: false, fields: [] },

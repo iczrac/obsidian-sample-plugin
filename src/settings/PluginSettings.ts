@@ -1,5 +1,7 @@
-import { App, PluginSettingTab, Setting, Notice, Plugin } from 'obsidian';
+import { App, PluginSettingTab, Setting, Notice, Plugin, Modal } from 'obsidian';
 import { BaziPluginSettings, BaziDisplayStyle } from '../types/PluginTypes';
+import { DoubleLinkTagSettingsManager } from '../config/DoubleLinkTagSettings';
+import { DEFAULT_DOUBLELINK_TAG_CONFIG } from '../config/DoubleLinkTagConfig';
 
 /**
  * 默认设置
@@ -24,10 +26,12 @@ export const DEFAULT_SETTINGS: BaziPluginSettings = {
  */
 export class BaziSettingTab extends PluginSettingTab {
 	plugin: Plugin & { settings: BaziPluginSettings; saveSettings(): Promise<void> };
+	doubleLinkTagSettingsManager: DoubleLinkTagSettingsManager;
 
-	constructor(app: App, plugin: Plugin & { settings: BaziPluginSettings; saveSettings(): Promise<void> }) {
+	constructor(app: App, plugin: Plugin & { settings: BaziPluginSettings; saveSettings(): Promise<void> }, doubleLinkTagSettingsManager: DoubleLinkTagSettingsManager) {
 		super(app, plugin);
 		this.plugin = plugin;
+		this.doubleLinkTagSettingsManager = doubleLinkTagSettingsManager;
 	}
 
 	display(): void {
@@ -178,6 +182,9 @@ export class BaziSettingTab extends PluginSettingTab {
 					});
 			});
 
+		// 添加双链和标签设置
+		this.addDoubleLinkTagSettings(containerEl);
+
 		// 添加使用说明（放在设置后面）
 		this.addUsageInstructions(containerEl);
 	}
@@ -203,6 +210,369 @@ export class BaziSettingTab extends PluginSettingTab {
 				console.log(`🎯 第 ${index + 1} 个八字视图没有找到实例或更新方法`);
 			}
 		});
+	}
+
+	/**
+	 * 添加双链和标签设置
+	 */
+	private addDoubleLinkTagSettings(containerEl: HTMLElement): void {
+		// 双链和标签设置标题
+		containerEl.createEl('h2', {text: '🔗 双链和标签设置'});
+
+		// 全局启用开关
+		new Setting(containerEl)
+			.setName('启用双链和标签功能')
+			.setDesc('全局开关，控制是否启用双链和标签功能')
+			.addToggle(toggle => toggle
+				.setValue(this.doubleLinkTagSettingsManager.getGlobalSettings().globalEnabled)
+				.onChange(async (value) => {
+					const settings = this.doubleLinkTagSettingsManager.getGlobalSettings();
+					settings.globalEnabled = value;
+					await this.doubleLinkTagSettingsManager.saveSettings();
+					new Notice(value ? '✅ 双链和标签功能已启用' : '❌ 双链和标签功能已禁用');
+				})
+			);
+
+		// 基础设置
+		containerEl.createEl('h3', {text: '📋 基础设置'});
+
+		const globalConfig = this.doubleLinkTagSettingsManager.getGlobalSettings().globalConfig;
+
+		// 自动建议
+		new Setting(containerEl)
+			.setName('自动建议')
+			.setDesc('根据八字内容自动建议相关的双链和标签')
+			.addToggle(toggle => toggle
+				.setValue(globalConfig.autoSuggest)
+				.onChange(async (value) => {
+					globalConfig.autoSuggest = value;
+					await this.doubleLinkTagSettingsManager.saveSettings();
+				})
+			);
+
+		// 智能检测
+		new Setting(containerEl)
+			.setName('智能检测')
+			.setDesc('智能检测八字内容，自动判断使用双链还是标签')
+			.addToggle(toggle => toggle
+				.setValue(globalConfig.smartDetection)
+				.onChange(async (value) => {
+					globalConfig.smartDetection = value;
+					await this.doubleLinkTagSettingsManager.saveSettings();
+				})
+			);
+
+		// 显示配置按钮
+		new Setting(containerEl)
+			.setName('显示配置按钮')
+			.setDesc('在八字命盘右上角显示双链标签配置按钮')
+			.addToggle(toggle => toggle
+				.setValue(globalConfig.showConfigButton)
+				.onChange(async (value) => {
+					globalConfig.showConfigButton = value;
+					await this.doubleLinkTagSettingsManager.saveSettings();
+				})
+			);
+
+		// 双链设置
+		containerEl.createEl('h3', {text: '🔗 双链设置（专属名称）'});
+
+		console.log('🔍 双链配置检查:', {
+			person: globalConfig.doubleLinks.person,
+			shenSha: globalConfig.doubleLinks.shenSha,
+			location: globalConfig.doubleLinks.location,
+			books: globalConfig.doubleLinks.books
+		});
+
+		this.createCategorySettings(containerEl, '人物相关', 'person', globalConfig.doubleLinks.person);
+		this.createCategorySettings(containerEl, '神煞相关', 'shenSha', globalConfig.doubleLinks.shenSha);
+		this.createCategorySettings(containerEl, '地名相关', 'location', globalConfig.doubleLinks.location);
+		this.createCategorySettings(containerEl, '书籍典籍', 'books', globalConfig.doubleLinks.books);
+
+		// 标签设置
+		containerEl.createEl('h3', {text: '🏷️ 标签设置（定性特征）'});
+
+		this.createCategorySettings(containerEl, '职业类型', 'profession', globalConfig.tags.profession);
+		this.createCategorySettings(containerEl, '五行强弱', 'wuxingStrength', globalConfig.tags.wuxingStrength);
+		this.createCategorySettings(containerEl, '格局类型', 'pattern', globalConfig.tags.pattern);
+		this.createCategorySettings(containerEl, '时代特征', 'era', globalConfig.tags.era);
+
+		// 管理功能
+		containerEl.createEl('h3', {text: '🛠️ 管理功能'});
+
+		// 重置配置
+		new Setting(containerEl)
+			.setName('重置为默认配置')
+			.setDesc('⚠️ 将所有设置重置为默认值，此操作不可撤销')
+			.addButton(button => button
+				.setButtonText('重置')
+				.setWarning()
+				.onClick(async () => {
+					if (confirm('确定要重置所有配置吗？此操作不可撤销。')) {
+						this.doubleLinkTagSettingsManager.resetToDefault();
+						await this.doubleLinkTagSettingsManager.saveSettings();
+						new Notice('✅ 配置已重置为默认值');
+						this.display();
+					}
+				})
+			)
+			.addButton(button => button
+				.setButtonText('🔄 强制重新加载')
+				.onClick(async () => {
+					await this.doubleLinkTagSettingsManager.loadSettings();
+					new Notice('✅ 配置已重新加载');
+					this.display();
+				})
+			);
+	}
+
+	/**
+	 * 创建分类设置
+	 */
+	private createCategorySettings(containerEl: HTMLElement, name: string, key: string, config: any): void {
+		const setting = new Setting(containerEl)
+			.setName(name)
+			.setDesc(`启用${name}相关的字段识别`)
+			.addToggle(toggle => toggle
+				.setValue(config.enabled)
+				.onChange(async (value) => {
+					config.enabled = value;
+					await this.doubleLinkTagSettingsManager.saveSettings();
+				})
+			);
+
+		// 显示字段数量
+		const fieldCount = config.fields.length;
+		setting.descEl.createSpan({
+			text: ` (${fieldCount} 个字段)`,
+			cls: 'setting-item-description'
+		});
+
+		// 添加查看/编辑字段按钮
+		setting.addButton(button => button
+			.setButtonText('查看字段')
+			.onClick(() => {
+				console.log(`🔍 查看字段 - 分类: ${name}, 字段数量: ${config.fields?.length || 0}`, config.fields);
+
+				// 确保字段数组存在
+				const fields = config.fields || [];
+
+				this.showFieldsModal(name, fields, (newFields) => {
+					console.log(`💾 保存字段 - 分类: ${name}, 新字段数量: ${newFields.length}`, newFields);
+
+					// 直接更新配置对象
+					config.fields = newFields;
+
+					// 保存到设置管理器
+					this.doubleLinkTagSettingsManager.saveSettings().then(() => {
+						console.log(`✅ 字段保存成功 - 分类: ${name}`);
+						this.display(); // 刷新界面
+					}).catch(error => {
+						console.error(`❌ 字段保存失败 - 分类: ${name}:`, error);
+					});
+				});
+			})
+		);
+	}
+
+	/**
+	 * 显示字段编辑模态框
+	 */
+	private showFieldsModal(categoryName: string, fields: string[], onSave: (fields: string[]) => void): void {
+		console.log(`🔍 显示字段模态框 - 分类: ${categoryName}, 接收到的字段:`, fields);
+
+		const modal = new Modal(this.app);
+		modal.setTitle(`管理 ${categoryName} 字段`);
+		modal.contentEl.style.width = '800px';
+		modal.contentEl.style.maxWidth = '90vw';
+
+		const { contentEl } = modal;
+		contentEl.empty();
+
+		// 获取默认字段
+		let defaultFields: string[] = [];
+		if (categoryName.includes('人物')) {
+			defaultFields = [...DEFAULT_DOUBLELINK_TAG_CONFIG.doubleLinks.person.fields];
+		} else if (categoryName.includes('神煞')) {
+			defaultFields = [...DEFAULT_DOUBLELINK_TAG_CONFIG.doubleLinks.shenSha.fields];
+		} else if (categoryName.includes('地名')) {
+			defaultFields = [...DEFAULT_DOUBLELINK_TAG_CONFIG.doubleLinks.location.fields];
+		} else if (categoryName.includes('书籍')) {
+			defaultFields = [...DEFAULT_DOUBLELINK_TAG_CONFIG.doubleLinks.books.fields];
+		} else if (categoryName.includes('职业')) {
+			defaultFields = [...DEFAULT_DOUBLELINK_TAG_CONFIG.tags.profession.fields];
+		} else if (categoryName.includes('五行')) {
+			defaultFields = [...DEFAULT_DOUBLELINK_TAG_CONFIG.tags.wuxingStrength.fields];
+		} else if (categoryName.includes('格局')) {
+			defaultFields = [...DEFAULT_DOUBLELINK_TAG_CONFIG.tags.pattern.fields];
+		} else if (categoryName.includes('时代')) {
+			defaultFields = [...DEFAULT_DOUBLELINK_TAG_CONFIG.tags.era.fields];
+		}
+
+		console.log(`🔍 默认字段加载 - 分类: ${categoryName}, 默认字段数量: ${defaultFields.length}`, defaultFields);
+		console.log(`🔍 DEFAULT_DOUBLELINK_TAG_CONFIG检查:`, DEFAULT_DOUBLELINK_TAG_CONFIG);
+		console.log(`🔍 person字段检查:`, DEFAULT_DOUBLELINK_TAG_CONFIG.doubleLinks.person.fields);
+
+		// 分离默认字段和自定义字段
+		const customFields = fields.filter(field => !defaultFields.includes(field));
+
+		// 创建主容器
+		const mainContainer = contentEl.createDiv({
+			attr: { style: 'display: flex; gap: 15px; height: 450px; margin-bottom: 15px;' }
+		});
+
+		// 左侧：默认字段（只读）
+		const defaultContainer = mainContainer.createDiv({
+			attr: { style: 'flex: 1; display: flex; flex-direction: column; border: 1px solid var(--background-modifier-border); border-radius: 8px; padding: 12px; background-color: var(--background-primary);' }
+		});
+
+		const defaultHeader = defaultContainer.createDiv({
+			attr: { style: 'display: flex; align-items: center; margin-bottom: 8px;' }
+		});
+
+		defaultHeader.createEl('span', {
+			text: '📋',
+			attr: { style: 'font-size: 16px; margin-right: 6px;' }
+		});
+
+		defaultHeader.createEl('h3', {
+			text: `默认字段 (${defaultFields.length}个)`,
+			attr: { style: 'margin: 0; color: var(--text-normal); font-size: 14px; font-weight: 600;' }
+		});
+
+		const defaultDescription = defaultContainer.createDiv({
+			cls: 'setting-item-description',
+			attr: { style: 'margin-bottom: 8px; font-size: 12px;' }
+		});
+		defaultDescription.innerHTML = `系统预设的${categoryName}字段，不可编辑`;
+
+		const defaultTextarea = defaultContainer.createEl('textarea', {
+			attr: {
+				readonly: 'true',
+				style: 'flex: 1; width: 100%; font-family: var(--font-monospace); font-size: 11px; background-color: var(--background-secondary); color: var(--text-muted); border: 1px solid var(--background-modifier-border); border-radius: 4px; padding: 8px; resize: none; line-height: 1.4;'
+			}
+		});
+
+		// 设置textarea的值
+		defaultTextarea.value = defaultFields.join('\n');
+		console.log(`🔍 设置默认字段textarea值:`, defaultTextarea.value);
+
+		// 右侧：自定义字段（可编辑）
+		const customContainer = mainContainer.createDiv({
+			attr: { style: 'flex: 1; display: flex; flex-direction: column; border: 1px solid var(--interactive-accent); border-radius: 8px; padding: 12px; background-color: var(--background-primary);' }
+		});
+
+		const customHeader = customContainer.createDiv({
+			attr: { style: 'display: flex; align-items: center; margin-bottom: 8px;' }
+		});
+
+		customHeader.createEl('span', {
+			text: '✏️',
+			attr: { style: 'font-size: 16px; margin-right: 6px;' }
+		});
+
+		customHeader.createEl('h3', {
+			text: `自定义字段`,
+			attr: { style: 'margin: 0; color: var(--interactive-accent); font-size: 14px; font-weight: 600;' }
+		});
+
+		const customDescription = customContainer.createDiv({
+			cls: 'setting-item-description',
+			attr: { style: 'margin-bottom: 8px; font-size: 12px;' }
+		});
+		customDescription.innerHTML = `您添加的自定义${categoryName}字段，每行一个`;
+
+		const customTextarea = customContainer.createEl('textarea', {
+			attr: {
+				placeholder: '在此添加自定义字段\n每行一个字段\n例如：\n自定义人物1\n自定义人物2',
+				style: 'flex: 1; width: 100%; font-family: var(--font-monospace); font-size: 13px; border: 1px solid var(--background-modifier-border); border-radius: 4px; padding: 8px; resize: none; line-height: 1.4; background-color: var(--background-primary);'
+			}
+		});
+
+		// 设置textarea的值
+		customTextarea.value = customFields.join('\n');
+		console.log(`🔍 设置自定义字段textarea值:`, customTextarea.value);
+
+		// 添加字段统计
+		const statsContainer = contentEl.createDiv({
+			attr: { style: 'padding: 12px; background-color: var(--background-secondary); border-radius: 6px; border: 1px solid var(--background-modifier-border);' }
+		});
+
+		const statsDiv = statsContainer.createDiv({
+			cls: 'field-stats',
+			attr: { style: 'font-size: 13px; color: var(--text-normal);' }
+		});
+
+		const updateStats = () => {
+			const currentCustomFields = customTextarea.value.split('\n').filter(field => field.trim());
+			const totalFields = defaultFields.length + currentCustomFields.length;
+			statsDiv.innerHTML = `
+				<div style="display: flex; justify-content: space-between; align-items: center;">
+					<span><strong>📊 字段统计</strong></span>
+					<span style="color: var(--text-muted);">
+						默认: <strong style="color: var(--text-accent);">${defaultFields.length}</strong> |
+						自定义: <strong style="color: var(--interactive-accent);">${currentCustomFields.length}</strong> |
+						总计: <strong style="color: var(--text-normal);">${totalFields}</strong>
+					</span>
+				</div>
+			`;
+		};
+
+		customTextarea.addEventListener('input', updateStats);
+		updateStats();
+
+		// 按钮容器
+		const buttonContainer = contentEl.createDiv({
+			cls: 'modal-button-container',
+			attr: { style: 'display: flex; gap: 10px; justify-content: flex-end; margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--background-modifier-border);' }
+		});
+
+		// 保存按钮
+		const saveButton = buttonContainer.createEl('button', {
+			text: '💾 保存',
+			cls: 'mod-cta',
+			attr: { style: 'padding: 8px 16px; font-size: 13px;' }
+		});
+
+		saveButton.addEventListener('click', () => {
+			const newCustomFields = customTextarea.value.split('\n')
+				.map(field => field.trim())
+				.filter(field => field.length > 0);
+
+			// 合并默认字段和自定义字段
+			const allFields = [...defaultFields, ...newCustomFields];
+
+			onSave(allFields);
+			modal.close();
+			new Notice(`✅ ${categoryName}字段已更新 (默认${defaultFields.length}个 + 自定义${newCustomFields.length}个)`);
+		});
+
+		// 清空自定义字段按钮
+		const clearButton = buttonContainer.createEl('button', {
+			text: '🗑️ 清空',
+			cls: 'mod-warning',
+			attr: { style: 'padding: 8px 16px; font-size: 13px;' }
+		});
+
+		clearButton.addEventListener('click', () => {
+			if (confirm(`确定要清空所有自定义${categoryName}字段吗？`)) {
+				customTextarea.value = '';
+				updateStats();
+			}
+		});
+
+		// 取消按钮
+		const cancelButton = buttonContainer.createEl('button', {
+			text: '❌ 取消',
+			cls: 'mod-secondary',
+			attr: { style: 'padding: 8px 16px; font-size: 13px;' }
+		});
+
+		cancelButton.addEventListener('click', () => {
+			modal.close();
+		});
+
+		modal.open();
 	}
 
 	/**

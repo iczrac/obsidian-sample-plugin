@@ -6,7 +6,6 @@ import { CodeBlockProcessor } from './processors/CodeBlockProcessor';
 import { DatePickerModal } from './ui/DatePickerModal';
 import { BaziParserModal } from './ui/BaziParserModal';
 import { DoubleLinkTagSettingsManager } from './config/DoubleLinkTagSettings';
-import { DoubleLinkTagSettingTab } from './settings/DoubleLinkTagSettingTab';
 
 /**
  * 八字命盘插件主类
@@ -48,8 +47,7 @@ export default class BaziPlugin extends Plugin {
 		this.setupRibbonIcon();
 
 		// 添加设置选项卡
-		this.addSettingTab(new BaziSettingTab(this.app, this));
-		this.addSettingTab(new DoubleLinkTagSettingTab(this.app, this, this.doubleLinkTagSettingsManager));
+		this.addSettingTab(new BaziSettingTab(this.app, this, this.doubleLinkTagSettingsManager));
 
 		// 输出调试信息
 		if (this.settings.debugMode) {

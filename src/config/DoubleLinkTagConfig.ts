@@ -4,6 +4,11 @@
  */
 
 export interface DoubleLinkTagConfig {
+    // 基础设置
+    autoSuggest: boolean;
+    smartDetection: boolean;
+    showConfigButton: boolean;
+
     // 双链配置 - 适合有专属名的内容
     doubleLinks: {
         // 人物相关双链
@@ -78,6 +83,11 @@ export interface DoubleLinkTagConfig {
  * 默认配置
  */
 export const DEFAULT_DOUBLELINK_TAG_CONFIG: DoubleLinkTagConfig = {
+    // 基础设置
+    autoSuggest: true,
+    smartDetection: true,
+    showConfigButton: true,
+
     doubleLinks: {
         person: {
             enabled: true,
@@ -228,7 +238,7 @@ export class DoubleLinkTagConfigManager {
      */
     shouldUseDoubleLink(content: string): boolean {
         const allDoubleLinkFields = this.getAllDoubleLinkFields();
-        return allDoubleLinkFields.some(field => 
+        return allDoubleLinkFields.some(field =>
             content.includes(field) || this.isExactMatch(content, field)
         );
     }
@@ -238,7 +248,7 @@ export class DoubleLinkTagConfigManager {
      */
     shouldUseTag(content: string): boolean {
         const allTagFields = this.getAllTagFields();
-        return allTagFields.some(field => 
+        return allTagFields.some(field =>
             content.includes(field) || this.isExactMatch(content, field)
         );
     }
@@ -248,7 +258,7 @@ export class DoubleLinkTagConfigManager {
      */
     getDoubleLinkSuggestions(content: string): string[] {
         const suggestions: string[] = [];
-        
+
         Object.entries(this.config.doubleLinks).forEach(([category, config]) => {
             if (config.enabled) {
                 config.fields.forEach(field => {
@@ -267,7 +277,7 @@ export class DoubleLinkTagConfigManager {
      */
     getTagSuggestions(content: string): string[] {
         const suggestions: string[] = [];
-        
+
         Object.entries(this.config.tags).forEach(([category, config]) => {
             if (config.enabled) {
                 config.fields.forEach(field => {
@@ -322,6 +332,9 @@ export class DoubleLinkTagConfigManager {
     private mergeConfig(defaultConfig: DoubleLinkTagConfig, userConfig: Partial<DoubleLinkTagConfig>): DoubleLinkTagConfig {
         // 深度合并配置对象
         return {
+            autoSuggest: userConfig.autoSuggest ?? defaultConfig.autoSuggest,
+            smartDetection: userConfig.smartDetection ?? defaultConfig.smartDetection,
+            showConfigButton: userConfig.showConfigButton ?? defaultConfig.showConfigButton,
             doubleLinks: { ...defaultConfig.doubleLinks, ...userConfig.doubleLinks },
             tags: { ...defaultConfig.tags, ...userConfig.tags },
             hybrid: { ...defaultConfig.hybrid, ...userConfig.hybrid }
