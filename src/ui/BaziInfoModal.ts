@@ -1,6 +1,6 @@
 import { App, Modal, Setting } from 'obsidian';
 import { BaziInfo } from '../types/BaziInfo';
-import { BaziService } from '../services/BaziService';
+import { BaziHTMLRenderer } from '../services/bazi/BaziHTMLRenderer';
 
 /**
  * 八字信息展示模态框
@@ -25,7 +25,7 @@ export class BaziInfoModal extends Modal {
 
     // 生成HTML内容
     const id = 'bazi-view-' + Math.random().toString(36).substring(2, 9);
-    const html = BaziService.generateBaziHTML(this.baziInfo, id);
+    const html = BaziHTMLRenderer.generateBaziHTML(this.baziInfo);
 
     // 渲染HTML
     infoContainer.innerHTML = html;

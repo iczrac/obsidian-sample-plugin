@@ -1,5 +1,5 @@
 import { BaziInfo } from 'src/types/BaziInfo';
-import { ShenShaService } from 'src/services/ShenShaService';
+import { ShenShaExplanationService } from 'src/services/ShenShaExplanationService';
 import { LinkService } from 'src/services/LinkService';
 import { Notice, App } from 'obsidian';
 
@@ -1662,7 +1662,7 @@ export class BaziView {
    * @returns 神煞信息
    */
   private getShenShaInfo(shenSha: string) {
-    return ShenShaService.getShenShaInfo(shenSha);
+    return ShenShaExplanationService.getShenShaInfo(shenSha);
   }
 
   /**
@@ -1678,7 +1678,7 @@ export class BaziView {
     console.log(`处理后的神煞名称: ${pureShenSha}`);
 
     // 获取神煞详细解释
-    const shenShaInfo = ShenShaService.getShenShaExplanation(pureShenSha);
+    const shenShaInfo = ShenShaExplanationService.getShenShaInfo(pureShenSha);
     console.log(`神煞信息:`, shenShaInfo);
 
     if (!shenShaInfo) {
@@ -1750,13 +1750,13 @@ export class BaziView {
 
     // 创建描述
     const description = document.createElement('div');
-    description.textContent = shenShaInfo.description;
+    description.textContent = shenShaInfo.explanation;
     description.style.marginBottom = '10px';
     modal.appendChild(description);
 
     // 创建详细描述
     const detailDescription = document.createElement('div');
-    detailDescription.textContent = shenShaInfo.detailDescription;
+    detailDescription.textContent = shenShaInfo.influence;
     detailDescription.style.marginBottom = '10px';
     modal.appendChild(detailDescription);
 
@@ -1768,11 +1768,11 @@ export class BaziView {
       modal.appendChild(calculation);
     }
 
-    // 创建影响
-    if (shenShaInfo.influence && shenShaInfo.influence.length > 0) {
-      const influence = document.createElement('div');
-      influence.innerHTML = `<strong>影响:</strong> ${shenShaInfo.influence.join(', ')}`;
-      modal.appendChild(influence);
+    // 创建建议
+    if (shenShaInfo.advice) {
+      const advice = document.createElement('div');
+      advice.innerHTML = `<strong>建议:</strong> ${shenShaInfo.advice}`;
+      modal.appendChild(advice);
     }
 
     // 添加可复制的内容
@@ -1795,12 +1795,10 @@ export class BaziView {
     const copyText = [
       `神煞: ${shenShaInfo.name}`,
       `类型: ${shenShaInfo.type}`,
-      shenShaInfo.description ? `描述: ${shenShaInfo.description}` : '',
-      shenShaInfo.detailDescription ? `详细描述: ${shenShaInfo.detailDescription}` : '',
+      shenShaInfo.explanation ? `解释: ${shenShaInfo.explanation}` : '',
+      shenShaInfo.influence ? `影响: ${shenShaInfo.influence}` : '',
       shenShaInfo.calculation ? `计算方法: ${shenShaInfo.calculation}` : '',
-      shenShaInfo.influence && shenShaInfo.influence.length > 0
-        ? `影响: ${shenShaInfo.influence.join(', ')}`
-        : ''
+      shenShaInfo.advice ? `建议: ${shenShaInfo.advice}` : ''
     ].filter(Boolean).join('\n');
 
     // 创建可复制的文本元素

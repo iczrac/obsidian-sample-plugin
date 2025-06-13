@@ -5,10 +5,10 @@ import { BaziService } from '../services/BaziService';
  * 八字解析模态框
  */
 export class BaziParserModal extends Modal {
-  private baziString: string = '';
+  private baziString = '';
   private onParsed: (baziInfo: any) => void;
 
-  constructor(app: App, initialBazi: string = '', onParsed: (baziInfo: any) => void) {
+  constructor(app: App, initialBazi = '', onParsed: (baziInfo: any) => void) {
     super(app);
     this.baziString = initialBazi;
     this.onParsed = onParsed;
@@ -119,6 +119,6 @@ export class BaziParserModal extends Modal {
   }
 
   // 添加性别和年份属性
-  private gender: string = ''; // 默认为空
+  private gender = ''; // 默认为空
   private specifiedYear: number | undefined;
 }

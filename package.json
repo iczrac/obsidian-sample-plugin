@@ -7,7 +7,15 @@
 		"dev": "node esbuild.config.mjs",
 		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
 		"deploy": "npm run build && ./deploy.sh",
-		"version": "node version-bump.mjs && git add manifest.json versions.json"
+		"version": "node version-bump.mjs && git add manifest.json versions.json",
+		"clean": "rm -rf dist && rm -f main.js main.js.map",
+		"lint": "eslint src --ext .ts",
+		"lint:fix": "eslint src --ext .ts --fix",
+		"type-check": "tsc --noEmit",
+		"test": "echo \"No tests specified\" && exit 0",
+		"watch": "node esbuild.config.mjs --watch",
+		"prebuild": "npm run clean && npm run lint",
+		"postbuild": "echo \"Build completed successfully!\""
 	},
 	"keywords": [],
 	"author": "",

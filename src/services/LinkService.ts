@@ -710,7 +710,7 @@ ${allTags.join(' ')}
         const year = baziInfo.solarDate?.split('-')[0] || '未知年份';
         const yearFileName = `${year}年生人.md`;
 
-        let content = `# ${year}年生人
+        const content = `# ${year}年生人
 
 ## 本年生人列表
 - [[${name}]]
@@ -755,7 +755,7 @@ ${allTags.join(' ')}
      * 添加人物到神煞案例
      */
     private async addPersonToShenShaCase(fileName: string, name: string, shenShaName: string): Promise<void> {
-        let content = `# ${shenShaName}案例集
+        const content = `# ${shenShaName}案例集
 
 ## 案例列表
 - [[${name}]]

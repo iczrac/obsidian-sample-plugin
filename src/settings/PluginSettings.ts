@@ -329,7 +329,7 @@ export class BaziSettingTab extends PluginSettingTab {
 	/**
 	 * 创建分类设置
 	 */
-	private createCategorySettings(containerEl: HTMLElement, name: string, key: string, config: any, showFieldsButton: boolean = true): void {
+	private createCategorySettings(containerEl: HTMLElement, name: string, key: string, config: any, showFieldsButton = true): void {
 		const setting = new Setting(containerEl)
 			.setName(name)
 			.setDesc(`启用${name}相关的字段识别`)

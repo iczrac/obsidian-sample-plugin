@@ -1,0 +1,29 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "env": {
+    "node": true,
+    "browser": true,
+    "es6": true
+  },
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "extends": [
+    "eslint:recommended"
+  ],
+  "parserOptions": {
+    "sourceType": "module"
+  },
+  "rules": {
+    "@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/no-var-requires": "off",
+    "no-dupe-else-if": "off",
+    "prefer-const": "off",
+    "no-prototype-builtins": "off",
+    "@typescript-eslint/ban-ts-comment": "off",
+    "no-unused-vars": "off"
+  }
+}

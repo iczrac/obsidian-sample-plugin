@@ -1,4 +1,4 @@
-import { App, Plugin, MarkdownView, Notice } from 'obsidian';
+import { Plugin, MarkdownView, Notice } from 'obsidian';
 import { BaziPluginSettings } from './types/PluginTypes';
 import { DEFAULT_SETTINGS, BaziSettingTab } from './settings/PluginSettings';
 import { CommandManager } from './commands/CommandManager';
@@ -165,8 +165,8 @@ export default class BaziPlugin extends Plugin {
 			let startLine = -1;
 			let endLine = -1;
 			let blockLanguage = '';
-			let foundBlocks = 0;
-			let blockContents: {start: number, end: number, content: string}[] = [];
+			const foundBlocks = 0;
+			const blockContents: {start: number, end: number, content: string}[] = [];
 
 			for (let i = 0; i < lines.length; i++) {
 				const line = lines[i];
@@ -180,8 +180,6 @@ export default class BaziPlugin extends Plugin {
 					endLine = i;
 
 					if (blockLanguage === 'bazi') {
-						foundBlocks++;
-
 						// 收集代码块内容
 						let blockContent = '';
 						for (let j = startLine + 1; j < endLine; j++) {

@@ -81,7 +81,8 @@ export class CommandManager {
 					if (baziPattern.test(cleanedBazi)) {
 						// 直接解析八字，获取可能的年份
 						try {
-							const baziInfo = BaziService.parseBaziString(cleanedBazi);
+							// 验证八字格式
+							BaziService.parseBaziString(cleanedBazi);
 
 							// 构建代码块内容
 							let codeBlockContent = `\`\`\`bazi\nbazi: ${cleanedBazi}\n`;

@@ -6,10 +6,10 @@ import { BaziService } from '../services/BaziService';
  */
 export class DatePickerModal extends Modal {
   private date: moment.Moment;
-  private hour: number = 0;
+  private hour = 0;
   private onSubmit: (baziInfo: any) => void;
-  private gender: string = ''; // 性别，默认为空
-  private baziSect: string = '2'; // 默认为流派2
+  private gender = ''; // 性别，默认为空
+  private baziSect = '2'; // 默认为流派2
 
   constructor(app: App, onSubmit: (baziInfo: any) => void) {
     super(app);

@@ -26,8 +26,8 @@ export class GeJuTrendChart {
     container: HTMLElement,
     trendData: TrendPoint[],
     keyYears: { year: number; event: string; level: 'good' | 'bad' | 'neutral' | 'mixed' }[],
-    width: number = 800,
-    height: number = 400
+    width = 800,
+    height = 400
   ) {
     this.container = container;
     this.trendData = trendData;

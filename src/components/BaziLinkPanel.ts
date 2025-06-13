@@ -1,9 +1,7 @@
-import { App, Modal, Setting, Notice } from 'obsidian';
+import { App, Modal, Notice } from 'obsidian';
 import { BaziInfo } from '../types/BaziInfo';
 import { LinkService } from '../services/LinkService';
-import { DoubleLinkTagConfigManager } from '../config/DoubleLinkTagConfig';
 import { DoubleLinkTagSettingsManager } from '../config/DoubleLinkTagSettings';
-import { BaziConfigPanel } from './BaziConfigPanel';
 
 /**
  * 八字双链面板 - 显示和管理八字相关的双链
@@ -165,8 +163,8 @@ export class BaziLinkPanel extends Modal {
         }
 
         // 使用ShenShaService获取神煞组合分析
-        const { ShenShaService } = require('../services/ShenShaService');
-        const combinationAnalysis = ShenShaService.getShenShaCombinationAnalysis(allShenSha);
+        const { ShenShaExplanationService } = require('../services/ShenShaExplanationService');
+        const combinationAnalysis = ShenShaExplanationService.getShenShaCombinationAnalysis(allShenSha);
 
         // 转换为双链格式
         combinationAnalysis.forEach((analysis: any) => {

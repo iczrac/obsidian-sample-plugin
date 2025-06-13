@@ -2,7 +2,7 @@
  * 格局趋势分析服务
  * 提供格局随大运、流年变化的趋势分析
  */
-import { GeJuService } from './GeJuService';
+import { GeJuExplanationService } from './GeJuExplanationService';
 
 export interface TrendPoint {
   year: number;
@@ -37,7 +37,7 @@ export class GeJuTrendService {
     riZhuWuXing: string,
     birthYear: number,
     daYunList: { ganZhi: string; startYear: number; endYear: number }[],
-    years: number = 20
+    years = 20
   ): GeJuTrendData {
     if (!geJu || !riZhuWuXing || !daYunList || daYunList.length === 0) {
       return {
@@ -168,7 +168,7 @@ export class GeJuTrendService {
     return daYunList
       .filter(daYun => daYun.endYear >= startYear && daYun.startYear <= endYear)
       .map(daYun => {
-        const effect = GeJuService.analyzeDaYunEffect(geJu, daYun.ganZhi, riZhuWuXing);
+        const effect = this.analyzeDaYunEffect(geJu, daYun.ganZhi, riZhuWuXing);
         return {
           ganZhi: daYun.ganZhi,
           effect: effect.effect,
@@ -206,7 +206,7 @@ export class GeJuTrendService {
     // 添加大运交接年
     daYunList.forEach((daYun, index) => {
       if (daYun.startYear >= startYear && daYun.startYear <= endYear) {
-        const effect = GeJuService.analyzeDaYunEffect(geJu, daYun.ganZhi, riZhuWuXing);
+        const effect = this.analyzeDaYunEffect(geJu, daYun.ganZhi, riZhuWuXing);
         let event = '';
         if (index === 0) {
           event = `进入${daYun.ganZhi}大运，${effect.effect}`;
@@ -234,7 +234,7 @@ export class GeJuTrendService {
 
       // 模拟一些重要流年（例如，每5年一个重要节点）
       if ((year - startYear) % 5 === 0 && !keyYears.some(key => key.year === year)) {
-        const daYunEffect = GeJuService.analyzeDaYunEffect(
+        const daYunEffect = this.analyzeDaYunEffect(
           geJu,
           currentDaYun.ganZhi,
           riZhuWuXing
@@ -329,5 +329,66 @@ export class GeJuTrendService {
     }
 
     return suggestion;
+  }
+
+  /**
+   * 分析大运对格局的影响（简化版本）
+   * @param geJu 格局名称
+   * @param daYunGanZhi 大运干支
+   * @param riZhuWuXing 日主五行
+   * @returns 大运影响分析
+   */
+  private static analyzeDaYunEffect(
+    geJu: string,
+    daYunGanZhi: string,
+    riZhuWuXing: string
+  ): {
+    effect: string;
+    level: 'good' | 'bad' | 'neutral' | 'mixed';
+  } {
+    // 简化的大运影响分析
+    // 实际应该根据具体的格局理论进行详细分析
+
+    if (!daYunGanZhi || daYunGanZhi.length !== 2) {
+      return {
+        effect: '无法分析大运影响',
+        level: 'neutral'
+      };
+    }
+
+    const daYunGan = daYunGanZhi.charAt(0);
+    const daYunZhi = daYunGanZhi.charAt(1);
+
+    // 根据格局类型进行简化分析
+    switch (geJu) {
+      case '正官格':
+        // 正官格喜印绶护官，忌伤官克官
+        if (['甲', '乙', '壬', '癸'].includes(daYunGan)) {
+          return { effect: '印绶护官，有利发展', level: 'good' };
+        } else if (['丙', '丁'].includes(daYunGan)) {
+          return { effect: '伤官见官，需要谨慎', level: 'bad' };
+        }
+        break;
+      case '正财格':
+        // 正财格喜官护财，忌比劫夺财
+        if (['庚', '辛'].includes(daYunGan)) {
+          return { effect: '官星护财，财运亨通', level: 'good' };
+        } else if (['甲', '乙'].includes(daYunGan)) {
+          return { effect: '比劫夺财，需防破财', level: 'bad' };
+        }
+        break;
+      case '食神格':
+        // 食神格喜财星泄秀，忌偏印夺食
+        if (['戊', '己'].includes(daYunGan)) {
+          return { effect: '财星泄秀，才华显现', level: 'good' };
+        } else if (['壬', '癸'].includes(daYunGan)) {
+          return { effect: '偏印夺食，需要化解', level: 'bad' };
+        }
+        break;
+      default:
+        return { effect: '运势平稳，需综合分析', level: 'neutral' };
+    }
+
+    return { effect: '运势一般，需要努力', level: 'mixed' };
   }
 }

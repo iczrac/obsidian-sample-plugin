@@ -11,11 +11,11 @@ export class BaziSettingsModal extends Modal {
   private baziId: string;
   private currentDate: { year: number; month: number; day: number; hour: number };
   private onUpdate: (baziInfo: any) => void;
-  private gender: string = ''; // 默认为空
-  private calculationMethod: string = '0'; // 默认为传统排盘
-  private baziSect: string = '2'; // 默认为流派2（晚子时日柱算当天）
-  private showWuxing: boolean = true; // 默认显示五行分析
-  private showSpecialInfo: boolean = true; // 默认显示特殊信息
+  private gender = ''; // 默认为空
+  private calculationMethod = '0'; // 默认为传统排盘
+  private baziSect = '2'; // 默认为流派2（晚子时日柱算当天）
+  private showWuxing = true; // 默认显示五行分析
+  private showSpecialInfo = true; // 默认显示特殊信息
   private showShenSha: {
     siZhu: boolean;
     daYun: boolean;

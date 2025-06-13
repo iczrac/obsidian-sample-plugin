@@ -1,12 +1,13 @@
 import { BaziInfo } from '../types/BaziInfo';
-import { ShenShaService } from '../services/ShenShaService';
-import { WuXingService } from '../services/WuXingService';
+import { ShenShaExplanationService } from '../services/ShenShaExplanationService';
+import { WuXingExplanationService } from '../services/WuXingExplanationService';
 import { MarkdownView, Notice } from 'obsidian';
-import { GeJuService } from '../services/GeJuService';
+import { GeJuExplanationService } from '../services/GeJuExplanationService';
 import { GeJuTrendService } from '../services/GeJuTrendService';
 import { GeJuTrendChart } from './GeJuTrendChart';
-import { GeJuJudgeService } from '../services/GeJuJudgeService';
 import { BaziService } from '../services/BaziService';
+import { ShiShenCalculator } from '../services/bazi/ShiShenCalculator';
+import { BaziCalculator } from '../services/bazi/BaziCalculator';
 
 /**
  * 交互式八字命盘视图
@@ -19,8 +20,8 @@ export class InteractiveBaziView {
   private plugin: any;
 
   // 当前选中的大运、流年索引
-  private selectedDaYunIndex: number = 0;
-  private selectedLiuNianYear: number = 0;
+  private selectedDaYunIndex = 0;
+  private selectedLiuNianYear = 0;
 
   // 表格元素引用
   private daYunTable: HTMLElement | null = null;
@@ -32,7 +33,7 @@ export class InteractiveBaziView {
   private shownModals: HTMLElement[] = [];
 
   // 动画相关
-  private animationDuration: number = 300; // 毫秒
+  private animationDuration = 300; // 毫秒
 
   /**
    * 构造函数
@@ -963,7 +964,7 @@ export class InteractiveBaziView {
 
         if (yearShenSha.length > 0) {
           yearShenSha.forEach(shenSha => {
-            const shenShaInfo = ShenShaService.getShenShaInfo(shenSha);
+            const shenShaInfo = ShenShaExplanationService.getShenShaInfo(shenSha);
             const type = shenShaInfo?.type || '未知';
 
             let cssClass = '';
@@ -981,7 +982,7 @@ export class InteractiveBaziView {
               attr: {
                 'data-shensha': shenSha,
                 'data-type': type,
-                'title': shenShaInfo?.description || ''
+                'title': shenShaInfo?.explanation || ''
               }
             });
 
@@ -999,7 +1000,7 @@ export class InteractiveBaziView {
 
         if (monthShenSha.length > 0) {
           monthShenSha.forEach(shenSha => {
-            const shenShaInfo = ShenShaService.getShenShaInfo(shenSha);
+            const shenShaInfo = ShenShaExplanationService.getShenShaInfo(shenSha);
             const type = shenShaInfo?.type || '未知';
 
             let cssClass = '';
@@ -1017,7 +1018,7 @@ export class InteractiveBaziView {
               attr: {
                 'data-shensha': shenSha,
                 'data-type': type,
-                'title': shenShaInfo?.description || ''
+                'title': shenShaInfo?.explanation || ''
               }
             });
 
@@ -1035,7 +1036,7 @@ export class InteractiveBaziView {
 
         if (dayShenSha.length > 0) {
           dayShenSha.forEach(shenSha => {
-            const shenShaInfo = ShenShaService.getShenShaInfo(shenSha);
+            const shenShaInfo = ShenShaExplanationService.getShenShaInfo(shenSha);
             const type = shenShaInfo?.type || '未知';
 
             let cssClass = '';
@@ -1053,7 +1054,7 @@ export class InteractiveBaziView {
               attr: {
                 'data-shensha': shenSha,
                 'data-type': type,
-                'title': shenShaInfo?.description || ''
+                'title': shenShaInfo?.explanation || ''
               }
             });
 
@@ -1071,7 +1072,7 @@ export class InteractiveBaziView {
 
         if (hourShenSha.length > 0) {
           hourShenSha.forEach(shenSha => {
-            const shenShaInfo = ShenShaService.getShenShaInfo(shenSha);
+            const shenShaInfo = ShenShaExplanationService.getShenShaInfo(shenSha);
             const type = shenShaInfo?.type || '未知';
 
             let cssClass = '';
@@ -1089,7 +1090,7 @@ export class InteractiveBaziView {
               attr: {
                 'data-shensha': shenSha,
                 'data-type': type,
-                'title': shenShaInfo?.description || ''
+                'title': shenShaInfo?.explanation || ''
               }
             });
 
@@ -1285,7 +1286,7 @@ export class InteractiveBaziView {
 
     // 添加神煞组合分析 - 移到特殊信息区域
     if (this.baziInfo.shenSha && this.baziInfo.shenSha.length > 1) {
-      const combinations = ShenShaService.getShenShaCombinationAnalysis(this.baziInfo.shenSha);
+      const combinations = ShenShaExplanationService.getShenShaCombinationAnalysis(this.baziInfo.shenSha);
       if (combinations.length > 0) {
         const combinationItem = infoList.createEl('li', { cls: 'shensha-combination-item' });
         combinationItem.createSpan({ text: '神煞组合: ' });
@@ -1578,7 +1579,7 @@ export class InteractiveBaziView {
         if (dy.shenSha && dy.shenSha.length > 0) {
           const shenShaList = cell.createDiv({ cls: 'bazi-shensha-list' });
           dy.shenSha.forEach((shenSha: string) => {
-            const shenShaInfo = ShenShaService.getShenShaInfo(shenSha);
+            const shenShaInfo = ShenShaExplanationService.getShenShaInfo(shenSha);
             const type = shenShaInfo?.type || '未知';
 
             let cssClass = '';
@@ -1596,7 +1597,7 @@ export class InteractiveBaziView {
               attr: {
                 'data-shensha': shenSha,
                 'data-type': type,
-                'title': shenShaInfo?.description || ''
+                'title': shenShaInfo?.explanation || ''
               }
             });
 
@@ -2177,7 +2178,7 @@ export class InteractiveBaziView {
         if (ln.shenSha && ln.shenSha.length > 0) {
           const shenShaList = cell.createDiv({ cls: 'bazi-shensha-list' });
           ln.shenSha.forEach((shenSha: string) => {
-            const shenShaInfo = ShenShaService.getShenShaInfo(shenSha);
+            const shenShaInfo = ShenShaExplanationService.getShenShaInfo(shenSha);
             const type = shenShaInfo?.type || '未知';
 
             let cssClass = '';
@@ -2195,7 +2196,7 @@ export class InteractiveBaziView {
               attr: {
                 'data-shensha': shenSha,
                 'data-type': type,
-                'title': shenShaInfo?.description || ''
+                'title': shenShaInfo?.explanation || ''
               }
             });
 
@@ -2241,7 +2242,7 @@ export class InteractiveBaziView {
         if (xy && xy.shenSha && xy.shenSha.length > 0) {
           const shenShaList = cell.createDiv({ cls: 'bazi-shensha-list' });
           xy.shenSha.forEach((shenSha: string) => {
-            const shenShaInfo = ShenShaService.getShenShaInfo(shenSha);
+            const shenShaInfo = ShenShaExplanationService.getShenShaInfo(shenSha);
             const type = shenShaInfo?.type || '未知';
 
             let cssClass = '';
@@ -2259,7 +2260,7 @@ export class InteractiveBaziView {
               attr: {
                 'data-shensha': shenSha,
                 'data-type': type,
-                'title': shenShaInfo?.description || ''
+                'title': shenShaInfo?.explanation || ''
               }
             });
 
@@ -2482,7 +2483,7 @@ export class InteractiveBaziView {
         if (ly.shenSha && ly.shenSha.length > 0) {
           const shenShaList = cell.createDiv({ cls: 'bazi-shensha-list' });
           ly.shenSha.forEach((shenSha: string) => {
-            const shenShaInfo = ShenShaService.getShenShaInfo(shenSha);
+            const shenShaInfo = ShenShaExplanationService.getShenShaInfo(shenSha);
             const type = shenShaInfo?.type || '未知';
 
             let cssClass = '';
@@ -2500,7 +2501,7 @@ export class InteractiveBaziView {
               attr: {
                 'data-shensha': shenSha,
                 'data-type': type,
-                'title': shenShaInfo?.description || ''
+                'title': shenShaInfo?.explanation || ''
               }
             });
 
@@ -3121,8 +3122,8 @@ export class InteractiveBaziView {
    * @returns 十神
    */
   private getShiShen(dayStem: string, stem: string): string {
-    // 使用BaziService中的方法
-    return BaziService.getShiShen(dayStem, stem);
+    // 使用ShiShenCalculator中的方法
+    return ShiShenCalculator.getShiShen(dayStem, stem);
   }
 
   /**
@@ -3132,8 +3133,8 @@ export class InteractiveBaziView {
    * @returns 藏干对应的十神数组
    */
   private getHiddenShiShen(dayStem: string, branch: string): string[] {
-    // 使用BaziService中的方法
-    return BaziService.getHiddenShiShen(dayStem, branch);
+    // 使用ShiShenCalculator中的方法
+    return ShiShenCalculator.getHiddenShiShen(dayStem, branch);
   }
 
   /**
@@ -3142,8 +3143,8 @@ export class InteractiveBaziView {
    * @returns 藏干字符串，多个藏干用逗号分隔
    */
   private getHideGan(branch: string): string {
-    // 使用BaziService中的方法
-    return BaziService.getHideGan(branch);
+    // 使用BaziCalculator中的方法
+    return BaziCalculator.getHideGan(branch);
   }
 
   /**
@@ -3214,7 +3215,12 @@ export class InteractiveBaziView {
    */
   private showShenShaExplanation(shenSha: string) {
     // 获取神煞详细解释
-    const shenShaInfo = ShenShaService.getShenShaExplanation(shenSha);
+    const shenShaInfo = ShenShaExplanationService.getShenShaExplanation(shenSha);
+
+    if (!shenShaInfo) {
+      console.error(`未找到神煞 "${shenSha}" 的详细信息`);
+      return;
+    }
 
     // 创建一个临时容器
     const container = document.createElement('div');
@@ -3415,7 +3421,7 @@ export class InteractiveBaziView {
 
     // 查找相关的神煞组合
     if (this.baziInfo.shenSha && this.baziInfo.shenSha.length > 0) {
-      const combinations = ShenShaService.getShenShaCombinationAnalysis(this.baziInfo.shenSha);
+      const combinations = ShenShaExplanationService.getShenShaCombinationAnalysis(this.baziInfo.shenSha);
       // 移除可能的前缀（如"年柱:"）
       const cleanShenSha = shenSha.includes(':') ? shenSha.split(':')[1] : shenSha;
       // 筛选包含当前神煞的组合，并按级别排序
@@ -3548,14 +3554,14 @@ export class InteractiveBaziView {
             comboContainer.appendChild(comboInfluence);
           }
 
-          // 添加应对方法
-          if (combo.solution) {
-            const comboSolution = document.createElement('div');
-            comboSolution.textContent = '【应对方法】' + combo.solution;
-            comboSolution.style.fontSize = '0.9em';
-            comboSolution.style.color = 'var(--text-muted)';
-            comboSolution.style.marginTop = '5px';
-            comboContainer.appendChild(comboSolution);
+          // 添加建议
+          if (combo.description) {
+            const comboAdvice = document.createElement('div');
+            comboAdvice.textContent = '【建议】' + combo.description;
+            comboAdvice.style.fontSize = '0.9em';
+            comboAdvice.style.color = 'var(--text-muted)';
+            comboAdvice.style.marginTop = '5px';
+            comboContainer.appendChild(comboAdvice);
           }
 
           combinationsSection.appendChild(comboContainer);
@@ -3641,7 +3647,7 @@ export class InteractiveBaziView {
 
     // 为每个神煞创建类型标签
     shenShaNames.forEach(name => {
-      const shenShaInfo = ShenShaService.getShenShaInfo(name);
+      const shenShaInfo = ShenShaExplanationService.getShenShaInfo(name);
       if (shenShaInfo) {
         const typeTag = document.createElement('span');
 
@@ -3725,7 +3731,7 @@ export class InteractiveBaziView {
     // 处理神煞列表
     this.baziInfo.shenSha.forEach(shenSha => {
       // 获取神煞信息
-      const shenShaInfo = ShenShaService.getShenShaInfo(shenSha);
+      const shenShaInfo = ShenShaExplanationService.getShenShaInfo(shenSha);
 
       if (shenShaInfo) {
         // 根据类型分类
@@ -3759,9 +3765,9 @@ export class InteractiveBaziView {
         item.addEventListener('click', () => this.showShenShaExplanation(shenSha));
 
         // 添加提示
-        const shenShaInfo = ShenShaService.getShenShaInfo(shenSha);
+        const shenShaInfo = ShenShaExplanationService.getShenShaInfo(shenSha);
         if (shenShaInfo) {
-          item.title = shenShaInfo.description;
+          item.title = shenShaInfo.explanation;
         }
 
         goodList.appendChild(item);
@@ -3791,9 +3797,9 @@ export class InteractiveBaziView {
         item.addEventListener('click', () => this.showShenShaExplanation(shenSha));
 
         // 添加提示
-        const shenShaInfo = ShenShaService.getShenShaInfo(shenSha);
+        const shenShaInfo = ShenShaExplanationService.getShenShaInfo(shenSha);
         if (shenShaInfo) {
-          item.title = shenShaInfo.description;
+          item.title = shenShaInfo.explanation;
         }
 
         mixedList.appendChild(item);
@@ -3823,9 +3829,9 @@ export class InteractiveBaziView {
         item.addEventListener('click', () => this.showShenShaExplanation(shenSha));
 
         // 添加提示
-        const shenShaInfo = ShenShaService.getShenShaInfo(shenSha);
+        const shenShaInfo = ShenShaExplanationService.getShenShaInfo(shenSha);
         if (shenShaInfo) {
-          item.title = shenShaInfo.description;
+          item.title = shenShaInfo.explanation;
         }
 
         badList.appendChild(item);
@@ -3945,7 +3951,7 @@ export class InteractiveBaziView {
    */
   private showWuXingExplanation(wuXing: string, value: string) {
     // 获取五行详细信息
-    const wuXingInfo = WuXingService.getWuXingInfo(wuXing);
+    const wuXingInfo = WuXingExplanationService.getWuXingInfoCompat(wuXing);
     if (!wuXingInfo) return;
 
     // 创建弹窗
@@ -3968,12 +3974,12 @@ export class InteractiveBaziView {
 
     // 创建解释
     const explanationText = document.createElement('div');
-    explanationText.textContent = wuXingInfo.explanation;
+    explanationText.textContent = wuXingInfo.description;
     explanationText.className = 'bazi-modal-explanation';
 
     // 创建影响
     const influenceText = document.createElement('div');
-    influenceText.textContent = wuXingInfo.influence;
+    influenceText.textContent = wuXingInfo.characteristics;
     influenceText.className = 'bazi-modal-influence';
 
     // 创建计算方法
@@ -3989,7 +3995,7 @@ export class InteractiveBaziView {
     }
 
     if (!actualCalculation) {
-      actualCalculation = wuXingInfo.calculation || `无法计算${wuXing}五行强度，请检查八字信息是否完整。`;
+      actualCalculation = `${wuXing}五行强度为${value}，具体计算方法请参考五行强度计算器。`;
     }
 
     // 创建计算方法标题和复制按钮
@@ -4134,10 +4140,10 @@ export class InteractiveBaziView {
       const { yearStem, monthStem, dayStem, hourStem } = this.baziInfo;
 
       // 获取配置中的权重（如果可能）
-      let yearWeight = 1.2;  // 默认使用优化后的权重
-      let monthWeight = 3.0;
-      let dayWeight = 3.0;
-      let hourWeight = 1.0;
+      const yearWeight = 1.2;  // 默认使用优化后的权重
+      const monthWeight = 3.0;
+      const dayWeight = 3.0;
+      const hourWeight = 1.0;
 
       if (this.getWuXingFromStem(yearStem) === wuXing) {
         calculation += `- 年干${yearStem}为${wuXing}，得分${yearWeight.toFixed(1)}（年干权重）\n`;
@@ -4161,10 +4167,10 @@ export class InteractiveBaziView {
       const { yearHideGan, monthHideGan, dayHideGan, hourHideGan } = this.baziInfo;
 
       // 获取配置中的权重（如果可能）
-      let yearWeight = 0.8;  // 默认使用优化后的权重
-      let monthWeight = 2.5;
-      let dayWeight = 2.2;
-      let hourWeight = 0.7;
+      const yearWeight = 0.8;  // 默认使用优化后的权重
+      const monthWeight = 2.5;
+      const dayWeight = 2.2;
+      const hourWeight = 0.7;
 
       // 藏干内部权重
       const oneGanWeight = [1.0];
@@ -4287,10 +4293,10 @@ export class InteractiveBaziView {
       const { yearNaYin, monthNaYin, dayNaYin, hourNaYin } = this.baziInfo;
 
       // 获取配置中的权重（如果可能）
-      let yearWeight = 0.6;  // 默认使用优化后的权重
-      let monthWeight = 2.0;
-      let dayWeight = 1.5;
-      let hourWeight = 0.5;
+      const yearWeight = 0.6;  // 默认使用优化后的权重
+      const monthWeight = 2.0;
+      const dayWeight = 1.5;
+      const hourWeight = 0.5;
 
       if (yearNaYin && yearNaYin.includes(wuXing)) {
         calculation += `- 年柱纳音${yearNaYin}为${wuXing}，得分${yearWeight.toFixed(1)}（年柱纳音权重）\n`;
@@ -5218,7 +5224,12 @@ export class InteractiveBaziView {
    */
   private showGeJuExplanation(geJu: string) {
     // 获取格局详细信息
-    const geJuInfo = GeJuService.getGeJuExplanation(geJu);
+    const geJuInfo = GeJuExplanationService.getGeJuExplanation(geJu);
+
+    if (!geJuInfo) {
+      console.error(`未找到格局 "${geJu}" 的详细信息`);
+      return;
+    }
 
     // 创建弹窗
     const modal = document.createElement('div');
@@ -5235,22 +5246,8 @@ export class InteractiveBaziView {
 
     // 创建类型
     const type = document.createElement('div');
-    let typeText = '';
-    switch (geJuInfo.type) {
-      case 'good':
-        typeText = '吉格';
-        break;
-      case 'bad':
-        typeText = '凶格';
-        break;
-      case 'mixed':
-        typeText = '吉凶参半';
-        break;
-      default:
-        typeText = '中性';
-    }
-    type.textContent = `类型: ${typeText}`;
-    type.className = `bazi-modal-type bazi-modal-type-${geJuInfo.type}`;
+    type.textContent = `格局: ${geJuInfo.name}`;
+    type.className = 'bazi-modal-type';
 
     // 创建解释
     const explanationTitle = document.createElement('h4');
@@ -5261,50 +5258,32 @@ export class InteractiveBaziView {
     explanationText.textContent = geJuInfo.explanation;
     explanationText.className = 'bazi-modal-explanation';
 
-    // 创建影响
-    const influenceTitle = document.createElement('h4');
-    influenceTitle.textContent = '性格影响';
-    influenceTitle.className = 'bazi-modal-section-title';
+    // 创建特征
+    const characteristicsTitle = document.createElement('h4');
+    characteristicsTitle.textContent = '格局特征';
+    characteristicsTitle.className = 'bazi-modal-section-title';
 
-    const influence = document.createElement('div');
-    influence.textContent = geJuInfo.influence;
-    influence.className = 'bazi-modal-influence';
+    const characteristics = document.createElement('div');
+    characteristics.textContent = geJuInfo.characteristics;
+    characteristics.className = 'bazi-modal-characteristics';
 
-    // 创建职业建议
-    const careerTitle = document.createElement('h4');
-    careerTitle.textContent = '职业建议';
-    careerTitle.className = 'bazi-modal-section-title';
+    // 创建优势
+    const advantagesTitle = document.createElement('h4');
+    advantagesTitle.textContent = '格局优势';
+    advantagesTitle.className = 'bazi-modal-section-title';
 
-    const career = document.createElement('div');
-    career.textContent = geJuInfo.career;
-    career.className = 'bazi-modal-career';
+    const advantages = document.createElement('div');
+    advantages.textContent = geJuInfo.advantages;
+    advantages.className = 'bazi-modal-advantages';
 
-    // 创建健康建议
-    const healthTitle = document.createElement('h4');
-    healthTitle.textContent = '健康建议';
-    healthTitle.className = 'bazi-modal-section-title';
+    // 创建劣势
+    const disadvantagesTitle = document.createElement('h4');
+    disadvantagesTitle.textContent = '格局劣势';
+    disadvantagesTitle.className = 'bazi-modal-section-title';
 
-    const health = document.createElement('div');
-    health.textContent = geJuInfo.health;
-    health.className = 'bazi-modal-health';
-
-    // 创建人际关系建议
-    const relationshipTitle = document.createElement('h4');
-    relationshipTitle.textContent = '人际关系';
-    relationshipTitle.className = 'bazi-modal-section-title';
-
-    const relationship = document.createElement('div');
-    relationship.textContent = geJuInfo.relationship;
-    relationship.className = 'bazi-modal-relationship';
-
-    // 创建财运建议
-    const wealthTitle = document.createElement('h4');
-    wealthTitle.textContent = '财运建议';
-    wealthTitle.className = 'bazi-modal-section-title';
-
-    const wealth = document.createElement('div');
-    wealth.textContent = geJuInfo.wealth;
-    wealth.className = 'bazi-modal-wealth';
+    const disadvantages = document.createElement('div');
+    disadvantages.textContent = geJuInfo.disadvantages;
+    disadvantages.className = 'bazi-modal-disadvantages';
 
     // 创建来源
     const sourceTitle = document.createElement('h4');
@@ -5312,7 +5291,7 @@ export class InteractiveBaziView {
     sourceTitle.className = 'bazi-modal-section-title';
 
     const source = document.createElement('div');
-    source.textContent = geJuInfo.source || '传统命理学';
+    source.textContent = geJuInfo.calculation || '传统命理学';
     source.className = 'bazi-modal-source';
 
     // 创建关闭按钮
@@ -5328,16 +5307,12 @@ export class InteractiveBaziView {
     modalContent.appendChild(type);
     modalContent.appendChild(explanationTitle);
     modalContent.appendChild(explanationText);
-    modalContent.appendChild(influenceTitle);
-    modalContent.appendChild(influence);
-    modalContent.appendChild(careerTitle);
-    modalContent.appendChild(career);
-    modalContent.appendChild(healthTitle);
-    modalContent.appendChild(health);
-    modalContent.appendChild(relationshipTitle);
-    modalContent.appendChild(relationship);
-    modalContent.appendChild(wealthTitle);
-    modalContent.appendChild(wealth);
+    modalContent.appendChild(characteristicsTitle);
+    modalContent.appendChild(characteristics);
+    modalContent.appendChild(advantagesTitle);
+    modalContent.appendChild(advantages);
+    modalContent.appendChild(disadvantagesTitle);
+    modalContent.appendChild(disadvantages);
     modalContent.appendChild(sourceTitle);
     modalContent.appendChild(source);
     modalContent.appendChild(closeButton);
@@ -5363,7 +5338,7 @@ export class InteractiveBaziView {
    */
   private showGeJuAnalysis(geJu: string, riZhuStrength: string) {
     // 获取格局分析
-    const analysis = GeJuService.analyzeGeJu(geJu, riZhuStrength);
+    const analysis = GeJuExplanationService.analyzeGeJu(geJu, riZhuStrength);
 
     // 创建弹窗
     const modal = document.createElement('div');
@@ -5380,22 +5355,8 @@ export class InteractiveBaziView {
 
     // 创建类型
     const type = document.createElement('div');
-    let typeText = '';
-    switch (analysis.level) {
-      case 'good':
-        typeText = '吉';
-        break;
-      case 'bad':
-        typeText = '凶';
-        break;
-      case 'mixed':
-        typeText = '吉凶参半';
-        break;
-      default:
-        typeText = '中性';
-    }
-    type.textContent = `综合评价: ${typeText}`;
-    type.className = `bazi-modal-type bazi-modal-type-${analysis.level}`;
+    type.textContent = `格局分析: ${geJu}`;
+    type.className = 'bazi-modal-type';
 
     // 创建分析
     const analysisTitle = document.createElement('h4');
@@ -5412,7 +5373,7 @@ export class InteractiveBaziView {
     suggestionTitle.className = 'bazi-modal-section-title';
 
     const suggestion = document.createElement('div');
-    suggestion.textContent = analysis.suggestion;
+    suggestion.textContent = analysis.advice;
     suggestion.className = 'bazi-modal-suggestion';
 
     // 创建日主旺衰信息
@@ -5697,7 +5658,7 @@ export class InteractiveBaziView {
 
         // 对格局影响
         const effectCell = document.createElement('td');
-        const effect = GeJuService.analyzeDaYunEffect(geJu, daYun.ganZhi, riZhuWuXing);
+        const effect = GeJuExplanationService.analyzeDaYunEffect(geJu, daYun.ganZhi, riZhuWuXing);
 
         // 根据影响级别设置颜色
         let effectClass = '';
