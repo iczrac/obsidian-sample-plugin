@@ -588,7 +588,7 @@ export class BaziLinkToolbar {
             });
             sections.push('');
 
-            // 生成神煞组合（使用ShenShaService）
+            // 生成神煞组合（使用ShenShaExplanationService）
             const shenShaCombos = this.generateShenShaCombosByService();
             if (shenShaCombos.length > 0) {
                 sections.push('### 神煞组合');
@@ -918,7 +918,7 @@ export class BaziLinkToolbar {
     }
 
     /**
-     * 使用ShenShaService生成神煞组合
+     * 使用ShenShaExplanationService生成神煞组合
      */
     private generateShenShaCombosByService(): Array<{name: string, description: string}> {
         const combos: Array<{name: string, description: string}> = [];
@@ -931,9 +931,9 @@ export class BaziLinkToolbar {
         }
 
         try {
-            // 使用ShenShaService获取神煞组合分析
-            const { ShenShaService } = require('../services/ShenShaService');
-            const combinationAnalysis = ShenShaService.getShenShaCombinationAnalysis(allShenSha);
+            // 使用ShenShaExplanationService获取神煞组合分析
+            const { ShenShaExplanationService } = require('../services/ShenShaExplanationService');
+            const combinationAnalysis = ShenShaExplanationService.getShenShaCombinationAnalysis(allShenSha);
 
             // 转换为所需格式
             combinationAnalysis.forEach((analysis: any) => {

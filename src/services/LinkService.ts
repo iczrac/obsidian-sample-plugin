@@ -264,9 +264,9 @@ export class LinkService {
         }
 
         try {
-            // 使用ShenShaService获取神煞组合分析
-            const { ShenShaService } = require('./ShenShaService');
-            const combinationAnalysis = ShenShaService.getShenShaCombinationAnalysis(shenShaList);
+            // 使用ShenShaExplanationService获取神煞组合分析
+            const { ShenShaExplanationService } = require('./ShenShaExplanationService');
+            const combinationAnalysis = ShenShaExplanationService.getShenShaCombinationAnalysis(shenShaList);
 
             // 提取组合名称作为双链
             combinationAnalysis.forEach((analysis: any) => {
