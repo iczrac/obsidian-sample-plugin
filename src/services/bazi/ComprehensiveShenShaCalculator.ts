@@ -37,12 +37,18 @@ export class ComprehensiveShenShaCalculator {
     const dayShenSha = this.calculatePillarShenSha(dayStem, dayStem, dayBranch, '日');
     const hourShenSha = this.calculatePillarShenSha(dayStem, hourStem, hourBranch, '时');
 
+    // 为神煞添加柱位前缀
+    const yearShenShaWithPrefix = yearShenSha.map(s => `年柱:${s}`);
+    const monthShenShaWithPrefix = monthShenSha.map(s => `月柱:${s}`);
+    const dayShenShaWithPrefix = dayShenSha.map(s => `日柱:${s}`);
+    const hourShenShaWithPrefix = hourShenSha.map(s => `时柱:${s}`);
+
     // 合并所有神煞并去重
     const allShenShaSet = new Set([
-      ...yearShenSha,
-      ...monthShenSha,
-      ...dayShenSha,
-      ...hourShenSha
+      ...yearShenShaWithPrefix,
+      ...monthShenShaWithPrefix,
+      ...dayShenShaWithPrefix,
+      ...hourShenShaWithPrefix
     ]);
     const allShenSha = Array.from(allShenShaSet);
 
@@ -52,7 +58,9 @@ export class ComprehensiveShenShaCalculator {
     const jiXiongShen: string[] = [];
 
     allShenSha.forEach(shenSha => {
-      const type = ShenShaCalculator.getShenShaType(shenSha);
+      // 提取神煞名称（去掉柱位前缀）
+      const shenShaName = shenSha.includes(':') ? shenSha.split(':')[1] : shenSha;
+      const type = ShenShaCalculator.getShenShaType(shenShaName);
       switch (type) {
         case '吉神':
           jiShen.push(shenSha);
@@ -68,10 +76,10 @@ export class ComprehensiveShenShaCalculator {
 
     return {
       allShenSha,
-      yearShenSha,
-      monthShenSha,
-      dayShenSha,
-      hourShenSha,
+      yearShenSha: yearShenShaWithPrefix,
+      monthShenSha: monthShenShaWithPrefix,
+      dayShenSha: dayShenShaWithPrefix,
+      hourShenSha: hourShenShaWithPrefix,
       jiShen,
       xiongShen,
       jiXiongShen

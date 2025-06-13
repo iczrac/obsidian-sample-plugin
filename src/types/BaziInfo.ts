@@ -59,7 +59,6 @@ export interface BaziInfo {
   monthShiShenGan?: string;
   dayShiShenGan?: string;
   timeShiShenGan?: string;
-  hourShiShenGan?: string; // 添加时柱天干十神
   yearShiShen?: string;
   monthShiShen?: string;
   dayShiShen?: string;
@@ -69,7 +68,7 @@ export interface BaziInfo {
   yearShiShenZhi?: string | string[];
   monthShiShenZhi?: string | string[];
   dayShiShenZhi?: string | string[];
-  hourShiShenZhi?: string | string[];
+  timeShiShenZhi?: string | string[];
 
   // 地势（长生十二神）信息
   yearDiShi?: string;

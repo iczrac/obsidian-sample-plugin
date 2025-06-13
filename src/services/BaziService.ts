@@ -254,8 +254,8 @@ export class BaziService {
       baziInfo.hourWuXing = BaziUtils.getStemWuXing(hourStem);
       baziInfo.hourNaYin = BaziCalculator.getNaYin(hourStem + hourBranch);
       baziInfo.hourShengXiao = BaziUtils.getShengXiao(hourBranch);
-      baziInfo.hourShiShenGan = ShiShenCalculator.getShiShen(dayStem, hourStem);
-      baziInfo.hourShiShenZhi = ShiShenCalculator.getHiddenShiShen(dayStem, hourBranch);
+      baziInfo.timeShiShenGan = ShiShenCalculator.getShiShen(dayStem, hourStem);
+      baziInfo.timeShiShenZhi = ShiShenCalculator.getHiddenShiShen(dayStem, hourBranch);
 
       // 特殊信息
       baziInfo.taiYuan = BaziCalculator.calculateTaiYuan(monthStem, monthBranch);
@@ -298,8 +298,8 @@ export class BaziService {
     const monthShiShenZhi = ShiShenCalculator.getHiddenShiShen(dayStem, monthBranch);
     const dayShiShen = '日主'; // 日柱天干是日主自己
     const dayShiShenZhi = ShiShenCalculator.getHiddenShiShen(dayStem, dayBranch);
-    const hourShiShenGan = ShiShenCalculator.getShiShen(dayStem, hourStem);
-    const hourShiShenZhi = ShiShenCalculator.getHiddenShiShen(dayStem, hourBranch);
+    const timeShiShenGan = ShiShenCalculator.getShiShen(dayStem, hourStem);
+    const timeShiShenZhi = ShiShenCalculator.getHiddenShiShen(dayStem, hourBranch);
 
     // 检查三合局和三会局
     const branches = [yearBranch, monthBranch, dayBranch, hourBranch];
@@ -420,8 +420,8 @@ export class BaziService {
       hourWuXing,
       hourNaYin,
       hourShengXiao,
-      hourShiShenGan,
-      hourShiShenZhi,
+      timeShiShenGan,
+      timeShiShenZhi,
 
       // 旬空信息
       yearXunKong: BaziCalculator.calculateXunKong(yearStem, yearBranch),
@@ -457,6 +457,11 @@ export class BaziService {
 
       // 流年信息
       liuNian,
+
+      // 十神信息（补充缺失的字段）
+      yearShiShen: yearShiShenGan,
+      monthShiShen: monthShiShenGan,
+      hourShiShen: timeShiShenGan,
 
       // 设置信息
       gender,
@@ -531,8 +536,8 @@ export class BaziService {
     const hourHideGan = BaziCalculator.getHideGan(hourBranch);
     const hourWuXing = eightChar.getTimeWuXing();
     const hourNaYin = eightChar.getTimeNaYin();
-    const hourShiShenGan = ShiShenCalculator.getShiShen(dayStem, hourStem);
-    const hourShiShenZhi = ShiShenCalculator.getHiddenShiShen(dayStem, hourBranch);
+    const timeShiShenGan = ShiShenCalculator.getShiShen(dayStem, hourStem);
+    const timeShiShenZhi = ShiShenCalculator.getHiddenShiShen(dayStem, hourBranch);
     const timeDiShi = eightChar.getTimeDiShi();
 
     // 计算时柱旬空
@@ -654,15 +659,15 @@ export class BaziService {
       yearShiShen: yearShiShenGan,
       monthShiShen: monthShiShenGan,
       dayShiShen: '日主',
-      hourShiShen: hourShiShenGan,
+      hourShiShen: timeShiShenGan,
 
       yearShiShenGan,
       yearShiShenZhi,
       monthShiShenGan,
       monthShiShenZhi,
       dayShiShenZhi,
-      hourShiShenGan,
-      hourShiShenZhi,
+      timeShiShenGan,
+      timeShiShenZhi,
 
       // 地势信息
       yearDiShi,

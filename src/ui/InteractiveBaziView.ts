@@ -783,10 +783,10 @@ export class InteractiveBaziView {
       });
     }
     // 地支藏干十神
-    if (this.baziInfo.hourShiShenZhi && Array.isArray(this.baziInfo.hourShiShenZhi) && this.baziInfo.hourShiShenZhi.length > 0) {
+    if (this.baziInfo.timeShiShenZhi && Array.isArray(this.baziInfo.timeShiShenZhi) && this.baziInfo.timeShiShenZhi.length > 0) {
       timeShiShenCell.createSpan({ text: ' ' });
       timeShiShenCell.createSpan({
-        text: this.baziInfo.hourShiShenZhi.join(','),
+        text: this.baziInfo.timeShiShenZhi.join(','),
         cls: 'shishen-tag-small shishen-tag-hide'
       });
     } else if (this.baziInfo.hourBranch) {
@@ -930,9 +930,9 @@ export class InteractiveBaziView {
     shengXiaoRow.createEl('td', { text: this.baziInfo.dayShengXiao || '' });
     shengXiaoRow.createEl('td', { text: this.baziInfo.hourShengXiao || '' });
 
-    // 创建神煞行（检查设置）
+    // 创建神煞行（默认显示，除非明确设置为false）
     if (this.baziInfo.shenSha && this.baziInfo.shenSha.length > 0 &&
-        this.baziInfo.showShenSha && this.baziInfo.showShenSha.siZhu !== false) {
+        (!this.baziInfo.showShenSha || this.baziInfo.showShenSha.siZhu !== false)) {
       // 按柱位分组神煞
       const yearShenSha: string[] = [];
       const monthShenSha: string[] = [];
