@@ -205,29 +205,48 @@ export class CodeBlockProcessor {
 	 */
 	private processBaziStringBased(params: BaziParams, source: string, el: HTMLElement): void {
 		try {
-			console.log('🎴 开始处理八字字符串:', params.bazi);
+			console.log('🎴 ========== 开始处理八字字符串 ==========');
+			console.log('🎴 八字字符串:', params.bazi);
+			console.log('🎴 年份参数:', params.year);
+			console.log('🎴 原始性别参数:', params.gender);
+			console.log('🎴 完整参数对象:', params);
 
-			// 解析八字字符串
-			const baziInfo = BaziService.parseBaziString(params.bazi!, params.year);
-			console.log('🎴 八字解析结果:', baziInfo);
+			// 处理性别参数
+			let gender = '';
+			if (params.gender) {
+				const genderValue = params.gender.trim().toLowerCase();
+				console.log('🎴 处理后的性别值:', genderValue);
+				if (genderValue === '男' || genderValue === 'male' || genderValue === '1') {
+					gender = '1';
+				} else if (genderValue === '女' || genderValue === 'female' || genderValue === '0') {
+					gender = '0';
+				}
+				console.log('🎴 最终性别参数:', gender);
+			} else {
+				console.log('🎴 没有性别参数');
+			}
+
+			// 解析八字字符串，传递性别参数
+			console.log('🎴 调用BaziService.parseBaziString，参数:');
+			console.log('  - 八字:', params.bazi);
+			console.log('  - 年份:', params.year);
+			console.log('  - 性别:', gender);
+
+			const baziInfo = BaziService.parseBaziString(params.bazi!, params.year, gender);
+
+			console.log('🎴 ========== 八字解析结果 ==========');
+			console.log('🎴 性别信息:', baziInfo.gender);
+			console.log('🎴 大运数据存在:', !!baziInfo.daYun);
+			console.log('🎴 大运数据长度:', baziInfo.daYun?.length);
+			console.log('🎴 流年数据存在:', !!baziInfo.liuNian);
+			console.log('🎴 流年数据长度:', baziInfo.liuNian?.length);
+			console.log('🎴 完整baziInfo对象:', baziInfo);
 
 			// 生成唯一ID
 			const blockId = 'bazi-block-' + Math.random().toString(36).substring(2, 9);
 			const cleanSource = source.replace(/[\n\r"']/g, '').replace(/\s+/g, ' ').trim();
 			el.setAttribute('data-bazi-source', cleanSource);
 			el.setAttribute('data-bazi-block-id', blockId);
-
-			// 处理性别参数
-			if (params.gender) {
-				// 设置性别
-				const genderValue = params.gender.trim().toLowerCase();
-				if (genderValue === '男' || genderValue === 'male' || genderValue === '1') {
-					baziInfo.gender = '1';
-				} else if (genderValue === '女' || genderValue === 'female' || genderValue === '0') {
-					baziInfo.gender = '0';
-				}
-				console.log('🎴 已设置性别:', baziInfo.gender);
-			}
 
 			// 添加姓名信息
 			if (params.name) {

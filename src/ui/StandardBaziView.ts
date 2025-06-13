@@ -228,10 +228,26 @@ export class StandardBaziView {
    * 创建大运信息
    */
   private createDaYunInfo() {
+    console.log('🎨 ========== StandardBaziView 创建大运信息 ==========');
+    console.log('🎨 baziInfo.daYun 存在:', !!this.baziInfo.daYun);
+    console.log('🎨 baziInfo.daYun 类型:', typeof this.baziInfo.daYun);
+    console.log('🎨 baziInfo.daYun 是数组:', Array.isArray(this.baziInfo.daYun));
+    console.log('🎨 baziInfo.daYun 长度:', this.baziInfo.daYun?.length);
+    console.log('🎨 baziInfo.daYun 内容:', this.baziInfo.daYun);
+    console.log('🎨 baziInfo.gender:', this.baziInfo.gender);
+
     if (!this.baziInfo.daYun || !Array.isArray(this.baziInfo.daYun) || this.baziInfo.daYun.length === 0) {
+      console.log('🎨 ❌ 没有大运数据，显示提示信息');
+      const section = this.container.createDiv({ cls: 'bazi-view-section standard' });
+      section.createEl('h5', { text: '大运', cls: 'bazi-section-title' });
+      section.createEl('div', {
+        text: '暂无大运数据（需要指定性别和年份）',
+        cls: 'bazi-empty-message'
+      });
       return;
     }
 
+    console.log('🎨 ✅ 有大运数据，开始创建表格');
     const section = this.container.createDiv({ cls: 'bazi-view-section standard' });
     section.createEl('h5', { text: '大运', cls: 'bazi-section-title' });
 
@@ -240,6 +256,7 @@ export class StandardBaziView {
 
     // 渲染大运表格
     this.renderDaYunTable(tableContainer);
+    console.log('🎨 ✅ 大运表格渲染完成');
   }
 
   /**

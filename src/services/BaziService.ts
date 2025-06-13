@@ -75,12 +75,21 @@ export class BaziService {
    * @returns 八字信息对象
    */
   static parseBaziString(baziStr: string, specifiedYear?: string, gender = '', sect = '2'): BaziInfo {
+    console.log('🔥 ========== BaziService.parseBaziString 开始 ==========');
+    console.log('🔥 输入参数:');
+    console.log('  - baziStr:', baziStr);
+    console.log('  - specifiedYear:', specifiedYear);
+    console.log('  - gender:', gender);
+    console.log('  - sect:', sect);
+
     // 清理并分割八字字符串
     const parts = baziStr.replace(/\s+/g, ' ').trim().split(' ');
 
     if (parts.length !== 4) {
       throw new Error('八字格式不正确，应为"年柱 月柱 日柱 时柱"的格式，如"甲子 乙丑 丙寅 丁卯"');
     }
+
+    console.log('🔥 八字分割结果:', parts);
 
     // 提取天干地支
     const yearStem = parts[0][0];
@@ -117,7 +126,11 @@ export class BaziService {
 
     // 如果指定了年份，尝试使用指定的年份进行日期推算
     const yearNum = specifiedYear ? parseInt(specifiedYear) : undefined;
-    if (yearNum && matchingYears.includes(yearNum)) {
+    if (yearNum) {
+      console.log('🔥 尝试日期反推，年份:', yearNum);
+      console.log('🔥 匹配年份列表:', matchingYears);
+      console.log('🔥 年份是否在匹配列表中:', matchingYears.includes(yearNum));
+
       try {
         // 使用lunar-typescript库的Solar.fromBaZi方法反推日期
         // 这个方法可能返回多个匹配的日期
@@ -130,9 +143,12 @@ export class BaziService {
           1 // 起始年份设为1，确保能找到所有可能的日期
         );
 
+        console.log('🔥 fromBaZi返回的日期数量:', solarList.length);
+
         // 找到指定年份的日期
         let matchingSolar: Solar | null = null;
         for (const s of solarList) {
+          console.log('🔥 检查日期:', s.getYear(), s.getMonth(), s.getDay());
           if (s.getYear() === yearNum) {
             matchingSolar = s;
             break;
@@ -150,14 +166,44 @@ export class BaziService {
           lunarDate = lunar.toString();
           solarTime = `${matchingSolar.getHour().toString().padStart(2, '0')}:${matchingSolar.getMinute().toString().padStart(2, '0')}`;
 
-          console.log('日期反推成功 - 指定年份:', yearNum);
-          console.log('日期反推结果 - 阳历日期:', solarDate);
-          console.log('日期反推结果 - 农历日期:', lunarDate);
+          console.log('🔥 ✅ 日期反推成功 - 指定年份:', yearNum);
+          console.log('🔥 ✅ 日期反推结果 - 阳历日期:', solarDate);
+          console.log('🔥 ✅ 日期反推结果 - 农历日期:', lunarDate);
         } else {
-          console.log('日期反推失败 - 未找到指定年份的匹配日期');
+          console.log('🔥 ❌ 日期反推失败 - 未找到指定年份的匹配日期');
+
+          // 即使反推失败，也创建一个基本的Solar对象用于大运计算
+          // 使用年份的第一天作为基准日期
+          console.log('🔥 🔧 创建基准Solar对象用于大运计算');
+          try {
+            solar = Solar.fromYmd(yearNum, 1, 1);
+            lunar = solar.getLunar();
+            // 创建一个基于用户输入八字的EightChar对象
+            eightChar = lunar.getEightChar();
+            // 手动设置八字信息
+            eightChar.setSect(parseInt(sect));
+
+            console.log('🔥 ✅ 基准Solar对象创建成功');
+          } catch (e) {
+            console.error('🔥 ❌ 创建基准Solar对象失败:', e);
+          }
         }
       } catch (error) {
-        console.error('日期推算出错:', error);
+        console.error('🔥 ❌ 日期推算出错:', error);
+
+        // 如果出错，也尝试创建基准Solar对象
+        if (yearNum) {
+          try {
+            console.log('🔥 🔧 错误恢复：创建基准Solar对象');
+            solar = Solar.fromYmd(yearNum, 1, 1);
+            lunar = solar.getLunar();
+            eightChar = lunar.getEightChar();
+            eightChar.setSect(parseInt(sect));
+            console.log('🔥 ✅ 错误恢复成功');
+          } catch (e) {
+            console.error('🔥 ❌ 错误恢复失败:', e);
+          }
+        }
       }
     }
 
@@ -260,6 +306,75 @@ export class BaziService {
     const sanHeJu = CombinationCalculator.checkSanHeJu(branches);
     const sanHuiJu = CombinationCalculator.checkSanHuiJu(branches);
 
+    // 计算神煞（即使没有完整日期信息也可以计算基本神煞）
+    let shenSha: string[] = [];
+    if (eightChar) {
+      const shenShaResult = ComprehensiveShenShaCalculator.calculateCompleteShenSha(eightChar);
+      shenSha = shenShaResult.allShenSha;
+    }
+
+    // 大运和流年信息（如果有性别且有完整八字信息）
+    let daYun: DaYunInfo[] = [];
+    let liuNian: LiuNianInfo[] = [];
+    let qiYunYear: number | undefined;
+    let qiYunAge: number | undefined;
+    let qiYunDate: string | undefined;
+    let qiYunMonth: number | undefined;
+    let qiYunDay: number | undefined;
+    let qiYunHour: number | undefined;
+    let daYunStartAge: number | undefined;
+
+    // 如果有性别且有完整的八字和日期信息，计算大运流年
+    console.log('🔥 ========== 检查大运流年计算条件 ==========');
+    console.log('🔥 性别检查:', gender, '(应该是"1"或"0")');
+    console.log('🔥 性别条件:', gender === '1' || gender === '0');
+    console.log('🔥 八字对象存在:', !!eightChar);
+    console.log('🔥 日期对象存在:', !!solar);
+    console.log('🔥 所有条件满足:', (gender === '1' || gender === '0') && eightChar && solar);
+
+    if ((gender === '1' || gender === '0') && eightChar && solar) {
+      console.log('🔥 ✅ 开始计算大运流年信息');
+      try {
+        // 计算起运信息
+        console.log('🔥 计算起运信息...');
+        const qiYunInfo = DaYunCalculator.calculateQiYunInfo(eightChar, solar, gender);
+        qiYunYear = qiYunInfo.qiYunYear;
+        qiYunAge = qiYunInfo.qiYunAge;
+        qiYunDate = qiYunInfo.qiYunDate;
+        qiYunMonth = qiYunInfo.qiYunMonth;
+        qiYunDay = qiYunInfo.qiYunDay;
+        qiYunHour = qiYunInfo.qiYunHour;
+        console.log('🔥 起运信息计算完成:', qiYunInfo);
+
+        // 计算大运信息
+        console.log('🔥 计算大运信息...');
+        daYun = DaYunCalculator.calculateDaYun(eightChar, solar, gender, dayStem, 10);
+        daYunStartAge = DaYunCalculator.getDaYunStartAge(eightChar, gender);
+        console.log('🔥 大运信息计算完成，数量:', daYun.length);
+
+        // 计算流年信息
+        console.log('🔥 计算流年信息...');
+        liuNian = LiuNianCalculator.calculateLiuNian(eightChar, solar, gender, dayStem, undefined, 10);
+        console.log('🔥 流年信息计算完成，数量:', liuNian.length);
+
+        console.log('🔥 ✅ 大运流年计算全部完成');
+      } catch (error) {
+        console.error('🔥 ❌ parseBaziString - 计算大运流年时出错:', error);
+        console.error('🔥 ❌ 错误详情:', error.stack);
+      }
+    } else {
+      console.log('🔥 ❌ 跳过大运流年计算，原因:');
+      if (gender !== '1' && gender !== '0') {
+        console.log('🔥   - 性别不正确:', gender, '(需要"1"或"0")');
+      }
+      if (!eightChar) {
+        console.log('🔥   - 缺少八字对象');
+      }
+      if (!solar) {
+        console.log('🔥   - 缺少日期对象');
+      }
+    }
+
     return {
       // 基本信息
       solarDate,
@@ -326,6 +441,22 @@ export class BaziService {
       // 组合信息
       sanHeJu,
       sanHuiJu,
+
+      // 神煞信息
+      shenSha,
+
+      // 大运信息
+      daYun,
+      daYunStartAge,
+      qiYunYear,
+      qiYunAge,
+      qiYunDate,
+      qiYunMonth,
+      qiYunDay,
+      qiYunHour,
+
+      // 流年信息
+      liuNian,
 
       // 设置信息
       gender,

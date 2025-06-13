@@ -47,6 +47,16 @@ export class DaYunCalculator {
         // 计算地势
         const diShi = this.calculateDiShi(ganZhi.charAt(0), ganZhi.charAt(1));
 
+        // 安全获取旬空信息
+        let xunKong = '';
+        try {
+          xunKong = dy.getXunKong() || '';
+        } catch (e) {
+          console.warn('获取大运旬空信息失败:', e);
+          // 使用备用方法计算旬空
+          xunKong = DaYunCalculator.calculateXunKongSafe(ganZhi);
+        }
+
         return {
           startYear: dy.getStartYear(),
           endYear: dy.getEndYear(),
@@ -58,7 +68,7 @@ export class DaYunCalculator {
           shiShenGan,
           shiShenZhi,
           diShi,
-          xunKong: dy.getXunKong(),
+          xunKong,
           shenSha
         };
       });
@@ -175,6 +185,27 @@ export class DaYunCalculator {
     };
 
     return changShengMap[stem]?.[branch] || '';
+  }
+
+  /**
+   * 安全计算旬空
+   * @param ganZhi 干支
+   * @returns 旬空信息
+   */
+  private static calculateXunKongSafe(ganZhi: string): string {
+    if (!ganZhi || ganZhi.length !== 2) {
+      return '';
+    }
+
+    try {
+      // 使用BaziCalculator的旬空计算方法
+      const stem = ganZhi.charAt(0);
+      const branch = ganZhi.charAt(1);
+      return BaziCalculator.calculateXunKong(stem, branch);
+    } catch (e) {
+      console.warn('安全旬空计算也失败:', e);
+      return '';
+    }
   }
 
   /**

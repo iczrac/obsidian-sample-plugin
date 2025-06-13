@@ -1411,7 +1411,12 @@ export class InteractiveBaziView {
    */
   private createDaYunInfo() {
     if (!this.baziInfo.daYun || this.baziInfo.daYun.length === 0) {
-      console.log('🎯 没有大运数据');
+      const daYunSection = this.container.createDiv({ cls: 'bazi-view-section bazi-dayun-section' });
+      daYunSection.createEl('h4', { text: '大运信息', cls: 'bazi-view-subtitle' });
+      daYunSection.createEl('div', {
+        text: '暂无大运数据（需要指定性别和年份）',
+        cls: 'bazi-empty-message'
+      });
       return;
     }
 

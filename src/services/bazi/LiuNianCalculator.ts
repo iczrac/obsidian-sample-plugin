@@ -57,6 +57,16 @@ export class LiuNianCalculator {
         // 计算地势
         const diShi = this.calculateDiShi(ganZhi.charAt(0), ganZhi.charAt(1));
 
+        // 安全获取旬空信息
+        let xunKong = '';
+        try {
+          xunKong = ln.getXunKong() || '';
+        } catch (e) {
+          console.warn('获取流年旬空信息失败:', e);
+          // 使用备用方法计算旬空
+          xunKong = this.calculateXunKong(ganZhi);
+        }
+
         return {
           year: ln.getYear(),
           age: ln.getAge(),
@@ -66,7 +76,7 @@ export class LiuNianCalculator {
           shiShenGan,
           shiShenZhi,
           diShi,
-          xunKong: ln.getXunKong(),
+          xunKong,
           shenSha
         };
       });
