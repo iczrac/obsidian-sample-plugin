@@ -128,19 +128,19 @@ export class BaziLinkToolbar {
 
 
     /**
-     * 创建插入链接按钮
+     * 创建快速链接按钮（简化版插入链接）
      */
     private createInsertLinksButton(container: HTMLElement): void {
         const button = container.createEl('button', {
-            text: '📝 插入链接',
-            cls: 'bazi-toolbar-button mod-cta',
-            attr: { 'title': '将双链和标签插入到当前文档中，使其能被Obsidian识别' }
+            text: '📝 快速链接',
+            cls: 'bazi-toolbar-button mod-secondary',
+            attr: { 'title': '在当前文档中插入核心链接和标签' }
         });
 
         button.addEventListener('click', async () => {
             try {
-                await this.insertLinksToDocument();
-                new Notice('✅ 双链和标签已插入到文档中！');
+                await this.insertCoreLinksToDocument();
+                new Notice('✅ 核心链接已插入到当前文档！');
             } catch (error) {
                 console.error('插入链接失败:', error);
                 new Notice('❌ 插入链接失败，请查看控制台');
@@ -318,6 +318,117 @@ export class BaziLinkToolbar {
     }
 
     /**
+     * 在当前文档中插入核心链接（简化版）
+     */
+    private async insertCoreLinksToDocument(): Promise<void> {
+        const activeFile = this.app.workspace.getActiveFile();
+        if (!activeFile) {
+            throw new Error('没有活动文档');
+        }
+
+        // 生成核心链接内容
+        const coreContent = this.buildCoreLinksContent();
+
+        // 读取当前文档内容
+        const currentContent = await this.app.vault.read(activeFile);
+
+        // 检查是否已经存在核心链接部分
+        const coreLinksRegex = /<!-- 八字核心链接 开始 -->[\s\S]*?<!-- 八字核心链接 结束 -->/;
+
+        let newContent: string;
+        if (coreLinksRegex.test(currentContent)) {
+            // 替换现有的核心链接部分
+            newContent = currentContent.replace(coreLinksRegex, coreContent);
+        } else {
+            // 在文档末尾添加核心链接部分
+            newContent = currentContent + '\n\n' + coreContent;
+        }
+
+        // 写入更新后的内容
+        await this.app.vault.modify(activeFile, newContent);
+    }
+
+    /**
+     * 构建核心链接内容（精简版）
+     */
+    private buildCoreLinksContent(): string {
+        const sections: string[] = [];
+
+        sections.push('<!-- 八字核心链接 开始 -->');
+        sections.push('');
+        sections.push('## 🔗 八字核心信息');
+        sections.push('');
+
+        // 人物档案链接
+        if (this.baziInfo.name) {
+            sections.push('### 👤 人物档案');
+            sections.push(`- [[${this.baziInfo.name}]] - 完整个人档案`);
+            sections.push('');
+        }
+
+        // 核心神煞（只显示最重要的3个）
+        const allShenSha = this.getAllShenShaNames();
+        if (allShenSha.length > 0) {
+            sections.push('### 🌟 核心神煞');
+            const importantShenSha = allShenSha.slice(0, 3);
+            importantShenSha.forEach(shenSha => {
+                sections.push(`- [[${shenSha}]]`);
+            });
+            sections.push('');
+        }
+
+        // 格局信息
+        if (this.baziInfo.geJu) {
+            sections.push('### ⚖️ 格局');
+            sections.push(`- [[${this.baziInfo.geJu}]]`);
+            sections.push('');
+        }
+
+        // 核心标签（只显示最重要的）
+        const coreTag = this.generateCoreTag();
+        if (coreTag) {
+            sections.push('### 🏷️ 核心特征');
+            sections.push(coreTag);
+            sections.push('');
+        }
+
+        sections.push('<!-- 八字核心链接 结束 -->');
+
+        return sections.join('\n');
+    }
+
+    /**
+     * 生成核心标签
+     */
+    private generateCoreTag(): string {
+        const tags: string[] = [];
+
+        // 日主强弱
+        if (this.baziInfo.dayStem && this.baziInfo.riZhuStrength) {
+            const wuXingMap: { [key: string]: string } = {
+                '甲': '木', '乙': '木', '丙': '火', '丁': '火',
+                '戊': '土', '己': '土', '庚': '金', '辛': '金',
+                '壬': '水', '癸': '水'
+            };
+            const wuXing = wuXingMap[this.baziInfo.dayStem] || '';
+            tags.push(`#${this.baziInfo.dayStem}${wuXing}日主${this.baziInfo.riZhuStrength}`);
+        }
+
+        // 生肖
+        if (this.baziInfo.yearShengXiao) {
+            tags.push(`#${this.baziInfo.yearShengXiao}年`);
+        }
+
+        // 性别
+        if (this.baziInfo.gender) {
+            const genderText = this.baziInfo.gender === '1' ? '男性' : this.baziInfo.gender === '0' ? '女性' : this.baziInfo.gender;
+            tags.push(`#${genderText}`);
+        }
+
+        return tags.join(' ');
+    }
+
+    /**
      * 将双链和标签插入到当前文档中（保留原接口）
      */
     private async insertLinksToDocument(): Promise<void> {
@@ -372,7 +483,7 @@ export class BaziLinkToolbar {
     /**
      * 生成个人档案内容（使用HTML注释块分区）
      */
-    private generatePersonalProfileContent(): string {
+    public generatePersonalProfileContent(): string {
         const smartResult = this.linkService.generateSmartLinksAndTags(this.baziInfo, this.baziId);
         const sections: string[] = [];
 
@@ -441,7 +552,9 @@ export class BaziLinkToolbar {
         sections.push('## 🔮 八字命盘');
         sections.push('');
         sections.push('```bazi');
-        sections.push(`date: ${this.baziInfo.solarDate} ${this.baziInfo.solarTime || '00:00'}`);
+        const timeStr = this.baziInfo.solarTime || '00:00';
+        const formattedTime = timeStr.includes(':') ? timeStr : '00:00';
+        sections.push(`date: ${this.baziInfo.solarDate} ${formattedTime}`);
         sections.push(`gender: ${this.baziInfo.gender === '1' ? '男' : '女'}`);
         sections.push(`name: ${this.baziInfo.name}`);
         sections.push('style: 3');
@@ -475,8 +588,8 @@ export class BaziLinkToolbar {
             });
             sections.push('');
 
-            // 生成神煞组合
-            const shenShaCombos = this.generateShenShaCombos();
+            // 生成神煞组合（使用ShenShaService）
+            const shenShaCombos = this.generateShenShaCombosByService();
             if (shenShaCombos.length > 0) {
                 sections.push('### 神煞组合');
                 shenShaCombos.forEach(combo => {
@@ -489,7 +602,19 @@ export class BaziLinkToolbar {
                 sections.push('');
             }
         } else {
-            sections.push('暂无神煞信息');
+            sections.push('### 神煞');
+            sections.push('- 暂无神煞信息，可能是八字数据不完整或神煞计算未启用');
+            sections.push('');
+
+            sections.push('### 神煞组合');
+            sections.push('- 暂无神煞组合');
+            sections.push('');
+
+            sections.push('### 神煞说明');
+            sections.push('> 💡 神煞是八字命理中的重要概念，代表特殊的星宿和能量。如果此处显示为空，可能需要：');
+            sections.push('> - 检查八字计算设置');
+            sections.push('> - 确认神煞计算功能已启用');
+            sections.push('> - 验证出生时间的准确性');
             sections.push('');
         }
 
@@ -513,16 +638,28 @@ export class BaziLinkToolbar {
         if (this.baziInfo.geJu) {
             sections.push('### 主格局');
             sections.push(`- **格局类型**: [[${this.baziInfo.geJu}]]`);
-            sections.push(`- **格局特点**: 待分析`);
-            sections.push(`- **格局优劣**: 待分析`);
+            sections.push(`- **格局等级**: ${this.getGeJuLevel(this.baziInfo.geJu)}`);
+            sections.push(`- **格局特点**: ${this.getGeJuFeatures(this.baziInfo.geJu)}`);
+            sections.push(`- **适合职业**: ${this.getGeJuCareers(this.baziInfo.geJu)}`);
             sections.push('');
 
             sections.push('### 格局分析');
-            sections.push('<!-- 详细的格局分析内容 -->');
-            sections.push('- 待补充...');
+            sections.push(`> 📊 **${this.baziInfo.geJu}分析**`);
+            sections.push(`> ${this.getGeJuDescription(this.baziInfo.geJu)}`);
+            sections.push('');
+
+            sections.push('### 格局优化建议');
+            sections.push('- 待根据具体情况分析');
+            sections.push('- 建议结合大运流年进行详细分析');
             sections.push('');
         } else {
-            sections.push('格局信息待分析');
+            sections.push('### 格局信息');
+            sections.push('- 格局信息待分析，可能需要更详细的八字计算');
+            sections.push('');
+
+            sections.push('### 格局说明');
+            sections.push('> 💡 八字格局是命理分析的核心，决定了一个人的基本性格和人生走向。');
+            sections.push('> 常见格局包括：正官格、偏官格、正财格、偏财格、食神格、伤官格等。');
             sections.push('');
         }
 
@@ -600,13 +737,29 @@ export class BaziLinkToolbar {
 
             if (year < 1912) {
                 sections.push('- **历史时期**: 古代');
+                sections.push('- **社会特征**: 传统农业社会，重视礼教文化');
             } else if (year >= 1912 && year < 1949) {
                 sections.push('- **历史时期**: 民国时期');
-            } else if (year >= 1949) {
-                sections.push('- **历史时期**: 新中国成立后');
+                sections.push('- **社会特征**: 新旧交替，思想解放，战乱频繁');
+            } else if (year >= 1949 && year < 1978) {
+                sections.push('- **历史时期**: 新中国成立初期');
+                sections.push('- **社会特征**: 计划经济，集体主义，艰苦奋斗');
+            } else if (year >= 1978 && year < 2000) {
+                sections.push('- **历史时期**: 改革开放时期');
+                sections.push('- **社会特征**: 经济腾飞，思想开放，机遇与挑战并存');
+            } else if (year >= 2000 && year < 2020) {
+                sections.push('- **历史时期**: 新世纪初期');
+                sections.push('- **社会特征**: 信息化时代，全球化进程，快速发展');
+            } else if (year >= 2020) {
+                sections.push('- **历史时期**: 新时代');
+                sections.push('- **社会特征**: 数字化转型，可持续发展，创新驱动');
             }
 
-            sections.push('- **时代特点**: 待补充');
+            // 添加生肖年特征
+            if (this.baziInfo.yearShengXiao) {
+                sections.push(`- **生肖特征**: ${this.getZodiacCharacteristics(this.baziInfo.yearShengXiao)}`);
+            }
+
             sections.push('');
         }
 
@@ -631,6 +784,8 @@ export class BaziLinkToolbar {
         sections.push(`- [[${this.baziInfo.name}的八字分析]] - 详细命理分析`);
         sections.push(`- [[${this.baziInfo.name}的大运分析]] - 人生运势分析`);
         sections.push(`- [[${this.baziInfo.name}的流年运势]] - 年度运势分析`);
+        sections.push(`- [[${this.baziInfo.name}的性格特征]] - 性格分析报告`);
+        sections.push(`- [[${this.baziInfo.name}的事业发展]] - 职业规划建议`);
         sections.push('');
 
         // 关联信息
@@ -698,12 +853,7 @@ export class BaziLinkToolbar {
             sections.push('');
         }
 
-        // 所有标签汇总
-        if (allTags.length > 0) {
-            sections.push('### 全部标签');
-            sections.push(allTags.join(' '));
-            sections.push('');
-        }
+
 
         sections.push('<!-- 标签系统区块 结束 -->');
         sections.push('');
@@ -768,7 +918,39 @@ export class BaziLinkToolbar {
     }
 
     /**
-     * 生成神煞组合
+     * 使用ShenShaService生成神煞组合
+     */
+    private generateShenShaCombosByService(): Array<{name: string, description: string}> {
+        const combos: Array<{name: string, description: string}> = [];
+
+        // 获取所有神煞名称
+        const allShenSha = this.getAllShenShaNames();
+
+        if (allShenSha.length === 0) {
+            return combos;
+        }
+
+        try {
+            // 使用ShenShaService获取神煞组合分析
+            const { ShenShaService } = require('../services/ShenShaService');
+            const combinationAnalysis = ShenShaService.getShenShaCombinationAnalysis(allShenSha);
+
+            // 转换为所需格式
+            combinationAnalysis.forEach((analysis: any) => {
+                combos.push({
+                    name: analysis.combination,
+                    description: analysis.analysis.substring(0, 80) + '...' // 截取前80个字符
+                });
+            });
+        } catch (error) {
+            console.error('获取神煞组合分析失败:', error);
+        }
+
+        return combos;
+    }
+
+    /**
+     * 生成神煞组合（备用方法，保留原有逻辑）
      */
     private generateShenShaCombos(): Array<{name: string, description: string}> {
         const combos: Array<{name: string, description: string}> = [];
@@ -780,63 +962,33 @@ export class BaziLinkToolbar {
         const comboRules = [
             {
                 names: ['天乙贵人', '文昌'],
-                combo: '贵人文昌组合',
+                combo: '天乙贵人 + 文昌',
                 desc: '智慧与贵人相助，学业事业双佳'
             },
             {
                 names: ['桃花', '咸池'],
-                combo: '桃花咸池组合',
+                combo: '桃花 + 咸池',
                 desc: '感情丰富，异性缘佳，需注意感情纠纷'
             },
             {
                 names: ['华盖', '文昌'],
-                combo: '华盖文昌组合',
+                combo: '华盖 + 文昌',
                 desc: '艺术才华出众，适合文化创作'
             },
             {
                 names: ['羊刃', '七杀'],
-                combo: '羊刃七杀组合',
+                combo: '羊刃 + 七杀',
                 desc: '性格刚强果断，具有领导才能'
             },
             {
                 names: ['天德', '月德'],
-                combo: '天月德组合',
+                combo: '天德 + 月德',
                 desc: '德行高尚，一生多贵人相助'
             },
             {
                 names: ['驿马', '将星'],
-                combo: '驿马将星组合',
+                combo: '驿马 + 将星',
                 desc: '奔波中成就事业，适合外出发展'
-            },
-            {
-                names: ['天乙贵人', '国印'],
-                combo: '贵人国印组合',
-                desc: '官运亨通，容易获得权威地位'
-            },
-            {
-                names: ['文昌', '学堂'],
-                combo: '文昌学堂组合',
-                desc: '学习能力强，适合学术研究'
-            },
-            {
-                names: ['红鸾', '天喜'],
-                combo: '红鸾天喜组合',
-                desc: '婚姻美满，感情生活幸福'
-            },
-            {
-                names: ['华盖', '孤辰'],
-                combo: '华盖孤辰组合',
-                desc: '性格孤高，适合独立思考和创作'
-            },
-            {
-                names: ['桃花', '红鸾'],
-                combo: '桃花红鸾组合',
-                desc: '异性缘极佳，感情机会多'
-            },
-            {
-                names: ['将星', '国印'],
-                combo: '将星国印组合',
-                desc: '具有统领才能，适合管理职位'
             }
         ];
 
@@ -914,6 +1066,115 @@ export class BaziLinkToolbar {
     }
 
     /**
+     * 获取格局等级
+     */
+    private getGeJuLevel(geJu: string): string {
+        const levelMap: { [key: string]: string } = {
+            '正官格': '上等格局',
+            '偏官格': '中上格局',
+            '正财格': '上等格局',
+            '偏财格': '中等格局',
+            '食神格': '上等格局',
+            '伤官格': '中等格局',
+            '正印格': '上等格局',
+            '偏印格': '中等格局',
+            '比肩格': '中等格局',
+            '劫财格': '中下格局',
+            '从旺格': '特殊格局',
+            '从弱格': '特殊格局',
+            '化气格': '特殊格局'
+        };
+        return levelMap[geJu] || '待分析';
+    }
+
+    /**
+     * 获取格局特点
+     */
+    private getGeJuFeatures(geJu: string): string {
+        const featuresMap: { [key: string]: string } = {
+            '正官格': '正直守法，有责任心，适合管理',
+            '偏官格': '果断刚强，有魄力，适合竞争',
+            '正财格': '务实稳重，善于理财，重视物质',
+            '偏财格': '灵活机变，善于投资，偏财运佳',
+            '食神格': '温和善良，有艺术天赋，重视享受',
+            '伤官格': '聪明才智，有创新精神，个性较强',
+            '正印格': '学识渊博，有贵人相助，重视名誉',
+            '偏印格': '思维敏捷，有特殊技能，较为孤独',
+            '比肩格': '自立自强，有竞争意识，重视友情',
+            '劫财格': '冲动急躁，容易破财，需要约束',
+            '从旺格': '个性强烈，一意孤行，需要引导',
+            '从弱格': '随和适应，依赖性强，需要支持',
+            '化气格': '变化多端，适应力强，机遇较多'
+        };
+        return featuresMap[geJu] || '待分析';
+    }
+
+    /**
+     * 获取格局适合职业
+     */
+    private getGeJuCareers(geJu: string): string {
+        const careersMap: { [key: string]: string } = {
+            '正官格': '公务员、管理者、法官、教师',
+            '偏官格': '军人、警察、企业家、运动员',
+            '正财格': '会计师、银行家、商人、理财师',
+            '偏财格': '投资者、销售员、中介、贸易商',
+            '食神格': '艺术家、厨师、娱乐业、服务业',
+            '伤官格': '设计师、发明家、作家、技术员',
+            '正印格': '学者、研究员、医生、咨询师',
+            '偏印格': '占卜师、心理学家、技术专家',
+            '比肩格': '合伙人、团队领导、体育教练',
+            '劫财格': '销售、竞技、短期投资',
+            '从旺格': '创业者、艺术家、自由职业',
+            '从弱格': '助理、秘书、服务行业',
+            '化气格': '外交官、中介、变化性工作'
+        };
+        return careersMap[geJu] || '待分析';
+    }
+
+    /**
+     * 获取格局描述
+     */
+    private getGeJuDescription(geJu: string): string {
+        const descMap: { [key: string]: string } = {
+            '正官格': '正官格的人通常具有强烈的责任感和正义感，做事有条理，适合在体制内发展。',
+            '偏官格': '偏官格的人性格刚强果断，有很强的执行力，适合在竞争激烈的环境中发展。',
+            '正财格': '正财格的人务实稳重，善于积累财富，通过正当途径获得成功。',
+            '偏财格': '偏财格的人机智灵活，善于把握机会，偏财运较好，适合投资理财。',
+            '食神格': '食神格的人温和善良，有艺术天赋，重视生活品质和精神享受。',
+            '伤官格': '伤官格的人聪明有才华，富有创新精神，但个性较强，需要适当约束。',
+            '正印格': '正印格的人学识渊博，有贵人相助，重视名誉和社会地位。',
+            '偏印格': '偏印格的人思维敏捷，有特殊技能，但较为孤独，需要主动社交。',
+            '比肩格': '比肩格的人自立自强，有竞争意识，重视友情，适合团队合作。',
+            '劫财格': '劫财格的人冲动急躁，容易破财，需要学会理财和情绪管理。',
+            '从旺格': '从旺格是特殊格局，个性强烈，一意孤行，需要适当的引导和约束。',
+            '从弱格': '从弱格的人随和适应，依赖性较强，需要寻找可靠的支持和依靠。',
+            '化气格': '化气格变化多端，适应力强，机遇较多，但需要把握时机。'
+        };
+        return descMap[geJu] || '此格局的详细分析有待进一步研究。';
+    }
+
+    /**
+     * 获取生肖特征
+     */
+    private getZodiacCharacteristics(zodiac: string): string {
+        const zodiacMap: { [key: string]: string } = {
+            '鼠': '机智灵活，适应力强，善于理财',
+            '牛': '勤劳踏实，坚韧不拔，值得信赖',
+            '虎': '勇敢果断，有领导力，富有正义感',
+            '兔': '温和善良，心思细腻，重视和谐',
+            '龙': '雄心壮志，有魅力，天生领袖',
+            '蛇': '智慧深沉，直觉敏锐，神秘优雅',
+            '马': '热情奔放，自由不羁，富有活力',
+            '羊': '温柔体贴，有艺术天赋，重视精神',
+            '猴': '聪明机智，多才多艺，善于变通',
+            '鸡': '勤奋认真，有条理，注重细节',
+            '狗': '忠诚可靠，有责任心，重视友情',
+            '猪': '诚实善良，乐观开朗，享受生活'
+        };
+        return zodiacMap[zodiac] || '待分析';
+    }
+
+    /**
      * 刷新工具栏
      */
     refresh(): void {
@@ -966,13 +1227,15 @@ export class BaziTableEnhancer {
 
             // 检查是否为神煞名称
             if (this.isShenShaName(text, effectiveConfig)) {
-                this.makeClickableLink(cell as HTMLElement, `${text}详解`, app);
+                this.makeClickableLink(cell as HTMLElement, text, app);
             }
 
             // 检查是否为其他可链接内容
             // 可以根据需要扩展更多类型
         });
     }
+
+
 
     /**
      * 判断是否为神煞名称

@@ -82,56 +82,45 @@ export class BaziLinkPanel extends Modal {
         // 获取智能生成的双链和标签（使用baziId获取有效配置）
         const smartResult = this.linkService.generateSmartLinksAndTags(this.baziInfo, this.baziId);
 
-        // 1. 神煞双链部分
+        // 1. 个人档案核心链接
+        this.createPersonalProfileSection(container);
+
+        // 2. 神煞分析
         const shenShaLinks = this.extractShenShaLinks();
-        if (shenShaLinks.length > 0) {
-            this.createPrimaryLinkSection(container, '🌟 神煞', shenShaLinks);
-        }
-
-        // 2. 神煞组合双链部分
         const shenShaComboLinks = this.extractShenShaComboLinks();
-        if (shenShaComboLinks.length > 0) {
-            this.createPrimaryLinkSection(container, '🔮 神煞组合', shenShaComboLinks);
+        if (shenShaLinks.length > 0 || shenShaComboLinks.length > 0) {
+            this.createShenShaSection(container, shenShaLinks, shenShaComboLinks);
         }
 
-        // 3. 格局双链部分
+        // 3. 格局分析
         const geJuLinks = this.extractGeJuLinks();
         if (geJuLinks.length > 0) {
-            this.createPrimaryLinkSection(container, '⚖️ 格局', geJuLinks);
+            this.createPrimaryLinkSection(container, '⚖️ 格局分析', geJuLinks);
         }
 
-        // 4. 五行强弱标签部分
+        // 4. 标签系统
         const wuXingTags = this.extractWuXingStrengthTags();
-        if (wuXingTags.length > 0) {
-            this.createTagSection(container, '🏷️ 五行强弱', wuXingTags);
-        }
-
-        // 5. 时代特征标签部分
         const eraTags = this.extractEraTags();
-        if (eraTags.length > 0) {
-            this.createTagSection(container, '🏷️ 时代特征', eraTags);
+        const allTags = [...wuXingTags, ...eraTags];
+        const otherTags = smartResult.tags.filter(tag =>
+            !allTags.includes(tag) && !this.isWuXingTag(tag) && !this.isEraTag(tag)
+        );
+        if (wuXingTags.length > 0 || eraTags.length > 0 || otherTags.length > 0) {
+            this.createTagSystemSection(container, wuXingTags, eraTags, otherTags);
         }
 
-        // 6. 其他双链和标签
+        // 5. 相关链接
         const otherLinks = smartResult.doubleLinks.filter(link =>
-            !this.isShenShaLink(link) && !this.isGeJuLink(link)
+            !this.isShenShaLink(link) && !this.isGeJuLink(link) && !link.includes(this.baziInfo.name || '')
         );
         if (otherLinks.length > 0) {
-            this.createPrimaryLinkSection(container, '🔗 其他链接',
+            this.createPrimaryLinkSection(container, '🔗 相关链接',
                 otherLinks.map(link => ({
                     label: link.replace(/\[\[|\]\]/g, ''),
                     link: link,
-                    description: '点击创建或打开专属页面',
-                    isPrimary: link.includes(this.baziInfo.name || '')
+                    description: '点击创建或打开专属页面'
                 }))
             );
-        }
-
-        const otherTags = smartResult.tags.filter(tag =>
-            !this.isWuXingTag(tag) && !this.isEraTag(tag)
-        );
-        if (otherTags.length > 0) {
-            this.createTagSection(container, '🏷️ 其他标签', otherTags);
         }
 
         // 如果没有内容，显示提示
@@ -151,61 +140,19 @@ export class BaziLinkPanel extends Modal {
         this.createConfigHint(container);
     }
     /**
-     * 提取神煞双链
+     * 提取神煞双链（直接从八字信息提取，避免循环调用）
      */
     private extractShenShaLinks(): Array<{label: string, link: string, description: string}> {
-        const shenShaList: string[] = [];
-
-        // 从八字信息中提取神煞
-        if (this.baziInfo.shenSha) {
-            if (Array.isArray(this.baziInfo.shenSha)) {
-                this.baziInfo.shenSha.forEach((shenSha: any) => {
-                    if (typeof shenSha === 'string') {
-                        shenShaList.push(shenSha);
-                    } else if (shenSha && shenSha.name) {
-                        shenShaList.push(shenSha.name);
-                    }
-                });
-            } else if (typeof this.baziInfo.shenSha === 'object') {
-                Object.values(this.baziInfo.shenSha).forEach((shenShaArray: any) => {
-                    if (Array.isArray(shenShaArray)) {
-                        shenShaArray.forEach((shenSha: any) => {
-                            if (typeof shenSha === 'string') {
-                                shenShaList.push(shenSha);
-                            } else if (shenSha && shenSha.name) {
-                                shenShaList.push(shenSha.name);
-                            }
-                        });
-                    }
-                });
-            }
-        }
-
-        // 检查各个柱的神煞
-        ['yearShenSha', 'monthShenSha', 'dayShenSha', 'hourShenSha'].forEach(key => {
-            const shenShaArray = (this.baziInfo as any)[key];
-            if (Array.isArray(shenShaArray)) {
-                shenShaArray.forEach((shenSha: any) => {
-                    if (typeof shenSha === 'string') {
-                        shenShaList.push(shenSha);
-                    } else if (shenSha && shenSha.name) {
-                        shenShaList.push(shenSha.name);
-                    }
-                });
-            }
-        });
-
-        // 去重并转换为链接格式
-        const uniqueShenSha = [...new Set(shenShaList)];
-        return uniqueShenSha.map(shenSha => ({
-            label: shenSha,
-            link: `[[${shenSha}]]`,
-            description: `${shenSha}的含义和影响`
+        const shenShaNames = this.getAllShenShaNames();
+        return shenShaNames.map(name => ({
+            label: name,
+            link: `[[${name}]]`,
+            description: `${name}的含义和影响`
         }));
     }
 
     /**
-     * 提取神煞组合双链
+     * 提取神煞组合双链（使用ShenShaService的组合分析）
      */
     private extractShenShaComboLinks(): Array<{label: string, link: string, description: string}> {
         const combos: Array<{label: string, link: string, description: string}> = [];
@@ -213,25 +160,21 @@ export class BaziLinkPanel extends Modal {
         // 获取所有神煞
         const allShenSha = this.getAllShenShaNames();
 
-        // 生成常见神煞组合
-        const commonCombos = [
-            { names: ['天乙贵人', '文昌'], combo: '贵人文昌组合', desc: '智慧与贵人相助的组合' },
-            { names: ['桃花', '咸池'], combo: '桃花咸池组合', desc: '感情丰富的组合' },
-            { names: ['华盖', '文昌'], combo: '华盖文昌组合', desc: '艺术才华的组合' },
-            { names: ['羊刃', '七杀'], combo: '羊刃七杀组合', desc: '刚强果断的组合' },
-            { names: ['天德', '月德'], combo: '天月德组合', desc: '德行高尚的组合' },
-            { names: ['驿马', '将星'], combo: '驿马将星组合', desc: '奔波成就的组合' }
-        ];
+        if (allShenSha.length === 0) {
+            return combos;
+        }
 
-        commonCombos.forEach(combo => {
-            const hasAllShenSha = combo.names.every(name => allShenSha.includes(name));
-            if (hasAllShenSha) {
-                combos.push({
-                    label: combo.combo,
-                    link: `[[${combo.combo}]]`,
-                    description: combo.desc
-                });
-            }
+        // 使用ShenShaService获取神煞组合分析
+        const { ShenShaService } = require('../services/ShenShaService');
+        const combinationAnalysis = ShenShaService.getShenShaCombinationAnalysis(allShenSha);
+
+        // 转换为双链格式
+        combinationAnalysis.forEach((analysis: any) => {
+            combos.push({
+                label: analysis.combination,
+                link: `[[${analysis.combination}]]`,
+                description: analysis.analysis.substring(0, 50) + '...' // 截取前50个字符作为描述
+            });
         });
 
         return combos;
@@ -263,24 +206,20 @@ export class BaziLinkPanel extends Modal {
     }
 
     /**
-     * 提取五行强弱标签
+     * 提取五行强弱标签（直接生成，避免循环调用）
      */
     private extractWuXingStrengthTags(): string[] {
         const tags: string[] = [];
 
         // 日主强弱
         if (this.baziInfo.dayStem && this.baziInfo.riZhuStrength) {
-            const wuXing = this.getStemWuXing(this.baziInfo.dayStem);
+            const wuXingMap: { [key: string]: string } = {
+                '甲': '木', '乙': '木', '丙': '火', '丁': '火',
+                '戊': '土', '己': '土', '庚': '金', '辛': '金',
+                '壬': '水', '癸': '水'
+            };
+            const wuXing = wuXingMap[this.baziInfo.dayStem] || '';
             tags.push(`#${this.baziInfo.dayStem}${wuXing}日主${this.baziInfo.riZhuStrength}`);
-        }
-
-        // 五行强度分析
-        if ((this.baziInfo as any).wuXingStrength) {
-            Object.entries((this.baziInfo as any).wuXingStrength).forEach(([element, strength]) => {
-                if (typeof strength === 'string') {
-                    tags.push(`#${element}${strength}`);
-                }
-            });
         }
 
         // 用神忌神
@@ -295,7 +234,7 @@ export class BaziLinkPanel extends Modal {
     }
 
     /**
-     * 提取时代特征标签
+     * 提取时代特征标签（直接生成，避免循环调用）
      */
     private extractEraTags(): string[] {
         const tags: string[] = [];
@@ -319,19 +258,6 @@ export class BaziLinkPanel extends Modal {
             else if (year >= 1990 && year <= 2000) tags.push('#90后');
             else if (year >= 2000 && year <= 2010) tags.push('#00后');
             else if (year >= 2010 && year <= 2020) tags.push('#10后');
-
-            // 朝代识别（古代）
-            if (year < 1912) {
-                if (year >= 1644) tags.push('#清朝');
-                else if (year >= 1368) tags.push('#明朝');
-                else if (year >= 1271) tags.push('#元朝');
-                else if (year >= 960) tags.push('#宋朝');
-                else if (year >= 618) tags.push('#唐朝');
-            } else if (year >= 1912 && year < 1949) {
-                tags.push('#民国');
-            } else if (year >= 1949) {
-                tags.push('#新中国');
-            }
         }
 
         // 生肖标签
@@ -348,7 +274,7 @@ export class BaziLinkPanel extends Modal {
         return tags;
     }
     /**
-     * 获取所有神煞名称
+     * 获取所有神煞名称（直接从八字信息提取，避免循环调用）
      */
     private getAllShenShaNames(): string[] {
         const shenShaList: string[] = [];
@@ -395,26 +321,18 @@ export class BaziLinkPanel extends Modal {
         return [...new Set(shenShaList)];
     }
 
-    /**
-     * 获取天干对应的五行
-     */
-    private getStemWuXing(stem: string): string {
-        const map: { [key: string]: string } = {
-            '甲': '木', '乙': '木',
-            '丙': '火', '丁': '火',
-            '戊': '土', '己': '土',
-            '庚': '金', '辛': '金',
-            '壬': '水', '癸': '水'
-        };
-        return map[stem] || '';
-    }
+
 
     /**
-     * 判断是否为神煞链接
+     * 判断是否为神煞链接（使用预定义关键词，避免循环调用）
      */
     private isShenShaLink(link: string): boolean {
-        const shenShaNames = this.getAllShenShaNames();
-        return shenShaNames.some(name => link.includes(name));
+        const shenShaKeywords = [
+            '天乙贵人', '文昌', '桃花', '咸池', '华盖', '羊刃', '七杀', '天德', '月德',
+            '驿马', '将星', '劫煞', '亡神', '孤辰', '寡宿', '红鸾', '天喜', '国印',
+            '学堂', '词馆', '金舆', '禄神', '刃煞', '飞刃', '血刃', '天罗', '地网'
+        ];
+        return shenShaKeywords.some(keyword => link.includes(keyword));
     }
 
     /**
@@ -565,8 +483,8 @@ export class BaziLinkPanel extends Modal {
         const importantShenShaNames = ['天乙贵人', '文昌', '桃花', '华盖', '禄神'];
 
         return importantShenShaNames.slice(0, 3).map(name => ({
-            label: `${name}详解`,
-            link: `[[${name}详解]]`,
+            label: name,
+            link: `[[${name}]]`,
             description: `${name}的含义和影响`
         }));
     }
@@ -629,15 +547,7 @@ export class BaziLinkPanel extends Modal {
 
         const buttonContainer = actionsSection.createDiv({ cls: 'bazi-actions-buttons' });
 
-        // 创建个人档案按钮
-        const createProfileButton = buttonContainer.createEl('button', {
-            text: `📝 创建 ${this.baziInfo.name || '个人'} 档案`,
-            cls: 'mod-cta bazi-action-button'
-        });
 
-        createProfileButton.addEventListener('click', async () => {
-            await this.createPersonalProfile();
-        });
 
 
 
@@ -652,36 +562,13 @@ export class BaziLinkPanel extends Modal {
         });
     }
 
-    /**
-     * 创建个人档案
-     */
-    private async createPersonalProfile() {
-        try {
-            const name = this.baziInfo.name || '未命名';
-            const fileName = `${name}.md`;
-            const existingFile = this.app.vault.getAbstractFileByPath(fileName);
 
-            if (!existingFile) {
-                // 使用新的档案格式创建
-                const content = this.generateNewPersonalProfileContent();
-                await this.app.vault.create(fileName, content);
-                new Notice(`✅ ${name} 的个人档案已创建`);
-            } else {
-                new Notice(`📄 ${name} 的档案已存在`);
-                // 打开现有档案
-                await this.app.workspace.openLinkText(fileName, '', false);
-            }
-            this.close();
-        } catch (error) {
-            new Notice('❌ 创建个人档案失败');
-            console.error('创建个人档案失败:', error);
-        }
-    }
     /**
-     * 生成新的个人档案内容（与BaziLinkToolbar保持一致）
+     * 生成完整的个人档案内容（与BaziLinkToolbar完全一致）
      */
     private generateNewPersonalProfileContent(): string {
-        const smartResult = this.linkService.generateSmartLinksAndTags(this.baziInfo);
+        // 为了避免循环引用，直接在这里实现完整的档案生成逻辑
+        const smartResult = this.linkService.generateSmartLinksAndTags(this.baziInfo, this.baziId);
         const sections: string[] = [];
 
         // 档案标题
@@ -707,7 +594,9 @@ export class BaziLinkPanel extends Modal {
         sections.push('## 🔮 八字命盘');
         sections.push('');
         sections.push('```bazi');
-        sections.push(`date: ${this.baziInfo.solarDate} ${this.baziInfo.solarTime || '00:00'}`);
+        const timeStr = this.baziInfo.solarTime || '00:00';
+        const formattedTime = timeStr.includes(':') ? timeStr : '00:00';
+        sections.push(`date: ${this.baziInfo.solarDate} ${formattedTime}`);
         sections.push(`gender: ${this.baziInfo.gender === '1' ? '男' : '女'}`);
         sections.push(`name: ${this.baziInfo.name}`);
         sections.push('style: 3');
@@ -732,11 +621,33 @@ export class BaziLinkPanel extends Modal {
             });
             sections.push('');
 
-            sections.push('### 神煞组合');
-            sections.push('- 待分析...');
-            sections.push('');
+            // 神煞组合
+            const shenShaCombos = this.extractShenShaComboLinks();
+            if (shenShaCombos.length > 0) {
+                sections.push('### 神煞组合');
+                shenShaCombos.forEach(combo => {
+                    sections.push(`- [[${combo.label}]] - ${combo.description}`);
+                });
+                sections.push('');
+            } else {
+                sections.push('### 神煞组合');
+                sections.push('- 暂无特殊神煞组合');
+                sections.push('');
+            }
         } else {
-            sections.push('暂无神煞信息');
+            sections.push('### 神煞');
+            sections.push('- 暂无神煞信息，可能是八字数据不完整或神煞计算未启用');
+            sections.push('');
+
+            sections.push('### 神煞组合');
+            sections.push('- 暂无神煞组合');
+            sections.push('');
+
+            sections.push('### 神煞说明');
+            sections.push('> 💡 神煞是八字命理中的重要概念，代表特殊的星宿和能量。如果此处显示为空，可能需要：');
+            sections.push('> - 检查八字计算设置');
+            sections.push('> - 确认神煞计算功能已启用');
+            sections.push('> - 验证出生时间的准确性');
             sections.push('');
         }
 
@@ -751,15 +662,60 @@ export class BaziLinkPanel extends Modal {
         if (this.baziInfo.geJu) {
             sections.push('### 主格局');
             sections.push(`- **格局类型**: [[${this.baziInfo.geJu}]]`);
+            sections.push(`- **格局等级**: 待分析`);
             sections.push(`- **格局特点**: 待分析`);
-            sections.push(`- **格局优劣**: 待分析`);
+            sections.push(`- **适合职业**: 待分析`);
+            sections.push('');
+
+            sections.push('### 格局分析');
+            sections.push(`> 📊 **${this.baziInfo.geJu}分析**`);
+            sections.push(`> 此格局的详细分析有待进一步研究。`);
+            sections.push('');
+
+            sections.push('### 格局优化建议');
+            sections.push('- 待根据具体情况分析');
+            sections.push('- 建议结合大运流年进行详细分析');
             sections.push('');
         } else {
-            sections.push('格局信息待分析');
+            sections.push('### 格局信息');
+            sections.push('- 格局信息待分析，可能需要更详细的八字计算');
+            sections.push('');
+
+            sections.push('### 格局说明');
+            sections.push('> 💡 八字格局是命理分析的核心，决定了一个人的基本性格和人生走向。');
+            sections.push('> 常见格局包括：正官格、偏官格、正财格、偏财格、食神格、伤官格等。');
             sections.push('');
         }
 
         sections.push('<!-- 格局分析区块 结束 -->');
+        sections.push('');
+
+        // 相关链接区块
+        sections.push('<!-- 相关链接区块 开始 -->');
+        sections.push('## 🔗 相关链接');
+        sections.push('');
+
+        // 个人相关链接
+        sections.push('### 个人档案');
+        sections.push(`- [[${this.baziInfo.name}的八字分析]] - 详细命理分析`);
+        sections.push(`- [[${this.baziInfo.name}的大运分析]] - 人生运势分析`);
+        sections.push(`- [[${this.baziInfo.name}的流年运势]] - 年度运势分析`);
+        sections.push(`- [[${this.baziInfo.name}的性格特征]] - 性格分析报告`);
+        sections.push(`- [[${this.baziInfo.name}的事业发展]] - 职业规划建议`);
+        sections.push('');
+
+        // 关联信息
+        const birthYear = this.baziInfo.solarDate?.split('-')[0] || '未知年份';
+        const zodiac = this.baziInfo.yearShengXiao || '未知';
+        const gender = this.baziInfo.gender === '1' ? '男性' : this.baziInfo.gender === '0' ? '女性' : '未知';
+
+        sections.push('### 关联信息');
+        sections.push(`- [[${birthYear}年生人]] - 同年份生人特征`);
+        sections.push(`- [[${zodiac}年运势]] - 生肖运势分析`);
+        sections.push(`- [[${gender}八字特征]] - 性别特征分析`);
+        sections.push('');
+
+        sections.push('<!-- 相关链接区块 结束 -->');
         sections.push('');
 
         // 标签系统区块
@@ -768,9 +724,32 @@ export class BaziLinkPanel extends Modal {
         sections.push('');
 
         if (smartResult.tags.length > 0) {
-            sections.push('### 全部标签');
-            sections.push(smartResult.tags.join(' '));
-            sections.push('');
+            // 分类显示标签
+            const wuXingTags = smartResult.tags.filter((tag: string) => this.isWuXingTag(tag));
+            const eraTags = smartResult.tags.filter((tag: string) => this.isEraTag(tag));
+            const otherTags = smartResult.tags.filter((tag: string) =>
+                !this.isWuXingTag(tag) && !this.isEraTag(tag)
+            );
+
+            if (wuXingTags.length > 0) {
+                sections.push('### 五行标签');
+                sections.push(wuXingTags.join(' '));
+                sections.push('');
+            }
+
+            if (eraTags.length > 0) {
+                sections.push('### 时代标签');
+                sections.push(eraTags.join(' '));
+                sections.push('');
+            }
+
+            if (otherTags.length > 0) {
+                sections.push('### 其他标签');
+                sections.push(otherTags.join(' '));
+                sections.push('');
+            }
+
+
         }
 
         sections.push('<!-- 标签系统区块 结束 -->');
@@ -872,6 +851,208 @@ export class BaziLinkPanel extends Modal {
             // 通用页面
             return this.generateGenericPageWithTags(pageName);
         }
+    }
+
+    /**
+     * 创建个人档案核心区块
+     */
+    private createPersonalProfileSection(container: HTMLElement) {
+        const name = this.baziInfo.name || '未命名';
+        const birthYear = this.baziInfo.solarDate?.split('-')[0] || '未知年份';
+        const zodiac = this.baziInfo.yearShengXiao || '未知';
+        const gender = this.baziInfo.gender === '1' ? '男' : this.baziInfo.gender === '0' ? '女' : '未知';
+
+        this.createPrimaryLinkSection(container, '👤 个人档案', [
+            {
+                label: name,
+                link: `[[${name}]]`,
+                description: '个人主页 - 包含完整八字信息',
+                isPrimary: true
+            },
+            {
+                label: `${name}的八字分析`,
+                link: `[[${name}的八字分析]]`,
+                description: '详细命理分析'
+            },
+            {
+                label: `${name}的大运分析`,
+                link: `[[${name}的大运分析]]`,
+                description: '人生运势分析'
+            },
+            {
+                label: `${name}的流年运势`,
+                link: `[[${name}的流年运势]]`,
+                description: '年度运势分析'
+            }
+        ]);
+
+        // 关联信息
+        this.createPrimaryLinkSection(container, '📅 关联信息', [
+            {
+                label: `${birthYear}年生人`,
+                link: `[[${birthYear}年生人]]`,
+                description: '同年份生人特征分析'
+            },
+            {
+                label: `${zodiac}年运势`,
+                link: `[[${zodiac}年运势]]`,
+                description: '生肖运势分析'
+            },
+            {
+                label: `${gender}性八字特征`,
+                link: `[[${gender}性八字特征]]`,
+                description: '性别特征分析'
+            }
+        ]);
+    }
+
+    /**
+     * 创建神煞分析区块
+     */
+    private createShenShaSection(
+        container: HTMLElement,
+        shenShaLinks: Array<{label: string, link: string, description: string}>,
+        shenShaComboLinks: Array<{label: string, link: string, description: string}>
+    ) {
+        const section = container.createDiv({ cls: 'bazi-shensha-section' });
+
+        // 分组标题
+        section.createEl('h3', {
+            text: '🌟 神煞分析',
+            cls: 'bazi-primary-section-title'
+        });
+
+        if (shenShaLinks.length > 0) {
+            const subSection = section.createDiv({ cls: 'bazi-shensha-subsection' });
+            subSection.createEl('h4', { text: '神煞', cls: 'bazi-subsection-title' });
+
+            const linkList = subSection.createDiv({ cls: 'bazi-primary-link-list' });
+            shenShaLinks.forEach(item => {
+                this.createLinkItem(linkList, item);
+            });
+        }
+
+        if (shenShaComboLinks.length > 0) {
+            const subSection = section.createDiv({ cls: 'bazi-shensha-subsection' });
+            subSection.createEl('h4', { text: '神煞组合', cls: 'bazi-subsection-title' });
+
+            const linkList = subSection.createDiv({ cls: 'bazi-primary-link-list' });
+            shenShaComboLinks.forEach(item => {
+                this.createLinkItem(linkList, item);
+            });
+        }
+
+        if (shenShaLinks.length === 0 && shenShaComboLinks.length === 0) {
+            section.innerHTML += `
+                <div style="color: var(--text-muted); font-style: italic; padding: 8px;">
+                    暂无神煞信息，可能需要检查八字计算设置
+                </div>
+            `;
+        }
+    }
+
+    /**
+     * 创建标签系统区块
+     */
+    private createTagSystemSection(
+        container: HTMLElement,
+        wuXingTags: string[],
+        eraTags: string[],
+        otherTags: string[]
+    ) {
+        const section = container.createDiv({ cls: 'bazi-tag-system-section' });
+
+        // 分组标题
+        section.createEl('h3', {
+            text: '🏷️ 标签系统',
+            cls: 'bazi-primary-section-title'
+        });
+
+        if (wuXingTags.length > 0) {
+            this.createSubTagSection(section, '五行标签', wuXingTags);
+        }
+
+        if (eraTags.length > 0) {
+            this.createSubTagSection(section, '时代标签', eraTags);
+        }
+
+        if (otherTags.length > 0) {
+            this.createSubTagSection(section, '其他标签', otherTags);
+        }
+
+
+    }
+
+    /**
+     * 创建子标签区块
+     */
+    private createSubTagSection(container: HTMLElement, title: string, tags: string[]) {
+        const subSection = container.createDiv({ cls: 'bazi-tag-subsection' });
+        subSection.createEl('h4', { text: title, cls: 'bazi-subsection-title' });
+
+        const tagContainer = subSection.createDiv({ cls: 'bazi-tag-container' });
+        tags.forEach(tag => {
+            const tagElement = tagContainer.createEl('span', {
+                text: tag,
+                cls: 'bazi-tag-item'
+            });
+
+            tagElement.addEventListener('click', () => {
+                navigator.clipboard.writeText(tag).then(() => {
+                    new Notice(`已复制标签: ${tag}`);
+                });
+            });
+
+            tagElement.setAttribute('title', `点击复制标签: ${tag}`);
+        });
+
+        // 批量复制按钮
+        const copyButton = subSection.createEl('button', {
+            text: '📋 复制',
+            cls: 'bazi-copy-tags-button'
+        });
+
+        copyButton.addEventListener('click', () => {
+            const allTags = tags.join(' ');
+            navigator.clipboard.writeText(allTags).then(() => {
+                new Notice(`已复制 ${tags.length} 个标签`);
+            });
+        });
+    }
+
+    /**
+     * 创建单个链接项
+     */
+    private createLinkItem(
+        container: HTMLElement,
+        item: {label: string, link: string, description?: string, isPrimary?: boolean}
+    ) {
+        const linkItem = container.createDiv({
+            cls: `bazi-primary-link-item ${item.isPrimary ? 'primary' : ''}`
+        });
+
+        // 链接按钮
+        const linkButton = linkItem.createEl('button', {
+            text: item.label,
+            cls: 'bazi-primary-link-button'
+        });
+
+        // 描述文本
+        if (item.description) {
+            linkItem.createEl('span', {
+                text: item.description,
+                cls: 'bazi-primary-link-description'
+            });
+        }
+
+        // 点击事件
+        linkButton.addEventListener('click', async () => {
+            try {
+                await this.app.workspace.openLinkText(item.link, '', false);
+            } catch (error) {
+                new Notice(`无法打开链接: ${item.link}`);
+            }
+        });
     }
 
     /**

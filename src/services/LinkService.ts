@@ -109,6 +109,10 @@ export class LinkService {
         const allShenSha = this.collectAllShenSha(baziInfo);
         content.push(...allShenSha);
 
+        // 神煞组合（双链）- 基于实际神煞生成组合
+        const shenShaCombos = this.generateShenShaCombinations(allShenSha);
+        content.push(...shenShaCombos);
+
         // 日主强弱（标签）
         if (baziInfo.dayStem && baziInfo.riZhuStrength) {
             const strengthTag = `${baziInfo.dayStem}${this.getStemWuXing(baziInfo.dayStem)}日主${baziInfo.riZhuStrength}`;
@@ -248,6 +252,51 @@ export class LinkService {
         // 去重并返回
         return [...new Set(shenShaList)];
     }
+
+    /**
+     * 生成神煞组合双链
+     */
+    private generateShenShaCombinations(shenShaList: string[]): string[] {
+        const combinations: string[] = [];
+
+        if (shenShaList.length < 2) {
+            return combinations;
+        }
+
+        try {
+            // 使用ShenShaService获取神煞组合分析
+            const { ShenShaService } = require('./ShenShaService');
+            const combinationAnalysis = ShenShaService.getShenShaCombinationAnalysis(shenShaList);
+
+            // 提取组合名称作为双链
+            combinationAnalysis.forEach((analysis: any) => {
+                combinations.push(analysis.combination);
+            });
+        } catch (error) {
+            console.error('生成神煞组合双链失败:', error);
+
+            // 备用方案：使用简单的组合规则
+            const simpleRules = [
+                { names: ['天乙贵人', '文昌'], combo: '天乙贵人 + 文昌' },
+                { names: ['桃花', '咸池'], combo: '桃花 + 咸池' },
+                { names: ['华盖', '文昌'], combo: '华盖 + 文昌' },
+                { names: ['羊刃', '七杀'], combo: '羊刃 + 七杀' },
+                { names: ['天德', '月德'], combo: '天德 + 月德' },
+                { names: ['驿马', '将星'], combo: '驿马 + 将星' }
+            ];
+
+            simpleRules.forEach(rule => {
+                const hasAllShenSha = rule.names.every(name => shenShaList.includes(name));
+                if (hasAllShenSha) {
+                    combinations.push(rule.combo);
+                }
+            });
+        }
+
+        return combinations;
+    }
+
+
 
     /**
      * 为八字信息生成相关链接（保持向后兼容）
