@@ -700,9 +700,10 @@ export class InteractiveBaziView {
         cls: 'shishen-tag-small'
       });
     }
+    // 换行
+    yearShiShenCell.createEl('br');
     // 地支藏干十神
     if (this.baziInfo.yearShiShenZhi && Array.isArray(this.baziInfo.yearShiShenZhi) && this.baziInfo.yearShiShenZhi.length > 0) {
-      yearShiShenCell.createSpan({ text: ' ' });
       yearShiShenCell.createSpan({
         text: this.baziInfo.yearShiShenZhi.join(','),
         cls: 'shishen-tag-small shishen-tag-hide'
@@ -711,7 +712,6 @@ export class InteractiveBaziView {
       // 如果没有提供地支藏干十神，则计算
       const hiddenShiShen = this.getHiddenShiShen(this.baziInfo.dayStem || '', this.baziInfo.yearBranch);
       if (hiddenShiShen.length > 0) {
-        yearShiShenCell.createSpan({ text: ' ' });
         yearShiShenCell.createSpan({
           text: hiddenShiShen.join(','),
           cls: 'shishen-tag-small shishen-tag-hide'
@@ -728,9 +728,10 @@ export class InteractiveBaziView {
         cls: 'shishen-tag-small'
       });
     }
+    // 换行
+    monthShiShenCell.createEl('br');
     // 地支藏干十神
     if (this.baziInfo.monthShiShenZhi && Array.isArray(this.baziInfo.monthShiShenZhi) && this.baziInfo.monthShiShenZhi.length > 0) {
-      monthShiShenCell.createSpan({ text: ' ' });
       monthShiShenCell.createSpan({
         text: this.baziInfo.monthShiShenZhi.join(','),
         cls: 'shishen-tag-small shishen-tag-hide'
@@ -739,7 +740,6 @@ export class InteractiveBaziView {
       // 如果没有提供地支藏干十神，则计算
       const hiddenShiShen = this.getHiddenShiShen(this.baziInfo.dayStem || '', this.baziInfo.monthBranch);
       if (hiddenShiShen.length > 0) {
-        monthShiShenCell.createSpan({ text: ' ' });
         monthShiShenCell.createSpan({
           text: hiddenShiShen.join(','),
           cls: 'shishen-tag-small shishen-tag-hide'
@@ -749,14 +749,15 @@ export class InteractiveBaziView {
 
     // 日柱十神
     const dayShiShenCell = shiShenRow.createEl('td');
-    // 日主标签
+    // 天干十神（日主）
     dayShiShenCell.createSpan({
       text: '日主',
       cls: 'shishen-tag-small'
     });
+    // 换行
+    dayShiShenCell.createEl('br');
     // 地支藏干十神
     if (this.baziInfo.dayShiShenZhi && Array.isArray(this.baziInfo.dayShiShenZhi) && this.baziInfo.dayShiShenZhi.length > 0) {
-      dayShiShenCell.createSpan({ text: ' ' });
       dayShiShenCell.createSpan({
         text: this.baziInfo.dayShiShenZhi.join(','),
         cls: 'shishen-tag-small shishen-tag-hide'
@@ -765,7 +766,6 @@ export class InteractiveBaziView {
       // 如果没有提供地支藏干十神，则计算
       const hiddenShiShen = this.getHiddenShiShen(this.baziInfo.dayStem || '', this.baziInfo.dayBranch);
       if (hiddenShiShen.length > 0) {
-        dayShiShenCell.createSpan({ text: ' ' });
         dayShiShenCell.createSpan({
           text: hiddenShiShen.join(','),
           cls: 'shishen-tag-small shishen-tag-hide'
@@ -782,9 +782,10 @@ export class InteractiveBaziView {
         cls: 'shishen-tag-small'
       });
     }
+    // 换行
+    timeShiShenCell.createEl('br');
     // 地支藏干十神
     if (this.baziInfo.timeShiShenZhi && Array.isArray(this.baziInfo.timeShiShenZhi) && this.baziInfo.timeShiShenZhi.length > 0) {
-      timeShiShenCell.createSpan({ text: ' ' });
       timeShiShenCell.createSpan({
         text: this.baziInfo.timeShiShenZhi.join(','),
         cls: 'shishen-tag-small shishen-tag-hide'
@@ -793,7 +794,6 @@ export class InteractiveBaziView {
       // 如果没有提供地支藏干十神，则计算
       const hiddenShiShen = this.getHiddenShiShen(this.baziInfo.dayStem || '', this.baziInfo.hourBranch);
       if (hiddenShiShen.length > 0) {
-        timeShiShenCell.createSpan({ text: ' ' });
         timeShiShenCell.createSpan({
           text: hiddenShiShen.join(','),
           cls: 'shishen-tag-small shishen-tag-hide'
@@ -1286,7 +1286,12 @@ export class InteractiveBaziView {
 
     // 添加神煞组合分析 - 移到特殊信息区域
     if (this.baziInfo.shenSha && this.baziInfo.shenSha.length > 1) {
-      const combinations = ShenShaExplanationService.getShenShaCombinationAnalysis(this.baziInfo.shenSha);
+      // 清理神煞名称，去掉柱位前缀
+      const cleanShenShaList = this.baziInfo.shenSha.map(shenSha => {
+        return shenSha.includes(':') ? shenSha.split(':')[1] : shenSha;
+      });
+
+      const combinations = ShenShaExplanationService.getShenShaCombinationAnalysis(cleanShenShaList);
       if (combinations.length > 0) {
         const combinationItem = infoList.createEl('li', { cls: 'shensha-combination-item' });
         combinationItem.createSpan({ text: '神煞组合: ' });
@@ -3219,12 +3224,22 @@ export class InteractiveBaziView {
    * @param shenSha 神煞名称
    */
   private showShenShaExplanation(shenSha: string) {
+    // 清理神煞名称，去掉可能的柱位前缀
+    const cleanShenSha = shenSha.includes(':') ? shenSha.split(':')[1] : shenSha;
+    console.log('显示神煞详情:', shenSha, '清理后:', cleanShenSha);
+
     // 获取神煞详细解释
-    const shenShaInfo = ShenShaExplanationService.getShenShaExplanation(shenSha);
+    let shenShaInfo = ShenShaExplanationService.getShenShaExplanation(cleanShenSha);
 
     if (!shenShaInfo) {
-      console.error(`未找到神煞 "${shenSha}" 的详细信息`);
-      return;
+      console.error(`未找到神煞 "${cleanShenSha}" 的详细信息`);
+      // 尝试使用原始名称
+      shenShaInfo = ShenShaExplanationService.getShenShaExplanation(shenSha);
+      if (!shenShaInfo) {
+        console.error(`也未找到神煞 "${shenSha}" 的详细信息`);
+        return;
+      }
+      console.log('使用fallback信息');
     }
 
     // 创建一个临时容器
@@ -3391,7 +3406,7 @@ export class InteractiveBaziView {
       copyButton.addEventListener('click', () => {
         // 创建一个临时元素来存储纯文本内容
         const tempElement = document.createElement('div');
-        tempElement.innerHTML = shenShaInfo.calculation || '';
+        tempElement.innerHTML = shenShaInfo?.calculation || '';
         const plainText = tempElement.textContent || tempElement.innerText;
 
         navigator.clipboard.writeText(plainText)
@@ -3735,10 +3750,15 @@ export class InteractiveBaziView {
 
     // 处理神煞列表
     this.baziInfo.shenSha.forEach(shenSha => {
+      // 清理神煞名称，去掉可能的柱位前缀
+      const cleanShenSha = shenSha.includes(':') ? shenSha.split(':')[1] : shenSha;
+      console.log('处理神煞:', shenSha, '清理后:', cleanShenSha);
+
       // 获取神煞信息
-      const shenShaInfo = ShenShaExplanationService.getShenShaInfo(shenSha);
+      const shenShaInfo = ShenShaExplanationService.getShenShaInfo(cleanShenSha);
 
       if (shenShaInfo) {
+        console.log('神煞信息:', shenShaInfo.name, '类型:', shenShaInfo.type);
         // 根据类型分类
         if (shenShaInfo.type === '吉神') {
           goodShenSha.push(shenSha);
@@ -3747,6 +3767,8 @@ export class InteractiveBaziView {
         } else {
           mixedShenSha.push(shenSha);
         }
+      } else {
+        console.log('未找到神煞信息:', cleanShenSha);
       }
     });
 
@@ -3770,7 +3792,8 @@ export class InteractiveBaziView {
         item.addEventListener('click', () => this.showShenShaExplanation(shenSha));
 
         // 添加提示
-        const shenShaInfo = ShenShaExplanationService.getShenShaInfo(shenSha);
+        const cleanShenShaForTooltip = shenSha.includes(':') ? shenSha.split(':')[1] : shenSha;
+        const shenShaInfo = ShenShaExplanationService.getShenShaInfo(cleanShenShaForTooltip);
         if (shenShaInfo) {
           item.title = shenShaInfo.explanation;
         }
@@ -3802,7 +3825,8 @@ export class InteractiveBaziView {
         item.addEventListener('click', () => this.showShenShaExplanation(shenSha));
 
         // 添加提示
-        const shenShaInfo = ShenShaExplanationService.getShenShaInfo(shenSha);
+        const cleanShenShaForTooltip = shenSha.includes(':') ? shenSha.split(':')[1] : shenSha;
+        const shenShaInfo = ShenShaExplanationService.getShenShaInfo(cleanShenShaForTooltip);
         if (shenShaInfo) {
           item.title = shenShaInfo.explanation;
         }
@@ -3834,7 +3858,8 @@ export class InteractiveBaziView {
         item.addEventListener('click', () => this.showShenShaExplanation(shenSha));
 
         // 添加提示
-        const shenShaInfo = ShenShaExplanationService.getShenShaInfo(shenSha);
+        const cleanShenShaForTooltip = shenSha.includes(':') ? shenSha.split(':')[1] : shenSha;
+        const shenShaInfo = ShenShaExplanationService.getShenShaInfo(cleanShenShaForTooltip);
         if (shenShaInfo) {
           item.title = shenShaInfo.explanation;
         }
