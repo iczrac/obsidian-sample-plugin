@@ -69,8 +69,13 @@ export class WuXingStrengthCalculator {
     };
 
     try {
+      // 获取调用堆栈信息
+      const stack = new Error().stack;
+      const caller = stack?.split('\n')[2]?.trim() || '未知调用者';
       console.log('🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 WuXingStrengthCalculator.calculateWuXingStrength 开始 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀');
       console.log('🚀 开始计算五行强度 - WuXingStrengthCalculator.calculateWuXingStrengthWithDetails');
+      console.log('🔍 调用者:', caller);
+      console.log('🔍 调用时间:', new Date().toISOString());
       // 获取四柱干支
       const yearStem = eightChar.getYearGan();
       const yearBranch = eightChar.getYearZhi();
@@ -177,6 +182,7 @@ export class WuXingStrengthCalculator {
 
   /**
    * 处理地支藏干的五行强度（带详细跟踪）
+   * 使用权威的本气、中气、余气权重分配
    * @param branches 地支数组
    * @param strength 强度对象
    * @param details 详细信息对象
@@ -196,12 +202,27 @@ export class WuXingStrengthCalculator {
         const hideGanArray = hideGanStr.split(',');
         const branchWeight = branchWeights[branchIndex];
 
+        // 根据藏干数量选择权威权重分配
+        let hideGanRatios: number[];
+        if (hideGanArray.length === 1) {
+          hideGanRatios = WuXingConfig.diZhiCangGanWeight.oneGan;   // [1.0]
+        } else if (hideGanArray.length === 2) {
+          hideGanRatios = WuXingConfig.diZhiCangGanWeight.twoGan;   // [0.7, 0.3]
+        } else {
+          hideGanRatios = WuXingConfig.diZhiCangGanWeight.threeGan; // [0.6, 0.3, 0.1]
+        }
+
+        console.log(`🔍 地支${branch}藏干: ${hideGanArray.join(',')}, 权重分配: ${hideGanRatios.join(',')}`);
+
         for (let i = 0; i < hideGanArray.length; i++) {
           const hideGan = hideGanArray[i].trim();
           const wuXing = BaziUtils.getStemWuXing(hideGan);
-          // 藏干的强度递减：本气1.0，中气0.6，余气0.3
-          const hideGanRatio = i === 0 ? 1.0 : (i === 1 ? 0.6 : 0.3);
+          const hideGanRatio = hideGanRatios[i] || 0; // 防止数组越界
           const finalWeight = branchWeight * hideGanRatio;
+
+          const ganType = i === 0 ? '本气' : (i === 1 ? '中气' : '余气');
+          console.log(`🔍   ${hideGan}(${wuXing}) ${ganType}: ${branchWeight} × ${hideGanRatio} = ${finalWeight.toFixed(2)}`);
+
           this.addWuXingStrengthWithDetails(wuXing, finalWeight, strength, details, 'diZhiCang');
         }
       }
@@ -266,6 +287,7 @@ export class WuXingStrengthCalculator {
 
   /**
    * 根据月令季节调整五行强度（带详细跟踪）
+   * 使用比例调整法：对每个五行的基础强度进行比例调整
    * @param monthBranch 月支
    * @param strength 强度对象
    * @param details 详细信息对象
@@ -282,63 +304,74 @@ export class WuXingStrengthCalculator {
     console.log(`🔍 季节调整: 月支=${monthBranch}, 季节=${season}`);
     if (!season) return;
 
-    // 月令是八字中最重要的因素，按旺相休囚死五个状态调整（使用统一配置）
+    // 计算各五行的基础强度（天干+地支+藏干+纳音+组合）
+    const baseStrengths = {
+      jin: details.jin.tianGan + details.jin.diZhi + details.jin.diZhiCang + details.jin.naYin + details.jin.combination,
+      mu: details.mu.tianGan + details.mu.diZhi + details.mu.diZhiCang + details.mu.naYin + details.mu.combination,
+      shui: details.shui.tianGan + details.shui.diZhi + details.shui.diZhiCang + details.shui.naYin + details.shui.combination,
+      huo: details.huo.tianGan + details.huo.diZhi + details.huo.diZhiCang + details.huo.naYin + details.huo.combination,
+      tu: details.tu.tianGan + details.tu.diZhi + details.tu.diZhiCang + details.tu.naYin + details.tu.combination
+    };
+
+    console.log(`🔍 基础强度: 金=${baseStrengths.jin}, 木=${baseStrengths.mu}, 水=${baseStrengths.shui}, 火=${baseStrengths.huo}, 土=${baseStrengths.tu}`);
+
+    // 根据季节对各五行进行比例调整
     switch (season) {
       case '春':
-        // 春季：木当令
-        strength.mu += WuXingConfig.seasonAdjust.wang;    // 木旺
-        details.mu.season += WuXingConfig.seasonAdjust.wang;
-        strength.huo += WuXingConfig.seasonAdjust.xiang;  // 火相
-        details.huo.season += WuXingConfig.seasonAdjust.xiang;
-        strength.shui += WuXingConfig.seasonAdjust.ping;  // 水休
-        details.shui.season += WuXingConfig.seasonAdjust.ping;
-        strength.jin += WuXingConfig.seasonAdjust.qiu;    // 金囚
-        details.jin.season += WuXingConfig.seasonAdjust.qiu;
-        strength.tu += WuXingConfig.seasonAdjust.si;      // 土死
-        details.tu.season += WuXingConfig.seasonAdjust.si;
+        // 春季：木旺、火相、水休、金囚、土死
+        this.applySeasonAdjustment('木', baseStrengths.mu, WuXingConfig.seasonAdjust.wang, strength, details, 'mu');
+        this.applySeasonAdjustment('火', baseStrengths.huo, WuXingConfig.seasonAdjust.xiang, strength, details, 'huo');
+        this.applySeasonAdjustment('水', baseStrengths.shui, WuXingConfig.seasonAdjust.ping, strength, details, 'shui');
+        this.applySeasonAdjustment('金', baseStrengths.jin, WuXingConfig.seasonAdjust.qiu, strength, details, 'jin');
+        this.applySeasonAdjustment('土', baseStrengths.tu, WuXingConfig.seasonAdjust.si, strength, details, 'tu');
         break;
       case '夏':
-        // 夏季：火当令
-        console.log(`🔍 夏季调整开始: 土相值=${WuXingConfig.seasonAdjust.xiang}`);
-        strength.huo += WuXingConfig.seasonAdjust.wang;   // 火旺
-        details.huo.season += WuXingConfig.seasonAdjust.wang;
-        strength.tu += WuXingConfig.seasonAdjust.xiang;   // 土相
-        details.tu.season += WuXingConfig.seasonAdjust.xiang;
-        console.log(`🔍 夏季调整后: details.tu.season=${details.tu.season}`);
-        strength.mu += WuXingConfig.seasonAdjust.ping;    // 木休
-        details.mu.season += WuXingConfig.seasonAdjust.ping;
-        strength.shui += WuXingConfig.seasonAdjust.qiu;   // 水囚
-        details.shui.season += WuXingConfig.seasonAdjust.qiu;
-        strength.jin += WuXingConfig.seasonAdjust.si;     // 金死
-        details.jin.season += WuXingConfig.seasonAdjust.si;
+        // 夏季：火旺、土相、木休、水囚、金死
+        this.applySeasonAdjustment('火', baseStrengths.huo, WuXingConfig.seasonAdjust.wang, strength, details, 'huo');
+        this.applySeasonAdjustment('土', baseStrengths.tu, WuXingConfig.seasonAdjust.xiang, strength, details, 'tu');
+        this.applySeasonAdjustment('木', baseStrengths.mu, WuXingConfig.seasonAdjust.ping, strength, details, 'mu');
+        this.applySeasonAdjustment('水', baseStrengths.shui, WuXingConfig.seasonAdjust.qiu, strength, details, 'shui');
+        this.applySeasonAdjustment('金', baseStrengths.jin, WuXingConfig.seasonAdjust.si, strength, details, 'jin');
         break;
       case '秋':
-        // 秋季：金当令
-        strength.jin += WuXingConfig.seasonAdjust.wang;   // 金旺
-        details.jin.season += WuXingConfig.seasonAdjust.wang;
-        strength.shui += WuXingConfig.seasonAdjust.xiang; // 水相
-        details.shui.season += WuXingConfig.seasonAdjust.xiang;
-        strength.tu += WuXingConfig.seasonAdjust.ping;    // 土休
-        details.tu.season += WuXingConfig.seasonAdjust.ping;
-        strength.mu += WuXingConfig.seasonAdjust.qiu;     // 木囚
-        details.mu.season += WuXingConfig.seasonAdjust.qiu;
-        strength.huo += WuXingConfig.seasonAdjust.si;     // 火死
-        details.huo.season += WuXingConfig.seasonAdjust.si;
+        // 秋季：金旺、水相、土休、木囚、火死
+        this.applySeasonAdjustment('金', baseStrengths.jin, WuXingConfig.seasonAdjust.wang, strength, details, 'jin');
+        this.applySeasonAdjustment('水', baseStrengths.shui, WuXingConfig.seasonAdjust.xiang, strength, details, 'shui');
+        this.applySeasonAdjustment('土', baseStrengths.tu, WuXingConfig.seasonAdjust.ping, strength, details, 'tu');
+        this.applySeasonAdjustment('木', baseStrengths.mu, WuXingConfig.seasonAdjust.qiu, strength, details, 'mu');
+        this.applySeasonAdjustment('火', baseStrengths.huo, WuXingConfig.seasonAdjust.si, strength, details, 'huo');
         break;
       case '冬':
-        // 冬季：水当令
-        strength.shui += WuXingConfig.seasonAdjust.wang;  // 水旺
-        details.shui.season += WuXingConfig.seasonAdjust.wang;
-        strength.mu += WuXingConfig.seasonAdjust.xiang;   // 木相
-        details.mu.season += WuXingConfig.seasonAdjust.xiang;
-        strength.jin += WuXingConfig.seasonAdjust.ping;   // 金休
-        details.jin.season += WuXingConfig.seasonAdjust.ping;
-        strength.huo += WuXingConfig.seasonAdjust.qiu;    // 火囚
-        details.huo.season += WuXingConfig.seasonAdjust.qiu;
-        strength.tu += WuXingConfig.seasonAdjust.si;      // 土死
-        details.tu.season += WuXingConfig.seasonAdjust.si;
+        // 冬季：水旺、木相、金休、火囚、土死
+        this.applySeasonAdjustment('水', baseStrengths.shui, WuXingConfig.seasonAdjust.wang, strength, details, 'shui');
+        this.applySeasonAdjustment('木', baseStrengths.mu, WuXingConfig.seasonAdjust.xiang, strength, details, 'mu');
+        this.applySeasonAdjustment('金', baseStrengths.jin, WuXingConfig.seasonAdjust.ping, strength, details, 'jin');
+        this.applySeasonAdjustment('火', baseStrengths.huo, WuXingConfig.seasonAdjust.qiu, strength, details, 'huo');
+        this.applySeasonAdjustment('土', baseStrengths.tu, WuXingConfig.seasonAdjust.si, strength, details, 'tu');
         break;
     }
+  }
+
+  /**
+   * 应用季节调整
+   * @param wuXingName 五行名称
+   * @param baseStrength 基础强度
+   * @param multiplier 调整系数
+   * @param strength 强度对象
+   * @param details 详细信息对象
+   * @param key 五行键名
+   */
+  private static applySeasonAdjustment(wuXingName: string, baseStrength: number, multiplier: number, strength: any, details: any, key: string): void {
+    // 计算调整后的强度
+    const adjustedStrength = baseStrength * multiplier;
+    // 计算调整量（调整后强度 - 基础强度）
+    const adjustment = adjustedStrength - baseStrength;
+
+    console.log(`🔍 ${wuXingName}季节调整: 基础=${baseStrength.toFixed(2)}, 系数=${multiplier}, 调整后=${adjustedStrength.toFixed(2)}, 调整量=${adjustment.toFixed(2)}`);
+
+    // 更新强度（保留2位小数，避免浮点精度问题）
+    strength[key] = Math.round((strength[key] + adjustment) * 100) / 100;
+    details[key].season = Math.round((details[key].season + adjustment) * 100) / 100;
   }
 
 
@@ -452,15 +485,21 @@ export class WuXingStrengthCalculator {
   /**
    * 计算日主旺衰
    * @param eightChar 八字对象
+   * @param wuXingStrength 可选的五行强度对象，如果提供则不重新计算
    * @returns 日主旺衰结果
    */
-  static calculateRiZhuStrength(eightChar: any): {
+  static calculateRiZhuStrength(eightChar: any, wuXingStrength?: any): {
     result: string;
     details: any;
   } {
     try {
-      // 获取五行强度
-      const wuXingStrength = this.calculateWuXingStrength(eightChar);
+      // 如果没有提供五行强度，则计算；否则使用提供的
+      if (!wuXingStrength) {
+        console.log('🔍 calculateRiZhuStrength: 没有提供五行强度，重新计算');
+        wuXingStrength = this.calculateWuXingStrength(eightChar);
+      } else {
+        console.log('🔍 calculateRiZhuStrength: 使用已提供的五行强度，避免重复计算');
+      }
       
       // 获取日干五行
       const dayStem = eightChar.getDayGan();

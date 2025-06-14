@@ -212,25 +212,13 @@ export class BaziService {
 
     // 如果有指定年份且成功推算日期，使用lunar-typescript库获取更多信息
     if (yearNum && solar && lunar && eightChar) {
-      // 创建基于用户输入八字的虚拟EightChar对象，覆盖反推的八字
-      const virtualEightChar = this.createVirtualEightChar(yearStem, yearBranch, monthStem, monthBranch, dayStem, dayBranch, hourStem, hourBranch, sect);
-      console.log('🔥 formatBaziInfo路径：创建虚拟八字对象:', {
-        year: yearStem + yearBranch,
-        month: monthStem + monthBranch,
-        day: dayStem + dayBranch,
-        hour: hourStem + hourBranch
-      });
+      console.log('🔥 formatBaziInfo路径：将在formatBaziInfo中创建虚拟八字对象');
 
-      // 使用formatBaziInfo获取完整的八字信息，但只获取日期、大运、流年等信息
+      // 使用formatBaziInfo获取完整的八字信息
+      // 注意：formatBaziInfo中会创建虚拟八字对象，确保计算正确的用户输入
       const baziInfo = this.formatBaziInfo(solar, lunar, eightChar, gender, sect);
 
-      // 重新计算五行强度，使用虚拟八字对象
-      console.log('🔥 重新计算五行强度，使用虚拟八字对象');
-      const virtualWuXingStrength = WuXingStrengthCalculator.calculateWuXingStrength(virtualEightChar);
-      console.log('🎯 虚拟八字五行强度计算结果:', virtualWuXingStrength);
-
-      // 覆盖五行强度结果
-      baziInfo.wuXingStrength = virtualWuXingStrength;
+      console.log('🔥 ✅ formatBaziInfo已使用虚拟八字对象，计算完成');
 
       // 使用用户输入的原始八字信息，而不是反推后的八字
       // 年柱
@@ -354,8 +342,8 @@ export class BaziService {
       console.log('🔍🔍🔍 getBaziFromString: 土五行强度 =', wuXingStrength.tu);
       console.log('🔍🔍🔍 getBaziFromString: 是否有详细信息 =', 'details' in wuXingStrength);
 
-      // 计算日主旺衰
-      const riZhuResult = WuXingStrengthCalculator.calculateRiZhuStrength(virtualEightChar);
+      // 计算日主旺衰（传递已计算的五行强度，避免重复计算）
+      const riZhuResult = WuXingStrengthCalculator.calculateRiZhuStrength(virtualEightChar, wuXingStrength);
       riZhuStrength = riZhuResult.result;
       riZhuStrengthDetails = riZhuResult.details;
       console.log('🎯 getBaziFromString: 日主旺衰计算结果:', riZhuResult);
@@ -710,8 +698,8 @@ export class BaziService {
     console.log('🔍🔍🔍 formatBaziInfo: 土五行强度 =', wuXingStrength.tu);
     console.log('🔍🔍🔍 formatBaziInfo: 是否有详细信息 =', 'details' in wuXingStrength);
 
-    // 计算日主旺衰
-    const riZhuStrength = WuXingStrengthCalculator.calculateRiZhuStrength(eightChar);
+    // 计算日主旺衰（传递已计算的五行强度，避免重复计算）
+    const riZhuStrength = WuXingStrengthCalculator.calculateRiZhuStrength(eightChar, wuXingStrength);
     console.log('🎯 日主旺衰计算结果:', riZhuStrength);
 
     // 格式化日期

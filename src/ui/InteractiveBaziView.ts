@@ -4129,6 +4129,7 @@ export class InteractiveBaziView {
     // 获取特定五行的详情
     let wuXingDetails: {
       tianGan?: number;
+      diZhi?: number;
       diZhiCang?: number;
       naYin?: number;
       season?: number;
@@ -4179,24 +4180,45 @@ export class InteractiveBaziView {
 
     // 直接使用后端返回的详细信息
     const tianGan = wuXingDetails.tianGan || 0;
+    const diZhi = wuXingDetails.diZhi || 0;
     const diZhiCang = wuXingDetails.diZhiCang || 0;
     const naYin = wuXingDetails.naYin || 0;
     const seasonValue = wuXingDetails.season || 0;
     const combination = wuXingDetails.combination || 0;
 
-    // 构建简化的显示
+    // 构建详细的显示
     let calculation = `${wuXing}五行强度实际计算过程：\n\n`;
+
+    // 添加八字对象分析
+    calculation += `【分析的八字对象】\n`;
+    calculation += `- 年柱：${this.baziInfo.yearStem}${this.baziInfo.yearBranch} (${this.getHideGan(this.baziInfo.yearBranch || '')})\n`;
+    calculation += `- 月柱：${this.baziInfo.monthStem}${this.baziInfo.monthBranch} (${this.getHideGan(this.baziInfo.monthBranch || '')})\n`;
+    calculation += `- 日柱：${this.baziInfo.dayStem}${this.baziInfo.dayBranch} (${this.getHideGan(this.baziInfo.dayBranch || '')})\n`;
+    calculation += `- 时柱：${this.baziInfo.hourStem}${this.baziInfo.hourBranch} (${this.getHideGan(this.baziInfo.hourBranch || '')})\n`;
+    calculation += `- 性别：${this.baziInfo.gender === '1' ? '男' : '女'}，年份：${this.baziInfo.solarDate?.split('-')[0] || '未知'}\n\n`;
 
     // 天干五行
     calculation += `【天干五行】\n`;
     if (tianGan > 0) {
       calculation += `- 天干贡献：${tianGan.toFixed(2)}分\n`;
+    } else {
+      calculation += `- 天干贡献：0.00分（八字中无${wuXing}的天干）\n`;
+    }
+
+    // 地支五行
+    calculation += `\n【地支五行】\n`;
+    if (diZhi > 0) {
+      calculation += `- 地支贡献：${diZhi.toFixed(2)}分\n`;
+    } else {
+      calculation += `- 地支贡献：0.00分（八字中无${wuXing}的地支）\n`;
     }
 
     // 地支藏干
     calculation += `\n【地支藏干】\n`;
     if (diZhiCang > 0) {
       calculation += `- 地支藏干贡献：${diZhiCang.toFixed(2)}分\n`;
+    } else {
+      calculation += `- 地支藏干贡献：0.00分（八字地支中无${wuXing}的藏干）\n`;
     }
 
     // 纳音五行
@@ -4208,17 +4230,29 @@ export class InteractiveBaziView {
     // 季节调整
     calculation += `\n【季节调整】\n`;
     if (seasonValue !== 0) {
-      calculation += `- 季节调整：${seasonValue > 0 ? '+' : ''}${seasonValue.toFixed(2)}分\n`;
+      // 计算基础强度（天干+地支+藏干+纳音+组合）
+      const baseStrength = tianGan + diZhi + diZhiCang + naYin + combination;
+      const adjustedStrength = baseStrength + seasonValue;
+      const multiplier = baseStrength > 0 ? adjustedStrength / baseStrength : 1;
+
+      calculation += `- 基础强度：${baseStrength.toFixed(2)}分（天干+地支+藏干+纳音+组合）\n`;
+      calculation += `- 季节系数：×${multiplier.toFixed(2)}（${this.getSeasonStatus(this.baziInfo.monthBranch || '', wuXing)}）\n`;
+      calculation += `- 调整后强度：${adjustedStrength.toFixed(2)}分\n`;
+      calculation += `- 调整量：${seasonValue > 0 ? '+' : ''}${seasonValue.toFixed(2)}分\n`;
+    } else {
+      calculation += `- 季节调整：无调整（${this.getSeasonStatus(this.baziInfo.monthBranch || '', wuXing)}）\n`;
     }
 
     // 组合调整
     calculation += `\n【组合调整】\n`;
     if (combination > 0) {
       calculation += `- 组合关系：${combination.toFixed(2)}分\n`;
+    } else {
+      calculation += `- 组合关系贡献：0.00分（八字中无${wuXing}相关的天干五合或地支三合三会）\n`;
     }
 
     // 总分计算
-    const totalScore = tianGan + diZhiCang + naYin + seasonValue + combination;
+    const totalScore = tianGan + diZhi + diZhiCang + naYin + seasonValue + combination;
     calculation += `\n【总分计算】\n`;
     calculation += `- ${wuXing}五行总得分：${totalScore.toFixed(2)}分\n`;
     calculation += `- 所有五行总得分：${total.toFixed(2)}分\n`;
@@ -4228,14 +4262,17 @@ export class InteractiveBaziView {
     calculation += `- ${wuXing}五行相对强度：${currentWuXingValue.toFixed(2)} / ${total.toFixed(2)} * 10 = ${relativeStrength.toFixed(2)}\n`;
 
     // 权重分配说明
-    calculation += `\n【重新设计的权重分配说明】\n`;
-    calculation += `- 天干权重：年干(2) < 月干(4) < 日干(6) < 时干(8)，递增权重\n`;
-    calculation += `- 地支权重：年支(3) < 日支(5) < 时支(12) < 月支(20)，月令最重要\n`;
-    calculation += `- 地支藏干：年支(2) < 日支(4) = 时支(4) < 月支(10)，配合地支\n`;
-    calculation += `- 纳音五行：年柱(1) < 时柱(0.5) < 日柱(1.5) < 月柱(2)，辅助参考\n`;
-    calculation += `- 季节调整：旺(+15)、相(+8)、平(0)、囚(-8)、死(-12)，月令威力\n`;
-    calculation += `- 组合关系：天干五合(+2)、地支三合(+3)、地支三会(+2)，适度加成\n`;
-    calculation += `\n注：总分100分体系，权重简化易懂，前后端计算统一\n`;
+    calculation += `\n【权重分配体系说明】\n`;
+    calculation += `- 天干权重：年干(2) < 月干(4) < 日干(6) < 时干(8)，总20分\n`;
+    calculation += `  * 日干最重要(代表自身)，时干次之(晚年运势)，月干再次(中年运势)，年干最轻(祖上影响)\n`;
+    calculation += `- 地支权重：年支(4) < 日支(10) = 时支(10) < 月支(16)，总40分\n`;
+    calculation += `  * 月支最重要(月令司权)，日支时支并重(配偶宫子女宫)，年支最轻(祖上宫)\n`;
+    calculation += `- 地支藏干：年支(2) < 日支(5) = 时支(5) < 月支(8)，总20分\n`;
+    calculation += `  * 本气、中气、余气权重：一个藏干(100%)，两个藏干(70%,30%)，三个藏干(60%,30%,10%)\n`;
+    calculation += `- 纳音五行：年柱(1) < 时柱(0.5) < 日柱(1.5) < 月柱(2)，总5分，辅助参考\n`;
+    calculation += `- 季节调整：旺(×1.5)、相(×1.2)、平(×1.0)、囚(×0.8)、死(×0.6)，比例调整法\n`;
+    calculation += `- 组合关系：天干五合(+2)、地支三合(+3)、地支三会(+2)，总5分，适度加成\n`;
+    calculation += `\n注：总分100分体系，传统理论指导，前后端计算统一\n`;
 
     return calculation;
   }
@@ -4553,6 +4590,37 @@ export class InteractiveBaziView {
       '亥': '水', '子': '水'
     };
     return map[branch] || '';
+  }
+
+
+
+  /**
+   * 获取五行在特定季节的状态
+   * @param monthBranch 月支
+   * @param wuXing 五行
+   * @returns 季节状态描述
+   */
+  private getSeasonStatus(monthBranch: string, wuXing: string): string {
+    const seasonMap: {[key: string]: string} = {
+      '寅': '春', '卯': '春', '辰': '春',
+      '巳': '夏', '午': '夏', '未': '夏',
+      '申': '秋', '酉': '秋', '戌': '秋',
+      '亥': '冬', '子': '冬', '丑': '冬'
+    };
+
+    const season = seasonMap[monthBranch];
+    if (!season) return '未知季节';
+
+    // 五行在各季节的状态
+    const statusMap: {[key: string]: {[key: string]: string}} = {
+      '春': { '木': '旺', '火': '相', '水': '休', '金': '囚', '土': '死' },
+      '夏': { '火': '旺', '土': '相', '木': '休', '水': '囚', '金': '死' },
+      '秋': { '金': '旺', '水': '相', '土': '休', '木': '囚', '火': '死' },
+      '冬': { '水': '旺', '木': '相', '金': '休', '火': '囚', '土': '死' }
+    };
+
+    const status = statusMap[season]?.[wuXing] || '平';
+    return `${season}季${wuXing}${status}`;
   }
 
   /**
