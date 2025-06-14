@@ -1,3 +1,4 @@
+import { Solar } from 'lunar-typescript';
 import { BaziInfo } from '../types/BaziInfo';
 import { ShenShaExplanationService } from '../services/ShenShaExplanationService';
 import { WuXingExplanationService } from '../services/WuXingExplanationService';
@@ -1869,10 +1870,11 @@ export class InteractiveBaziView {
         return false;
       }) || [];
 
-      // 如果仍然没有找到流月数据，则动态生成
+      // 如果仍然没有找到流月数据，则使用后端计算
       if (liuYueData.length === 0) {
-        // 生成流月数据
-        liuYueData = this.generateLiuYueForYear(year);
+        // 使用后端计算流月数据
+        const dayStem = this.baziInfo.dayStem || '甲';
+        liuYueData = BaziService.getLiuYue(year, dayStem);
       }
     }
 
@@ -2366,7 +2368,7 @@ export class InteractiveBaziView {
     this.liuYueTable.style.opacity = '0';
     this.liuYueTable.style.transition = `opacity ${this.animationDuration}ms ease-in-out`;
 
-    // 第一行：月份
+    // 第一行：月份（添加公历起始日期）
     const monthRow = this.liuYueTable.createEl('tr');
     monthRow.createEl('th', { text: '流月' });
     liuYue.forEach(ly => {
@@ -2388,10 +2390,28 @@ export class InteractiveBaziView {
         monthText = chineseMonths[ly.index] + '月';
       }
 
-      monthRow.createEl('td', {
-        text: monthText,
+      const cell = monthRow.createEl('td', {
         cls: 'bazi-liuyue-month'
       });
+
+      // 创建月份名称
+      const monthNameEl = cell.createDiv({
+        text: monthText,
+        cls: 'bazi-liuyue-month-name'
+      });
+
+      // 创建公历起始日期（从后端数据获取）
+      if (ly.startDate) {
+        const startDateEl = cell.createDiv({
+          text: ly.startDate,
+          cls: 'bazi-liuyue-start-date'
+        });
+        startDateEl.style.cssText = `
+          font-size: 10px;
+          color: var(--text-muted);
+          margin-top: 2px;
+        `;
+      }
     });
 
     // 第二行：干支
@@ -2435,6 +2455,9 @@ export class InteractiveBaziView {
           c.classList.remove('selected');
         });
         cell.classList.add('selected');
+
+        // 显示该月的流日信息
+        this.selectLiuYue(ly);
       });
     });
 
@@ -5518,6 +5541,396 @@ export class InteractiveBaziView {
     modal.addEventListener('click', (e) => {
       if (e.target === modal) {
         document.body.removeChild(modal);
+      }
+    });
+  }
+
+
+
+  /**
+   * 计算指定日期的干支
+   * @param year 年份
+   * @param month 月份
+   * @param day 日期
+   * @returns 干支字符串
+   */
+  private calculateDayGanZhi(year: number, month: number, day: number): string {
+    // 使用公历日期计算干支的标准算法
+    // 基准日期：1900年1月31日为甲子日
+    const baseDate = new Date(1900, 0, 31); // 1900年1月31日
+    const targetDate = new Date(year, month - 1, day);
+
+    // 计算天数差
+    const daysDiff = Math.floor((targetDate.getTime() - baseDate.getTime()) / (1000 * 60 * 60 * 24));
+
+    // 计算干支索引
+    const ganIndex = daysDiff % 10;
+    const zhiIndex = daysDiff % 12;
+
+    // 天干地支数组
+    const gans = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
+    const zhis = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
+
+    return gans[ganIndex] + zhis[zhiIndex];
+  }
+
+
+
+
+
+
+
+  /**
+   * 选择流月，显示该月的流日信息
+   * @param liuYue 流月数据
+   */
+  private selectLiuYue(liuYue: any) {
+    console.log('🗓️ 选择流月:', liuYue);
+    console.log('🗓️ 流月数据结构:', JSON.stringify(liuYue, null, 2));
+
+    // 获取年份和月柱干支
+    const year = liuYue.year || this.selectedLiuNianYear;
+    const monthGanZhi = liuYue.ganZhi;
+
+    console.log(`🗓️ 解析结果: 年份=${year}, 月柱干支=${monthGanZhi}`);
+
+    if (!year || !monthGanZhi) {
+      console.error('🗓️ 无法获取有效的年份或月柱干支信息', { year, monthGanZhi, liuYue });
+      return;
+    }
+
+    // 获取日干用于计算
+    const dayStem = this.baziInfo.dayStem;
+    if (!dayStem) {
+      console.error('无法获取日干信息');
+      return;
+    }
+
+    // 计算该干支月的流日信息
+    const liuRiData = BaziService.getLiuRi(year, monthGanZhi, dayStem);
+
+    // 显示流日横向滚动选择器
+    this.showLiuRiSelector(year, monthGanZhi, liuRiData);
+  }
+
+  /**
+   * 显示流日横向滚动选择器
+   * @param year 年份
+   * @param monthGanZhi 月柱干支
+   * @param liuRiData 流日数据
+   */
+  private showLiuRiSelector(year: number, monthGanZhi: string, liuRiData: any[]) {
+    // 查找或创建流日选择器容器
+    let liuRiContainer = this.container.querySelector('.bazi-liuri-selector-container') as HTMLElement;
+    if (!liuRiContainer) {
+      // 在流月表格后面创建流日选择器
+      const liuYueSection = this.container.querySelector('.bazi-liuyue-section');
+      if (liuYueSection) {
+        liuRiContainer = liuYueSection.createDiv({ cls: 'bazi-liuri-selector-container' });
+      } else {
+        return;
+      }
+    }
+
+    // 清空容器
+    liuRiContainer.empty();
+
+    // 获取该干支月的日期范围（从流日数据中获取）
+    let rangeText = '';
+    if (liuRiData.length > 0) {
+      const firstDay = liuRiData[0];
+      const lastDay = liuRiData[liuRiData.length - 1];
+      if (firstDay && lastDay) {
+        rangeText = ` (${firstDay.month}.${firstDay.day}-${lastDay.month}.${lastDay.day})`;
+      }
+    }
+
+    // 创建标题
+    liuRiContainer.createEl('h5', {
+      text: `${year}年${monthGanZhi}月流日${rangeText}`,
+      cls: 'bazi-liuri-title'
+    });
+
+    // 创建横向滚动容器
+    const scrollContainer = liuRiContainer.createDiv({
+      cls: 'bazi-liuri-scroll-container'
+    });
+    scrollContainer.style.cssText = `
+      display: flex;
+      overflow-x: auto;
+      gap: 8px;
+      padding: 10px 0;
+      border: 1px solid var(--background-modifier-border);
+      border-radius: 6px;
+      background: var(--background-secondary);
+    `;
+
+    // 创建流日选择项
+    liuRiData.forEach((liuRi, index) => {
+      const dayItem = scrollContainer.createDiv({
+        cls: 'bazi-liuri-item'
+      });
+      dayItem.style.cssText = `
+        min-width: 80px;
+        padding: 8px 12px;
+        border: 1px solid var(--background-modifier-border);
+        border-radius: 4px;
+        background: var(--background-primary);
+        cursor: pointer;
+        text-align: center;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+      `;
+
+      // 日期（显示月.日格式）
+      const dateEl = dayItem.createDiv({
+        text: `${liuRi.month}.${liuRi.day}`,
+        cls: 'bazi-liuri-date'
+      });
+      dateEl.style.cssText = `
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-bottom: 4px;
+      `;
+
+      // 干支
+      const ganZhiEl = dayItem.createDiv({
+        cls: 'bazi-liuri-ganzhi'
+      });
+      ganZhiEl.style.cssText = `
+        font-weight: bold;
+        font-size: 14px;
+      `;
+
+      if (liuRi.ganZhi && liuRi.ganZhi.length >= 2) {
+        const stem = liuRi.ganZhi[0];
+        const branch = liuRi.ganZhi[1];
+
+        const stemSpan = ganZhiEl.createSpan({ text: stem });
+        this.setWuXingColorDirectly(stemSpan, this.getStemWuXing(stem));
+
+        const branchSpan = ganZhiEl.createSpan({ text: branch });
+        this.setWuXingColorDirectly(branchSpan, this.getBranchWuXing(branch));
+      } else {
+        ganZhiEl.textContent = liuRi.ganZhi || '';
+      }
+
+      // 添加悬停效果
+      dayItem.addEventListener('mouseenter', () => {
+        dayItem.style.background = 'var(--background-modifier-hover)';
+        dayItem.style.transform = 'translateY(-2px)';
+      });
+
+      dayItem.addEventListener('mouseleave', () => {
+        if (!dayItem.classList.contains('selected')) {
+          dayItem.style.background = 'var(--background-primary)';
+          dayItem.style.transform = 'translateY(0)';
+        }
+      });
+
+      // 添加点击事件
+      dayItem.addEventListener('click', () => {
+        // 移除其他选中状态
+        scrollContainer.querySelectorAll('.bazi-liuri-item').forEach(item => {
+          item.classList.remove('selected');
+          (item as HTMLElement).style.background = 'var(--background-primary)';
+          (item as HTMLElement).style.transform = 'translateY(0)';
+        });
+
+        // 设置当前选中状态
+        dayItem.classList.add('selected');
+        dayItem.style.background = 'var(--interactive-accent)';
+        dayItem.style.color = 'var(--text-on-accent)';
+
+        // 显示该日的流时信息
+        this.selectLiuRi(liuRi.year || year, liuRi.month || 1, liuRi.day);
+      });
+
+      // 默认选中第一个
+      if (index === 0) {
+        dayItem.click();
+      }
+    });
+  }
+
+  /**
+   * 选择流日，显示该日的流时信息
+   * @param year 年份
+   * @param month 月份
+   * @param day 日期
+   */
+  private selectLiuRi(year: number, month: number, day: number) {
+    console.log(`选择流日: ${year}-${month}-${day}`);
+
+    // 获取日干用于计算
+    const dayStem = this.baziInfo.dayStem;
+    if (!dayStem) {
+      console.error('无法获取日干信息');
+      return;
+    }
+
+    // 计算该日的流时信息
+    const liuShiData = BaziService.getLiuShi(year, month, day, dayStem);
+
+    // 显示流时横向滚动选择器
+    this.showLiuShiSelector(year, month, day, liuShiData);
+  }
+
+  /**
+   * 显示流时横向滚动选择器
+   * @param year 年份
+   * @param month 月份
+   * @param day 日期
+   * @param liuShiData 流时数据
+   */
+  private showLiuShiSelector(year: number, month: number, day: number, liuShiData: any[]) {
+    // 查找或创建流时选择器容器
+    let liuShiContainer = this.container.querySelector('.bazi-liushi-selector-container') as HTMLElement;
+    if (!liuShiContainer) {
+      // 在流日选择器后面创建流时选择器
+      const liuRiContainer = this.container.querySelector('.bazi-liuri-selector-container');
+      if (liuRiContainer) {
+        liuShiContainer = liuRiContainer.createDiv({ cls: 'bazi-liushi-selector-container' });
+      } else {
+        return;
+      }
+    }
+
+    // 清空容器
+    liuShiContainer.empty();
+
+    // 创建标题
+    liuShiContainer.createEl('h5', {
+      text: `${year}年${month}月${day}日流时`,
+      cls: 'bazi-liushi-title'
+    });
+
+    // 创建横向滚动容器
+    const scrollContainer = liuShiContainer.createDiv({
+      cls: 'bazi-liushi-scroll-container'
+    });
+    scrollContainer.style.cssText = `
+      display: flex;
+      overflow-x: auto;
+      gap: 8px;
+      padding: 10px 0;
+      border: 1px solid var(--background-modifier-border);
+      border-radius: 6px;
+      background: var(--background-secondary);
+      margin-top: 10px;
+    `;
+
+    // 时辰名称和时间范围
+    const timeInfo = [
+      { name: '子时', time: '23:00-01:00' },
+      { name: '丑时', time: '01:00-03:00' },
+      { name: '寅时', time: '03:00-05:00' },
+      { name: '卯时', time: '05:00-07:00' },
+      { name: '辰时', time: '07:00-09:00' },
+      { name: '巳时', time: '09:00-11:00' },
+      { name: '午时', time: '11:00-13:00' },
+      { name: '未时', time: '13:00-15:00' },
+      { name: '申时', time: '15:00-17:00' },
+      { name: '酉时', time: '17:00-19:00' },
+      { name: '戌时', time: '19:00-21:00' },
+      { name: '亥时', time: '21:00-23:00' }
+    ];
+
+    // 创建流时选择项
+    liuShiData.forEach((liuShi, index) => {
+      const timeItem = scrollContainer.createDiv({
+        cls: 'bazi-liushi-item'
+      });
+      timeItem.style.cssText = `
+        min-width: 90px;
+        padding: 8px 12px;
+        border: 1px solid var(--background-modifier-border);
+        border-radius: 4px;
+        background: var(--background-primary);
+        cursor: pointer;
+        text-align: center;
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+      `;
+
+      // 时辰名称
+      const timeNameEl = timeItem.createDiv({
+        text: timeInfo[index]?.name || `${index}时`,
+        cls: 'bazi-liushi-name'
+      });
+      timeNameEl.style.cssText = `
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-bottom: 2px;
+      `;
+
+      // 时间范围
+      const timeRangeEl = timeItem.createDiv({
+        text: timeInfo[index]?.time || '',
+        cls: 'bazi-liushi-range'
+      });
+      timeRangeEl.style.cssText = `
+        font-size: 10px;
+        color: var(--text-faint);
+        margin-bottom: 4px;
+      `;
+
+      // 干支
+      const ganZhiEl = timeItem.createDiv({
+        cls: 'bazi-liushi-ganzhi'
+      });
+      ganZhiEl.style.cssText = `
+        font-weight: bold;
+        font-size: 14px;
+      `;
+
+      if (liuShi.ganZhi && liuShi.ganZhi.length >= 2) {
+        const stem = liuShi.ganZhi[0];
+        const branch = liuShi.ganZhi[1];
+
+        const stemSpan = ganZhiEl.createSpan({ text: stem });
+        this.setWuXingColorDirectly(stemSpan, this.getStemWuXing(stem));
+
+        const branchSpan = ganZhiEl.createSpan({ text: branch });
+        this.setWuXingColorDirectly(branchSpan, this.getBranchWuXing(branch));
+      } else {
+        ganZhiEl.textContent = liuShi.ganZhi || '';
+      }
+
+      // 添加悬停效果
+      timeItem.addEventListener('mouseenter', () => {
+        timeItem.style.background = 'var(--background-modifier-hover)';
+        timeItem.style.transform = 'translateY(-2px)';
+      });
+
+      timeItem.addEventListener('mouseleave', () => {
+        if (!timeItem.classList.contains('selected')) {
+          timeItem.style.background = 'var(--background-primary)';
+          timeItem.style.transform = 'translateY(0)';
+        }
+      });
+
+      // 添加点击事件
+      timeItem.addEventListener('click', () => {
+        // 移除其他选中状态
+        scrollContainer.querySelectorAll('.bazi-liushi-item').forEach(item => {
+          item.classList.remove('selected');
+          (item as HTMLElement).style.background = 'var(--background-primary)';
+          (item as HTMLElement).style.transform = 'translateY(0)';
+          (item as HTMLElement).style.color = '';
+        });
+
+        // 设置当前选中状态
+        timeItem.classList.add('selected');
+        timeItem.style.background = 'var(--interactive-accent)';
+        timeItem.style.color = 'var(--text-on-accent)';
+
+        console.log(`选择流时: ${timeInfo[index]?.name} (${liuShi.ganZhi})`);
+      });
+
+      // 默认选中第一个
+      if (index === 0) {
+        timeItem.click();
       }
     });
   }

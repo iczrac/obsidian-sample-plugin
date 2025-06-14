@@ -15,6 +15,9 @@ import { WuXingExplanationService } from './WuXingExplanationService';
 import { GeJuCalculator } from './bazi/GeJuCalculator';
 import { WuXingStrengthCalculator } from './bazi/WuXingStrengthCalculator';
 import { ShiErChangShengCalculator } from './bazi/ShiErChangShengCalculator';
+import { LiuRiCalculator } from './bazi/LiuRiCalculator';
+import { LiuShiCalculator } from './bazi/LiuShiCalculator';
+import { LiuYueCalculator } from './bazi/LiuYueCalculator';
 
 /**
  * 八字服务类，封装lunar-typescript的八字功能
@@ -879,5 +882,37 @@ export class BaziService {
     };
   }
 
+  /**
+   * 获取流月信息
+   * @param year 年份
+   * @param dayStem 日干
+   * @returns 流月信息数组
+   */
+  static getLiuYue(year: number, dayStem: string): any[] {
+    return LiuYueCalculator.calculateLiuYue(year, dayStem);
+  }
+
+  /**
+   * 获取流日信息
+   * @param year 年份
+   * @param monthGanZhi 月柱干支
+   * @param dayStem 日干
+   * @returns 流日信息数组
+   */
+  static getLiuRi(year: number, monthGanZhi: string, dayStem: string): any[] {
+    return LiuRiCalculator.calculateLiuRi(year, monthGanZhi, dayStem);
+  }
+
+  /**
+   * 获取流时信息
+   * @param year 年份
+   * @param month 月份
+   * @param day 日期
+   * @param dayStem 日干
+   * @returns 流时信息数组
+   */
+  static getLiuShi(year: number, month: number, day: number, dayStem: string): any[] {
+    return LiuShiCalculator.calculateLiuShi(year, month, day, dayStem);
+  }
 
 }

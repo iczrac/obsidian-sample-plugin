@@ -141,6 +141,12 @@ export interface BaziInfo {
   // 流月信息
   liuYue?: LiuYueInfo[];
 
+  // 流日信息
+  liuRi?: LiuRiInfo[];
+
+  // 流时信息
+  liuShi?: LiuShiInfo[];
+
   // 五行强度
   wuXingStrength?: {
     jin: number;
@@ -251,6 +257,47 @@ export interface XiaoYunInfo {
 export interface LiuYueInfo {
   year?: number;
   month: string | number;
+  index?: number;
+  ganZhi: string;
+  startDate?: string; // 公历起始日期（如"2.4"）
+  endDate?: string; // 公历结束日期（如"3.5"）
+  naYin?: string;
+  xunKong?: string;
+  shiShenGan?: string;
+  shiShenZhi?: string | string[];
+  diShi?: string;
+  shenSha?: string[];
+}
+
+/**
+ * 流日信息接口
+ */
+export interface LiuRiInfo {
+  year?: number; // 公历年份
+  month?: number; // 公历月份
+  day: number; // 公历日期
+  lunarYear?: number; // 农历年份
+  lunarMonth?: number; // 农历月份
+  lunarDay?: number; // 农历日期
+  monthGanZhi?: string; // 所属干支月
+  index?: number;
+  ganZhi: string;
+  naYin?: string;
+  xunKong?: string;
+  shiShenGan?: string;
+  shiShenZhi?: string | string[];
+  diShi?: string;
+  shenSha?: string[];
+}
+
+/**
+ * 流时信息接口
+ */
+export interface LiuShiInfo {
+  year?: number;
+  month?: number;
+  day?: number;
+  hour: number;
   index?: number;
   ganZhi: string;
   naYin?: string;
