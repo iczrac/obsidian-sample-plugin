@@ -557,4 +557,114 @@ export class WuXingStrengthCalculator {
       };
     }
   }
+
+  /**
+   * 独立的五行强度计算（不依赖lunar-typescript库）
+   * @param yearStem 年干
+   * @param yearBranch 年支
+   * @param monthStem 月干
+   * @param monthBranch 月支
+   * @param dayStem 日干
+   * @param dayBranch 日支
+   * @param hourStem 时干
+   * @param hourBranch 时支
+   * @returns 五行强度结果
+   */
+  static calculateWuXingStrengthFromBazi(
+    yearStem: string, yearBranch: string,
+    monthStem: string, monthBranch: string,
+    dayStem: string, dayBranch: string,
+    hourStem: string, hourBranch: string
+  ): any {
+    console.log('🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 WuXingStrengthCalculator.calculateWuXingStrengthFromBazi 开始 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀');
+    console.log('🔍 独立计算八字:', `${yearStem}${yearBranch} ${monthStem}${monthBranch} ${dayStem}${dayBranch} ${hourStem}${hourBranch}`);
+
+    // 创建简化的八字对象用于计算
+    const simpleBazi = {
+      getYearGan: () => yearStem,
+      getYearZhi: () => yearBranch,
+      getMonthGan: () => monthStem,
+      getMonthZhi: () => monthBranch,
+      getDayGan: () => dayStem,
+      getDayZhi: () => dayBranch,
+      getTimeGan: () => hourStem,
+      getTimeZhi: () => hourBranch,
+
+      // 纳音方法（简化实现）
+      getYearNaYin: () => BaziCalculator.getNaYin(yearStem + yearBranch),
+      getMonthNaYin: () => BaziCalculator.getNaYin(monthStem + monthBranch),
+      getDayNaYin: () => BaziCalculator.getNaYin(dayStem + dayBranch),
+      getTimeNaYin: () => BaziCalculator.getNaYin(hourStem + hourBranch)
+    };
+
+    // 使用现有的计算方法
+    return this.calculateWuXingStrength(simpleBazi);
+  }
+
+  /**
+   * 根据五行强度计算日主旺衰（独立方法）
+   * @param wuXingStrength 五行强度结果
+   * @param dayStem 日干
+   * @returns 日主旺衰结果
+   */
+  static calculateRiZhuStrengthFromWuXing(wuXingStrength: any, dayStem: string): any {
+    console.log('🔍 calculateRiZhuStrengthFromWuXing: 使用已提供的五行强度，避免重复计算');
+
+    // 获取日干对应的五行
+    const dayWuXing = BaziUtils.getStemWuXing(dayStem);
+
+    // 获取日干五行的强度
+    const dayWuXingStrength = wuXingStrength[this.getWuXingKey(dayWuXing)];
+
+    // 计算总强度
+    const totalStrength = wuXingStrength.jin + wuXingStrength.mu + wuXingStrength.shui + wuXingStrength.huo + wuXingStrength.tu;
+
+    // 计算日干五行的相对强度
+    const relativeStrength = totalStrength > 0 ? (dayWuXingStrength / totalStrength) * 10 : 0;
+
+    console.log('🔍 日主旺衰计算:', {
+      dayStem,
+      dayWuXing,
+      dayWuXingStrength,
+      totalStrength,
+      relativeStrength
+    });
+
+    // 判断旺衰
+    let result = '中和';
+    if (relativeStrength >= 3.5) {
+      result = '偏旺';
+    } else if (relativeStrength >= 4.5) {
+      result = '太旺';
+    } else if (relativeStrength <= 1.5) {
+      result = '偏弱';
+    } else if (relativeStrength <= 0.5) {
+      result = '太弱';
+    }
+
+    return {
+      result,
+      details: {
+        dayWuXing,
+        dayWuXingStrength,
+        totalStrength,
+        relativeStrength,
+        calculation: `${dayWuXing}五行强度: ${dayWuXingStrength.toFixed(2)}, 总强度: ${totalStrength.toFixed(2)}, 相对强度: ${relativeStrength.toFixed(2)}`
+      }
+    };
+  }
+
+  /**
+   * 获取五行对应的键名
+   */
+  private static getWuXingKey(wuXing: string): string {
+    const map: {[key: string]: string} = {
+      '金': 'jin',
+      '木': 'mu',
+      '水': 'shui',
+      '火': 'huo',
+      '土': 'tu'
+    };
+    return map[wuXing] || 'tu';
+  }
 }

@@ -226,7 +226,7 @@ export class LiuNianCalculator {
   }
 
   /**
-   * 计算旬空
+   * 计算旬空（使用统一的BaziCalculator方法）
    * @param ganZhi 干支
    * @returns 旬空
    */
@@ -235,21 +235,10 @@ export class LiuNianCalculator {
       return '';
     }
 
-    // 旬空表
-    const xunKongMap: { [key: string]: string } = {
-      '甲子': '戌亥', '甲戌': '申酉', '甲申': '午未', '甲午': '辰巳', '甲辰': '寅卯', '甲寅': '子丑'
-    };
-
     const stem = ganZhi.charAt(0);
     const branch = ganZhi.charAt(1);
 
-    // 找到对应的旬
-    for (const [xun, kongWang] of Object.entries(xunKongMap)) {
-      if (xun.charAt(0) === stem) {
-        return kongWang;
-      }
-    }
-
-    return '';
+    // 使用统一的BaziCalculator方法
+    return BaziCalculator.calculateXunKong(stem, branch);
   }
 }

@@ -8,6 +8,7 @@ import { GeJuTrendChart } from './GeJuTrendChart';
 import { BaziService } from '../services/BaziService';
 import { ShiShenCalculator } from '../services/bazi/ShiShenCalculator';
 import { BaziCalculator } from '../services/bazi/BaziCalculator';
+import { BaziUtils } from '../services/bazi/BaziUtils';
 import { WuXingConfig } from '../config/WuXingConfig';
 
 /**
@@ -23,6 +24,14 @@ export class InteractiveBaziView {
   // 当前选中的大运、流年索引
   private selectedDaYunIndex = 0;
   private selectedLiuNianYear = 0;
+
+  // 十二长生显示模式：0=地势，1=自坐，2=月令
+  private changShengMode: number = 0;
+  private readonly CHANG_SHENG_MODES = [
+    { key: 'diShi', name: '地势', description: '日干在各地支的十二长生状态' },
+    { key: 'ziZuo', name: '自坐', description: '各柱天干相对于各柱地支的十二长生状态' },
+    { key: 'yueLing', name: '月令', description: '各柱天干相对于月令的十二长生状态' }
+  ];
 
   // 表格元素引用
   private daYunTable: HTMLElement | null = null;
@@ -76,6 +85,82 @@ export class InteractiveBaziView {
 
     // 初始化视图
     this.initView();
+  }
+
+  /**
+   * 切换十二长生显示模式
+   */
+  private toggleChangShengMode() {
+    // 切换到下一个模式
+    this.changShengMode = (this.changShengMode + 1) % this.CHANG_SHENG_MODES.length;
+
+    // 更新地势行显示
+    this.updateChangShengDisplay();
+
+    // 显示切换提示
+    const currentMode = this.CHANG_SHENG_MODES[this.changShengMode];
+    new Notice(`已切换到${currentMode.name}模式：${currentMode.description}`);
+  }
+
+  /**
+   * 更新十二长生显示
+   */
+  private updateChangShengDisplay() {
+    const currentMode = this.CHANG_SHENG_MODES[this.changShengMode];
+
+    // 更新标签文本和提示
+    const diShiLabel = this.container.querySelector('.bazi-changsheng-label');
+    if (diShiLabel) {
+      diShiLabel.textContent = currentMode.name;
+      diShiLabel.setAttribute('title', currentMode.description + ' (点击切换)');
+    }
+
+    // 更新各柱的十二长生状态显示
+    this.updatePillarChangShengDisplay('year');
+    this.updatePillarChangShengDisplay('month');
+    this.updatePillarChangShengDisplay('day');
+    this.updatePillarChangShengDisplay('time');
+  }
+
+  /**
+   * 更新单个柱的十二长生状态显示
+   */
+  private updatePillarChangShengDisplay(pillar: 'year' | 'month' | 'day' | 'time') {
+    const currentMode = this.CHANG_SHENG_MODES[this.changShengMode];
+    let value = '';
+
+    // 根据当前模式获取对应的值
+    switch (currentMode.key) {
+      case 'diShi':
+        value = this.baziInfo[`${pillar}DiShi` as keyof BaziInfo] as string || '';
+        break;
+      case 'ziZuo':
+        value = this.baziInfo[`${pillar}ZiZuo` as keyof BaziInfo] as string || '';
+        break;
+      case 'yueLing':
+        value = this.baziInfo[`${pillar}YueLing` as keyof BaziInfo] as string || '';
+        break;
+    }
+
+    // 更新对应的显示元素
+    const cellSelector = `.bazi-dishi-row td:nth-child(${this.getPillarIndex(pillar)}) .dishi-tag-small`;
+    const element = this.container.querySelector(cellSelector);
+    if (element) {
+      element.textContent = value;
+    }
+  }
+
+  /**
+   * 获取柱的索引位置
+   */
+  private getPillarIndex(pillar: 'year' | 'month' | 'day' | 'time'): number {
+    switch (pillar) {
+      case 'year': return 2;  // 年柱在第2列
+      case 'month': return 3; // 月柱在第3列
+      case 'day': return 4;   // 日柱在第4列
+      case 'time': return 5;  // 时柱在第5列
+      default: return 2;
+    }
   }
 
   /**
@@ -802,9 +887,21 @@ export class InteractiveBaziView {
       }
     }
 
-    // 地势行
+    // 地势行（可点击切换）
     const diShiRow = tbody.createEl('tr', { cls: 'bazi-dishi-row' });
-    diShiRow.createEl('td', { text: '地势', cls: 'bazi-table-label' });
+    const diShiLabel = diShiRow.createEl('td', {
+      text: this.CHANG_SHENG_MODES[this.changShengMode].name,
+      cls: 'bazi-table-label bazi-changsheng-label',
+      attr: {
+        'title': this.CHANG_SHENG_MODES[this.changShengMode].description + ' (点击切换)',
+        'style': 'cursor: pointer; user-select: none;'
+      }
+    });
+
+    // 添加点击事件切换十二长生模式
+    diShiLabel.addEventListener('click', () => {
+      this.toggleChangShengMode();
+    });
 
     // 年柱地势
     const yearDiShiCell = diShiRow.createEl('td');
@@ -1844,56 +1941,9 @@ export class InteractiveBaziView {
       const chineseMonths = ['', '正', '二', '三', '四', '五', '六', '七', '八', '九', '十', '冬', '腊'];
       const monthText = chineseMonths[month] + '月';
 
-      // 计算神煞
+      // 神煞信息应该从后端获取，前端不应该计算
       const shenSha: string[] = [];
-      if (dayStem && yearBranch) {
-        // 天乙贵人
-        if (this.isTianYiGuiRen(dayStem, monthBranch)) {
-          shenSha.push('天乙贵人');
-        }
-
-        // 文昌
-        if (this.isWenChang(monthBranch)) {
-          shenSha.push('文昌');
-        }
-
-        // 华盖
-        if (this.isHuaGai(monthBranch)) {
-          shenSha.push('华盖');
-        }
-
-        // 桃花
-        if (this.isTaoHua(monthBranch)) {
-          shenSha.push('桃花');
-        }
-
-        // 驿马
-        if (this.isYiMa(monthBranch, yearBranch)) {
-          shenSha.push('驿马');
-        }
-
-        // 禄神
-        if (this.isLuShen(monthStem, monthBranch)) {
-          shenSha.push('禄神');
-        }
-
-        // 羊刃
-        if (this.isYangRen(monthStem, monthBranch)) {
-          shenSha.push('羊刃');
-        }
-
-        // 孤辰
-        if (this.isGuChen(monthBranch)) {
-          shenSha.push('孤辰');
-        }
-
-        // 寡宿
-        if (this.isGuaSu(monthBranch)) {
-          shenSha.push('寡宿');
-        }
-
-        console.log(`生成流月 ${monthText} (${ganZhi}) 神煞:`, shenSha);
-      }
+      console.log(`流月 ${monthText} (${ganZhi}) 神煞应从后端获取`);
 
       liuYueData.push({
         month: monthText,
@@ -2587,56 +2637,9 @@ export class InteractiveBaziView {
         diShi = this.getDiShi(dayStem, branch);
       }
 
-      // 计算神煞
+      // 神煞信息应该从后端获取，前端不应该计算
       const shenSha: string[] = [];
-      if (dayStem && yearBranch) {
-        // 天乙贵人
-        if (this.isTianYiGuiRen(dayStem, branch)) {
-          shenSha.push('天乙贵人');
-        }
-
-        // 文昌
-        if (this.isWenChang(branch)) {
-          shenSha.push('文昌');
-        }
-
-        // 华盖
-        if (this.isHuaGai(branch)) {
-          shenSha.push('华盖');
-        }
-
-        // 桃花
-        if (this.isTaoHua(branch)) {
-          shenSha.push('桃花');
-        }
-
-        // 驿马
-        if (this.isYiMa(branch, yearBranch)) {
-          shenSha.push('驿马');
-        }
-
-        // 禄神
-        if (this.isLuShen(stem, branch)) {
-          shenSha.push('禄神');
-        }
-
-        // 羊刃
-        if (this.isYangRen(stem, branch)) {
-          shenSha.push('羊刃');
-        }
-
-        // 孤辰
-        if (this.isGuChen(branch)) {
-          shenSha.push('孤辰');
-        }
-
-        // 寡宿
-        if (this.isGuaSu(branch)) {
-          shenSha.push('寡宿');
-        }
-
-        console.log(`生成流年 ${year} (${ganZhi}) 神煞:`, shenSha);
-      }
+      console.log(`流年 ${year} (${ganZhi}) 神煞应从后端获取`);
 
       liuNianData.push({
         year,
@@ -2674,8 +2677,13 @@ export class InteractiveBaziView {
 
     // 获取大运干支
     const daYunGanZhi = daYun.ganZhi;
-    if (!daYunGanZhi || daYunGanZhi.length !== 2) {
-      console.log('大运干支无效:', daYunGanZhi);
+    if (!daYunGanZhi || daYunGanZhi.trim() === '') {
+      console.log('前运期间，还未排上大运，跳过小运生成');
+      return [];
+    }
+
+    if (daYunGanZhi.length !== 2) {
+      console.log('大运干支格式无效:', daYunGanZhi);
       return [];
     }
 
@@ -2731,56 +2739,9 @@ export class InteractiveBaziView {
           diShi = this.getDiShi(dayStem, branch);
         }
 
-        // 计算神煞
+        // 神煞信息应该从后端获取，前端不应该计算
         const shenSha: string[] = [];
-        if (dayStem && yearBranch) {
-          // 天乙贵人
-          if (this.isTianYiGuiRen(dayStem, branch)) {
-            shenSha.push('天乙贵人');
-          }
-
-          // 文昌
-          if (this.isWenChang(branch)) {
-            shenSha.push('文昌');
-          }
-
-          // 华盖
-          if (this.isHuaGai(branch)) {
-            shenSha.push('华盖');
-          }
-
-          // 桃花
-          if (this.isTaoHua(branch)) {
-            shenSha.push('桃花');
-          }
-
-          // 驿马
-          if (this.isYiMa(branch, yearBranch)) {
-            shenSha.push('驿马');
-          }
-
-          // 禄神
-          if (this.isLuShen(stem, branch)) {
-            shenSha.push('禄神');
-          }
-
-          // 羊刃
-          if (this.isYangRen(stem, branch)) {
-            shenSha.push('羊刃');
-          }
-
-          // 孤辰
-          if (this.isGuChen(branch)) {
-            shenSha.push('孤辰');
-          }
-
-          // 寡宿
-          if (this.isGuaSu(branch)) {
-            shenSha.push('寡宿');
-          }
-
-          console.log(`生成小运 ${year} (${ganZhi}) 神煞:`, shenSha);
-        }
+        console.log(`小运 ${year} (${ganZhi}) 神煞应从后端获取`);
 
         xiaoYunData.push({
           year,
@@ -2823,56 +2784,9 @@ export class InteractiveBaziView {
           diShi = this.getDiShi(dayStem, branch);
         }
 
-        // 计算神煞
+        // 神煞信息应该从后端获取，前端不应该计算
         const shenSha: string[] = [];
-        if (dayStem && yearBranch) {
-          // 天乙贵人
-          if (this.isTianYiGuiRen(dayStem, branch)) {
-            shenSha.push('天乙贵人');
-          }
-
-          // 文昌
-          if (this.isWenChang(branch)) {
-            shenSha.push('文昌');
-          }
-
-          // 华盖
-          if (this.isHuaGai(branch)) {
-            shenSha.push('华盖');
-          }
-
-          // 桃花
-          if (this.isTaoHua(branch)) {
-            shenSha.push('桃花');
-          }
-
-          // 驿马
-          if (this.isYiMa(branch, yearBranch)) {
-            shenSha.push('驿马');
-          }
-
-          // 禄神
-          if (this.isLuShen(stem, branch)) {
-            shenSha.push('禄神');
-          }
-
-          // 羊刃
-          if (this.isYangRen(stem, branch)) {
-            shenSha.push('羊刃');
-          }
-
-          // 孤辰
-          if (this.isGuChen(branch)) {
-            shenSha.push('孤辰');
-          }
-
-          // 寡宿
-          if (this.isGuaSu(branch)) {
-            shenSha.push('寡宿');
-          }
-
-          console.log(`生成小运 ${year} (${ganZhi}) 神煞:`, shenSha);
-        }
+        console.log(`小运 ${year} (${ganZhi}) 神煞应从后端获取`);
 
         xiaoYunData.push({
           year,
@@ -2890,33 +2804,13 @@ export class InteractiveBaziView {
   }
 
   /**
-   * 计算旬空
+   * 计算旬空（使用统一的BaziCalculator方法）
    * @param gan 天干
    * @param zhi 地支
    * @returns 旬空
    */
   private calculateXunKong(gan: string, zhi: string): string {
-    // 天干序号（甲=0, 乙=1, ..., 癸=9）
-    const ganIndex = "甲乙丙丁戊己庚辛壬癸".indexOf(gan);
-    // 地支序号（子=0, 丑=1, ..., 亥=11）
-    const zhiIndex = "子丑寅卯辰巳午未申酉戌亥".indexOf(zhi);
-
-    if (ganIndex < 0 || zhiIndex < 0) {
-      return '';
-    }
-
-    // 计算旬首
-    const xunShouIndex = Math.floor(ganIndex / 2) * 2;
-
-    // 计算旬空地支
-    const xunKongIndex1 = (xunShouIndex + 10) % 12;
-    const xunKongIndex2 = (xunShouIndex + 11) % 12;
-
-    // 获取旬空地支
-    const xunKongZhi1 = "子丑寅卯辰巳午未申酉戌亥".charAt(xunKongIndex1);
-    const xunKongZhi2 = "子丑寅卯辰巳午未申酉戌亥".charAt(xunKongIndex2);
-
-    return xunKongZhi1 + xunKongZhi2;
+    return BaziCalculator.calculateXunKong(gan, zhi);
   }
 
 
@@ -3105,25 +2999,12 @@ export class InteractiveBaziView {
   }
 
   /**
-   * 获取天干对应的五行
+   * 获取天干对应的五行（使用后端工具类）
    * @param stem 天干
    * @returns 五行
    */
   private getStemWuXing(stem: string): string {
-    const map: {[key: string]: string} = {
-      '甲': '木',
-      '乙': '木',
-      '丙': '火',
-      '丁': '火',
-      '戊': '土',
-      '己': '土',
-      '庚': '金',
-      '辛': '金',
-      '壬': '水',
-      '癸': '水'
-    };
-
-    return map[stem] || '未知';
+    return BaziUtils.getStemWuXing(stem);
   }
 
   /**
@@ -4575,21 +4456,13 @@ export class InteractiveBaziView {
   }
 
   /**
-   * 获取地支对应的五行
+   * 获取地支对应的五行（使用后端工具类）
    * @param branch 地支
    * @returns 五行
    */
   private getBranchWuXing(branch: string | undefined): string {
     if (!branch) return '';
-
-    const map: {[key: string]: string} = {
-      '寅': '木', '卯': '木',
-      '巳': '火', '午': '火',
-      '辰': '土', '丑': '土', '戌': '土', '未': '土',
-      '申': '金', '酉': '金',
-      '亥': '水', '子': '水'
-    };
-    return map[branch] || '';
+    return BaziUtils.getBranchWuXing(branch);
   }
 
 
@@ -4674,140 +4547,7 @@ export class InteractiveBaziView {
     return map[wuHe] || '';
   }
 
-  /**
-   * 判断是否为天乙贵人
-   * @param dayStem 日干
-   * @param branch 地支
-   * @returns 是否为天乙贵人
-   */
-  private isTianYiGuiRen(dayStem: string, branch: string): boolean {
-    const map: {[key: string]: string[]} = {
-      '甲': ['丑', '未'],
-      '乙': ['子', '申'],
-      '丙': ['亥', '酉'],
-      '丁': ['亥', '酉'],
-      '戊': ['丑', '未'],
-      '己': ['子', '申'],
-      '庚': ['丑', '未'],
-      '辛': ['寅', '卯'],
-      '壬': ['巳', '卯'],
-      '癸': ['巳', '卯']
-    };
-    return map[dayStem]?.includes(branch) || false;
-  }
 
-  /**
-   * 判断是否为文昌
-   * @param branch 地支
-   * @returns 是否为文昌
-   */
-  private isWenChang(branch: string): boolean {
-    return ['巳', '申', '午', '寅'].includes(branch);
-  }
-
-  /**
-   * 判断是否为华盖
-   * @param branch 地支
-   * @returns 是否为华盖
-   */
-  private isHuaGai(branch: string): boolean {
-    return ['辰', '戌', '丑', '未'].includes(branch);
-  }
-
-  /**
-   * 判断是否为桃花
-   * @param branch 地支
-   * @returns 是否为桃花
-   */
-  private isTaoHua(branch: string): boolean {
-    return ['卯', '酉', '子', '午'].includes(branch);
-  }
-
-  /**
-   * 判断是否为驿马
-   * @param branch 地支
-   * @param yearBranch 年支
-   * @returns 是否为驿马
-   */
-  private isYiMa(branch: string, yearBranch: string): boolean {
-    const map: {[key: string]: string[]} = {
-      '申': ['寅'],
-      '子': ['寅'],
-      '辰': ['寅'],
-      '亥': ['巳'],
-      '卯': ['巳'],
-      '未': ['巳'],
-      '寅': ['申'],
-      '午': ['申'],
-      '戌': ['申'],
-      '巳': ['亥'],
-      '酉': ['亥'],
-      '丑': ['亥']
-    };
-    return map[yearBranch]?.includes(branch) || false;
-  }
-
-  /**
-   * 判断是否为禄神
-   * @param stem 天干
-   * @param branch 地支
-   * @returns 是否为禄神
-   */
-  private isLuShen(stem: string, branch: string): boolean {
-    const map: {[key: string]: string} = {
-      '甲': '寅',
-      '乙': '卯',
-      '丙': '巳',
-      '丁': '午',
-      '戊': '巳',
-      '己': '午',
-      '庚': '申',
-      '辛': '酉',
-      '壬': '亥',
-      '癸': '子'
-    };
-    return map[stem] === branch;
-  }
-
-  /**
-   * 判断是否为羊刃
-   * @param stem 天干
-   * @param branch 地支
-   * @returns 是否为羊刃
-   */
-  private isYangRen(stem: string, branch: string): boolean {
-    const map: {[key: string]: string} = {
-      '甲': '卯',
-      '乙': '寅',
-      '丙': '午',
-      '丁': '巳',
-      '戊': '午',
-      '己': '巳',
-      '庚': '酉',
-      '辛': '申',
-      '壬': '子',
-      '癸': '亥'
-    };
-    return map[stem] === branch;
-  }
-
-  /**
-   * 判断是否为孤辰
-   * @param branch 地支
-   * @returns 是否为孤辰
-   */
-  private isGuChen(branch: string): boolean {
-    return ['寅', '巳', '申', '亥'].includes(branch);
-  }
-
-  /**
-   * 判断是否为寡宿
-   * @param branch 地支
-   * @returns 是否为寡宿
-   */
-  private isGuaSu(branch: string): boolean {
-    return ['辰', '戌', '丑', '未'].includes(branch);
-  }
 
   /**
    * 检查地支三合

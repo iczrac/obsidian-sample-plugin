@@ -1,4 +1,5 @@
 import { EightChar } from 'lunar-typescript';
+import { BaziCalculator } from './BaziCalculator';
 
 /**
  * 旬空计算器
@@ -97,7 +98,7 @@ export class XunKongCalculator {
   }
 
   /**
-   * 根据干支计算旬空（备用方法）
+   * 根据干支计算旬空（使用统一的BaziCalculator方法）
    * @param ganZhi 干支
    * @returns 旬空
    */
@@ -109,40 +110,8 @@ export class XunKongCalculator {
     const stem = ganZhi.charAt(0);
     const branch = ganZhi.charAt(1);
 
-    // 旬空表 - 根据天干确定旬，然后确定旬空
-    const xunKongMap: { [key: string]: string } = {
-      // 甲子旬：戌亥空
-      '甲': '戌亥',
-      '乙': '戌亥',
-      '丙': '戌亥',
-      '丁': '戌亥',
-      '戊': '戌亥',
-      '己': '戌亥',
-      '庚': '戌亥',
-      '辛': '戌亥',
-      '壬': '戌亥',
-      '癸': '戌亥'
-    };
-
-    // 更精确的旬空计算
-    const stems = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
-    const branches = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
-
-    const stemIndex = stems.indexOf(stem);
-    const branchIndex = branches.indexOf(branch);
-
-    if (stemIndex === -1 || branchIndex === -1) {
-      return '';
-    }
-
-    // 计算旬首
-    const xunShouBranchIndex = stemIndex % 12;
-    
-    // 旬空是旬首后面的两个地支
-    const kongWang1Index = (xunShouBranchIndex + 10) % 12;
-    const kongWang2Index = (xunShouBranchIndex + 11) % 12;
-
-    return branches[kongWang1Index] + branches[kongWang2Index];
+    // 使用统一的BaziCalculator方法
+    return BaziCalculator.calculateXunKong(stem, branch);
   }
 
   /**

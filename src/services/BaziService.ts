@@ -14,6 +14,7 @@ import { ShenShaExplanationService } from './ShenShaExplanationService';
 import { WuXingExplanationService } from './WuXingExplanationService';
 import { GeJuCalculator } from './bazi/GeJuCalculator';
 import { WuXingStrengthCalculator } from './bazi/WuXingStrengthCalculator';
+import { ShiErChangShengCalculator } from './bazi/ShiErChangShengCalculator';
 
 /**
  * 八字服务类，封装lunar-typescript的八字功能
@@ -212,11 +213,17 @@ export class BaziService {
 
     // 如果有指定年份且成功推算日期，使用lunar-typescript库获取更多信息
     if (yearNum && solar && lunar && eightChar) {
-      console.log('🔥 formatBaziInfo路径：将在formatBaziInfo中创建虚拟八字对象');
+      console.log('🔥 formatBaziInfo路径：传递用户输入八字信息');
+
+      // 准备用户输入的八字信息
+      const userInputBazi = {
+        yearStem, yearBranch, monthStem, monthBranch,
+        dayStem, dayBranch, hourStem, hourBranch
+      };
 
       // 使用formatBaziInfo获取完整的八字信息
-      // 注意：formatBaziInfo中会创建虚拟八字对象，确保计算正确的用户输入
-      const baziInfo = this.formatBaziInfo(solar, lunar, eightChar, gender, sect);
+      // 注意：传递用户输入八字信息，对五行强度计算使用虚拟八字对象，对大运计算使用原始八字对象
+      const baziInfo = this.formatBaziInfo(solar, lunar, eightChar, gender, sect, userInputBazi);
 
       console.log('🔥 ✅ formatBaziInfo已使用虚拟八字对象，计算完成');
 
@@ -309,6 +316,14 @@ export class BaziService {
     const timeShiShenGan = ShiShenCalculator.getShiShen(dayStem, hourStem);
     const timeShiShenZhi = ShiShenCalculator.getHiddenShiShen(dayStem, hourBranch);
 
+    // 计算完整的十二长生信息
+    const changShengInfo = ShiErChangShengCalculator.calculateComplete(
+      yearStem, yearBranch,
+      monthStem, monthBranch,
+      dayStem, dayBranch,
+      hourStem, hourBranch
+    );
+
     // 检查三合局和三会局
     const branches = [yearBranch, monthBranch, dayBranch, hourBranch];
     const sanHeJu = CombinationCalculator.checkSanHeJu(branches);
@@ -326,28 +341,28 @@ export class BaziService {
     let riZhuStrength: string = '未知';
     let riZhuStrengthDetails: any = {};
 
-    // 创建基于用户输入八字的虚拟EightChar对象
-    const virtualEightChar = this.createVirtualEightChar(yearStem, yearBranch, monthStem, monthBranch, dayStem, dayBranch, hourStem, hourBranch, sect);
-    console.log('🔥 创建虚拟八字对象:', {
+    // 使用独立的五行强度计算（不依赖lunar-typescript库）
+    console.log('🔥 使用独立五行强度计算:', {
       year: yearStem + yearBranch,
       month: monthStem + monthBranch,
       day: dayStem + dayBranch,
       hour: hourStem + hourBranch
     });
 
-    if (virtualEightChar) {
-      console.log('🚀🚀🚀 getBaziFromString: 开始调用五行强度计算（使用虚拟八字对象）');
-      wuXingStrength = WuXingStrengthCalculator.calculateWuXingStrength(virtualEightChar);
-      console.log('🎯🎯🎯 getBaziFromString: 五行强度计算结果:', wuXingStrength);
-      console.log('🔍🔍🔍 getBaziFromString: 土五行强度 =', wuXingStrength.tu);
-      console.log('🔍🔍🔍 getBaziFromString: 是否有详细信息 =', 'details' in wuXingStrength);
+    console.log('🚀🚀🚀 getBaziFromString: 开始独立五行强度计算');
+    wuXingStrength = WuXingStrengthCalculator.calculateWuXingStrengthFromBazi(
+      yearStem, yearBranch, monthStem, monthBranch,
+      dayStem, dayBranch, hourStem, hourBranch
+    );
+    console.log('🎯🎯🎯 getBaziFromString: 五行强度计算结果:', wuXingStrength);
+    console.log('🔍🔍🔍 getBaziFromString: 土五行强度 =', wuXingStrength.tu);
+    console.log('🔍🔍🔍 getBaziFromString: 是否有详细信息 =', 'details' in wuXingStrength);
 
-      // 计算日主旺衰（传递已计算的五行强度，避免重复计算）
-      const riZhuResult = WuXingStrengthCalculator.calculateRiZhuStrength(virtualEightChar, wuXingStrength);
-      riZhuStrength = riZhuResult.result;
-      riZhuStrengthDetails = riZhuResult.details;
-      console.log('🎯 getBaziFromString: 日主旺衰计算结果:', riZhuResult);
-    }
+    // 计算日主旺衰（使用独立计算的结果）
+    const riZhuResult = WuXingStrengthCalculator.calculateRiZhuStrengthFromWuXing(wuXingStrength, dayStem);
+    riZhuStrength = riZhuResult.result;
+    riZhuStrengthDetails = riZhuResult.details;
+    console.log('🎯 getBaziFromString: 日主旺衰计算结果:', riZhuResult);
 
     // 大运和流年信息（如果有性别且有完整八字信息）
     let daYun: DaYunInfo[] = [];
@@ -459,6 +474,24 @@ export class BaziService {
       timeShiShenGan,
       timeShiShenZhi,
 
+      // 地势信息（日干在各地支的十二长生状态）
+      yearDiShi: changShengInfo.diShi.yearDiShi,
+      monthDiShi: changShengInfo.diShi.monthDiShi,
+      dayDiShi: changShengInfo.diShi.dayDiShi,
+      timeDiShi: changShengInfo.diShi.timeDiShi,
+
+      // 自坐信息（各柱天干相对于各柱地支的十二长生状态）
+      yearZiZuo: changShengInfo.ziZuo.yearZiZuo,
+      monthZiZuo: changShengInfo.ziZuo.monthZiZuo,
+      dayZiZuo: changShengInfo.ziZuo.dayZiZuo,
+      timeZiZuo: changShengInfo.ziZuo.timeZiZuo,
+
+      // 月令信息（各柱天干相对于月令的十二长生状态）
+      yearYueLing: changShengInfo.yueLing.yearYueLing,
+      monthYueLing: changShengInfo.yueLing.monthYueLing,
+      dayYueLing: changShengInfo.yueLing.dayYueLing,
+      timeYueLing: changShengInfo.yueLing.timeYueLing,
+
       // 旬空信息
       yearXunKong: BaziCalculator.calculateXunKong(yearStem, yearBranch),
       monthXunKong: BaziCalculator.calculateXunKong(monthStem, monthBranch),
@@ -512,63 +545,7 @@ export class BaziService {
     };
   }
 
-  /**
-   * 创建基于用户输入八字的虚拟EightChar对象
-   */
-  private static createVirtualEightChar(yearStem: string, yearBranch: string, monthStem: string, monthBranch: string, dayStem: string, dayBranch: string, hourStem: string, hourBranch: string, sect: string): any {
-    // 创建一个虚拟的EightChar对象，包含用户输入的八字信息
-    return {
-      // 基本干支获取方法
-      getYearGan: () => yearStem,
-      getYearZhi: () => yearBranch,
-      getMonthGan: () => monthStem,
-      getMonthZhi: () => monthBranch,
-      getDayGan: () => dayStem,
-      getDayZhi: () => dayBranch,
-      getTimeGan: () => hourStem,
-      getTimeZhi: () => hourBranch,
 
-      // 五行获取方法
-      getYearWuXing: () => BaziUtils.getStemWuXing(yearStem),
-      getMonthWuXing: () => BaziUtils.getStemWuXing(monthStem),
-      getDayWuXing: () => BaziUtils.getStemWuXing(dayStem),
-      getTimeWuXing: () => BaziUtils.getStemWuXing(hourStem),
-
-      // 纳音获取方法
-      getYearNaYin: () => BaziCalculator.getNaYin(yearStem + yearBranch),
-      getMonthNaYin: () => BaziCalculator.getNaYin(monthStem + monthBranch),
-      getDayNaYin: () => BaziCalculator.getNaYin(dayStem + dayBranch),
-      getTimeNaYin: () => BaziCalculator.getNaYin(hourStem + hourBranch),
-
-      // 地势获取方法（简化实现）
-      getYearDiShi: () => '未知',
-      getMonthDiShi: () => '未知',
-      getDayDiShi: () => '未知',
-      getTimeDiShi: () => '未知',
-
-      // 旬空相关方法（简化实现）
-      getYearXun: () => BaziCalculator.calculateXunKong(yearStem, yearBranch),
-      getMonthXun: () => BaziCalculator.calculateXunKong(monthStem, monthBranch),
-      getDayXun: () => BaziCalculator.calculateXunKong(dayStem, dayBranch),
-      getTimeXun: () => BaziCalculator.calculateXunKong(hourStem, hourBranch),
-
-      // 身宫相关方法（简化实现）
-      getShenGong: () => BaziCalculator.calculateMingGong(hourStem, hourBranch),
-
-      // 大运相关方法（简化实现）
-      getYun: (forward: boolean) => {
-        // 返回一个简化的大运对象
-        return {
-          getGan: () => monthStem,
-          getZhi: () => monthBranch
-        };
-      },
-
-      // 流派设置
-      setSect: (s: number) => {}, // 空实现
-      getSect: () => parseInt(sect)
-    };
-  }
 
   /**
    * 格式化八字信息
@@ -577,9 +554,10 @@ export class BaziService {
    * @param eightChar 八字对象
    * @param gender 性别（1-男，0-女）
    * @param sect 八字流派（1或2）
+   * @param userInputBazi 可选的用户输入八字信息
    * @returns 格式化后的八字信息
    */
-  private static formatBaziInfo(solar: Solar, lunar: Lunar, eightChar: EightChar, gender = '', sect = '2'): BaziInfo {
+  private static formatBaziInfo(solar: Solar, lunar: Lunar, eightChar: EightChar, gender = '', sect = '2', userInputBazi?: any): BaziInfo {
     // 设置八字流派
     eightChar.setSect(parseInt(sect));
 
@@ -596,7 +574,7 @@ export class BaziService {
     const yearNaYin = eightChar.getYearNaYin();
     const yearShiShenGan = ShiShenCalculator.getShiShen(dayStem, yearStem);
     const yearShiShenZhi = ShiShenCalculator.getHiddenShiShen(dayStem, yearBranch);
-    const yearDiShi = eightChar.getYearDiShi();
+
 
     // 计算年柱旬空
     const yearXunKong = XunKongCalculator.calculateYearXunKong(eightChar);
@@ -611,7 +589,7 @@ export class BaziService {
     const monthNaYin = eightChar.getMonthNaYin();
     const monthShiShenGan = ShiShenCalculator.getShiShen(dayStem, monthStem);
     const monthShiShenZhi = ShiShenCalculator.getHiddenShiShen(dayStem, monthBranch);
-    const monthDiShi = eightChar.getMonthDiShi();
+
 
     // 计算月柱旬空
     const monthXunKong = XunKongCalculator.calculateMonthXunKong(eightChar);
@@ -624,7 +602,7 @@ export class BaziService {
     const dayWuXing = eightChar.getDayWuXing();
     const dayNaYin = eightChar.getDayNaYin();
     const dayShiShenZhi = ShiShenCalculator.getHiddenShiShen(dayStem, dayBranch);
-    const dayDiShi = eightChar.getDayDiShi();
+
 
     // 计算日柱旬空
     const dayXunKong = XunKongCalculator.calculateDayXunKong(eightChar);
@@ -639,10 +617,18 @@ export class BaziService {
     const hourNaYin = eightChar.getTimeNaYin();
     const timeShiShenGan = ShiShenCalculator.getShiShen(dayStem, hourStem);
     const timeShiShenZhi = ShiShenCalculator.getHiddenShiShen(dayStem, hourBranch);
-    const timeDiShi = eightChar.getTimeDiShi();
+
 
     // 计算时柱旬空
     const hourXunKong = XunKongCalculator.calculateHourXunKong(eightChar);
+
+    // 计算完整的十二长生信息
+    const changShengInfo = ShiErChangShengCalculator.calculateComplete(
+      yearStem, yearBranch,
+      monthStem, monthBranch,
+      dayStem, dayBranch,
+      hourStem, hourBranch
+    );
 
     // 生肖信息
     const yearShengXiao = BaziUtils.getShengXiao(yearBranch);
@@ -673,27 +659,53 @@ export class BaziService {
     const geJuResult = GeJuCalculator.calculateGeJu(eightChar);
     console.log('🎯 格局计算结果:', geJuResult);
 
-    // 计算五行强度（使用虚拟八字对象，确保使用用户输入的八字）
-    console.log('🚀🚀🚀 formatBaziInfo: 开始调用五行强度计算');
+    // 计算五行强度（完全独立的计算，不依赖lunar-typescript库）
+    console.log('🚀🚀🚀 formatBaziInfo: 开始独立五行强度计算');
 
-    // 从eightChar获取八字信息，但这些可能是反推的，我们需要使用原始输入
-    const currentYearStem = eightChar.getYearGan();
-    const currentYearBranch = eightChar.getYearZhi();
-    const currentMonthStem = eightChar.getMonthGan();
-    const currentMonthBranch = eightChar.getMonthZhi();
-    const currentDayStem = eightChar.getDayGan();
-    const currentDayBranch = eightChar.getDayZhi();
-    const currentHourStem = eightChar.getTimeGan();
-    const currentHourBranch = eightChar.getTimeZhi();
+    let wuXingStrength: any;
 
-    console.log('🔍 formatBaziInfo当前八字:', {
-      year: currentYearStem + currentYearBranch,
-      month: currentMonthStem + currentMonthBranch,
-      day: currentDayStem + currentDayBranch,
-      hour: currentHourStem + currentHourBranch
-    });
+    if (userInputBazi) {
+      console.log('🔍 formatBaziInfo使用用户输入八字进行独立计算');
+      console.log('🔍 formatBaziInfo当前八字:', {
+        year: userInputBazi.yearStem + userInputBazi.yearBranch,
+        month: userInputBazi.monthStem + userInputBazi.monthBranch,
+        day: userInputBazi.dayStem + userInputBazi.dayBranch,
+        hour: userInputBazi.hourStem + userInputBazi.hourBranch
+      });
 
-    const wuXingStrength = WuXingStrengthCalculator.calculateWuXingStrength(eightChar);
+      // 使用独立的五行强度计算，直接传入八字信息
+      wuXingStrength = WuXingStrengthCalculator.calculateWuXingStrengthFromBazi(
+        userInputBazi.yearStem, userInputBazi.yearBranch,
+        userInputBazi.monthStem, userInputBazi.monthBranch,
+        userInputBazi.dayStem, userInputBazi.dayBranch,
+        userInputBazi.hourStem, userInputBazi.hourBranch
+      );
+    } else {
+      console.log('🔍 formatBaziInfo使用原始八字对象进行独立计算');
+      const currentYearStem = eightChar.getYearGan();
+      const currentYearBranch = eightChar.getYearZhi();
+      const currentMonthStem = eightChar.getMonthGan();
+      const currentMonthBranch = eightChar.getMonthZhi();
+      const currentDayStem = eightChar.getDayGan();
+      const currentDayBranch = eightChar.getDayZhi();
+      const currentHourStem = eightChar.getTimeGan();
+      const currentHourBranch = eightChar.getTimeZhi();
+
+      console.log('🔍 formatBaziInfo当前八字:', {
+        year: currentYearStem + currentYearBranch,
+        month: currentMonthStem + currentMonthBranch,
+        day: currentDayStem + currentDayBranch,
+        hour: currentHourStem + currentHourBranch
+      });
+
+      // 使用独立的五行强度计算，直接传入八字信息
+      wuXingStrength = WuXingStrengthCalculator.calculateWuXingStrengthFromBazi(
+        currentYearStem, currentYearBranch,
+        currentMonthStem, currentMonthBranch,
+        currentDayStem, currentDayBranch,
+        currentHourStem, currentHourBranch
+      );
+    }
     console.log('🎯🎯🎯 formatBaziInfo: 五行强度计算结果:', wuXingStrength);
     console.log('🔍🔍🔍 formatBaziInfo: 土五行强度 =', wuXingStrength.tu);
     console.log('🔍🔍🔍 formatBaziInfo: 是否有详细信息 =', 'details' in wuXingStrength);
@@ -808,11 +820,23 @@ export class BaziService {
       timeShiShenGan,
       timeShiShenZhi,
 
-      // 地势信息
-      yearDiShi,
-      monthDiShi,
-      dayDiShi,
-      hourDiShi: timeDiShi,
+      // 地势信息（日干在各地支的十二长生状态）
+      yearDiShi: changShengInfo.diShi.yearDiShi,
+      monthDiShi: changShengInfo.diShi.monthDiShi,
+      dayDiShi: changShengInfo.diShi.dayDiShi,
+      timeDiShi: changShengInfo.diShi.timeDiShi,
+
+      // 自坐信息（各柱天干相对于各柱地支的十二长生状态）
+      yearZiZuo: changShengInfo.ziZuo.yearZiZuo,
+      monthZiZuo: changShengInfo.ziZuo.monthZiZuo,
+      dayZiZuo: changShengInfo.ziZuo.dayZiZuo,
+      timeZiZuo: changShengInfo.ziZuo.timeZiZuo,
+
+      // 月令信息（各柱天干相对于月令的十二长生状态）
+      yearYueLing: changShengInfo.yueLing.yearYueLing,
+      monthYueLing: changShengInfo.yueLing.monthYueLing,
+      dayYueLing: changShengInfo.yueLing.dayYueLing,
+      timeYueLing: changShengInfo.yueLing.timeYueLing,
 
       // 旬空信息
       yearXunKong,

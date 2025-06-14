@@ -75,7 +75,18 @@ export interface BaziInfo {
   monthDiShi?: string;
   dayDiShi?: string;
   timeDiShi?: string;
-  hourDiShi?: string;
+
+  // 自坐（天干相对于地支的十二长生状态）
+  yearZiZuo?: string;
+  monthZiZuo?: string;
+  dayZiZuo?: string;
+  timeZiZuo?: string;
+
+  // 月令（天干相对于月令的十二长生状态）
+  yearYueLing?: string;
+  monthYueLing?: string;
+  dayYueLing?: string;
+  timeYueLing?: string;
 
   // 神煞信息
   shenSha?: string[];

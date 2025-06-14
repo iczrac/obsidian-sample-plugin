@@ -12,10 +12,11 @@ export class ShiShenCalculator {
    * @param otherStem 其他天干
    * @returns 十神名称
    */
-  static getShiShen(dayStem: string, otherStem: string): string {
-    // 如果是日干自己，返回日主
+  static getShiShen(dayStem: string, otherStem: string, isHiddenGan: boolean = false): string {
+    // 如果是日干自己
     if (dayStem === otherStem) {
-      return '日主';
+      // 在地支藏干中返回比肩，在天干中返回日主
+      return isHiddenGan ? '比肩' : '日主';
     }
 
     // 获取天干的五行
@@ -69,7 +70,7 @@ export class ShiShenCalculator {
     // 计算每个藏干的十神
     const shiShens: string[] = [];
     for (const hideGan of hideGanArray) {
-      const shiShen = this.getShiShen(dayStem, hideGan.trim());
+      const shiShen = this.getShiShen(dayStem, hideGan.trim(), true); // 传入true表示是地支藏干
       shiShens.push(shiShen);
     }
 

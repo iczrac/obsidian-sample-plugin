@@ -25,18 +25,48 @@ export class DaYunCalculator {
     dayStem: string, 
     count = 10
   ): DaYunInfo[] {
+    console.log('🔍 DaYunCalculator.calculateDaYun 开始');
+    console.log('🔍 参数: gender =', gender, ', dayStem =', dayStem, ', count =', count);
+
     if (gender !== '1' && gender !== '0') {
+      console.log('🚨 DaYunCalculator: 性别参数无效:', gender);
       return [];
     }
 
     try {
+      console.log('🔍 DaYunCalculator: 获取运势对象...');
       // 获取运势信息
       const yun = eightChar.getYun(gender === '1' ? 1 : 0);
+      console.log('🔍 DaYunCalculator: 运势对象获取成功:', yun);
+
+      console.log('🔍 DaYunCalculator: 获取大运列表...');
       const daYunList = yun.getDaYun(count);
+      console.log('🔍 DaYunCalculator: 大运列表获取成功，数量:', daYunList.length);
 
       // 处理大运信息
       return daYunList.map((dy, index) => {
         const ganZhi = dy.getGanZhi();
+
+        // 检查干支是否有效
+        if (!ganZhi || ganZhi.trim() === '') {
+          console.log(`🔍 DaYunCalculator: 跳过前运，干支为空，索引: ${index}（还未排上大运）`);
+          // 返回一个空的大运对象，表示前运（还未排上大运）
+          return {
+            startYear: dy.getStartYear(),
+            endYear: dy.getEndYear(),
+            startAge: dy.getStartAge(),
+            endAge: dy.getEndAge(),
+            index: dy.getIndex(),
+            ganZhi: '',
+            naYin: '',
+            shiShenGan: '',
+            shiShenZhi: '',
+            diShi: '',
+            xunKong: '',
+            shenSha: []
+          };
+        }
+
         const naYin = BaziCalculator.getNaYin(ganZhi);
         const shiShenGan = ShiShenCalculator.getShiShen(dayStem, ganZhi.charAt(0));
         const shiShenZhi = ShiShenCalculator.getHiddenShiShen(dayStem, ganZhi.charAt(1));
@@ -50,11 +80,19 @@ export class DaYunCalculator {
         // 安全获取旬空信息
         let xunKong = '';
         try {
+          console.log('🔍 DaYunCalculator: 尝试获取大运旬空，干支:', ganZhi);
+          console.log('🔍 DaYunCalculator: dy对象:', dy);
+          console.log('🔍 DaYunCalculator: dy.getXunKong方法存在:', typeof dy.getXunKong === 'function');
+
           xunKong = dy.getXunKong() || '';
+          console.log('🔍 DaYunCalculator: 成功获取旬空:', xunKong);
         } catch (e) {
-          console.warn('获取大运旬空信息失败:', e);
+          console.warn('🚨 DaYunCalculator: 获取大运旬空信息失败:', e);
+          console.warn('🚨 DaYunCalculator: 错误详情:', e.message);
+          console.warn('🚨 DaYunCalculator: 错误堆栈:', e.stack);
           // 使用备用方法计算旬空
           xunKong = DaYunCalculator.calculateXunKongSafe(ganZhi);
+          console.log('🔍 DaYunCalculator: 使用备用方法计算旬空结果:', xunKong);
         }
 
         return {
@@ -188,7 +226,7 @@ export class DaYunCalculator {
   }
 
   /**
-   * 安全计算旬空
+   * 安全计算旬空（使用统一的BaziCalculator方法）
    * @param ganZhi 干支
    * @returns 旬空信息
    */
@@ -198,12 +236,12 @@ export class DaYunCalculator {
     }
 
     try {
-      // 使用BaziCalculator的旬空计算方法
+      // 使用统一的BaziCalculator旬空计算方法
       const stem = ganZhi.charAt(0);
       const branch = ganZhi.charAt(1);
       return BaziCalculator.calculateXunKong(stem, branch);
     } catch (e) {
-      console.warn('安全旬空计算也失败:', e);
+      console.warn('统一旬空计算失败:', e);
       return '';
     }
   }
