@@ -8,6 +8,7 @@ import { GeJuTrendChart } from './GeJuTrendChart';
 import { BaziService } from '../services/BaziService';
 import { ShiShenCalculator } from '../services/bazi/ShiShenCalculator';
 import { BaziCalculator } from '../services/bazi/BaziCalculator';
+import { WuXingConfig } from '../config/WuXingConfig';
 
 /**
  * 交互式八字命盘视图
@@ -4102,13 +4103,13 @@ export class InteractiveBaziView {
   }
 
   /**
-   * 获取实际的五行强度计算过程
+   * 获取实际的五行强度计算过程（使用后端返回的详细信息）
    * @param wuXing 五行名称
    * @returns 实际计算过程
    */
   private getActualWuXingCalculation(wuXing: string): string {
     if (!this.baziInfo || !this.baziInfo.wuXingStrength) {
-      return '';
+      return `无法获取${wuXing}五行强度信息。`;
     }
 
     // 检查是否有详细信息
@@ -4118,6 +4119,7 @@ export class InteractiveBaziView {
 
     // 获取五行强度详情
     const details = (this.baziInfo.wuXingStrength as any).details;
+    const wuXingStrength = this.baziInfo.wuXingStrength as any;
 
     // 检查 details 是否存在
     if (!details) {
@@ -4136,17 +4138,32 @@ export class InteractiveBaziView {
     } = {};
 
     // 根据五行类型获取对应的详情，并进行空值检查
+    let currentWuXingValue = 0;
     switch (wuXing) {
-      case '金': wuXingDetails = details.jin || {}; break;
-      case '木': wuXingDetails = details.mu || {}; break;
-      case '水': wuXingDetails = details.shui || {}; break;
-      case '火': wuXingDetails = details.huo || {}; break;
-      case '土': wuXingDetails = details.tu || {}; break;
+      case '金':
+        wuXingDetails = details.jin || {};
+        currentWuXingValue = wuXingStrength.jin || 0;
+        break;
+      case '木':
+        wuXingDetails = details.mu || {};
+        currentWuXingValue = wuXingStrength.mu || 0;
+        break;
+      case '水':
+        wuXingDetails = details.shui || {};
+        currentWuXingValue = wuXingStrength.shui || 0;
+        break;
+      case '火':
+        wuXingDetails = details.huo || {};
+        currentWuXingValue = wuXingStrength.huo || 0;
+        break;
+      case '土':
+        wuXingDetails = details.tu || {};
+        currentWuXingValue = wuXingStrength.tu || 0;
+        break;
       default: return '';
     }
 
     // 计算总分
-    const wuXingStrength = this.baziInfo.wuXingStrength as any;
     let total = 0;
 
     // 确保所有属性存在并且是数字
@@ -4160,403 +4177,65 @@ export class InteractiveBaziView {
       total = jin + mu + shui + huo + tu;
     }
 
-    // 构建计算过程
+    // 直接使用后端返回的详细信息
+    const tianGan = wuXingDetails.tianGan || 0;
+    const diZhiCang = wuXingDetails.diZhiCang || 0;
+    const naYin = wuXingDetails.naYin || 0;
+    const seasonValue = wuXingDetails.season || 0;
+    const combination = wuXingDetails.combination || 0;
+
+    // 构建简化的显示
     let calculation = `${wuXing}五行强度实际计算过程：\n\n`;
 
     // 天干五行
     calculation += `【天干五行】\n`;
-    if (wuXingDetails.tianGan && wuXingDetails.tianGan > 0) {
-      // 获取八字信息
-      const { yearStem, monthStem, dayStem, hourStem } = this.baziInfo;
-
-      // 获取配置中的权重（如果可能）
-      const yearWeight = 1.2;  // 默认使用优化后的权重
-      const monthWeight = 3.0;
-      const dayWeight = 3.0;
-      const hourWeight = 1.0;
-
-      if (this.getWuXingFromStem(yearStem) === wuXing) {
-        calculation += `- 年干${yearStem}为${wuXing}，得分${yearWeight.toFixed(1)}（年干权重）\n`;
-      }
-      if (this.getWuXingFromStem(monthStem) === wuXing) {
-        calculation += `- 月干${monthStem}为${wuXing}，得分${monthWeight.toFixed(1)}（月干权重，提高以强调月令重要性）\n`;
-      }
-      if (this.getWuXingFromStem(dayStem) === wuXing) {
-        calculation += `- 日干${dayStem}为${wuXing}，得分${dayWeight.toFixed(1)}（日干权重，日主最重要）\n`;
-      }
-      if (this.getWuXingFromStem(hourStem) === wuXing) {
-        calculation += `- 时干${hourStem}为${wuXing}，得分${hourWeight.toFixed(1)}（时干权重）\n`;
-      }
+    if (tianGan > 0) {
+      calculation += `- 天干贡献：${tianGan.toFixed(2)}分\n`;
     }
 
     // 地支藏干
     calculation += `\n【地支藏干】\n`;
-    if (wuXingDetails.diZhiCang && wuXingDetails.diZhiCang > 0) {
-      // 获取八字信息
-      const { yearBranch, monthBranch, dayBranch, hourBranch } = this.baziInfo;
-      const { yearHideGan, monthHideGan, dayHideGan, hourHideGan } = this.baziInfo;
-
-      // 获取配置中的权重（如果可能）
-      const yearWeight = 0.8;  // 默认使用优化后的权重
-      const monthWeight = 2.5;
-      const dayWeight = 2.2;
-      const hourWeight = 0.7;
-
-      // 藏干内部权重
-      const oneGanWeight = [1.0];
-      const twoGanWeight = [0.6, 0.4];
-      const threeGanWeight = [0.5, 0.3, 0.2];
-
-      if (yearHideGan) {
-        const yearHideGanArray = Array.isArray(yearHideGan) ? yearHideGan : yearHideGan.split('');
-        calculation += `- 年支${yearBranch}藏干：`;
-
-        // 根据藏干数量选择权重
-        const weights = yearHideGanArray.length === 1 ? oneGanWeight :
-                       yearHideGanArray.length === 2 ? twoGanWeight : threeGanWeight;
-
-        let hasMatchingGan = false;
-        for (let i = 0; i < yearHideGanArray.length; i++) {
-          const gan = yearHideGanArray[i];
-          if (this.getWuXingFromStem(gan) === wuXing) {
-            const ganWeight = weights[i];
-            const score = yearWeight * ganWeight;
-            calculation += `${gan}(${wuXing})得分${score.toFixed(1)}`;
-            if (yearHideGanArray.length > 1) {
-              calculation += `（年支权重${yearWeight.toFixed(1)}×藏干权重${ganWeight.toFixed(1)}）`;
-            } else {
-              calculation += `（年支权重）`;
-            }
-            calculation += `，`;
-            hasMatchingGan = true;
-          }
-        }
-        calculation = hasMatchingGan ? calculation.slice(0, -1) + '\n' : calculation + '无匹配五行\n';
-      }
-
-      if (monthHideGan) {
-        const monthHideGanArray = Array.isArray(monthHideGan) ? monthHideGan : monthHideGan.split('');
-        calculation += `- 月支${monthBranch}藏干：`;
-
-        // 根据藏干数量选择权重
-        const weights = monthHideGanArray.length === 1 ? oneGanWeight :
-                       monthHideGanArray.length === 2 ? twoGanWeight : threeGanWeight;
-
-        let hasMatchingGan = false;
-        for (let i = 0; i < monthHideGanArray.length; i++) {
-          const gan = monthHideGanArray[i];
-          if (this.getWuXingFromStem(gan) === wuXing) {
-            const ganWeight = weights[i];
-            const score = monthWeight * ganWeight;
-            calculation += `${gan}(${wuXing})得分${score.toFixed(1)}`;
-            if (monthHideGanArray.length > 1) {
-              calculation += `（月支权重${monthWeight.toFixed(1)}×藏干权重${ganWeight.toFixed(1)}）`;
-            } else {
-              calculation += `（月支权重，提高以强调月令重要性）`;
-            }
-            calculation += `，`;
-            hasMatchingGan = true;
-          }
-        }
-        calculation = hasMatchingGan ? calculation.slice(0, -1) + '\n' : calculation + '无匹配五行\n';
-      }
-
-      if (dayHideGan) {
-        const dayHideGanArray = Array.isArray(dayHideGan) ? dayHideGan : dayHideGan.split('');
-        calculation += `- 日支${dayBranch}藏干：`;
-
-        // 根据藏干数量选择权重
-        const weights = dayHideGanArray.length === 1 ? oneGanWeight :
-                       dayHideGanArray.length === 2 ? twoGanWeight : threeGanWeight;
-
-        let hasMatchingGan = false;
-        for (let i = 0; i < dayHideGanArray.length; i++) {
-          const gan = dayHideGanArray[i];
-          if (this.getWuXingFromStem(gan) === wuXing) {
-            const ganWeight = weights[i];
-            const score = dayWeight * ganWeight;
-            calculation += `${gan}(${wuXing})得分${score.toFixed(1)}`;
-            if (dayHideGanArray.length > 1) {
-              calculation += `（日支权重${dayWeight.toFixed(1)}×藏干权重${ganWeight.toFixed(1)}）`;
-            } else {
-              calculation += `（日支权重）`;
-            }
-            calculation += `，`;
-            hasMatchingGan = true;
-          }
-        }
-        calculation = hasMatchingGan ? calculation.slice(0, -1) + '\n' : calculation + '无匹配五行\n';
-      }
-
-      if (hourHideGan) {
-        const hourHideGanArray = Array.isArray(hourHideGan) ? hourHideGan : hourHideGan.split('');
-        calculation += `- 时支${hourBranch}藏干：`;
-
-        // 根据藏干数量选择权重
-        const weights = hourHideGanArray.length === 1 ? oneGanWeight :
-                       hourHideGanArray.length === 2 ? twoGanWeight : threeGanWeight;
-
-        let hasMatchingGan = false;
-        for (let i = 0; i < hourHideGanArray.length; i++) {
-          const gan = hourHideGanArray[i];
-          if (this.getWuXingFromStem(gan) === wuXing) {
-            const ganWeight = weights[i];
-            const score = hourWeight * ganWeight;
-            calculation += `${gan}(${wuXing})得分${score.toFixed(1)}`;
-            if (hourHideGanArray.length > 1) {
-              calculation += `（时支权重${hourWeight.toFixed(1)}×藏干权重${ganWeight.toFixed(1)}）`;
-            } else {
-              calculation += `（时支权重）`;
-            }
-            calculation += `，`;
-            hasMatchingGan = true;
-          }
-        }
-        calculation = hasMatchingGan ? calculation.slice(0, -1) + '\n' : calculation + '无匹配五行\n';
-      }
+    if (diZhiCang > 0) {
+      calculation += `- 地支藏干贡献：${diZhiCang.toFixed(2)}分\n`;
     }
 
     // 纳音五行
     calculation += `\n【纳音五行】\n`;
-    if (wuXingDetails.naYin && wuXingDetails.naYin > 0) {
-      // 获取八字信息
-      const { yearNaYin, monthNaYin, dayNaYin, hourNaYin } = this.baziInfo;
-
-      // 获取配置中的权重（如果可能）
-      const yearWeight = 0.6;  // 默认使用优化后的权重
-      const monthWeight = 2.0;
-      const dayWeight = 1.5;
-      const hourWeight = 0.5;
-
-      if (yearNaYin && yearNaYin.includes(wuXing)) {
-        calculation += `- 年柱纳音${yearNaYin}为${wuXing}，得分${yearWeight.toFixed(1)}（年柱纳音权重）\n`;
-      }
-      if (monthNaYin && monthNaYin.includes(wuXing)) {
-        calculation += `- 月柱纳音${monthNaYin}为${wuXing}，得分${monthWeight.toFixed(1)}（月柱纳音权重，提高以强调月令重要性）\n`;
-      }
-      if (dayNaYin && dayNaYin.includes(wuXing)) {
-        calculation += `- 日柱纳音${dayNaYin}为${wuXing}，得分${dayWeight.toFixed(1)}（日柱纳音权重）\n`;
-      }
-      if (hourNaYin && hourNaYin.includes(wuXing)) {
-        calculation += `- 时柱纳音${hourNaYin}为${wuXing}，得分${hourWeight.toFixed(1)}（时柱纳音权重）\n`;
-      }
+    if (naYin > 0) {
+      calculation += `- 纳音贡献：${naYin.toFixed(2)}分\n`;
     }
 
     // 季节调整
     calculation += `\n【季节调整】\n`;
-    const { monthBranch } = this.baziInfo;
-    const season = this.getSeason(monthBranch);
-    calculation += `- 当前季节：${season}\n`;
-
-    // 获取配置中的权重（如果可能）
-    const seasonAdjust = {
-      wang: 2.5,   // 旺相系数（从2.0提高到2.5）
-      xiang: 1.2,  // 相旺系数（从1.0提高到1.2）
-      ping: 0.0,   // 平和系数（保持不变）
-      qiu: -1.2,   // 囚系数（从-1.0增强到-1.2）
-      si: -1.8     // 死系数（从-1.5增强到-1.8）
-    };
-
-    if (wuXingDetails.season !== undefined && wuXingDetails.season !== 0) {
-      switch (season) {
-        case '春季':
-          if (wuXing === '木') calculation += `- 春季木旺，得分+${seasonAdjust.wang.toFixed(1)}（旺相系数，提高以强化季节影响）\n`;
-          if (wuXing === '火') calculation += `- 春季火相，得分+${seasonAdjust.xiang.toFixed(1)}（相旺系数，提高以强化季节影响）\n`;
-          if (wuXing === '土') calculation += `- 春季土平，得分${seasonAdjust.ping.toFixed(1)}（平和系数）\n`;
-          if (wuXing === '金') calculation += `- 春季金囚，得分${seasonAdjust.qiu.toFixed(1)}（囚系数，增强以强化季节影响）\n`;
-          if (wuXing === '水') calculation += `- 春季水死，得分${seasonAdjust.si.toFixed(1)}（死系数，增强以强化季节影响）\n`;
-          break;
-        case '夏季':
-          if (wuXing === '火') calculation += `- 夏季火旺，得分+${seasonAdjust.wang.toFixed(1)}（旺相系数，提高以强化季节影响）\n`;
-          if (wuXing === '土') calculation += `- 夏季土相，得分+${seasonAdjust.xiang.toFixed(1)}（相旺系数，提高以强化季节影响）\n`;
-          if (wuXing === '金') calculation += `- 夏季金平，得分${seasonAdjust.ping.toFixed(1)}（平和系数）\n`;
-          if (wuXing === '水') calculation += `- 夏季水囚，得分${seasonAdjust.qiu.toFixed(1)}（囚系数，增强以强化季节影响）\n`;
-          if (wuXing === '木') calculation += `- 夏季木死，得分${seasonAdjust.si.toFixed(1)}（死系数，增强以强化季节影响）\n`;
-          break;
-        case '秋季':
-          if (wuXing === '金') calculation += `- 秋季金旺，得分+${seasonAdjust.wang.toFixed(1)}（旺相系数，提高以强化季节影响）\n`;
-          if (wuXing === '水') calculation += `- 秋季水相，得分+${seasonAdjust.xiang.toFixed(1)}（相旺系数，提高以强化季节影响）\n`;
-          if (wuXing === '木') calculation += `- 秋季木平，得分${seasonAdjust.ping.toFixed(1)}（平和系数）\n`;
-          if (wuXing === '火') calculation += `- 秋季火囚，得分${seasonAdjust.qiu.toFixed(1)}（囚系数，增强以强化季节影响）\n`;
-          if (wuXing === '土') calculation += `- 秋季土死，得分${seasonAdjust.si.toFixed(1)}（死系数，增强以强化季节影响）\n`;
-          break;
-        case '冬季':
-          if (wuXing === '水') calculation += `- 冬季水旺，得分+${seasonAdjust.wang.toFixed(1)}（旺相系数，提高以强化季节影响）\n`;
-          if (wuXing === '木') calculation += `- 冬季木相，得分+${seasonAdjust.xiang.toFixed(1)}（相旺系数，提高以强化季节影响）\n`;
-          if (wuXing === '火') calculation += `- 冬季火平，得分${seasonAdjust.ping.toFixed(1)}（平和系数）\n`;
-          if (wuXing === '土') calculation += `- 冬季土囚，得分${seasonAdjust.qiu.toFixed(1)}（囚系数，增强以强化季节影响）\n`;
-          if (wuXing === '金') calculation += `- 冬季金死，得分${seasonAdjust.si.toFixed(1)}（死系数，增强以强化季节影响）\n`;
-          break;
-      }
-    }
-
-    // 月令当令加成
-    calculation += `\n【月令当令加成】\n`;
-
-    // 获取配置中的权重（如果可能）
-    const monthDominantBonus = {
-      dominant: 2.0,   // 当令加成（从1.5提高到2.0）
-      related: 1.0,    // 相旺加成（从0.8提高到1.0）
-      neutral: 0.0,    // 平和加成（保持不变）
-      weak: -0.5,      // 囚加成（新增）
-      dead: -0.8       // 死加成（新增）
-    };
-
-    // 显示月令当令加成
-    if ((wuXingDetails as any).monthDominant !== undefined && (wuXingDetails as any).monthDominant !== 0) {
-      switch (season) {
-        case '春季':
-          if (wuXing === '木') calculation += `- 春季木当令，得分+${monthDominantBonus.dominant.toFixed(1)}（当令加成，提高以强调月令重要性）\n`;
-          if (wuXing === '火') calculation += `- 春季火相旺，得分+${monthDominantBonus.related.toFixed(1)}（相旺加成，提高以强调月令重要性）\n`;
-          if (wuXing === '土') calculation += `- 春季土平和，得分${monthDominantBonus.neutral.toFixed(1)}（平和加成）\n`;
-          if (wuXing === '金') calculation += `- 春季金囚，得分${monthDominantBonus.weak.toFixed(1)}（囚加成，新增负面调整）\n`;
-          if (wuXing === '水') calculation += `- 春季水死，得分${monthDominantBonus.dead.toFixed(1)}（死加成，新增负面调整）\n`;
-          break;
-        case '夏季':
-          if (wuXing === '火') calculation += `- 夏季火当令，得分+${monthDominantBonus.dominant.toFixed(1)}（当令加成，提高以强调月令重要性）\n`;
-          if (wuXing === '土') calculation += `- 夏季土相旺，得分+${monthDominantBonus.related.toFixed(1)}（相旺加成，提高以强调月令重要性）\n`;
-          if (wuXing === '金') calculation += `- 夏季金平和，得分${monthDominantBonus.neutral.toFixed(1)}（平和加成）\n`;
-          if (wuXing === '水') calculation += `- 夏季水囚，得分${monthDominantBonus.weak.toFixed(1)}（囚加成，新增负面调整）\n`;
-          if (wuXing === '木') calculation += `- 夏季木死，得分${monthDominantBonus.dead.toFixed(1)}（死加成，新增负面调整）\n`;
-          break;
-        case '秋季':
-          if (wuXing === '金') calculation += `- 秋季金当令，得分+${monthDominantBonus.dominant.toFixed(1)}（当令加成，提高以强调月令重要性）\n`;
-          if (wuXing === '水') calculation += `- 秋季水相旺，得分+${monthDominantBonus.related.toFixed(1)}（相旺加成，提高以强调月令重要性）\n`;
-          if (wuXing === '木') calculation += `- 秋季木平和，得分${monthDominantBonus.neutral.toFixed(1)}（平和加成）\n`;
-          if (wuXing === '火') calculation += `- 秋季火囚，得分${monthDominantBonus.weak.toFixed(1)}（囚加成，新增负面调整）\n`;
-          if (wuXing === '土') calculation += `- 秋季土死，得分${monthDominantBonus.dead.toFixed(1)}（死加成，新增负面调整）\n`;
-          break;
-        case '冬季':
-          if (wuXing === '水') calculation += `- 冬季水当令，得分+${monthDominantBonus.dominant.toFixed(1)}（当令加成，提高以强调月令重要性）\n`;
-          if (wuXing === '木') calculation += `- 冬季木相旺，得分+${monthDominantBonus.related.toFixed(1)}（相旺加成，提高以强调月令重要性）\n`;
-          if (wuXing === '火') calculation += `- 冬季火平和，得分${monthDominantBonus.neutral.toFixed(1)}（平和加成）\n`;
-          if (wuXing === '土') calculation += `- 冬季土囚，得分${monthDominantBonus.weak.toFixed(1)}（囚加成，新增负面调整）\n`;
-          if (wuXing === '金') calculation += `- 冬季金死，得分${monthDominantBonus.dead.toFixed(1)}（死加成，新增负面调整）\n`;
-          break;
-      }
+    if (seasonValue !== 0) {
+      calculation += `- 季节调整：${seasonValue > 0 ? '+' : ''}${seasonValue.toFixed(2)}分\n`;
     }
 
     // 组合调整
     calculation += `\n【组合调整】\n`;
-
-    // 获取配置中的权重（如果可能）
-    const combinationWeight = {
-      tianGanWuHe: 0.8,      // 天干五合权重（从0.6提高到0.8）
-      diZhiSanHe: 1.5,       // 地支三合权重（从1.2提高到1.5）
-      diZhiSanHui: 1.2,      // 地支三会权重（从1.0提高到1.2）
-      partialSanHe: 0.9,     // 部分三合权重（新增，为完整三合的60%）
-      partialSanHui: 0.7     // 部分三会权重（新增，为完整三会的60%）
-    };
-
-    if (wuXingDetails.combination && wuXingDetails.combination > 0) {
-      // 天干五合
-      const tianGanWuHe = this.checkTianGanWuHe();
-      if (tianGanWuHe) {
-        const heWuXing = this.getWuXingFromWuHe(tianGanWuHe);
-        if (heWuXing === wuXing) {
-          calculation += `- 天干五合：${tianGanWuHe}合化${wuXing}，得分+${combinationWeight.tianGanWuHe.toFixed(1)}（天干五合权重，提高以增强组合影响）\n`;
-        }
-      }
-
-      // 地支三合
-      const diZhiSanHe = this.checkDiZhiSanHe();
-      if (diZhiSanHe) {
-        const heWuXing = this.getWuXingFromSanHe(diZhiSanHe);
-        if (heWuXing === wuXing) {
-          // 检查是完整三合还是部分三合
-          const { yearBranch, monthBranch, dayBranch, hourBranch } = this.baziInfo;
-          const branches = [yearBranch, monthBranch, dayBranch, hourBranch].filter(branch => branch !== undefined) as string[];
-
-          // 根据三合类型获取对应的地支
-          const sanHePatterns: {[key: string]: string[]} = {
-            '寅午戌': ['寅', '午', '戌'],
-            '申子辰': ['申', '子', '辰'],
-            '亥卯未': ['亥', '卯', '未'],
-            '巳酉丑': ['巳', '酉', '丑']
-          };
-
-          const pattern = sanHePatterns[diZhiSanHe];
-          if (pattern) {
-            const matchedBranches = branches.filter(branch => pattern.includes(branch));
-            const uniqueBranches = new Set(matchedBranches);
-
-            if (uniqueBranches.size === 3) {
-              // 完整三合
-              calculation += `- 地支三合：${diZhiSanHe}三合${wuXing}局（完整），得分+${combinationWeight.diZhiSanHe.toFixed(1)}（地支三合权重，提高以增强组合影响）\n`;
-            } else {
-              // 部分三合
-              calculation += `- 地支三合：${diZhiSanHe}三合${wuXing}局（部分），得分+${combinationWeight.partialSanHe.toFixed(1)}（部分三合权重，新增区分完整度）\n`;
-            }
-          }
-        }
-      }
-
-      // 地支三会
-      const diZhiSanHui = this.checkDiZhiSanHui();
-      if (diZhiSanHui) {
-        const heWuXing = this.getWuXingFromSanHui(diZhiSanHui);
-        if (heWuXing === wuXing) {
-          // 检查是完整三会还是部分三会
-          const { yearBranch, monthBranch, dayBranch, hourBranch } = this.baziInfo;
-          const branches = [yearBranch, monthBranch, dayBranch, hourBranch].filter(branch => branch !== undefined) as string[];
-
-          // 根据三会类型获取对应的地支
-          const sanHuiPatterns: {[key: string]: string[]} = {
-            '寅卯辰': ['寅', '卯', '辰'],
-            '巳午未': ['巳', '午', '未'],
-            '申酉戌': ['申', '酉', '戌'],
-            '亥子丑': ['亥', '子', '丑']
-          };
-
-          const pattern = sanHuiPatterns[diZhiSanHui];
-          if (pattern) {
-            const matchedBranches = branches.filter(branch => pattern.includes(branch));
-            const uniqueBranches = new Set(matchedBranches);
-
-            if (uniqueBranches.size === 3) {
-              // 完整三会
-              calculation += `- 地支三会：${diZhiSanHui}三会${wuXing}局（完整），得分+${combinationWeight.diZhiSanHui.toFixed(1)}（地支三会权重，提高以增强组合影响）\n`;
-            } else {
-              // 部分三会
-              calculation += `- 地支三会：${diZhiSanHui}三会${wuXing}局（部分），得分+${combinationWeight.partialSanHui.toFixed(1)}（部分三会权重，新增区分完整度）\n`;
-            }
-          }
-        }
-      }
+    if (combination > 0) {
+      calculation += `- 组合关系：${combination.toFixed(2)}分\n`;
     }
 
-    // 总结
+    // 总分计算
+    const totalScore = tianGan + diZhiCang + naYin + seasonValue + combination;
     calculation += `\n【总分计算】\n`;
+    calculation += `- ${wuXing}五行总得分：${totalScore.toFixed(2)}分\n`;
+    calculation += `- 所有五行总得分：${total.toFixed(2)}分\n`;
 
-    // 各项得分明细
-    calculation += `- ${wuXing}五行各项得分：\n`;
-    calculation += `  • 天干五行：${wuXingDetails.tianGan ? wuXingDetails.tianGan.toFixed(2) : '0.00'}\n`;
-    calculation += `  • 地支藏干：${wuXingDetails.diZhiCang ? wuXingDetails.diZhiCang.toFixed(2) : '0.00'}\n`;
-    calculation += `  • 纳音五行：${wuXingDetails.naYin ? wuXingDetails.naYin.toFixed(2) : '0.00'}\n`;
-    calculation += `  • 季节调整：${wuXingDetails.season ? wuXingDetails.season.toFixed(2) : '0.00'}\n`;
-    calculation += `  • 月令加成：${(wuXingDetails as any).monthDominant ? (wuXingDetails as any).monthDominant.toFixed(2) : '0.00'}\n`;
-    calculation += `  • 组合调整：${wuXingDetails.combination ? wuXingDetails.combination.toFixed(2) : '0.00'}\n`;
-
-    // 总分和相对强度
-    const totalScore = wuXingDetails.total || 0;
-    calculation += `- ${wuXing}五行总得分：${totalScore.toFixed(2)}\n`;
-    calculation += `- 所有五行总得分：${total.toFixed(2)}\n`;
-
-    // 计算相对强度，避免除以零
-    let relativeStrength = 0;
-    if (total > 0) {
-      relativeStrength = totalScore / total * 10;
-    }
-    calculation += `- ${wuXing}五行相对强度：${totalScore.toFixed(2)} / ${total.toFixed(2)} * 10 = ${relativeStrength.toFixed(2)}\n`;
+    // 计算相对强度
+    const relativeStrength = total > 0 ? (currentWuXingValue / total * 10) : 0;
+    calculation += `- ${wuXing}五行相对强度：${currentWuXingValue.toFixed(2)} / ${total.toFixed(2)} * 10 = ${relativeStrength.toFixed(2)}\n`;
 
     // 权重分配说明
-    calculation += `\n【权重分配说明】\n`;
-    calculation += `- 天干权重：年干(1.2) < 月干(3.0) = 日干(3.0) > 时干(1.0)，突出月令和日主重要性\n`;
-    calculation += `- 地支藏干权重：年支(0.8) < 月支(2.5) > 日支(2.2) > 时支(0.7)，突出月令重要性\n`;
-    calculation += `- 纳音五行权重：年柱(0.6) < 月柱(2.0) > 日柱(1.5) > 时柱(0.5)，突出月令重要性\n`;
-    calculation += `- 季节调整：旺(+2.5)、相(+1.2)、平(0)、囚(-1.2)、死(-1.8)，强化季节影响\n`;
-    calculation += `- 月令加成：当令(+2.0)、相旺(+1.0)、平和(0)、囚(-0.5)、死(-0.8)，全面考虑月令影响\n`;
-    calculation += `- 组合关系：天干五合(+0.8)、地支三合(+1.5/+0.9)、地支三会(+1.2/+0.7)，区分完整度\n`;
+    calculation += `\n【重新设计的权重分配说明】\n`;
+    calculation += `- 天干权重：年干(2) < 月干(4) < 日干(6) < 时干(8)，递增权重\n`;
+    calculation += `- 地支权重：年支(3) < 日支(5) < 时支(12) < 月支(20)，月令最重要\n`;
+    calculation += `- 地支藏干：年支(2) < 日支(4) = 时支(4) < 月支(10)，配合地支\n`;
+    calculation += `- 纳音五行：年柱(1) < 时柱(0.5) < 日柱(1.5) < 月柱(2)，辅助参考\n`;
+    calculation += `- 季节调整：旺(+15)、相(+8)、平(0)、囚(-8)、死(-12)，月令威力\n`;
+    calculation += `- 组合关系：天干五合(+2)、地支三合(+3)、地支三会(+2)，适度加成\n`;
+    calculation += `\n注：总分100分体系，权重简化易懂，前后端计算统一\n`;
 
     return calculation;
   }

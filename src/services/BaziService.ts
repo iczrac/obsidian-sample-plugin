@@ -12,6 +12,8 @@ import { XunKongCalculator } from './bazi/XunKongCalculator';
 import { GeJuExplanationService } from './GeJuExplanationService';
 import { ShenShaExplanationService } from './ShenShaExplanationService';
 import { WuXingExplanationService } from './WuXingExplanationService';
+import { GeJuCalculator } from './bazi/GeJuCalculator';
+import { WuXingStrengthCalculator } from './bazi/WuXingStrengthCalculator';
 
 /**
  * 八字服务类，封装lunar-typescript的八字功能
@@ -75,6 +77,7 @@ export class BaziService {
    * @returns 八字信息对象
    */
   static parseBaziString(baziStr: string, specifiedYear?: string, gender = '', sect = '2'): BaziInfo {
+    console.log('🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 BaziService.parseBaziString 开始 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥');
     console.log('🔥 ========== BaziService.parseBaziString 开始 ==========');
     console.log('🔥 输入参数:');
     console.log('  - baziStr:', baziStr);
@@ -209,8 +212,25 @@ export class BaziService {
 
     // 如果有指定年份且成功推算日期，使用lunar-typescript库获取更多信息
     if (yearNum && solar && lunar && eightChar) {
+      // 创建基于用户输入八字的虚拟EightChar对象，覆盖反推的八字
+      const virtualEightChar = this.createVirtualEightChar(yearStem, yearBranch, monthStem, monthBranch, dayStem, dayBranch, hourStem, hourBranch, sect);
+      console.log('🔥 formatBaziInfo路径：创建虚拟八字对象:', {
+        year: yearStem + yearBranch,
+        month: monthStem + monthBranch,
+        day: dayStem + dayBranch,
+        hour: hourStem + hourBranch
+      });
+
       // 使用formatBaziInfo获取完整的八字信息，但只获取日期、大运、流年等信息
       const baziInfo = this.formatBaziInfo(solar, lunar, eightChar, gender, sect);
+
+      // 重新计算五行强度，使用虚拟八字对象
+      console.log('🔥 重新计算五行强度，使用虚拟八字对象');
+      const virtualWuXingStrength = WuXingStrengthCalculator.calculateWuXingStrength(virtualEightChar);
+      console.log('🎯 虚拟八字五行强度计算结果:', virtualWuXingStrength);
+
+      // 覆盖五行强度结果
+      baziInfo.wuXingStrength = virtualWuXingStrength;
 
       // 使用用户输入的原始八字信息，而不是反推后的八字
       // 年柱
@@ -311,6 +331,34 @@ export class BaziService {
     if (eightChar) {
       const shenShaResult = ComprehensiveShenShaCalculator.calculateCompleteShenSha(eightChar);
       shenSha = shenShaResult.allShenSha;
+    }
+
+    // 计算五行强度（如果有八字对象）
+    let wuXingStrength: any = undefined;
+    let riZhuStrength: string = '未知';
+    let riZhuStrengthDetails: any = {};
+
+    // 创建基于用户输入八字的虚拟EightChar对象
+    const virtualEightChar = this.createVirtualEightChar(yearStem, yearBranch, monthStem, monthBranch, dayStem, dayBranch, hourStem, hourBranch, sect);
+    console.log('🔥 创建虚拟八字对象:', {
+      year: yearStem + yearBranch,
+      month: monthStem + monthBranch,
+      day: dayStem + dayBranch,
+      hour: hourStem + hourBranch
+    });
+
+    if (virtualEightChar) {
+      console.log('🚀🚀🚀 getBaziFromString: 开始调用五行强度计算（使用虚拟八字对象）');
+      wuXingStrength = WuXingStrengthCalculator.calculateWuXingStrength(virtualEightChar);
+      console.log('🎯🎯🎯 getBaziFromString: 五行强度计算结果:', wuXingStrength);
+      console.log('🔍🔍🔍 getBaziFromString: 土五行强度 =', wuXingStrength.tu);
+      console.log('🔍🔍🔍 getBaziFromString: 是否有详细信息 =', 'details' in wuXingStrength);
+
+      // 计算日主旺衰
+      const riZhuResult = WuXingStrengthCalculator.calculateRiZhuStrength(virtualEightChar);
+      riZhuStrength = riZhuResult.result;
+      riZhuStrengthDetails = riZhuResult.details;
+      console.log('🎯 getBaziFromString: 日主旺衰计算结果:', riZhuResult);
     }
 
     // 大运和流年信息（如果有性别且有完整八字信息）
@@ -445,6 +493,13 @@ export class BaziService {
       // 神煞信息
       shenSha,
 
+      // 五行强度信息
+      wuXingStrength,
+
+      // 日主旺衰信息
+      riZhuStrength,
+      riZhuStrengthDetails,
+
       // 大运信息
       daYun,
       daYunStartAge,
@@ -466,6 +521,64 @@ export class BaziService {
       // 设置信息
       gender,
       baziSect: sect
+    };
+  }
+
+  /**
+   * 创建基于用户输入八字的虚拟EightChar对象
+   */
+  private static createVirtualEightChar(yearStem: string, yearBranch: string, monthStem: string, monthBranch: string, dayStem: string, dayBranch: string, hourStem: string, hourBranch: string, sect: string): any {
+    // 创建一个虚拟的EightChar对象，包含用户输入的八字信息
+    return {
+      // 基本干支获取方法
+      getYearGan: () => yearStem,
+      getYearZhi: () => yearBranch,
+      getMonthGan: () => monthStem,
+      getMonthZhi: () => monthBranch,
+      getDayGan: () => dayStem,
+      getDayZhi: () => dayBranch,
+      getTimeGan: () => hourStem,
+      getTimeZhi: () => hourBranch,
+
+      // 五行获取方法
+      getYearWuXing: () => BaziUtils.getStemWuXing(yearStem),
+      getMonthWuXing: () => BaziUtils.getStemWuXing(monthStem),
+      getDayWuXing: () => BaziUtils.getStemWuXing(dayStem),
+      getTimeWuXing: () => BaziUtils.getStemWuXing(hourStem),
+
+      // 纳音获取方法
+      getYearNaYin: () => BaziCalculator.getNaYin(yearStem + yearBranch),
+      getMonthNaYin: () => BaziCalculator.getNaYin(monthStem + monthBranch),
+      getDayNaYin: () => BaziCalculator.getNaYin(dayStem + dayBranch),
+      getTimeNaYin: () => BaziCalculator.getNaYin(hourStem + hourBranch),
+
+      // 地势获取方法（简化实现）
+      getYearDiShi: () => '未知',
+      getMonthDiShi: () => '未知',
+      getDayDiShi: () => '未知',
+      getTimeDiShi: () => '未知',
+
+      // 旬空相关方法（简化实现）
+      getYearXun: () => BaziCalculator.calculateXunKong(yearStem, yearBranch),
+      getMonthXun: () => BaziCalculator.calculateXunKong(monthStem, monthBranch),
+      getDayXun: () => BaziCalculator.calculateXunKong(dayStem, dayBranch),
+      getTimeXun: () => BaziCalculator.calculateXunKong(hourStem, hourBranch),
+
+      // 身宫相关方法（简化实现）
+      getShenGong: () => BaziCalculator.calculateMingGong(hourStem, hourBranch),
+
+      // 大运相关方法（简化实现）
+      getYun: (forward: boolean) => {
+        // 返回一个简化的大运对象
+        return {
+          getGan: () => monthStem,
+          getZhi: () => monthBranch
+        };
+      },
+
+      // 流派设置
+      setSect: (s: number) => {}, // 空实现
+      getSect: () => parseInt(sect)
     };
   }
 
@@ -564,6 +677,43 @@ export class BaziService {
     const shenShaResult = ComprehensiveShenShaCalculator.calculateCompleteShenSha(eightChar);
     const shenSha = shenShaResult.allShenSha;
 
+    // 计算身宫
+    const shenGong = eightChar.getShenGong();
+    console.log('🎯 身宫计算结果:', shenGong);
+
+    // 计算格局
+    const geJuResult = GeJuCalculator.calculateGeJu(eightChar);
+    console.log('🎯 格局计算结果:', geJuResult);
+
+    // 计算五行强度（使用虚拟八字对象，确保使用用户输入的八字）
+    console.log('🚀🚀🚀 formatBaziInfo: 开始调用五行强度计算');
+
+    // 从eightChar获取八字信息，但这些可能是反推的，我们需要使用原始输入
+    const currentYearStem = eightChar.getYearGan();
+    const currentYearBranch = eightChar.getYearZhi();
+    const currentMonthStem = eightChar.getMonthGan();
+    const currentMonthBranch = eightChar.getMonthZhi();
+    const currentDayStem = eightChar.getDayGan();
+    const currentDayBranch = eightChar.getDayZhi();
+    const currentHourStem = eightChar.getTimeGan();
+    const currentHourBranch = eightChar.getTimeZhi();
+
+    console.log('🔍 formatBaziInfo当前八字:', {
+      year: currentYearStem + currentYearBranch,
+      month: currentMonthStem + currentMonthBranch,
+      day: currentDayStem + currentDayBranch,
+      hour: currentHourStem + currentHourBranch
+    });
+
+    const wuXingStrength = WuXingStrengthCalculator.calculateWuXingStrength(eightChar);
+    console.log('🎯🎯🎯 formatBaziInfo: 五行强度计算结果:', wuXingStrength);
+    console.log('🔍🔍🔍 formatBaziInfo: 土五行强度 =', wuXingStrength.tu);
+    console.log('🔍🔍🔍 formatBaziInfo: 是否有详细信息 =', 'details' in wuXingStrength);
+
+    // 计算日主旺衰
+    const riZhuStrength = WuXingStrengthCalculator.calculateRiZhuStrength(eightChar);
+    console.log('🎯 日主旺衰计算结果:', riZhuStrength);
+
     // 格式化日期
     const solarDate = `${solar.getYear()}-${solar.getMonth().toString().padStart(2, '0')}-${solar.getDay().toString().padStart(2, '0')}`;
     const lunarDate = lunar.toString();
@@ -641,6 +791,7 @@ export class BaziService {
       taiYuanNaYin,
       mingGong,
       mingGongNaYin,
+      shenGong,
 
       // 完整信息
       fullString: lunar.toFullString(),
@@ -687,6 +838,19 @@ export class BaziService {
 
       // 神煞信息
       shenSha,
+
+      // 格局信息
+      geJu: geJuResult.geJu,
+      geJuDetail: geJuResult.detail,
+      geJuStrength: geJuResult.geJuStrength,
+      yongShen: geJuResult.analysis, // 用神信息包含在分析中
+
+      // 五行强度信息
+      wuXingStrength,
+
+      // 日主旺衰信息
+      riZhuStrength: riZhuStrength.result,
+      riZhuStrengthDetails: riZhuStrength.details,
 
       // 大运信息
       daYun,

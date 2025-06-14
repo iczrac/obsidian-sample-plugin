@@ -17,6 +17,7 @@ export default class BaziPlugin extends Plugin {
 	private codeBlockProcessor: CodeBlockProcessor;
 
 	async onload() {
+		console.log('🚀🚀🚀🚀🚀 八字命盘插件开始加载 - main.ts onload');
 		console.log('🚀 八字命盘插件开始加载...');
 
 		// 加载设置

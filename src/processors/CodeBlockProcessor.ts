@@ -217,7 +217,13 @@ export class CodeBlockProcessor {
 			}
 
 			// 解析八字字符串，传递性别参数
+			console.log('🔥🔥🔥🔥🔥 调用 BaziService.parseBaziString');
+			console.log('🔥 参数 bazi:', params.bazi);
+			console.log('🔥 参数 year:', params.year);
+			console.log('🔥 参数 gender:', gender);
 			const baziInfo = BaziService.parseBaziString(params.bazi!, params.year, gender);
+			console.log('🔥🔥🔥🔥🔥 BaziService.parseBaziString 返回结果:', baziInfo);
+			console.log('🔥 返回结果中的 wuXingStrength:', baziInfo.wuXingStrength);
 
 			// 生成唯一ID
 			const blockId = 'bazi-block-' + Math.random().toString(36).substring(2, 9);
