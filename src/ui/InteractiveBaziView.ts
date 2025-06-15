@@ -11,6 +11,7 @@ import { ShiShenCalculator } from '../services/bazi/ShiShenCalculator';
 import { BaziCalculator } from '../services/bazi/BaziCalculator';
 import { BaziUtils } from '../services/bazi/BaziUtils';
 import { WuXingConfig } from '../config/WuXingConfig';
+import { WuXingStrengthService } from '../services/bazi/WuXingStrengthService';
 
 /**
  * 扩展柱信息接口
@@ -4797,7 +4798,7 @@ export class InteractiveBaziView {
     // 获取实际计算过程
     let actualCalculation = '';
     try {
-      actualCalculation = this.getActualWuXingCalculation(wuXing);
+      actualCalculation = WuXingStrengthService.getWuXingCalculationExplanation(wuXing, this.baziInfo);
     } catch (error) {
       console.error(`计算${wuXing}五行强度时出错:`, error);
     }
@@ -5410,37 +5411,20 @@ export class InteractiveBaziView {
   }
 
   /**
-   * 检查天干五合
+   * 检查天干五合（使用服务层方法）
    * @returns 五合组合
    */
   private checkTianGanWuHe(): string {
-    const { yearStem, monthStem, dayStem, timeStem } = this.baziInfo;
-    const stems = [yearStem, monthStem, dayStem, timeStem];
-
-    // 检查五合
-    if (stems.includes('甲') && stems.includes('己')) return '甲己';
-    if (stems.includes('乙') && stems.includes('庚')) return '乙庚';
-    if (stems.includes('丙') && stems.includes('辛')) return '丙辛';
-    if (stems.includes('丁') && stems.includes('壬')) return '丁壬';
-    if (stems.includes('戊') && stems.includes('癸')) return '戊癸';
-
-    return '';
+    return WuXingStrengthService.checkTianGanWuHe(this.baziInfo);
   }
 
   /**
-   * 获取五合对应的五行
+   * 获取五合对应的五行（使用服务层方法）
    * @param wuHe 五合组合
    * @returns 五行
    */
   private getWuXingFromWuHe(wuHe: string): string {
-    const map: {[key: string]: string} = {
-      '甲己': '土',
-      '乙庚': '金',
-      '丙辛': '水',
-      '丁壬': '木',
-      '戊癸': '火'
-    };
-    return map[wuHe] || '';
+    return WuXingStrengthService.getWuXingFromWuHe(wuHe);
   }
 
 
