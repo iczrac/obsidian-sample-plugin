@@ -1,4 +1,3 @@
-import { RefactoredInteractiveBaziView } from '../ui/components/interactive/RefactoredInteractiveBaziView';
 import { InteractiveBaziView } from '../ui/InteractiveBaziView';
 import { BaziInfo } from '../types/BaziInfo';
 import { Notice } from 'obsidian';
@@ -96,7 +95,7 @@ export class ComponentTester {
       document.body.appendChild(testContainer);
 
       // 创建重构版本
-      const refactoredView = new RefactoredInteractiveBaziView(
+      const refactoredView = new InteractiveBaziView(
         testContainer,
         baziInfo,
         'test-basic-table',
@@ -160,7 +159,7 @@ export class ComponentTester {
       testContainer.style.display = 'none';
       document.body.appendChild(testContainer);
 
-      const refactoredView = new RefactoredInteractiveBaziView(
+      const refactoredView = new InteractiveBaziView(
         testContainer,
         baziInfo,
         'test-extended-table',
@@ -238,7 +237,7 @@ export class ComponentTester {
 
       // 测试重构版本
       const startTime = performance.now();
-      const refactoredView = new RefactoredInteractiveBaziView(
+      const refactoredView = new InteractiveBaziView(
         testContainer,
         baziInfo,
         'test-performance',
@@ -310,7 +309,7 @@ export class ComponentTester {
           testContainer.style.display = 'none';
           document.body.appendChild(testContainer);
 
-          const view = new RefactoredInteractiveBaziView(
+          const view = new InteractiveBaziView(
             testContainer,
             testData,
             'test-compatibility',

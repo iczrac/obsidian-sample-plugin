@@ -1,4 +1,4 @@
-import { RefactoredInteractiveBaziView } from '../ui/components/interactive/RefactoredInteractiveBaziView';
+import { InteractiveBaziView } from '../ui/InteractiveBaziView';
 import { BaziInfo } from '../types/BaziInfo';
 import { Notice } from 'obsidian';
 
@@ -23,7 +23,7 @@ export class VersionManager {
     baziInfo: BaziInfo,
     id: string,
     options: ViewOptions = {}
-  ): RefactoredInteractiveBaziView {
+  ): InteractiveBaziView {
     
     const useRefactored = this.shouldUseRefactoredVersion(options);
     
@@ -111,10 +111,10 @@ export class VersionManager {
     container: HTMLElement,
     baziInfo: BaziInfo,
     id: string
-  ): RefactoredInteractiveBaziView {
+  ): InteractiveBaziView {
     console.log('🆕 创建重构版本视图');
-    
-    const view = new RefactoredInteractiveBaziView(
+
+    const view = new InteractiveBaziView(
       container,
       baziInfo,
       id,
@@ -134,10 +134,10 @@ export class VersionManager {
     container: HTMLElement,
     baziInfo: BaziInfo,
     id: string
-  ): RefactoredInteractiveBaziView {
+  ): InteractiveBaziView {
     console.log('📜 创建视图（使用重构版本）');
 
-    const view = new RefactoredInteractiveBaziView(
+    const view = new InteractiveBaziView(
       container,
       baziInfo,
       id,

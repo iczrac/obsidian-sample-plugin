@@ -1,5 +1,5 @@
 import { BaziInfo } from '../types/BaziInfo';
-import { RefactoredInteractiveBaziView } from '../ui/components/interactive/RefactoredInteractiveBaziView';
+import { InteractiveBaziView } from '../ui/InteractiveBaziView';
 
 /**
  * 八字视图功能测试
@@ -105,7 +105,7 @@ export class BaziViewComparisonTest {
 
     try {
       // 初始化重构版本
-      const view = new RefactoredInteractiveBaziView(container, baziInfo, 'test-view');
+      const view = new InteractiveBaziView(container, baziInfo, 'test-view');
 
       // 等待初始化完成
       setTimeout(() => {
@@ -208,7 +208,7 @@ export class BaziViewComparisonTest {
     
     try {
       const baziInfo = this.createTestBaziInfo();
-      const view = new RefactoredInteractiveBaziView(container, baziInfo, 'test-view');
+      const view = new InteractiveBaziView(container, baziInfo, 'test-view');
       
       const featureResults: { [key: string]: boolean } = {};
       

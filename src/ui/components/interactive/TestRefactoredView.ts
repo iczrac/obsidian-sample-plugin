@@ -1,4 +1,4 @@
-import { RefactoredInteractiveBaziView } from './RefactoredInteractiveBaziView';
+import { InteractiveBaziView } from '../../InteractiveBaziView';
 import { BaziInfo } from '../../../types/BaziInfo';
 
 /**
@@ -135,7 +135,7 @@ export class TestRefactoredView {
   /**
    * 测试重构后的视图
    */
-  static testRefactoredView(container: HTMLElement, plugin?: any): RefactoredInteractiveBaziView {
+  static testRefactoredView(container: HTMLElement, plugin?: any): InteractiveBaziView {
     console.log('🧪 开始测试重构后的交互式八字视图');
 
     // 创建测试数据
@@ -143,7 +143,7 @@ export class TestRefactoredView {
     console.log('🧪 测试数据创建完成:', testBaziInfo);
 
     // 创建重构后的视图
-    const refactoredView = new RefactoredInteractiveBaziView(
+    const refactoredView = new InteractiveBaziView(
       container,
       testBaziInfo,
       'test-refactored-view',
@@ -161,7 +161,7 @@ export class TestRefactoredView {
   /**
    * 添加测试按钮
    */
-  private static addTestButtons(container: HTMLElement, view: RefactoredInteractiveBaziView) {
+  private static addTestButtons(container: HTMLElement, view: InteractiveBaziView) {
     const testButtonContainer = container.createDiv({ cls: 'test-button-container' });
     testButtonContainer.style.cssText = `
       position: fixed;
@@ -251,7 +251,7 @@ export class TestRefactoredView {
 
     // 测试重构版本
     const startTime = performance.now();
-    const refactoredView = new RefactoredInteractiveBaziView(
+    const refactoredView = new InteractiveBaziView(
       container,
       testBaziInfo,
       'performance-test',

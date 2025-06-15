@@ -417,7 +417,27 @@ export class BaziTableManager {
         color: var(--text-muted);
         cursor: pointer;
       `;
+
+      // 添加点击事件
+      shenShaSpan.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.handleShenShaClick(sha);
+      });
     });
+  }
+
+  /**
+   * 处理神煞点击事件
+   */
+  private handleShenShaClick(shenSha: string) {
+    console.log(`🎯 神煞被点击: ${shenSha}`);
+
+    // 触发自定义事件，让父组件处理
+    const event = new CustomEvent('shensha-click', {
+      detail: { shenSha },
+      bubbles: true
+    });
+    this.container.dispatchEvent(event);
   }
 
   /**

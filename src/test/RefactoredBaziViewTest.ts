@@ -1,8 +1,8 @@
 import { BaziInfo } from '../types/BaziInfo';
-import { RefactoredInteractiveBaziView } from '../ui/components/interactive/RefactoredInteractiveBaziView';
+import { InteractiveBaziView } from '../ui/InteractiveBaziView';
 
 /**
- * RefactoredInteractiveBaziView 功能测试
+ * InteractiveBaziView 功能测试
  * 验证重构后的版本与原版本功能一致
  */
 export class RefactoredBaziViewTest {
@@ -106,7 +106,7 @@ export class RefactoredBaziViewTest {
       const baziInfo = this.createTestBaziInfo();
       
       // 创建重构后的视图
-      const view = new RefactoredInteractiveBaziView(container, baziInfo, 'test-view');
+      const view = new InteractiveBaziView(container, baziInfo, 'test-view');
       
       // 检查容器是否有内容
       const hasContent = container.children.length > 0;
@@ -144,7 +144,7 @@ export class RefactoredBaziViewTest {
       document.body.appendChild(container);
       
       const baziInfo = this.createTestBaziInfo();
-      const view = new RefactoredInteractiveBaziView(container, baziInfo, 'test-view');
+      const view = new InteractiveBaziView(container, baziInfo, 'test-view');
       
       // 检查各种管理器是否正确初始化（通过检查相关DOM元素）
       const hasModalSupport = true; // ModalManager 初始化不会立即创建DOM
@@ -177,7 +177,7 @@ export class RefactoredBaziViewTest {
       document.body.appendChild(container);
       
       const baziInfo = this.createTestBaziInfo();
-      const view = new RefactoredInteractiveBaziView(container, baziInfo, 'test-view');
+      const view = new InteractiveBaziView(container, baziInfo, 'test-view');
       
       // 等待初始化完成
       setTimeout(() => {
@@ -221,7 +221,7 @@ export class RefactoredBaziViewTest {
       document.body.appendChild(container);
       
       const baziInfo = this.createTestBaziInfo();
-      const view = new RefactoredInteractiveBaziView(container, baziInfo, 'test-view');
+      const view = new InteractiveBaziView(container, baziInfo, 'test-view');
       
       // 检查按钮是否存在
       const styleBtn = container.querySelector('.bazi-style-switch-btn');
@@ -248,7 +248,7 @@ export class RefactoredBaziViewTest {
    * 运行所有测试
    */
   static runAllTests(): boolean {
-    console.log('🚀 开始运行 RefactoredInteractiveBaziView 功能测试...');
+    console.log('🚀 开始运行 InteractiveBaziView 功能测试...');
     
     const tests = [
       this.testBasicInitialization,

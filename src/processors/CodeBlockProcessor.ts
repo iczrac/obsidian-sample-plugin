@@ -1,7 +1,7 @@
 import { MarkdownView, Notice } from 'obsidian';
 import { BaziParams, BaziDisplayStyle } from '../types/PluginTypes';
 import { BaziService } from '../services/BaziService';
-import { RefactoredInteractiveBaziView } from '../ui/components/interactive/RefactoredInteractiveBaziView';
+import { InteractiveBaziView } from '../ui/InteractiveBaziView';
 import { SimpleBaziView } from '../ui/SimpleBaziView';
 import { StandardBaziView } from '../ui/StandardBaziView';
 import type BaziPlugin from '../main';
@@ -669,7 +669,7 @@ export class CodeBlockProcessor {
 				break;
 			case BaziDisplayStyle.COMPLETE:
 			default:
-				new RefactoredInteractiveBaziView(el, baziInfo, id, this.plugin);
+				new InteractiveBaziView(el, baziInfo, id, this.plugin);
 				break;
 		}
 

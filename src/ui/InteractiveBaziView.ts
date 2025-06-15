@@ -1,23 +1,23 @@
-import { BaziInfo } from '../../../types/BaziInfo';
-import { BaziTableManager } from './BaziTableManager';
-import { ExtendedColumnManager } from './ExtendedColumnManager';
-import { HorizontalSelectorManager } from './HorizontalSelectorManager';
-import { ModalManager } from './ModalManager';
-import { StyleAndUtilsManager } from './StyleAndUtilsManager';
-import { DaYunTableManager } from '../DaYunTableManager';
-import { BaziService } from '../../../services/BaziService';
-import { ExplanationServiceManager } from '../../../services/ExplanationServiceManager';
-import { PillarCalculationService } from '../../../services/bazi/PillarCalculationService';
-import { StyleUtilsService } from '../../../services/bazi/StyleUtilsService';
-import { DataGenerationService } from '../../../services/bazi/DataGenerationService';
-import { InteractionManager } from './InteractionManager';
-import { SectionRenderManager } from './SectionRenderManager';
+import { BaziInfo } from '../types/BaziInfo';
+import { BaziTableManager } from './components/interactive/BaziTableManager';
+import { ExtendedColumnManager } from './components/interactive/ExtendedColumnManager';
+import { HorizontalSelectorManager } from './components/interactive/HorizontalSelectorManager';
+import { ModalManager } from './components/interactive/ModalManager';
+import { StyleAndUtilsManager } from './components/interactive/StyleAndUtilsManager';
+import { DaYunTableManager } from './components/DaYunTableManager';
+import { BaziService } from '../services/BaziService';
+import { ExplanationServiceManager } from '../services/ExplanationServiceManager';
+import { PillarCalculationService } from '../services/bazi/PillarCalculationService';
+import { StyleUtilsService } from '../services/bazi/StyleUtilsService';
+import { DataGenerationService } from '../services/bazi/DataGenerationService';
+import { InteractionManager } from './components/interactive/InteractionManager';
+import { SectionRenderManager } from './components/interactive/SectionRenderManager';
 
 /**
- * 重构后的交互式八字命盘视图
- * 将原来的7000行大文件拆分成多个功能组件
+ * 交互式八字命盘视图
+ * 重构后的模块化架构，将原来的7000行大文件拆分成多个功能组件
  */
-export class RefactoredInteractiveBaziView {
+export class InteractiveBaziView {
   private container: HTMLElement;
   private baziInfo: BaziInfo;
   private id: string;
@@ -49,7 +49,7 @@ export class RefactoredInteractiveBaziView {
     // 在容器元素上存储实例引用，以便设置页面可以找到并更新
     (this.container as any).__baziViewInstance = this;
 
-    console.log('🎯 RefactoredInteractiveBaziView构造函数开始');
+    console.log('🎯 InteractiveBaziView构造函数开始');
     console.log('🎯 接收到的baziInfo.showShenSha:', this.baziInfo.showShenSha);
 
     // 设置默认的神煞显示设置
@@ -358,6 +358,11 @@ export class RefactoredInteractiveBaziView {
       this.handleSettingsUpdate(settings);
     });
 
+    // 监听神煞点击事件
+    this.container.addEventListener('shensha-click', (e: CustomEvent) => {
+      this.handleShenShaClick(e.detail.shenSha);
+    });
+
     console.log('✅ 事件监听器设置完成');
   }
 
@@ -452,6 +457,77 @@ export class RefactoredInteractiveBaziView {
 
     // 重新渲染整个视图
     this.initView();
+  }
+
+  /**
+   * 选择流日
+   * @param year 年份
+   * @param month 月份
+   * @param day 日期
+   */
+  private selectLiuRi(year: number, month: number, day: number) {
+    console.log(`🎯 选择流日: ${year}-${month}-${day}`);
+
+    // 更新扩展列管理器的选中流日
+    this.extendedColumnManager.setCurrentSelectedLiuRi({ year, month, day });
+
+    // 扩展四柱表格到流日层级
+    this.extendedColumnManager.extendBaziTableToLevel('liuri');
+
+    // 生成流时数据并显示流时选择器
+    const liuShiData = DataGenerationService.generateLiuShiForDay(year, month, day);
+    this.horizontalSelectorManager.showLiuShiSelector(
+      year,
+      month,
+      day,
+      liuShiData,
+      (timeIndex, ganZhi, name) => {
+        this.handleLiuShiSelect(timeIndex, ganZhi, name);
+      }
+    );
+  }
+
+  /**
+   * 选择流时
+   * @param timeIndex 时辰索引
+   * @param ganZhi 干支
+   * @param name 时辰名称
+   */
+  private selectLiuShi(timeIndex: number, ganZhi: string, name: string) {
+    console.log(`🎯 选择流时: ${name} (${ganZhi})`);
+
+    // 更新扩展列管理器的选中流时
+    this.extendedColumnManager.setCurrentSelectedLiuShi({ timeIndex, ganZhi, name });
+
+    // 扩展四柱表格到流时层级
+    this.extendedColumnManager.extendBaziTableToLevel('liushi');
+  }
+
+  /**
+   * 处理流时选择
+   * @param timeIndex 时辰索引
+   * @param ganZhi 干支
+   * @param name 时辰名称
+   */
+  private handleLiuShiSelect(timeIndex: number, ganZhi: string, name: string) {
+    this.selectLiuShi(timeIndex, ganZhi, name);
+  }
+
+  /**
+   * 处理神煞点击事件
+   * @param shenSha 神煞名称
+   */
+  private handleShenShaClick(shenSha: string) {
+    console.log(`🎯 处理神煞点击: ${shenSha}`);
+
+    // 创建一个模拟的鼠标事件
+    const mockEvent = new MouseEvent('click', {
+      clientX: window.innerWidth / 2,
+      clientY: window.innerHeight / 2
+    });
+
+    // 使用模态框管理器显示神煞解释
+    this.modalManager.showShenShaModal(shenSha, mockEvent);
   }
 
   /**
@@ -676,78 +752,6 @@ export class RefactoredInteractiveBaziView {
    * @param day 日期
    */
   private handleLiuRiSelect(year: number, month: number, day: number) {
-    console.log(`🎯 选择流日: ${year}-${month}-${day}`);
-
-    // 更新扩展列管理器的选中流日
-    this.extendedColumnManager.setCurrentSelectedLiuRi({ year, month, day });
-
-    // 扩展四柱表格到流日层级
-    this.extendedColumnManager.extendBaziTableToLevel('liuri');
-
-    // 生成流时数据并显示流时选择器
-    const liuShiData = DataGenerationService.generateLiuShiForDay(year, month, day);
-    this.horizontalSelectorManager.showLiuShiSelector(
-      year,
-      month,
-      day,
-      liuShiData,
-      (timeIndex, ganZhi, name) => {
-        this.handleLiuShiSelect(timeIndex, ganZhi, name);
-      }
-    );
-  }
-
-  /**
-   * 选择流日
-   * @param year 年份
-   * @param month 月份
-   * @param day 日期
-   */
-  private selectLiuRi(year: number, month: number, day: number) {
-    console.log(`🎯 选择流日: ${year}-${month}-${day}`);
-
-    // 更新扩展列管理器的选中流日
-    this.extendedColumnManager.setCurrentSelectedLiuRi({ year, month, day });
-
-    // 扩展四柱表格到流日层级
-    this.extendedColumnManager.extendBaziTableToLevel('liuri');
-
-    // 生成流时数据并显示流时选择器
-    const liuShiData = DataGenerationService.generateLiuShiForDay(year, month, day);
-    this.horizontalSelectorManager.showLiuShiSelector(
-      year,
-      month,
-      day,
-      liuShiData,
-      (timeIndex, ganZhi, name) => {
-        this.handleLiuShiSelect(timeIndex, ganZhi, name);
-      }
-    );
-  }
-
-  /**
-   * 选择流时
-   * @param timeIndex 时辰索引
-   * @param ganZhi 干支
-   * @param name 时辰名称
-   */
-  private selectLiuShi(timeIndex: number, ganZhi: string, name: string) {
-    console.log(`🎯 选择流时: ${name} (${ganZhi})`);
-
-    // 更新扩展列管理器的选中流时
-    this.extendedColumnManager.setCurrentSelectedLiuShi({ timeIndex, ganZhi, name });
-
-    // 扩展四柱表格到流时层级
-    this.extendedColumnManager.extendBaziTableToLevel('liushi');
-  }
-
-  /**
-   * 处理流时选择
-   * @param timeIndex 时辰索引
-   * @param ganZhi 干支
-   * @param name 时辰名称
-   */
-  private handleLiuShiSelect(timeIndex: number, ganZhi: string, name: string) {
-    this.selectLiuShi(timeIndex, ganZhi, name);
+    this.selectLiuRi(year, month, day);
   }
 }
