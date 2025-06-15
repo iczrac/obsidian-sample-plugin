@@ -11,6 +11,7 @@ import { PillarCalculationService } from '../../../services/bazi/PillarCalculati
 import { StyleUtilsService } from '../../../services/bazi/StyleUtilsService';
 import { DataGenerationService } from '../../../services/bazi/DataGenerationService';
 import { InteractionManager } from './InteractionManager';
+import { SectionRenderManager } from './SectionRenderManager';
 
 /**
  * 重构后的交互式八字命盘视图
@@ -30,6 +31,7 @@ export class RefactoredInteractiveBaziView {
   private styleAndUtilsManager: StyleAndUtilsManager;
   private daYunTableManager: DaYunTableManager;
   private interactionManager: InteractionManager;
+  private sectionRenderManager: SectionRenderManager;
 
   // 表格元素引用
   private baziTable: HTMLTableElement | null = null;
@@ -98,6 +100,13 @@ export class RefactoredInteractiveBaziView {
     //   (index: number) => this.handleDaYunSelect(index)
     // );
 
+    // 初始化区域渲染管理器
+    this.sectionRenderManager = new SectionRenderManager(
+      this.container,
+      this.baziInfo,
+      this.plugin
+    );
+
     // 初始化交互管理器
     this.interactionManager = new InteractionManager(
       this.container,
@@ -122,14 +131,14 @@ export class RefactoredInteractiveBaziView {
     this.resetExtendedState();
 
     // 创建视图组件
-    this.createHeader();
+    this.sectionRenderManager.createHeader();
     this.createBaziTable();
-    this.createSpecialInfo();
+    this.sectionRenderManager.createSpecialInfo();
     this.createDaYunInfo();
     this.createLiuNianInfo();
     this.createLiuYueInfo();
-    this.createLiuRiInfo();
-    this.createLiuShiInfo();
+    this.sectionRenderManager.createLiuRiInfo();
+    this.sectionRenderManager.createLiuShiInfo();
 
     // 初始化交互管理器
     this.interactionManager.initialize();
@@ -218,37 +227,24 @@ export class RefactoredInteractiveBaziView {
     console.log('✅ 八字表格创建完成');
   }
 
-  /**
-   * 创建特殊信息
-   */
-  private createSpecialInfo() {
-    // 这里可以添加特殊信息的创建逻辑
-    // 如格局、五行强度等
-    console.log('✅ 特殊信息创建完成');
-  }
+
 
   /**
    * 创建大运信息
    */
   private createDaYunInfo() {
-    if (!this.baziInfo.daYun || this.baziInfo.daYun.length === 0) {
-      console.log('⚠️ 没有大运数据，跳过大运信息创建');
-      return;
-    }
+    // 使用SectionRenderManager创建大运区域
+    this.sectionRenderManager.createDaYunInfo();
 
-    const daYunSection = this.container.createDiv({ cls: 'bazi-view-section' });
-    daYunSection.createEl('h3', { text: '大运信息' });
-
-    // 创建大运表格容器
-    this.daYunTable = daYunSection.createEl('div', { cls: 'bazi-dayun-container' });
+    // 获取大运表格容器
+    this.daYunTable = this.sectionRenderManager.getContainer('dayun-table');
 
     // 使用大运表格管理器创建表格
     // 暂时注释掉，因为DaYunTableManager需要重构
-    // this.daYunTableManager.setDaYunTable(this.daYunTable);
-    // this.daYunTableManager.updateDaYunTable(this.baziInfo.daYun || []);
-
-    // 临时创建简单的大运表格
-    this.daYunTable.createEl('div', { text: '大运表格功能开发中...', cls: 'bazi-empty-message' });
+    // if (this.daYunTable && this.baziInfo.daYun && this.baziInfo.daYun.length > 0) {
+    //   this.daYunTableManager.setDaYunTable(this.daYunTable);
+    //   this.daYunTableManager.updateDaYunTable(this.baziInfo.daYun);
+    // }
 
     console.log('✅ 大运信息创建完成');
   }
@@ -257,18 +253,11 @@ export class RefactoredInteractiveBaziView {
    * 创建流年信息
    */
   private createLiuNianInfo() {
-    // 创建流年和小运部分
-    const liuNianSection = this.container.createDiv({ cls: 'bazi-view-section bazi-liunian-section' });
-    liuNianSection.createEl('h3', { text: '流年信息' });
+    // 使用SectionRenderManager创建流年区域
+    this.sectionRenderManager.createLiuNianInfo();
 
-    // 创建流年表格容器
-    this.liuNianTable = liuNianSection.createEl('div', { cls: 'bazi-liunian-container' });
-
-    // 初始显示提示信息
-    this.liuNianTable.createEl('div', { 
-      text: '请先选择大运', 
-      cls: 'bazi-empty-message' 
-    });
+    // 获取流年表格容器
+    this.liuNianTable = this.sectionRenderManager.getContainer('liunian-table');
 
     console.log('✅ 流年信息创建完成');
   }
@@ -277,41 +266,16 @@ export class RefactoredInteractiveBaziView {
    * 创建流月信息
    */
   private createLiuYueInfo() {
-    if (!this.baziInfo.liuYue || this.baziInfo.liuYue.length === 0) {
-      console.log('⚠️ 没有流月数据，跳过流月信息创建');
-      return;
-    }
+    // 使用SectionRenderManager创建流月区域
+    this.sectionRenderManager.createLiuYueInfo();
 
-    const liuYueSection = this.container.createDiv({ cls: 'bazi-view-section bazi-liuyue-section' });
-    liuYueSection.createEl('h3', { text: '流月信息' });
-
-    // 创建流月表格容器
-    this.liuYueTable = liuYueSection.createEl('div', { cls: 'bazi-liuyue-container' });
-
-    // 初始显示提示信息
-    this.liuYueTable.createEl('div', { 
-      text: '请先选择流年', 
-      cls: 'bazi-empty-message' 
-    });
+    // 获取流月表格容器
+    this.liuYueTable = this.sectionRenderManager.getContainer('liuyue-table');
 
     console.log('✅ 流月信息创建完成');
   }
 
-  /**
-   * 创建流日信息（不再创建固定的section，改为动态创建）
-   */
-  private createLiuRiInfo() {
-    // 不再创建固定的流日信息section，改为在HorizontalSelectorManager中动态创建
-    console.log('✅ 流日信息将在选择流月时动态创建');
-  }
 
-  /**
-   * 创建流时信息（不再创建固定的section，改为动态创建）
-   */
-  private createLiuShiInfo() {
-    // 不再创建固定的流时信息section，改为在HorizontalSelectorManager中动态创建
-    console.log('✅ 流时信息将在选择流日时动态创建');
-  }
 
   /**
    * 设置事件监听器
