@@ -1,5 +1,6 @@
 import { BaziInfo } from '../../../types/BaziInfo';
 import { BaziService } from '../../../services/BaziService';
+import { StyleUtilsService } from '../../../services/bazi/StyleUtilsService';
 
 /**
  * 横向选择器管理器
@@ -113,10 +114,10 @@ export class HorizontalSelectorManager {
         const branch = liuRi.ganZhi[1];
 
         const stemSpan = ganZhiEl.createSpan({ text: stem });
-        this.setWuXingColorDirectly(stemSpan, this.getStemWuXing(stem));
+        StyleUtilsService.setStemWuXingColor(stemSpan, stem);
 
         const branchSpan = ganZhiEl.createSpan({ text: branch });
-        this.setWuXingColorDirectly(branchSpan, this.getBranchWuXing(branch));
+        StyleUtilsService.setBranchWuXingColor(branchSpan, branch);
       } else {
         ganZhiEl.textContent = liuRi.ganZhi || '';
       }
@@ -277,10 +278,10 @@ export class HorizontalSelectorManager {
         const branch = liuShi.ganZhi[1];
 
         const stemSpan = ganZhiEl.createSpan({ text: stem });
-        this.setWuXingColorDirectly(stemSpan, this.getStemWuXing(stem));
+        StyleUtilsService.setStemWuXingColor(stemSpan, stem);
 
         const branchSpan = ganZhiEl.createSpan({ text: branch });
-        this.setWuXingColorDirectly(branchSpan, this.getBranchWuXing(branch));
+        StyleUtilsService.setBranchWuXingColor(branchSpan, branch);
       } else {
         ganZhiEl.textContent = liuShi.ganZhi || '';
       }
@@ -324,40 +325,5 @@ export class HorizontalSelectorManager {
     });
   }
 
-  // 工具方法
-  private getStemWuXing(stem: string): string {
-    const stemWuXing: { [key: string]: string } = {
-      '甲': '木', '乙': '木',
-      '丙': '火', '丁': '火',
-      '戊': '土', '己': '土',
-      '庚': '金', '辛': '金',
-      '壬': '水', '癸': '水'
-    };
-    return stemWuXing[stem] || '';
-  }
 
-  private getBranchWuXing(branch: string): string {
-    const branchWuXing: { [key: string]: string } = {
-      '子': '水', '丑': '土', '寅': '木', '卯': '木',
-      '辰': '土', '巳': '火', '午': '火', '未': '土',
-      '申': '金', '酉': '金', '戌': '土', '亥': '水'
-    };
-    return branchWuXing[branch] || '';
-  }
-
-  private setWuXingColorDirectly(element: HTMLElement, wuXing: string) {
-    const colorMap: { [key: string]: string } = {
-      '木': '#22c55e',  // 绿色
-      '火': '#ef4444',  // 红色
-      '土': '#eab308',  // 黄色
-      '金': '#64748b',  // 灰色
-      '水': '#3b82f6'   // 蓝色
-    };
-
-    const color = colorMap[wuXing];
-    if (color) {
-      element.style.color = color;
-      element.style.fontWeight = 'bold';
-    }
-  }
 }

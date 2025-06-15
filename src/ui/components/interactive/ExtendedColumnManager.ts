@@ -1,27 +1,5 @@
 import { BaziInfo, DaYunInfo } from '../../../types/BaziInfo';
-import { BaziCalculator } from '../../../services/bazi/BaziCalculator';
-import { ShiShenCalculator } from '../../../services/bazi/ShiShenCalculator';
-import { BaziUtils } from '../../../services/bazi/BaziUtils';
-
-/**
- * 扩展柱信息接口
- */
-export interface ExtendedPillarInfo {
-  type: 'dayun' | 'liunian' | 'liuyue' | 'liuri' | 'liushi';
-  name: string; // 显示名称，如"大运"、"流年"等
-  stem: string; // 天干
-  branch: string; // 地支
-  ganZhi: string; // 干支组合
-  hideGan: string; // 藏干
-  shiShenGan: string; // 天干十神
-  shiShenZhi: string[]; // 地支藏干十神
-  diShi: string; // 地势
-  naYin: string; // 纳音
-  xunKong: string; // 旬空
-  shengXiao: string; // 生肖
-  shenSha: string[]; // 神煞
-  wuXing: string; // 五行
-}
+import { PillarCalculationService, ExtendedPillarInfo } from '../../../services/bazi/PillarCalculationService';
 
 /**
  * 扩展列管理器

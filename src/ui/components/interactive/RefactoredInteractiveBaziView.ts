@@ -6,6 +6,9 @@ import { ModalManager } from './ModalManager';
 import { StyleAndUtilsManager } from './StyleAndUtilsManager';
 import { DaYunTableManager } from '../DaYunTableManager';
 import { BaziService } from '../../../services/BaziService';
+import { ExplanationServiceManager } from '../../../services/ExplanationServiceManager';
+import { PillarCalculationService } from '../../../services/bazi/PillarCalculationService';
+import { StyleUtilsService } from '../../../services/bazi/StyleUtilsService';
 
 /**
  * 重构后的交互式八字命盘视图
