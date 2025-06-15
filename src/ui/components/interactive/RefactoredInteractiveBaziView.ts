@@ -85,12 +85,12 @@ export class RefactoredInteractiveBaziView {
     this.styleAndUtilsManager = new StyleAndUtilsManager(this.container, this.plugin);
 
     // 初始化大运表格管理器
-    // 注意：这里需要传入正确的ExtendedTableManager类型，暂时注释掉
-    // this.daYunTableManager = new DaYunTableManager(
-    //   this.baziInfo,
-    //   this.extendedColumnManager,
-    //   (index: number) => this.handleDaYunSelect(index)
-    // );
+    // 暂时使用简化版本，后续可以创建适配器
+    this.daYunTableManager = new DaYunTableManager(
+      this.baziInfo,
+      this.extendedColumnManager as any, // 临时类型转换
+      (index: number) => this.handleDaYunSelect(index)
+    );
 
     console.log('✅ 所有功能组件初始化完成');
   }
@@ -224,12 +224,11 @@ export class RefactoredInteractiveBaziView {
     this.daYunTable = daYunSection.createEl('div', { cls: 'bazi-dayun-container' });
 
     // 使用大运表格管理器创建表格
-    // 暂时注释掉，因为DaYunTableManager需要重构
-    // this.daYunTableManager.setDaYunTable(this.daYunTable);
-    // this.daYunTableManager.updateDaYunTable(this.baziInfo.daYun || []);
+    this.daYunTableManager.setDaYunTable(this.daYunTable);
 
-    // 临时创建简单的大运表格
-    this.daYunTable.createEl('div', { text: '大运表格功能开发中...', cls: 'bazi-empty-message' });
+    // 确保daYun是数组类型
+    const daYunArray = Array.isArray(this.baziInfo.daYun) ? this.baziInfo.daYun : [];
+    this.daYunTableManager.updateDaYunTable(daYunArray);
 
     console.log('✅ 大运信息创建完成');
   }

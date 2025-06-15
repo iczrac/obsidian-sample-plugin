@@ -362,9 +362,106 @@ export class BaziTableManager {
     return this.baziTable;
   }
 
-  // 工具方法将在下一个文件中实现...
-  private applyStemWuXingColor(element: HTMLElement, stem: string) { /* TODO */ }
-  private applyBranchWuXingColor(element: HTMLElement, branch: string) { /* TODO */ }
-  private createColoredHideGan(element: HTMLElement, hideGan: string) { /* TODO */ }
-  private createShenShaContent(element: HTMLElement, shenSha: string[] | undefined) { /* TODO */ }
+  /**
+   * 应用天干五行颜色
+   */
+  private applyStemWuXingColor(element: HTMLElement, stem: string) {
+    const wuXing = this.getStemWuXing(stem);
+    this.setWuXingColorDirectly(element, wuXing);
+  }
+
+  /**
+   * 应用地支五行颜色
+   */
+  private applyBranchWuXingColor(element: HTMLElement, branch: string) {
+    const wuXing = this.getBranchWuXing(branch);
+    this.setWuXingColorDirectly(element, wuXing);
+  }
+
+  /**
+   * 创建带颜色的藏干
+   */
+  private createColoredHideGan(element: HTMLElement, hideGan: string) {
+    if (!hideGan) return;
+
+    for (const gan of hideGan) {
+      const span = element.createSpan({ text: gan });
+      this.applyStemWuXingColor(span, gan);
+    }
+  }
+
+  /**
+   * 创建神煞内容
+   */
+  private createShenShaContent(element: HTMLElement, shenSha: string[] | undefined) {
+    if (!shenSha || shenSha.length === 0) {
+      return;
+    }
+
+    shenSha.forEach((sha, index) => {
+      if (index > 0) {
+        element.createSpan({ text: ' ' });
+      }
+
+      const shenShaSpan = element.createSpan({
+        text: sha,
+        cls: 'shensha-tag'
+      });
+      shenShaSpan.style.cssText = `
+        display: inline-block;
+        padding: 2px 4px;
+        margin: 1px;
+        border-radius: 3px;
+        font-size: 10px;
+        background: var(--background-modifier-border);
+        color: var(--text-muted);
+        cursor: pointer;
+      `;
+    });
+  }
+
+  /**
+   * 获取天干五行
+   */
+  private getStemWuXing(stem: string): string {
+    const stemWuXing: { [key: string]: string } = {
+      '甲': '木', '乙': '木',
+      '丙': '火', '丁': '火',
+      '戊': '土', '己': '土',
+      '庚': '金', '辛': '金',
+      '壬': '水', '癸': '水'
+    };
+    return stemWuXing[stem] || '';
+  }
+
+  /**
+   * 获取地支五行
+   */
+  private getBranchWuXing(branch: string): string {
+    const branchWuXing: { [key: string]: string } = {
+      '子': '水', '丑': '土', '寅': '木', '卯': '木',
+      '辰': '土', '巳': '火', '午': '火', '未': '土',
+      '申': '金', '酉': '金', '戌': '土', '亥': '水'
+    };
+    return branchWuXing[branch] || '';
+  }
+
+  /**
+   * 直接设置五行颜色
+   */
+  private setWuXingColorDirectly(element: HTMLElement, wuXing: string) {
+    const colorMap: { [key: string]: string } = {
+      '木': '#22c55e',  // 绿色
+      '火': '#ef4444',  // 红色
+      '土': '#eab308',  // 黄色
+      '金': '#64748b',  // 灰色
+      '水': '#3b82f6'   // 蓝色
+    };
+
+    const color = colorMap[wuXing];
+    if (color) {
+      element.style.color = color;
+      element.style.fontWeight = 'bold';
+    }
+  }
 }
