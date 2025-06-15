@@ -10,6 +10,7 @@ import { ExplanationServiceManager } from '../../../services/ExplanationServiceM
 import { PillarCalculationService } from '../../../services/bazi/PillarCalculationService';
 import { StyleUtilsService } from '../../../services/bazi/StyleUtilsService';
 import { DataGenerationService } from '../../../services/bazi/DataGenerationService';
+import { InteractionManager } from './InteractionManager';
 
 /**
  * 重构后的交互式八字命盘视图
@@ -28,6 +29,7 @@ export class RefactoredInteractiveBaziView {
   private modalManager: ModalManager;
   private styleAndUtilsManager: StyleAndUtilsManager;
   private daYunTableManager: DaYunTableManager;
+  private interactionManager: InteractionManager;
 
   // 表格元素引用
   private baziTable: HTMLTableElement | null = null;
@@ -96,6 +98,16 @@ export class RefactoredInteractiveBaziView {
     //   (index: number) => this.handleDaYunSelect(index)
     // );
 
+    // 初始化交互管理器
+    this.interactionManager = new InteractionManager(
+      this.container,
+      this.baziInfo,
+      this.modalManager,
+      this.styleAndUtilsManager,
+      this.extendedColumnManager,
+      this.horizontalSelectorManager
+    );
+
     console.log('✅ 所有功能组件初始化完成');
   }
 
@@ -119,8 +131,11 @@ export class RefactoredInteractiveBaziView {
     this.createLiuRiInfo();
     this.createLiuShiInfo();
 
-    // 添加表格单元格监听器
-    this.addTableCellListeners();
+    // 初始化交互管理器
+    this.interactionManager.initialize();
+
+    // 设置事件监听器
+    this.setupEventListeners();
 
     console.log('✅ 视图初始化完成');
   }
@@ -299,28 +314,32 @@ export class RefactoredInteractiveBaziView {
   }
 
   /**
-   * 添加表格单元格监听器
+   * 设置事件监听器
    */
-  private addTableCellListeners() {
-    // 添加神煞点击事件
-    this.container.addEventListener('click', (event) => {
-      const target = event.target as HTMLElement;
-      
-      // 神煞点击事件
-      if (target.classList.contains('shensha-tag')) {
-        const shenSha = target.textContent?.trim();
-        if (shenSha) {
-          this.modalManager.showShenShaModal(shenSha, event as MouseEvent);
-        }
-      }
+  private setupEventListeners() {
+    const eventManager = this.interactionManager.getEventManager();
 
-      // 十二长生模式切换
-      if (target.classList.contains('bazi-changsheng-label')) {
-        this.styleAndUtilsManager.toggleChangShengMode();
-      }
+    // 监听大运选择事件
+    eventManager.on('dayun:select', (index: number) => {
+      this.handleDaYunSelect(index);
     });
 
-    console.log('✅ 表格单元格监听器添加完成');
+    // 监听流年选择事件
+    eventManager.on('liunian:select', (year: number) => {
+      this.handleLiuNianSelect({ year });
+    });
+
+    // 监听流月选择事件
+    eventManager.on('liuyue:select', (data: any) => {
+      this.handleLiuYueSelect(data);
+    });
+
+    // 监听设置更新事件
+    eventManager.on('settings:update', (settings: any) => {
+      this.handleSettingsUpdate(settings);
+    });
+
+    console.log('✅ 事件监听器设置完成');
   }
 
   /**
@@ -370,14 +389,21 @@ export class RefactoredInteractiveBaziView {
    */
   private openSettingsModal() {
     this.modalManager.showSettingsModal((settings) => {
-      // 更新八字信息的设置
-      this.baziInfo.showShenSha = settings.showShenSha;
-      
-      // 重新初始化视图以应用新设置
-      this.initView();
-      
-      console.log('✅ 设置已更新并应用');
+      this.handleSettingsUpdate(settings);
     });
+  }
+
+  /**
+   * 处理设置更新
+   */
+  private handleSettingsUpdate(settings: any) {
+    // 更新八字信息的设置
+    this.baziInfo.showShenSha = settings.showShenSha;
+
+    // 重新初始化视图以应用新设置
+    this.initView();
+
+    console.log('✅ 设置已更新并应用');
   }
 
   /**
