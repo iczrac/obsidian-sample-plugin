@@ -8,6 +8,6 @@ export interface BaziResult {
   monthBranch: EarthlyBranch;
   dayStem: HeavenlyStem;
   dayBranch: EarthlyBranch;
-  hourStem: HeavenlyStem;
-  hourBranch: EarthlyBranch;
+  timeStem: HeavenlyStem;
+  timeBranch: EarthlyBranch;
 }

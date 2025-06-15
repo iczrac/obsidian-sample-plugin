@@ -104,7 +104,7 @@ bazi: ${cleanedBazi}
 						// 如果不符合格式，打开解析模态框让用户修改
 						this.plugin.openBaziParserModal(selection, (baziInfo) => {
 							// 获取解析后的八字
-							const parsedBazi = `${baziInfo.yearPillar} ${baziInfo.monthPillar} ${baziInfo.dayPillar} ${baziInfo.hourPillar}`;
+							const parsedBazi = `${baziInfo.yearPillar} ${baziInfo.monthPillar} ${baziInfo.dayPillar} ${baziInfo.timePillar}`;
 
 							// 构建代码块内容
 							let codeBlockContent = `\`\`\`bazi\nbazi: ${parsedBazi}\n`;

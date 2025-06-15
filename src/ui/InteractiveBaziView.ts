@@ -462,7 +462,7 @@ export class InteractiveBaziView {
         year: this.baziInfo.originalDate?.year || new Date().getFullYear(),
         month: this.baziInfo.originalDate?.month || new Date().getMonth() + 1,
         day: this.baziInfo.originalDate?.day || new Date().getDate(),
-        hour: this.baziInfo.originalDate?.hour || new Date().getHours()
+        time: this.baziInfo.originalDate?.time || new Date().getHours()
       };
 
       // 创建设置模态框
@@ -730,8 +730,8 @@ export class InteractiveBaziView {
     const dayStemCell = stemRow.createEl('td', { text: this.baziInfo.dayStem || '' });
     this.applyStemWuXingColor(dayStemCell, this.baziInfo.dayStem || '');
 
-    const hourStemCell = stemRow.createEl('td', { text: this.baziInfo.hourStem || '' });
-    this.applyStemWuXingColor(hourStemCell, this.baziInfo.hourStem || '');
+    const timeStemCell = stemRow.createEl('td', { text: this.baziInfo.timeStem || '' });
+    this.applyStemWuXingColor(timeStemCell, this.baziInfo.timeStem || '');
 
     // 地支行
     const branchRow = tbody.createEl('tr', { cls: 'bazi-branch-row' });
@@ -747,8 +747,8 @@ export class InteractiveBaziView {
     const dayBranchCell = branchRow.createEl('td', { text: this.baziInfo.dayBranch || '' });
     this.applyBranchWuXingColor(dayBranchCell, this.baziInfo.dayBranch || '');
 
-    const hourBranchCell = branchRow.createEl('td', { text: this.baziInfo.hourBranch || '' });
-    this.applyBranchWuXingColor(hourBranchCell, this.baziInfo.hourBranch || '');
+    const timeBranchCell = branchRow.createEl('td', { text: this.baziInfo.timeBranch || '' });
+    this.applyBranchWuXingColor(timeBranchCell, this.baziInfo.timeBranch || '');
 
     // 藏干行
     const hideGanRow = tbody.createEl('tr', { cls: 'bazi-hidegan-row' });
@@ -770,9 +770,9 @@ export class InteractiveBaziView {
     this.createColoredHideGan(dayHideGanCell, dayHideGanText);
 
     // 时柱藏干
-    const hourHideGanText = Array.isArray(this.baziInfo.hourHideGan) ? this.baziInfo.hourHideGan.join('') : (this.baziInfo.hourHideGan || '');
-    const hourHideGanCell = hideGanRow.createEl('td');
-    this.createColoredHideGan(hourHideGanCell, hourHideGanText);
+    const timeHideGanText = Array.isArray(this.baziInfo.timeHideGan) ? this.baziInfo.timeHideGan.join('') : (this.baziInfo.timeHideGan || '');
+    const timeHideGanCell = hideGanRow.createEl('td');
+    this.createColoredHideGan(timeHideGanCell, timeHideGanText);
 
     // 十神行
     const shiShenRow = tbody.createEl('tr', { cls: 'bazi-shishen-row' });
@@ -877,9 +877,9 @@ export class InteractiveBaziView {
         text: this.baziInfo.timeShiShenZhi.join(','),
         cls: 'shishen-tag-small shishen-tag-hide'
       });
-    } else if (this.baziInfo.hourBranch) {
+    } else if (this.baziInfo.timeBranch) {
       // 如果没有提供地支藏干十神，则计算
-      const hiddenShiShen = this.getHiddenShiShen(this.baziInfo.dayStem || '', this.baziInfo.hourBranch);
+      const hiddenShiShen = this.getHiddenShiShen(this.baziInfo.dayStem || '', this.baziInfo.timeBranch);
       if (hiddenShiShen.length > 0) {
         timeShiShenCell.createSpan({
           text: hiddenShiShen.join(','),
@@ -973,12 +973,12 @@ export class InteractiveBaziView {
     }
 
     // 时柱纳音
-    const hourNaYin = this.baziInfo.hourNaYin || '';
-    const hourNaYinCell = naYinRow.createEl('td');
-    if (hourNaYin) {
-      const wuXing = this.extractWuXingFromNaYin(hourNaYin);
-      const hourNaYinSpan = hourNaYinCell.createSpan({ text: hourNaYin });
-      this.setWuXingColorDirectly(hourNaYinSpan, wuXing);
+    const timeNaYin = this.baziInfo.timeNaYin || '';
+    const timeNaYinCell = naYinRow.createEl('td');
+    if (timeNaYin) {
+      const wuXing = this.extractWuXingFromNaYin(timeNaYin);
+      const timeNaYinSpan = timeNaYinCell.createSpan({ text: timeNaYin });
+      this.setWuXingColorDirectly(timeNaYinSpan, wuXing);
     }
 
     // 旬空行
@@ -1013,10 +1013,10 @@ export class InteractiveBaziView {
     }
 
     // 时柱旬空
-    const hourXunKongCell = xunKongRow.createEl('td');
-    if (this.baziInfo.hourXunKong) {
-      hourXunKongCell.createSpan({
-        text: this.baziInfo.hourXunKong,
+    const timeXunKongCell = xunKongRow.createEl('td');
+    if (this.baziInfo.timeXunKong) {
+      timeXunKongCell.createSpan({
+        text: this.baziInfo.timeXunKong,
         cls: 'xunkong-tag-small'
       });
     }
@@ -1027,7 +1027,7 @@ export class InteractiveBaziView {
     shengXiaoRow.createEl('td', { text: this.baziInfo.yearShengXiao || '' });
     shengXiaoRow.createEl('td', { text: this.baziInfo.monthShengXiao || '' });
     shengXiaoRow.createEl('td', { text: this.baziInfo.dayShengXiao || '' });
-    shengXiaoRow.createEl('td', { text: this.baziInfo.hourShengXiao || '' });
+    shengXiaoRow.createEl('td', { text: this.baziInfo.timeShengXiao || '' });
 
     // 创建神煞行（默认显示，除非明确设置为false）
     if (this.baziInfo.shenSha && this.baziInfo.shenSha.length > 0 &&
@@ -1036,7 +1036,7 @@ export class InteractiveBaziView {
       const yearShenSha: string[] = [];
       const monthShenSha: string[] = [];
       const dayShenSha: string[] = [];
-      const hourShenSha: string[] = [];
+      const timeShenSha: string[] = [];
 
       this.baziInfo.shenSha.forEach(shenSha => {
         if (shenSha.startsWith('年柱:')) {
@@ -1046,13 +1046,13 @@ export class InteractiveBaziView {
         } else if (shenSha.startsWith('日柱:')) {
           dayShenSha.push(shenSha.substring(3));
         } else if (shenSha.startsWith('时柱:')) {
-          hourShenSha.push(shenSha.substring(3));
+          timeShenSha.push(shenSha.substring(3));
         }
       });
 
       // 如果有任何柱位有神煞，创建神煞行
       if (yearShenSha.length > 0 || monthShenSha.length > 0 ||
-          dayShenSha.length > 0 || hourShenSha.length > 0) {
+          dayShenSha.length > 0 || timeShenSha.length > 0) {
         // 创建神煞行
         const shenShaRow = tbody.createEl('tr');
         shenShaRow.createEl('td', { text: '神煞', cls: 'bazi-table-label' });
@@ -1166,11 +1166,11 @@ export class InteractiveBaziView {
         }
 
         // 时柱神煞单元格
-        const hourCell = shenShaRow.createEl('td', { cls: 'bazi-shensha-cell' });
-        const hourShenShaList = hourCell.createDiv({ cls: 'bazi-shensha-list' });
+        const timeCell = shenShaRow.createEl('td', { cls: 'bazi-shensha-cell' });
+        const timeShenShaList = timeCell.createDiv({ cls: 'bazi-shensha-list' });
 
-        if (hourShenSha.length > 0) {
-          hourShenSha.forEach(shenSha => {
+        if (timeShenSha.length > 0) {
+          timeShenSha.forEach(shenSha => {
             const shenShaInfo = ShenShaExplanationService.getShenShaInfo(shenSha);
             const type = shenShaInfo?.type || '未知';
 
@@ -1183,7 +1183,7 @@ export class InteractiveBaziView {
               cssClass = 'shensha-mixed';
             }
 
-            const shenShaEl = hourShenShaList.createEl('span', {
+            const shenShaEl = timeShenShaList.createEl('span', {
               text: shenSha,
               cls: `bazi-shensha ${cssClass}`,
               attr: {
@@ -1198,7 +1198,7 @@ export class InteractiveBaziView {
             });
           });
         } else {
-          hourCell.textContent = '无';
+          timeCell.textContent = '无';
         }
       }
     }
@@ -4098,7 +4098,7 @@ export class InteractiveBaziView {
     calculation += `- 年柱：${this.baziInfo.yearStem}${this.baziInfo.yearBranch} (${this.getHideGan(this.baziInfo.yearBranch || '')})\n`;
     calculation += `- 月柱：${this.baziInfo.monthStem}${this.baziInfo.monthBranch} (${this.getHideGan(this.baziInfo.monthBranch || '')})\n`;
     calculation += `- 日柱：${this.baziInfo.dayStem}${this.baziInfo.dayBranch} (${this.getHideGan(this.baziInfo.dayBranch || '')})\n`;
-    calculation += `- 时柱：${this.baziInfo.hourStem}${this.baziInfo.hourBranch} (${this.getHideGan(this.baziInfo.hourBranch || '')})\n`;
+    calculation += `- 时柱：${this.baziInfo.timeStem}${this.baziInfo.timeBranch} (${this.getHideGan(this.baziInfo.timeBranch || '')})\n`;
     calculation += `- 性别：${this.baziInfo.gender === '1' ? '男' : '女'}，年份：${this.baziInfo.solarDate?.split('-')[0] || '未知'}\n\n`;
 
     // 天干五行
@@ -4417,8 +4417,8 @@ export class InteractiveBaziView {
    * @returns 三会组合
    */
   private checkDiZhiSanHui(): string {
-    const { yearBranch, monthBranch, dayBranch, hourBranch } = this.baziInfo;
-    const branches = [yearBranch, monthBranch, dayBranch, hourBranch].filter(branch => branch !== undefined) as string[];
+    const { yearBranch, monthBranch, dayBranch, timeBranch } = this.baziInfo;
+    const branches = [yearBranch, monthBranch, dayBranch, timeBranch].filter(branch => branch !== undefined) as string[];
 
     // 检查三会
     const sanHuiPatterns = [
@@ -4541,8 +4541,8 @@ export class InteractiveBaziView {
    * @returns 五合组合
    */
   private checkTianGanWuHe(): string {
-    const { yearStem, monthStem, dayStem, hourStem } = this.baziInfo;
-    const stems = [yearStem, monthStem, dayStem, hourStem];
+    const { yearStem, monthStem, dayStem, timeStem } = this.baziInfo;
+    const stems = [yearStem, monthStem, dayStem, timeStem];
 
     // 检查五合
     if (stems.includes('甲') && stems.includes('己')) return '甲己';
@@ -4577,8 +4577,8 @@ export class InteractiveBaziView {
    * @returns 三合组合
    */
   private checkDiZhiSanHe(): string {
-    const { yearBranch, monthBranch, dayBranch, hourBranch } = this.baziInfo;
-    const branches = [yearBranch, monthBranch, dayBranch, hourBranch].filter(branch => branch !== undefined) as string[];
+    const { yearBranch, monthBranch, dayBranch, timeBranch } = this.baziInfo;
+    const branches = [yearBranch, monthBranch, dayBranch, timeBranch].filter(branch => branch !== undefined) as string[];
 
     // 检查三合
     const sanHePatterns = [
@@ -5587,12 +5587,24 @@ export class InteractiveBaziView {
   private selectLiuYue(liuYue: any) {
     console.log('🗓️ 选择流月:', liuYue);
     console.log('🗓️ 流月数据结构:', JSON.stringify(liuYue, null, 2));
+    console.log('🗓️ this.selectedLiuNianYear:', this.selectedLiuNianYear);
 
     // 获取年份和月柱干支
     const year = liuYue.year || this.selectedLiuNianYear;
     const monthGanZhi = liuYue.ganZhi;
 
     console.log(`🗓️ 解析结果: 年份=${year}, 月柱干支=${monthGanZhi}`);
+    console.log(`🗓️ 年份来源: ${liuYue.year ? 'liuYue.year' : 'this.selectedLiuNianYear'}`);
+
+    // 检查必要的参数
+    if (!year) {
+      console.error('🗓️ ❌ 缺少年份信息');
+      return;
+    }
+    if (!monthGanZhi) {
+      console.error('🗓️ ❌ 缺少月柱干支信息');
+      return;
+    }
 
     if (!year || !monthGanZhi) {
       console.error('🗓️ 无法获取有效的年份或月柱干支信息', { year, monthGanZhi, liuYue });
@@ -5601,16 +5613,37 @@ export class InteractiveBaziView {
 
     // 获取日干用于计算
     const dayStem = this.baziInfo.dayStem;
+    console.log(`🗓️ 获取日干: ${dayStem}`);
     if (!dayStem) {
-      console.error('无法获取日干信息');
+      console.error('🗓️ ❌ 无法获取日干信息');
       return;
     }
 
     // 计算该干支月的流日信息
+    console.log(`🗓️ 准备调用 BaziService.getLiuRi(${year}, ${monthGanZhi}, ${dayStem})`);
+
+    // 检查 BaziService.getLiuRi 方法是否存在
+    if (typeof BaziService.getLiuRi !== 'function') {
+      console.error('🗓️ ❌ BaziService.getLiuRi 方法不存在');
+      return;
+    }
+
+    console.log(`🗓️ 🚀 调用 BaziService.getLiuRi(${year}, ${monthGanZhi}, ${dayStem})`);
     const liuRiData = BaziService.getLiuRi(year, monthGanZhi, dayStem);
+    console.log(`🗓️ 流日数据返回:`, liuRiData);
+    console.log(`🗓️ 流日数据类型: ${typeof liuRiData}`);
+    console.log(`🗓️ 流日数据是否为数组: ${Array.isArray(liuRiData)}`);
+    console.log(`🗓️ 流日数据长度: ${liuRiData ? liuRiData.length : 'undefined'}`);
+
+    if (liuRiData && liuRiData.length > 0) {
+      console.log(`🗓️ 第一天: ${liuRiData[0].year}-${liuRiData[0].month}-${liuRiData[0].day}`);
+      console.log(`🗓️ 最后一天: ${liuRiData[liuRiData.length - 1].year}-${liuRiData[liuRiData.length - 1].month}-${liuRiData[liuRiData.length - 1].day}`);
+    } else {
+      console.warn(`🗓️ ⚠️ 流日数据为空或无效`);
+    }
 
     // 显示流日横向滚动选择器
-    this.showLiuRiSelector(year, monthGanZhi, liuRiData);
+    this.showLiuRiSelector(year, monthGanZhi, liuRiData || []);
   }
 
   /**

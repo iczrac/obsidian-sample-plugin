@@ -28,7 +28,7 @@ export class ShiErChangShengCalculator {
    * @param yearBranch 年支
    * @param monthBranch 月支
    * @param dayBranch 日支
-   * @param hourBranch 时支
+   * @param timeBranch 时支
    * @returns 各柱地势
    */
   static calculateDiShi(
@@ -36,7 +36,7 @@ export class ShiErChangShengCalculator {
     yearBranch: string,
     monthBranch: string,
     dayBranch: string,
-    hourBranch: string
+    timeBranch: string
   ): {
     yearDiShi: string;
     monthDiShi: string;
@@ -47,7 +47,7 @@ export class ShiErChangShengCalculator {
       yearDiShi: BaziCalculator.getDiShi(dayStem, yearBranch),
       monthDiShi: BaziCalculator.getDiShi(dayStem, monthBranch),
       dayDiShi: BaziCalculator.getDiShi(dayStem, dayBranch),
-      timeDiShi: BaziCalculator.getDiShi(dayStem, hourBranch)
+      timeDiShi: BaziCalculator.getDiShi(dayStem, timeBranch)
     };
   }
 
@@ -59,8 +59,8 @@ export class ShiErChangShengCalculator {
    * @param monthBranch 月支
    * @param dayStem 日干
    * @param dayBranch 日支
-   * @param hourStem 时干
-   * @param hourBranch 时支
+   * @param timeStem 时干
+   * @param timeBranch 时支
    * @returns 各柱自坐
    */
   static calculateZiZuo(
@@ -70,8 +70,8 @@ export class ShiErChangShengCalculator {
     monthBranch: string,
     dayStem: string,
     dayBranch: string,
-    hourStem: string,
-    hourBranch: string
+    timeStem: string,
+    timeBranch: string
   ): {
     yearZiZuo: string;
     monthZiZuo: string;
@@ -82,7 +82,7 @@ export class ShiErChangShengCalculator {
       yearZiZuo: BaziCalculator.getDiShi(yearStem, yearBranch),
       monthZiZuo: BaziCalculator.getDiShi(monthStem, monthBranch),
       dayZiZuo: BaziCalculator.getDiShi(dayStem, dayBranch),
-      timeZiZuo: BaziCalculator.getDiShi(hourStem, hourBranch)
+      timeZiZuo: BaziCalculator.getDiShi(timeStem, timeBranch)
     };
   }
 
@@ -91,7 +91,7 @@ export class ShiErChangShengCalculator {
    * @param yearStem 年干
    * @param monthStem 月干
    * @param dayStem 日干
-   * @param hourStem 时干
+   * @param timeStem 时干
    * @param monthBranch 月支（月令）
    * @returns 各柱月令
    */
@@ -99,7 +99,7 @@ export class ShiErChangShengCalculator {
     yearStem: string,
     monthStem: string,
     dayStem: string,
-    hourStem: string,
+    timeStem: string,
     monthBranch: string
   ): {
     yearYueLing: string;
@@ -111,7 +111,7 @@ export class ShiErChangShengCalculator {
       yearYueLing: BaziCalculator.getDiShi(yearStem, monthBranch),
       monthYueLing: BaziCalculator.getDiShi(monthStem, monthBranch),
       dayYueLing: BaziCalculator.getDiShi(dayStem, monthBranch),
-      timeYueLing: BaziCalculator.getDiShi(hourStem, monthBranch)
+      timeYueLing: BaziCalculator.getDiShi(timeStem, monthBranch)
     };
   }
 
@@ -123,8 +123,8 @@ export class ShiErChangShengCalculator {
    * @param monthBranch 月支
    * @param dayStem 日干
    * @param dayBranch 日支
-   * @param hourStem 时干
-   * @param hourBranch 时支
+   * @param timeStem 时干
+   * @param timeBranch 时支
    * @returns 完整的十二长生信息
    */
   static calculateComplete(
@@ -134,8 +134,8 @@ export class ShiErChangShengCalculator {
     monthBranch: string,
     dayStem: string,
     dayBranch: string,
-    hourStem: string,
-    hourBranch: string
+    timeStem: string,
+    timeBranch: string
   ): {
     diShi: {
       yearDiShi: string;
@@ -157,18 +157,18 @@ export class ShiErChangShengCalculator {
     };
   } {
     // 计算地势
-    const diShi = this.calculateDiShi(dayStem, yearBranch, monthBranch, dayBranch, hourBranch);
+    const diShi = this.calculateDiShi(dayStem, yearBranch, monthBranch, dayBranch, timeBranch);
     
     // 计算自坐
     const ziZuo = this.calculateZiZuo(
       yearStem, yearBranch,
       monthStem, monthBranch,
       dayStem, dayBranch,
-      hourStem, hourBranch
+      timeStem, timeBranch
     );
     
     // 计算月令
-    const yueLing = this.calculateYueLing(yearStem, monthStem, dayStem, hourStem, monthBranch);
+    const yueLing = this.calculateYueLing(yearStem, monthStem, dayStem, timeStem, monthBranch);
 
     return {
       diShi,

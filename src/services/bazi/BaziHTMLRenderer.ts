@@ -36,21 +36,21 @@ export class BaziHTMLRenderer {
             <div class="stem ${this.getWuXingClass(baziInfo.yearWuXing)}">${baziInfo.yearStem || ''}</div>
             <div class="stem ${this.getWuXingClass(baziInfo.monthWuXing)}">${baziInfo.monthStem || ''}</div>
             <div class="stem ${this.getWuXingClass(baziInfo.dayWuXing)}">${baziInfo.dayStem || ''}</div>
-            <div class="stem ${this.getWuXingClass(baziInfo.hourWuXing)}">${baziInfo.hourStem || ''}</div>
+            <div class="stem ${this.getWuXingClass(baziInfo.timeWuXing)}">${baziInfo.timeStem || ''}</div>
           </div>
           
           <div class="pillar-branches">
             <div class="branch">${baziInfo.yearBranch || ''}</div>
             <div class="branch">${baziInfo.monthBranch || ''}</div>
             <div class="branch">${baziInfo.dayBranch || ''}</div>
-            <div class="branch">${baziInfo.hourBranch || ''}</div>
+            <div class="branch">${baziInfo.timeBranch || ''}</div>
           </div>
           
           <div class="pillar-shengxiao">
             <div class="shengxiao">${baziInfo.yearShengXiao || ''}</div>
             <div class="shengxiao">${baziInfo.monthShengXiao || ''}</div>
             <div class="shengxiao">${baziInfo.dayShengXiao || ''}</div>
-            <div class="shengxiao">${baziInfo.hourShengXiao || ''}</div>
+            <div class="shengxiao">${baziInfo.timeShengXiao || ''}</div>
           </div>
         </div>
         
@@ -176,8 +176,8 @@ export class BaziHTMLRenderer {
             <div class="label">日</div>
           </div>
           <div class="pillar">
-            <div class="stem ${this.getWuXingClass(baziInfo.hourWuXing)}">${baziInfo.hourStem || ''}</div>
-            <div class="branch">${baziInfo.hourBranch || ''}</div>
+            <div class="stem ${this.getWuXingClass(baziInfo.timeWuXing)}">${baziInfo.timeStem || ''}</div>
+            <div class="branch">${baziInfo.timeBranch || ''}</div>
             <div class="label">时</div>
           </div>
         </div>
@@ -230,10 +230,10 @@ export class BaziHTMLRenderer {
           </tr>
           <tr>
             <td>时柱</td>
-            <td class="${this.getWuXingClass(baziInfo.hourWuXing)}">${baziInfo.hourStem || ''}</td>
-            <td>${baziInfo.hourBranch || ''}</td>
-            <td>${baziInfo.hourNaYin || ''}</td>
-            <td>${baziInfo.hourShengXiao || ''}</td>
+            <td class="${this.getWuXingClass(baziInfo.timeWuXing)}">${baziInfo.timeStem || ''}</td>
+            <td>${baziInfo.timeBranch || ''}</td>
+            <td>${baziInfo.timeNaYin || ''}</td>
+            <td>${baziInfo.timeShengXiao || ''}</td>
           </tr>
         </tbody>
       </table>

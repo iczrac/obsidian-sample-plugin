@@ -65,7 +65,7 @@ export class XunKongCalculator {
    * @param eightChar 八字对象
    * @returns 时柱旬空
    */
-  static calculateHourXunKong(eightChar: EightChar): string {
+  static calculateTimeXunKong(eightChar: EightChar): string {
     try {
       // 先获取旬，再获取旬空
       const timeXun = eightChar.getTimeXun();
@@ -87,13 +87,13 @@ export class XunKongCalculator {
     yearXunKong: string;
     monthXunKong: string;
     dayXunKong: string;
-    hourXunKong: string;
+    timeXunKong: string;
   } {
     return {
       yearXunKong: this.calculateYearXunKong(eightChar),
       monthXunKong: this.calculateMonthXunKong(eightChar),
       dayXunKong: this.calculateDayXunKong(eightChar),
-      hourXunKong: this.calculateHourXunKong(eightChar)
+      timeXunKong: this.calculateTimeXunKong(eightChar)
     };
   }
 
@@ -133,17 +133,17 @@ export class XunKongCalculator {
     year: { xun: string; xunKong: string; isKong: boolean };
     month: { xun: string; xunKong: string; isKong: boolean };
     day: { xun: string; xunKong: string; isKong: boolean };
-    hour: { xun: string; xunKong: string; isKong: boolean };
+    time: { xun: string; xunKong: string; isKong: boolean };
   } {
     const yearBranch = eightChar.getYearZhi();
     const monthBranch = eightChar.getMonthZhi();
     const dayBranch = eightChar.getDayZhi();
-    const hourBranch = eightChar.getTimeZhi();
+    const timeBranch = eightChar.getTimeZhi();
 
     const yearXunKong = this.calculateYearXunKong(eightChar);
     const monthXunKong = this.calculateMonthXunKong(eightChar);
     const dayXunKong = this.calculateDayXunKong(eightChar);
-    const hourXunKong = this.calculateHourXunKong(eightChar);
+    const timeXunKong = this.calculateTimeXunKong(eightChar);
 
     return {
       year: {
@@ -161,10 +161,10 @@ export class XunKongCalculator {
         xunKong: dayXunKong,
         isKong: this.isBranchInXunKong(dayBranch, dayXunKong)
       },
-      hour: {
+      time: {
         xun: eightChar.getTimeXun() || '',
-        xunKong: hourXunKong,
-        isKong: this.isBranchInXunKong(hourBranch, hourXunKong)
+        xunKong: timeXunKong,
+        isKong: this.isBranchInXunKong(timeBranch, timeXunKong)
       }
     };
   }

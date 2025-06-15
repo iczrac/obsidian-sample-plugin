@@ -6,7 +6,7 @@ import { BaziService } from '../services/BaziService';
  */
 export class DatePickerModal extends Modal {
   private date: moment.Moment;
-  private hour = 0;
+  private time = 0;
   private onSubmit: (baziInfo: any) => void;
   private gender = ''; // 性别，默认为空
   private baziSect = '2'; // 默认为流派2
@@ -55,11 +55,11 @@ export class DatePickerModal extends Modal {
       .addDropdown(dropdown => {
         // 添加24小时选项
         for (let i = 0; i < 24; i++) {
-          dropdown.addOption(i.toString(), `${i}点 (${this.getChineseHour(i)}时)`);
+          dropdown.addOption(i.toString(), `${i}点 (${this.getChineseTime(i)}时)`);
         }
-        dropdown.setValue(this.hour.toString())
+        dropdown.setValue(this.time.toString())
           .onChange(value => {
-            this.hour = parseInt(value);
+            this.time = parseInt(value);
           });
       });
 
@@ -90,7 +90,7 @@ export class DatePickerModal extends Modal {
               const day = this.date.date();
 
               // 获取八字信息
-              const baziInfo = BaziService.getBaziFromDate(year, month, day, this.hour, this.gender, this.baziSect);
+              const baziInfo = BaziService.getBaziFromDate(year, month, day, this.time, this.gender, this.baziSect);
 
               // 确保性别信息被传递给回调函数
               baziInfo.gender = this.gender;
@@ -118,17 +118,17 @@ export class DatePickerModal extends Modal {
 
   /**
    * 获取中文时辰名称
-   * @param hour 小时（0-23）
+   * @param time 小时（0-23）
    * @returns 中文时辰名称
    */
-  private getChineseHour(hour: number): string {
-    const chineseHours = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
+  private getChineseTime(time: number): string {
+    const chineseTimes = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
     // 将24小时制转换为12时辰
     // 23:00-00:59 = 子时
     // 01:00-02:59 = 丑时
     // ...
     // 21:00-22:59 = 亥时
-    const index = Math.floor((hour + 1) % 24 / 2);
-    return chineseHours[index];
+    const index = Math.floor((time + 1) % 24 / 2);
+    return chineseTimes[index];
   }
 }

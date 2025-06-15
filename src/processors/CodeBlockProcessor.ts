@@ -114,9 +114,9 @@ export class CodeBlockProcessor {
 			const year = dateParts[0];
 			const month = dateParts[1];
 			const day = dateParts[2];
-			const hour = timeParts[0];
+			const time = timeParts[0];
 
-			console.log('📅 解析结果:', {year, month, day, hour});
+			console.log('📅 解析结果:', {year, month, day, time});
 
 			// 获取性别参数，不使用默认值
 			let gender = '';
@@ -132,8 +132,8 @@ export class CodeBlockProcessor {
 			console.log('🔍 性别参数处理结果:', gender);
 
 			// 获取八字信息
-			console.log('📊 调用BaziService.getBaziFromDate，参数:', {year, month, day, hour, gender, sect: this.plugin.settings.baziSect});
-			const baziInfo = BaziService.getBaziFromDate(year, month, day, hour, gender, this.plugin.settings.baziSect);
+			console.log('📊 调用BaziService.getBaziFromDate，参数:', {year, month, day, time, gender, sect: this.plugin.settings.baziSect});
+			const baziInfo = BaziService.getBaziFromDate(year, month, day, time, gender, this.plugin.settings.baziSect);
 			console.log('📊 BaziService返回结果:', baziInfo);
 
 			// 添加姓名信息
@@ -286,9 +286,9 @@ export class CodeBlockProcessor {
 			const year = dateParts[0];
 			const month = dateParts[1];
 			const day = dateParts[2];
-			const hour = timeParts[0];
+			const time = timeParts[0];
 
-			console.log('🌙 农历日期解析结果:', {year, month, day, hour});
+			console.log('🌙 农历日期解析结果:', {year, month, day, time});
 
 			// 获取性别参数，不使用默认值
 			let gender = '';
@@ -303,7 +303,7 @@ export class CodeBlockProcessor {
 			console.log('🌙 性别参数处理结果:', gender);
 
 			// 获取八字信息（使用农历日期）
-			const baziInfo = BaziService.getBaziFromLunarDate(year, month, day, hour, false, gender, this.plugin.settings.baziSect);
+			const baziInfo = BaziService.getBaziFromLunarDate(year, month, day, time, false, gender, this.plugin.settings.baziSect);
 			console.log('🌙 农历八字结果:', baziInfo);
 
 			// 生成唯一ID
@@ -347,9 +347,9 @@ export class CodeBlockProcessor {
 			const year = now.getFullYear();
 			const month = now.getMonth() + 1; // JavaScript月份从0开始
 			const day = now.getDate();
-			const hour = now.getHours();
+			const time = now.getHours();
 
-			console.log('⏰ 当前时间:', {year, month, day, hour});
+			console.log('⏰ 当前时间:', {year, month, day, time});
 
 			// 获取性别参数，不使用默认值
 			let gender = '';
@@ -364,7 +364,7 @@ export class CodeBlockProcessor {
 			console.log('⏰ 性别参数处理结果:', gender);
 
 			// 获取八字信息
-			const baziInfo = BaziService.getBaziFromDate(year, month, day, hour, gender, this.plugin.settings.baziSect);
+			const baziInfo = BaziService.getBaziFromDate(year, month, day, time, gender, this.plugin.settings.baziSect);
 			console.log('⏰ 当前时间八字结果:', baziInfo);
 
 			// 生成唯一ID

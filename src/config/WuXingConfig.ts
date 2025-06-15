@@ -22,7 +22,7 @@ export const WuXingConfig = {
     year: 2,     // 年干权重
     month: 4,    // 月干权重
     day: 6,      // 日干权重
-    hour: 8      // 时干权重
+    time: 8      // 时干权重
   },
 
   /**
@@ -33,7 +33,7 @@ export const WuXingConfig = {
     year: 4,     // 年支权重（祖上宫）
     month: 16,   // 月支权重（月令司权，但不过于突出）
     day: 10,     // 日支权重（配偶宫，重要性提升）
-    hour: 10     // 时支权重（子女宫）
+    time: 10     // 时支权重（子女宫）
   },
 
   /**
@@ -44,7 +44,7 @@ export const WuXingConfig = {
     year: 2,     // 年支藏干权重
     month: 8,    // 月支藏干权重（与地支权重比例一致）
     day: 5,      // 日支藏干权重（提升配偶宫重要性）
-    hour: 5      // 时支藏干权重
+    time: 5      // 时支藏干权重
   },
 
 
@@ -56,7 +56,7 @@ export const WuXingConfig = {
     year: 1,     // 年柱纳音权重
     month: 2,    // 月柱纳音权重
     day: 1.5,    // 日柱纳音权重
-    hour: 0.5    // 时柱纳音权重
+    time: 0.5    // 时柱纳音权重
   },
 
   /**

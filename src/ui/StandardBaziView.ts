@@ -200,8 +200,8 @@ export class StandardBaziView {
       cls: `wuxing-${this.getWuXingClass(this.getStemWuXing(this.baziInfo.dayStem || ''))}`
     });
     stemRow.createEl('td', {
-      text: this.baziInfo.hourStem || '',
-      cls: `wuxing-${this.getWuXingClass(this.getStemWuXing(this.baziInfo.hourStem || ''))}`
+      text: this.baziInfo.timeStem || '',
+      cls: `wuxing-${this.getWuXingClass(this.getStemWuXing(this.baziInfo.timeStem || ''))}`
     });
 
     // 地支行
@@ -219,8 +219,8 @@ export class StandardBaziView {
       cls: `wuxing-${this.getWuXingClass(this.getBranchWuXing(this.baziInfo.dayBranch || ''))}`
     });
     branchRow.createEl('td', {
-      text: this.baziInfo.hourBranch || '',
-      cls: `wuxing-${this.getWuXingClass(this.getBranchWuXing(this.baziInfo.hourBranch || ''))}`
+      text: this.baziInfo.timeBranch || '',
+      cls: `wuxing-${this.getWuXingClass(this.getBranchWuXing(this.baziInfo.timeBranch || ''))}`
     });
   }
 
@@ -709,7 +709,7 @@ export class StandardBaziView {
         year: this.baziInfo.originalDate?.year || new Date().getFullYear(),
         month: this.baziInfo.originalDate?.month || new Date().getMonth() + 1,
         day: this.baziInfo.originalDate?.day || new Date().getDate(),
-        hour: this.baziInfo.originalDate?.hour || new Date().getHours()
+        time: this.baziInfo.originalDate?.time || new Date().getHours()
       };
 
       // 创建设置模态框

@@ -6,31 +6,73 @@ import { Solar } from 'lunar-typescript';
  */
 export class YearMatchCalculator {
   /**
-   * 根据年柱干支计算匹配的年份列表
+   * 根据完整八字计算匹配的年份列表
    * @param yearStem 年干
    * @param yearBranch 年支
+   * @param monthStem 月干（可选）
+   * @param monthBranch 月支（可选）
+   * @param dayStem 日干（可选）
+   * @param dayBranch 日支（可选）
+   * @param timeStem 时干（可选）
+   * @param timeBranch 时支（可选）
+   * @param sect 流派（1或2，默认为2）
+   * @param baseYear 起始年份（默认为1，获取所有可能年份）
    * @returns 匹配的年份数组
    */
-  static calculateMatchingYears(yearStem: string, yearBranch: string): number[] {
+  static calculateMatchingYears(
+    yearStem: string,
+    yearBranch: string,
+    monthStem?: string,
+    monthBranch?: string,
+    dayStem?: string,
+    dayBranch?: string,
+    timeStem?: string,
+    timeBranch?: string,
+    sect: number = 2,
+    baseYear: number = 1
+  ): number[] {
     let matchingYears: number[] = [];
 
     // 首先尝试使用lunar-typescript库的方法
     try {
       const yearPillar = yearStem + yearBranch;
-      const solarList = Solar.fromBaZi(yearPillar, '', '', '');
-      
+      const monthPillar = (monthStem && monthBranch) ? monthStem + monthBranch : '';
+      const dayPillar = (dayStem && dayBranch) ? dayStem + dayBranch : '';
+      const timePillar = (timeStem && timeBranch) ? timeStem + timeBranch : '';
+
+      console.log('🔍 使用完整八字反推年份:', {
+        yearPillar,
+        monthPillar,
+        dayPillar,
+        timePillar,
+        sect,
+        baseYear
+      });
+
+      const solarList = Solar.fromBaZi(yearPillar, monthPillar, dayPillar, timePillar, sect, baseYear);
+
       if (solarList && solarList.length > 0) {
         matchingYears = solarList.map(solar => solar.getYear());
-        console.log('使用lunar-typescript库获取匹配年份:', matchingYears);
+        console.log('✅ 使用lunar-typescript库获取匹配年份:', matchingYears);
         return matchingYears;
       }
     } catch (error) {
-      console.error('使用lunar-typescript获取匹配年份出错:', error);
+      console.error('❌ 使用lunar-typescript获取匹配年份出错:', error);
     }
 
-    // 如果lunar-typescript方法失败，使用传统计算方法
-    console.log('使用传统方法计算匹配年份');
+    // 如果lunar-typescript方法失败，使用传统计算方法（仅基于年柱）
+    console.log('⚠️ 使用传统方法计算匹配年份（仅基于年柱）');
     return this.calculateMatchingYearsByTraditionalMethod(yearStem, yearBranch);
+  }
+
+  /**
+   * 根据年柱干支计算匹配的年份列表（兼容旧接口）
+   * @param yearStem 年干
+   * @param yearBranch 年支
+   * @returns 匹配的年份数组
+   */
+  static calculateMatchingYearsByYearPillar(yearStem: string, yearBranch: string): number[] {
+    return this.calculateMatchingYears(yearStem, yearBranch);
   }
 
   /**
@@ -77,11 +119,37 @@ export class YearMatchCalculator {
    * @param yearStem 年干
    * @param yearBranch 年支
    * @param specifiedYear 指定的年份（可选）
+   * @param monthStem 月干（可选）
+   * @param monthBranch 月支（可选）
+   * @param dayStem 日干（可选）
+   * @param dayBranch 日支（可选）
+   * @param timeStem 时干（可选）
+   * @param timeBranch 时支（可选）
+   * @param sect 流派（1或2，默认为2）
+   * @param baseYear 起始年份（默认为1，获取所有可能年份）
    * @returns 最可能的年份
    */
-  static findMostLikelyYear(yearStem: string, yearBranch: string, specifiedYear?: string): number | null {
-    const matchingYears = this.calculateMatchingYears(yearStem, yearBranch);
-    
+  static findMostLikelyYear(
+    yearStem: string,
+    yearBranch: string,
+    specifiedYear?: string,
+    monthStem?: string,
+    monthBranch?: string,
+    dayStem?: string,
+    dayBranch?: string,
+    timeStem?: string,
+    timeBranch?: string,
+    sect: number = 2,
+    baseYear: number = 1
+  ): number | null {
+    const matchingYears = this.calculateMatchingYears(
+      yearStem, yearBranch,
+      monthStem, monthBranch,
+      dayStem, dayBranch,
+      timeStem, timeBranch,
+      sect, baseYear
+    );
+
     if (matchingYears.length === 0) {
       return null;
     }
@@ -120,6 +188,17 @@ export class YearMatchCalculator {
     }
 
     return closestYear;
+  }
+
+  /**
+   * 根据指定年份和年柱信息推算最可能的年份（兼容旧接口）
+   * @param yearStem 年干
+   * @param yearBranch 年支
+   * @param specifiedYear 指定的年份（可选）
+   * @returns 最可能的年份
+   */
+  static findMostLikelyYearByYearPillar(yearStem: string, yearBranch: string, specifiedYear?: string): number | null {
+    return this.findMostLikelyYear(yearStem, yearBranch, specifiedYear);
   }
 
   /**

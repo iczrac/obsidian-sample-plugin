@@ -16,7 +16,7 @@ export class ComprehensiveShenShaCalculator {
     yearShenSha: string[];
     monthShenSha: string[];
     dayShenSha: string[];
-    hourShenSha: string[];
+    timeShenSha: string[];
     jiShen: string[];
     xiongShen: string[];
     jiXiongShen: string[];
@@ -28,27 +28,27 @@ export class ComprehensiveShenShaCalculator {
     const monthStem = eightChar.getMonthGan();
     const monthBranch = eightChar.getMonthZhi();
     const dayBranch = eightChar.getDayZhi();
-    const hourStem = eightChar.getTimeGan();
-    const hourBranch = eightChar.getTimeZhi();
+    const timeStem = eightChar.getTimeGan();
+    const timeBranch = eightChar.getTimeZhi();
 
     // 计算各柱神煞
     const yearShenSha = this.calculatePillarShenSha(dayStem, yearStem, yearBranch, '年');
     const monthShenSha = this.calculatePillarShenSha(dayStem, monthStem, monthBranch, '月');
     const dayShenSha = this.calculatePillarShenSha(dayStem, dayStem, dayBranch, '日');
-    const hourShenSha = this.calculatePillarShenSha(dayStem, hourStem, hourBranch, '时');
+    const timeShenSha = this.calculatePillarShenSha(dayStem, timeStem, timeBranch, '时');
 
     // 为神煞添加柱位前缀
     const yearShenShaWithPrefix = yearShenSha.map(s => `年柱:${s}`);
     const monthShenShaWithPrefix = monthShenSha.map(s => `月柱:${s}`);
     const dayShenShaWithPrefix = dayShenSha.map(s => `日柱:${s}`);
-    const hourShenShaWithPrefix = hourShenSha.map(s => `时柱:${s}`);
+    const timeShenShaWithPrefix = timeShenSha.map(s => `时柱:${s}`);
 
     // 合并所有神煞并去重
     const allShenShaSet = new Set([
       ...yearShenShaWithPrefix,
       ...monthShenShaWithPrefix,
       ...dayShenShaWithPrefix,
-      ...hourShenShaWithPrefix
+      ...timeShenShaWithPrefix
     ]);
     const allShenSha = Array.from(allShenShaSet);
 
@@ -79,7 +79,7 @@ export class ComprehensiveShenShaCalculator {
       yearShenSha: yearShenShaWithPrefix,
       monthShenSha: monthShenShaWithPrefix,
       dayShenSha: dayShenShaWithPrefix,
-      hourShenSha: hourShenShaWithPrefix,
+      timeShenSha: timeShenShaWithPrefix,
       jiShen,
       xiongShen,
       jiXiongShen

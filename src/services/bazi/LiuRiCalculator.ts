@@ -40,12 +40,12 @@ export class LiuRiCalculator {
 
       while (currentDate <= endDate) {
         try {
-          const year = currentDate.getFullYear();
-          const month = currentDate.getMonth() + 1;
-          const day = currentDate.getDate();
+          const currentYear = currentDate.getFullYear();
+          const currentMonth = currentDate.getMonth() + 1;
+          const currentDay = currentDate.getDate();
 
           // 创建公历日期对象
-          const solar = Solar.fromYmd(year, month, day);
+          const solar = Solar.fromYmd(currentYear, currentMonth, currentDay);
           const lunar = solar.getLunar();
           const eightChar = lunar.getEightChar();
 
@@ -71,9 +71,9 @@ export class LiuRiCalculator {
           const shenSha: string[] = [];
 
           liuRiData.push({
-            year: year,
-            month: month,
-            day: day,
+            year: currentYear,
+            month: currentMonth,
+            day: currentDay,
             monthGanZhi: monthGanZhi, // 添加干支月信息
             index: dayIndex,
             ganZhi,
@@ -85,7 +85,7 @@ export class LiuRiCalculator {
             shenSha
           });
 
-          console.log(`🗓️ 流日 ${year}-${month}-${day} (${ganZhi}) 计算完成`);
+          console.log(`🗓️ 流日 ${currentYear}-${currentMonth}-${currentDay} (${ganZhi}) 计算完成`);
 
           // 移动到下一天
           currentDate.setDate(currentDate.getDate() + 1);
@@ -113,46 +113,94 @@ export class LiuRiCalculator {
     try {
       // 干支月与节气的对应关系
       const monthBranch = monthGanZhi[1]; // 取地支
-      const jieQiMap: {[key: string]: { start: string; end: string }} = {
-        '寅': { start: '立春', end: '惊蛰' },    // 正月
-        '卯': { start: '惊蛰', end: '清明' },    // 二月
-        '辰': { start: '清明', end: '立夏' },    // 三月
-        '巳': { start: '立夏', end: '芒种' },    // 四月
-        '午': { start: '芒种', end: '小暑' },    // 五月
-        '未': { start: '小暑', end: '立秋' },    // 六月
-        '申': { start: '立秋', end: '白露' },    // 七月
-        '酉': { start: '白露', end: '寒露' },    // 八月
-        '戌': { start: '寒露', end: '立冬' },    // 九月
-        '亥': { start: '立冬', end: '大雪' },    // 十月
-        '子': { start: '大雪', end: '小寒' },    // 十一月
-        '丑': { start: '小寒', end: '立春' }     // 十二月
+      const jieQiMap: {[key: string]: string} = {
+        '寅': '立春',    // 正月（立春到惊蛰前）
+        '卯': '惊蛰',    // 二月（惊蛰到清明前）
+        '辰': '清明',    // 三月（清明到立夏前）
+        '巳': '立夏',    // 四月（立夏到芒种前）
+        '午': '芒种',    // 五月（芒种到小暑前）
+        '未': '小暑',    // 六月（小暑到立秋前）
+        '申': '立秋',    // 七月（立秋到白露前）
+        '酉': '白露',    // 八月（白露到寒露前）
+        '戌': '寒露',    // 九月（寒露到立冬前）
+        '亥': '立冬',    // 十月（立冬到大雪前）
+        '子': '大雪',    // 十一月（大雪到小寒前）
+        '丑': '小寒'     // 十二月（小寒到立春前）
       };
 
-      const jieQiInfo = jieQiMap[monthBranch];
-      if (!jieQiInfo) {
+      const startJieQi = jieQiMap[monthBranch];
+      if (!startJieQi) {
         return null;
       }
 
+      // 获取下一个月的节气作为结束节气
+      const nextMonthMap: {[key: string]: string} = {
+        '寅': '卯',    // 正月 → 二月
+        '卯': '辰',    // 二月 → 三月
+        '辰': '巳',    // 三月 → 四月
+        '巳': '午',    // 四月 → 五月
+        '午': '未',    // 五月 → 六月
+        '未': '申',    // 六月 → 七月
+        '申': '酉',    // 七月 → 八月
+        '酉': '戌',    // 八月 → 九月
+        '戌': '亥',    // 九月 → 十月
+        '亥': '子',    // 十月 → 十一月
+        '子': '丑',    // 十一月 → 十二月
+        '丑': '寅'     // 十二月 → 正月（次年）
+      };
+
+      const nextMonthBranch = nextMonthMap[monthBranch];
+      const endJieQi = jieQiMap[nextMonthBranch];
+
       // 使用lunar-typescript查找节气日期
-      const startDate = this.findJieQiDate(year, jieQiInfo.start);
-      let endDate = this.findJieQiDate(year, jieQiInfo.end);
+      console.log(`🗓️ 查找起始节气: ${startJieQi} (年份: ${year})`);
+      const startDate = this.findJieQiDate(year, startJieQi);
+      console.log(`🗓️ 起始节气日期: ${startDate}`);
+
+      console.log(`🗓️ 查找结束节气: ${endJieQi} (年份: ${year})`);
+      let endDate = this.findJieQiDate(year, endJieQi);
+      console.log(`🗓️ 结束节气日期: ${endDate}`);
 
       // 如果是跨年的情况（如十二月丑月）
-      if (monthBranch === '丑' && jieQiInfo.end === '立春') {
-        endDate = this.findJieQiDate(year + 1, jieQiInfo.end);
+      if (monthBranch === '丑' && endJieQi === '立春') {
+        console.log(`🗓️ 跨年情况，查找次年立春: ${year + 1}`);
+        endDate = this.findJieQiDate(year + 1, endJieQi);
+        console.log(`🗓️ 次年立春日期: ${endDate}`);
       }
 
       if (!startDate || !endDate) {
         return null;
       }
 
-      // 结束日期要减一天，因为节气当天属于下一个月
-      const endDateObj = new Date(endDate);
-      endDateObj.setDate(endDateObj.getDate() - 1);
+      // 使用lunar-typescript的Solar API来正确处理日期计算
+      const startDateParts = startDate.split('-');
+      const endDateParts = endDate.split('-');
+
+      const startYear = parseInt(startDateParts[0]);
+      const startMonth = parseInt(startDateParts[1]);
+      const startDay = parseInt(startDateParts[2]);
+
+      const endYear = parseInt(endDateParts[0]);
+      const endMonth = parseInt(endDateParts[1]);
+      const endDay = parseInt(endDateParts[2]);
+
+      console.log(`🗓️ 解析日期: 开始=${startYear}-${startMonth}-${startDay}, 结束=${endYear}-${endMonth}-${endDay}`);
+
+      // 使用Solar.fromYmdHms创建日期对象（避免JavaScript年份推断）
+      const startSolar = Solar.fromYmdHms(startYear, startMonth, startDay, 0, 0, 0);
+      const endSolar = Solar.fromYmdHms(endYear, endMonth, endDay, 0, 0, 0);
+
+      // 结束日期减一天，因为节气当天属于下一个月
+      const finalEndSolar = endSolar.nextDay(-1);
+
+      const finalStartDate = startSolar.toYmd();
+      const finalEndDate = finalEndSolar.toYmd();
+
+      console.log(`🗓️ 最终日期范围: ${finalStartDate} 到 ${finalEndDate}`);
 
       return {
-        startDate: startDate,
-        endDate: endDateObj.toISOString().split('T')[0]
+        startDate: finalStartDate,
+        endDate: finalEndDate
       };
     } catch (error) {
       console.error('获取干支月日期范围时出错:', error);
@@ -168,23 +216,34 @@ export class LiuRiCalculator {
    */
   private static findJieQiDate(year: number, jieQiName: string): string | null {
     try {
-      // 从年初开始查找节气
-      for (let month = 1; month <= 12; month++) {
-        for (let day = 1; day <= 31; day++) {
-          try {
-            const solar = Solar.fromYmd(year, month, day);
-            const lunar = solar.getLunar();
-            const currentJieQi = lunar.getCurrentJieQi();
+      console.log(`🔍 查找节气 ${jieQiName}，年份: ${year}`);
 
-            if (currentJieQi && currentJieQi.toString() === jieQiName) {
-              return `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
-            }
-          } catch (e) {
-            // 忽略无效日期
-            continue;
-          }
-        }
+      // 使用lunar-typescript的节气表查找准确日期
+      const solar = Solar.fromYmd(year, 6, 15); // 使用年中的日期
+      console.log(`🔍 创建Solar对象: ${year}-06-15`);
+
+      const lunar = solar.getLunar();
+      console.log(`🔍 获取Lunar对象: ${lunar.toString()}`);
+
+      // 获取该年的节气表
+      const jieQiTable = lunar.getJieQiTable();
+      console.log(`🔍 节气表键值:`, Object.keys(jieQiTable));
+
+      // 查找指定节气
+      if (jieQiTable[jieQiName]) {
+        const jieQiSolar = jieQiTable[jieQiName];
+        const jieQiYear = jieQiSolar.getYear();
+        const jieQiMonth = jieQiSolar.getMonth();
+        const jieQiDay = jieQiSolar.getDay();
+        console.log(`🌸 找到节气 ${jieQiName}: ${jieQiYear}-${jieQiMonth}-${jieQiDay}`);
+
+        const resultDate = `${jieQiYear}-${jieQiMonth.toString().padStart(2, '0')}-${jieQiDay.toString().padStart(2, '0')}`;
+        console.log(`🔍 返回节气日期: ${resultDate}`);
+        return resultDate;
       }
+
+      console.warn(`⚠️ 未在节气表中找到 ${jieQiName}`);
+      console.warn(`⚠️ 可用的节气:`, Object.keys(jieQiTable));
       return null;
     } catch (error) {
       console.error(`查找节气 ${jieQiName} 时出错:`, error);

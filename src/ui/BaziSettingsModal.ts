@@ -9,7 +9,7 @@ import { DatePickerModal } from './DatePickerModal';
  */
 export class BaziSettingsModal extends Modal {
   private baziId: string;
-  private currentDate: { year: number; month: number; day: number; hour: number };
+  private currentDate: { year: number; month: number; day: number; time: number };
   private onUpdate: (baziInfo: any) => void;
   private gender = ''; // 默认为空
   private calculationMethod = '0'; // 默认为传统排盘
@@ -40,7 +40,7 @@ export class BaziSettingsModal extends Modal {
   constructor(
     app: App,
     baziId: string,
-    initialDate: { year: number; month: number; day: number; hour: number },
+    initialDate: { year: number; month: number; day: number; time: number },
     onUpdate: (baziInfo: any) => void,
     baziInfo?: BaziInfo
   ) {
@@ -288,7 +288,7 @@ export class BaziSettingsModal extends Modal {
       this.currentDate.year,
       this.currentDate.month,
       this.currentDate.day,
-      this.currentDate.hour,
+      this.currentDate.time,
       this.gender, // 传递性别参数
       this.baziSect // 传递流派参数
     );
@@ -313,7 +313,7 @@ export class BaziSettingsModal extends Modal {
       year: this.currentDate.year,
       month: this.currentDate.month,
       day: this.currentDate.day,
-      hour: this.currentDate.hour
+      time: this.currentDate.time
     };
 
     console.log('🎯 更新八字信息，包含大运:', !!baziInfo.daYun);

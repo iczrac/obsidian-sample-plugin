@@ -15,7 +15,7 @@
   - `calculateYearShenSha()` - 计算年柱神煞
   - `calculateMonthShenSha()` - 计算月柱神煞
   - `calculateDayShenSha()` - 计算日柱神煞
-  - `calculateHourShenSha()` - 计算时柱神煞
+  - `calculatetimeShenSha()` - 计算时柱神煞
   - `getDetailedShenShaInfo()` - 获取详细神煞信息
 
 #### 2. **YearMatchCalculator.ts** (204行, 6KB)
@@ -33,7 +33,7 @@
   - `calculateYearXunKong()` - 计算年柱旬空
   - `calculateMonthXunKong()` - 计算月柱旬空
   - `calculateDayXunKong()` - 计算日柱旬空
-  - `calculateHourXunKong()` - 计算时柱旬空
+  - `calculateTimeXunKong()` - 计算时柱旬空
   - `calculateAllXunKong()` - 计算所有旬空
   - `getXunKongDetails()` - 获取旬空详细信息
 

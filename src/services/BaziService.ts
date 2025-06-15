@@ -29,12 +29,12 @@ export class BaziService {
    * @param year 年
    * @param month 月
    * @param day 日
-   * @param hour 时（0-23）
+   * @param time 时（0-23）
    * @returns 八字信息对象
    */
-  static getBaziFromDate(year: number, month: number, day: number, hour = 0, gender = '', sect = '2'): BaziInfo {
+  static getBaziFromDate(year: number, month: number, day: number, time = 0, gender = '', sect = '2'): BaziInfo {
     // 创建阳历对象
-    const solar = Solar.fromYmdHms(year, month, day, hour, 0, 0);
+    const solar = Solar.fromYmdHms(year, month, day, time, 0, 0);
     // 转换为农历
     const lunar = solar.getLunar();
     // 获取八字
@@ -48,11 +48,11 @@ export class BaziService {
    * @param year 农历年
    * @param month 农历月
    * @param day 农历日
-   * @param hour 时（0-23）
+   * @param time 时（0-23）
    * @param isLeapMonth 是否闰月
    * @returns 八字信息对象
    */
-  static getBaziFromLunarDate(year: number, month: number, day: number, hour = 0, isLeapMonth = false, gender = '', sect = '2'): BaziInfo {
+  static getBaziFromLunarDate(year: number, month: number, day: number, time = 0, isLeapMonth = false, gender = '', sect = '2'): BaziInfo {
     // 创建农历对象
     // Lunar.fromYmdHms只接受6个参数，不支持isLeapMonth参数
     // 需要使用其他方法处理闰月
@@ -62,7 +62,7 @@ export class BaziService {
       // 这里简化处理，实际应用中可能需要更复杂的逻辑
       lunar = Lunar.fromYmd(year, month, day);
     } else {
-      lunar = Lunar.fromYmdHms(year, month, day, hour, 0, 0);
+      lunar = Lunar.fromYmdHms(year, month, day, time, 0, 0);
     }
     // 转换为阳历
     const solar = lunar.getSolar();
@@ -105,20 +105,20 @@ export class BaziService {
     const monthBranch = parts[1][1];
     const dayStem = parts[2][0];
     const dayBranch = parts[2][1];
-    const hourStem = parts[3][0];
-    const hourBranch = parts[3][1];
+    const timeStem = parts[3][0];
+    const timeBranch = parts[3][1];
 
     // 计算五行
     const yearWuXing = BaziUtils.getStemWuXing(yearStem);
     const monthWuXing = BaziUtils.getStemWuXing(monthStem);
     const dayWuXing = BaziUtils.getStemWuXing(dayStem);
-    const hourWuXing = BaziUtils.getStemWuXing(hourStem);
+    const timeWuXing = BaziUtils.getStemWuXing(timeStem);
 
     // 计算纳音
     const yearNaYin = BaziCalculator.getNaYin(yearStem + yearBranch);
     const monthNaYin = BaziCalculator.getNaYin(monthStem + monthBranch);
     const dayNaYin = BaziCalculator.getNaYin(dayStem + dayBranch);
-    const hourNaYin = BaziCalculator.getNaYin(hourStem + hourBranch);
+    const timeNaYin = BaziCalculator.getNaYin(timeStem + timeBranch);
 
     // 初始化日期相关变量
     let solarDate = '----年--月--日';
@@ -128,8 +128,24 @@ export class BaziService {
     let lunar: Lunar | null = null;
     let eightChar: EightChar | null = null;
 
-    // 计算匹配的年份列表
-    const matchingYears = YearMatchCalculator.calculateMatchingYears(yearStem, yearBranch);
+    // 计算匹配的年份列表（使用完整八字信息）
+    console.log('🔍 年份匹配计算参数:', {
+      yearStem, yearBranch,
+      monthStem, monthBranch,
+      dayStem, dayBranch,
+      timeStem: timeStem, timeBranch: timeBranch, // 统一使用 time 前缀
+      sect: parseInt(sect),
+      baseYear: 1
+    });
+
+    const matchingYears = YearMatchCalculator.calculateMatchingYears(
+      yearStem, yearBranch,
+      monthStem, monthBranch,
+      dayStem, dayBranch,
+      timeStem, timeBranch, // 传入解析的 timeStem/timeBranch，YearMatchCalculator 内部统一为 timeStem/timeBranch
+      parseInt(sect), // 使用系统设置的流派
+      1 // 起始年份设为1，确保能找到所有可能的年份
+    );
 
     // 如果指定了年份，尝试使用指定的年份进行日期推算
     const yearNum = specifiedYear ? parseInt(specifiedYear) : undefined;
@@ -145,7 +161,7 @@ export class BaziService {
           yearStem + yearBranch,
           monthStem + monthBranch,
           dayStem + dayBranch,
-          hourStem + hourBranch,
+          timeStem + timeBranch,
           parseInt(sect), // 流派
           1 // 起始年份设为1，确保能找到所有可能的日期
         );
@@ -221,7 +237,7 @@ export class BaziService {
       // 准备用户输入的八字信息
       const userInputBazi = {
         yearStem, yearBranch, monthStem, monthBranch,
-        dayStem, dayBranch, hourStem, hourBranch
+        dayStem, dayBranch, timeStem, timeBranch
       };
 
       // 使用formatBaziInfo获取完整的八字信息
@@ -265,24 +281,24 @@ export class BaziService {
       baziInfo.dayShiShenZhi = ShiShenCalculator.getHiddenShiShen(dayStem, dayBranch);
 
       // 时柱
-      baziInfo.hourPillar = parts[3];
-      baziInfo.hourStem = hourStem;
-      baziInfo.hourBranch = hourBranch;
-      baziInfo.hourHideGan = BaziCalculator.getHideGan(hourBranch);
-      baziInfo.hourWuXing = BaziUtils.getStemWuXing(hourStem);
-      baziInfo.hourNaYin = BaziCalculator.getNaYin(hourStem + hourBranch);
-      baziInfo.hourShengXiao = BaziUtils.getShengXiao(hourBranch);
-      baziInfo.timeShiShenGan = ShiShenCalculator.getShiShen(dayStem, hourStem);
-      baziInfo.timeShiShenZhi = ShiShenCalculator.getHiddenShiShen(dayStem, hourBranch);
+      baziInfo.timePillar = parts[3];
+      baziInfo.timeStem = timeStem;
+      baziInfo.timeBranch = timeBranch;
+      baziInfo.timeHideGan = BaziCalculator.getHideGan(timeBranch);
+      baziInfo.timeWuXing = BaziUtils.getStemWuXing(timeStem);
+      baziInfo.timeNaYin = BaziCalculator.getNaYin(timeStem + timeBranch);
+      baziInfo.timeShengXiao = BaziUtils.getShengXiao(timeBranch);
+      baziInfo.timeShiShenGan = ShiShenCalculator.getShiShen(dayStem, timeStem);
+      baziInfo.timeShiShenZhi = ShiShenCalculator.getHiddenShiShen(dayStem, timeBranch);
 
       // 特殊信息
       baziInfo.taiYuan = BaziCalculator.calculateTaiYuan(monthStem, monthBranch);
       baziInfo.taiYuanNaYin = BaziCalculator.getNaYin(baziInfo.taiYuan);
-      baziInfo.mingGong = BaziCalculator.calculateMingGong(hourStem, hourBranch);
+      baziInfo.mingGong = BaziCalculator.calculateMingGong(timeStem, timeBranch);
       baziInfo.mingGongNaYin = BaziCalculator.getNaYin(baziInfo.mingGong);
 
       // 检查三合局和三会局
-      const branches = [yearBranch, monthBranch, dayBranch, hourBranch];
+      const branches = [yearBranch, monthBranch, dayBranch, timeBranch];
       baziInfo.sanHeJu = CombinationCalculator.checkSanHeJu(branches);
       baziInfo.sanHuiJu = CombinationCalculator.checkSanHuiJu(branches);
 
@@ -299,14 +315,14 @@ export class BaziService {
     // 计算特殊信息
     const taiYuan = BaziCalculator.calculateTaiYuan(monthStem, monthBranch);
     const taiYuanNaYin = BaziCalculator.getNaYin(taiYuan);
-    const mingGong = BaziCalculator.calculateMingGong(hourStem, hourBranch);
+    const mingGong = BaziCalculator.calculateMingGong(timeStem, timeBranch);
     const mingGongNaYin = BaziCalculator.getNaYin(mingGong);
 
     // 生肖信息
     const yearShengXiao = BaziUtils.getShengXiao(yearBranch);
     const monthShengXiao = BaziUtils.getShengXiao(monthBranch);
     const dayShengXiao = BaziUtils.getShengXiao(dayBranch);
-    const hourShengXiao = BaziUtils.getShengXiao(hourBranch);
+    const timeShengXiao = BaziUtils.getShengXiao(timeBranch);
 
     // 创建一个基本的BaziInfo对象
     // 计算十神信息 - 以日干为基准
@@ -316,19 +332,19 @@ export class BaziService {
     const monthShiShenZhi = ShiShenCalculator.getHiddenShiShen(dayStem, monthBranch);
     const dayShiShen = '日主'; // 日柱天干是日主自己
     const dayShiShenZhi = ShiShenCalculator.getHiddenShiShen(dayStem, dayBranch);
-    const timeShiShenGan = ShiShenCalculator.getShiShen(dayStem, hourStem);
-    const timeShiShenZhi = ShiShenCalculator.getHiddenShiShen(dayStem, hourBranch);
+    const timeShiShenGan = ShiShenCalculator.getShiShen(dayStem, timeStem);
+    const timeShiShenZhi = ShiShenCalculator.getHiddenShiShen(dayStem, timeBranch);
 
     // 计算完整的十二长生信息
     const changShengInfo = ShiErChangShengCalculator.calculateComplete(
       yearStem, yearBranch,
       monthStem, monthBranch,
       dayStem, dayBranch,
-      hourStem, hourBranch
+      timeStem, timeBranch
     );
 
     // 检查三合局和三会局
-    const branches = [yearBranch, monthBranch, dayBranch, hourBranch];
+    const branches = [yearBranch, monthBranch, dayBranch, timeBranch];
     const sanHeJu = CombinationCalculator.checkSanHeJu(branches);
     const sanHuiJu = CombinationCalculator.checkSanHuiJu(branches);
 
@@ -349,13 +365,13 @@ export class BaziService {
       year: yearStem + yearBranch,
       month: monthStem + monthBranch,
       day: dayStem + dayBranch,
-      hour: hourStem + hourBranch
+      time: timeStem + timeBranch
     });
 
     console.log('🚀🚀🚀 getBaziFromString: 开始独立五行强度计算');
     wuXingStrength = WuXingStrengthCalculator.calculateWuXingStrengthFromBazi(
       yearStem, yearBranch, monthStem, monthBranch,
-      dayStem, dayBranch, hourStem, hourBranch
+      dayStem, dayBranch, timeStem, timeBranch
     );
     console.log('🎯🎯🎯 getBaziFromString: 五行强度计算结果:', wuXingStrength);
     console.log('🔍🔍🔍 getBaziFromString: 土五行强度 =', wuXingStrength.tu);
@@ -375,7 +391,7 @@ export class BaziService {
     let qiYunDate: string | undefined;
     let qiYunMonth: number | undefined;
     let qiYunDay: number | undefined;
-    let qiYunHour: number | undefined;
+    let qiYunTime: number | undefined;
     let daYunStartAge: number | undefined;
 
     // 如果有性别且有完整的八字和日期信息，计算大运流年
@@ -397,7 +413,7 @@ export class BaziService {
         qiYunDate = qiYunInfo.qiYunDate;
         qiYunMonth = qiYunInfo.qiYunMonth;
         qiYunDay = qiYunInfo.qiYunDay;
-        qiYunHour = qiYunInfo.qiYunHour;
+        qiYunTime = qiYunInfo.qiYunTime;
         console.log('🔥 起运信息计算完成:', qiYunInfo);
 
         // 计算大运信息
@@ -467,13 +483,13 @@ export class BaziService {
       dayShiShen,
       dayShiShenZhi,
 
-      hourPillar: parts[3],
-      hourStem,
-      hourBranch,
-      hourHideGan: BaziCalculator.getHideGan(hourBranch),
-      hourWuXing,
-      hourNaYin,
-      hourShengXiao,
+      timePillar: parts[3],
+      timeStem: timeStem,
+      timeBranch: timeBranch,
+      timeHideGan: BaziCalculator.getHideGan(timeBranch),
+      timeWuXing: timeWuXing,
+      timeNaYin: timeNaYin,
+      timeShengXiao: timeShengXiao,
       timeShiShenGan,
       timeShiShenZhi,
 
@@ -499,7 +515,7 @@ export class BaziService {
       yearXunKong: BaziCalculator.calculateXunKong(yearStem, yearBranch),
       monthXunKong: BaziCalculator.calculateXunKong(monthStem, monthBranch),
       dayXunKong: BaziCalculator.calculateXunKong(dayStem, dayBranch),
-      hourXunKong: BaziCalculator.calculateXunKong(hourStem, hourBranch),
+      timeXunKong: BaziCalculator.calculateXunKong(timeStem, timeBranch),
 
       // 特殊信息
       taiYuan,
@@ -532,7 +548,7 @@ export class BaziService {
       qiYunDate,
       qiYunMonth,
       qiYunDay,
-      qiYunHour,
+      qiYunTime,
 
       // 流年信息
       liuNian,
@@ -540,7 +556,7 @@ export class BaziService {
       // 十神信息（补充缺失的字段）
       yearShiShen: yearShiShenGan,
       monthShiShen: monthShiShenGan,
-      hourShiShen: timeShiShenGan,
+      timeShiShen: timeShiShenGan,
 
       // 设置信息
       gender,
@@ -611,42 +627,42 @@ export class BaziService {
     const dayXunKong = XunKongCalculator.calculateDayXunKong(eightChar);
 
     // 时柱
-    const hourStem = eightChar.getTimeGan();
-    const hourBranch = eightChar.getTimeZhi();
-    const hourPillar = hourStem + hourBranch;
+    const timeStem = eightChar.getTimeGan();
+    const timeBranch = eightChar.getTimeZhi();
+    const timePillar = timeStem + timeBranch;
     // 使用我们自己的藏干定义，而不是lunar-typescript库的定义
-    const hourHideGan = BaziCalculator.getHideGan(hourBranch);
-    const hourWuXing = eightChar.getTimeWuXing();
-    const hourNaYin = eightChar.getTimeNaYin();
-    const timeShiShenGan = ShiShenCalculator.getShiShen(dayStem, hourStem);
-    const timeShiShenZhi = ShiShenCalculator.getHiddenShiShen(dayStem, hourBranch);
+    const timeHideGan = BaziCalculator.getHideGan(timeBranch);
+    const timeWuXing = eightChar.getTimeWuXing();
+    const timeNaYin = eightChar.getTimeNaYin();
+    const timeShiShenGan = ShiShenCalculator.getShiShen(dayStem, timeStem);
+    const timeShiShenZhi = ShiShenCalculator.getHiddenShiShen(dayStem, timeBranch);
 
 
     // 计算时柱旬空
-    const hourXunKong = XunKongCalculator.calculateHourXunKong(eightChar);
+    const timeXunKong = XunKongCalculator.calculateTimeXunKong(eightChar);
 
     // 计算完整的十二长生信息
     const changShengInfo = ShiErChangShengCalculator.calculateComplete(
       yearStem, yearBranch,
       monthStem, monthBranch,
       dayStem, dayBranch,
-      hourStem, hourBranch
+      timeStem, timeBranch
     );
 
     // 生肖信息
     const yearShengXiao = BaziUtils.getShengXiao(yearBranch);
     const monthShengXiao = BaziUtils.getShengXiao(monthBranch);
     const dayShengXiao = BaziUtils.getShengXiao(dayBranch);
-    const hourShengXiao = BaziUtils.getShengXiao(hourBranch);
+    const timeShengXiao = BaziUtils.getShengXiao(timeBranch);
 
     // 特殊信息
     const taiYuan = BaziCalculator.calculateTaiYuan(monthStem, monthBranch);
     const taiYuanNaYin = BaziCalculator.getNaYin(taiYuan);
-    const mingGong = BaziCalculator.calculateMingGong(hourStem, hourBranch);
+    const mingGong = BaziCalculator.calculateMingGong(timeStem, timeBranch);
     const mingGongNaYin = BaziCalculator.getNaYin(mingGong);
 
     // 检查三合局和三会局
-    const branches = [yearBranch, monthBranch, dayBranch, hourBranch];
+    const branches = [yearBranch, monthBranch, dayBranch, timeBranch];
     const sanHeJu = CombinationCalculator.checkSanHeJu(branches);
     const sanHuiJu = CombinationCalculator.checkSanHuiJu(branches);
 
@@ -673,7 +689,7 @@ export class BaziService {
         year: userInputBazi.yearStem + userInputBazi.yearBranch,
         month: userInputBazi.monthStem + userInputBazi.monthBranch,
         day: userInputBazi.dayStem + userInputBazi.dayBranch,
-        hour: userInputBazi.hourStem + userInputBazi.hourBranch
+        time: userInputBazi.timeStem + userInputBazi.timeBranch
       });
 
       // 使用独立的五行强度计算，直接传入八字信息
@@ -681,7 +697,7 @@ export class BaziService {
         userInputBazi.yearStem, userInputBazi.yearBranch,
         userInputBazi.monthStem, userInputBazi.monthBranch,
         userInputBazi.dayStem, userInputBazi.dayBranch,
-        userInputBazi.hourStem, userInputBazi.hourBranch
+        userInputBazi.timeStem, userInputBazi.timeBranch
       );
     } else {
       console.log('🔍 formatBaziInfo使用原始八字对象进行独立计算');
@@ -691,14 +707,14 @@ export class BaziService {
       const currentMonthBranch = eightChar.getMonthZhi();
       const currentDayStem = eightChar.getDayGan();
       const currentDayBranch = eightChar.getDayZhi();
-      const currentHourStem = eightChar.getTimeGan();
-      const currentHourBranch = eightChar.getTimeZhi();
+      const currentTimeStem = eightChar.getTimeGan();
+      const currentTimeBranch = eightChar.getTimeZhi();
 
       console.log('🔍 formatBaziInfo当前八字:', {
         year: currentYearStem + currentYearBranch,
         month: currentMonthStem + currentMonthBranch,
         day: currentDayStem + currentDayBranch,
-        hour: currentHourStem + currentHourBranch
+        time: currentTimeStem + currentTimeBranch
       });
 
       // 使用独立的五行强度计算，直接传入八字信息
@@ -706,7 +722,7 @@ export class BaziService {
         currentYearStem, currentYearBranch,
         currentMonthStem, currentMonthBranch,
         currentDayStem, currentDayBranch,
-        currentHourStem, currentHourBranch
+        currentTimeStem, currentTimeBranch
       );
     }
     console.log('🎯🎯🎯 formatBaziInfo: 五行强度计算结果:', wuXingStrength);
@@ -730,7 +746,7 @@ export class BaziService {
     let qiYunDate: string | undefined;
     let qiYunMonth: number | undefined;
     let qiYunDay: number | undefined;
-    let qiYunHour: number | undefined;
+    let qiYunTime: number | undefined;
     let daYunStartAge: number | undefined;
 
     // 计算大运和流年信息
@@ -742,7 +758,7 @@ export class BaziService {
       qiYunDate = qiYunInfo.qiYunDate;
       qiYunMonth = qiYunInfo.qiYunMonth;
       qiYunDay = qiYunInfo.qiYunDay;
-      qiYunHour = qiYunInfo.qiYunHour;
+      qiYunTime = qiYunInfo.qiYunTime;
 
       // 计算大运信息
       daYun = DaYunCalculator.calculateDaYun(eightChar, solar, gender, dayStem, 10);
@@ -782,12 +798,12 @@ export class BaziService {
       dayWuXing,
       dayNaYin,
 
-      hourPillar,
-      hourStem,
-      hourBranch,
-      hourHideGan,
-      hourWuXing,
-      hourNaYin,
+      timePillar: timePillar,
+      timeStem: timeStem,
+      timeBranch: timeBranch,
+      timeHideGan: timeHideGan,
+      timeWuXing: timeWuXing,
+      timeNaYin: timeNaYin,
 
       // 特殊信息
       taiYuan,
@@ -807,13 +823,13 @@ export class BaziService {
       yearShengXiao,
       monthShengXiao,
       dayShengXiao,
-      hourShengXiao,
+      timeShengXiao: timeShengXiao,
 
       // 十神信息
       yearShiShen: yearShiShenGan,
       monthShiShen: monthShiShenGan,
       dayShiShen: '日主',
-      hourShiShen: timeShiShenGan,
+      timeShiShen: timeShiShenGan,
 
       yearShiShenGan,
       yearShiShenZhi,
@@ -845,7 +861,7 @@ export class BaziService {
       yearXunKong,
       monthXunKong,
       dayXunKong,
-      hourXunKong,
+      timeXunKong: timeXunKong,
 
       // 组合信息
       sanHeJu,
@@ -875,7 +891,7 @@ export class BaziService {
       qiYunDate,
       qiYunMonth,
       qiYunDay,
-      qiYunHour,
+      qiYunTime,
 
       // 流年信息
       liuNian

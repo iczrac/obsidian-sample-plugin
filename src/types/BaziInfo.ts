@@ -19,26 +19,26 @@ export interface BaziInfo {
   monthBranch?: string;
   dayStem?: string;
   dayBranch?: string;
-  hourStem?: string;
-  hourBranch?: string;
+  timeStem?: string;
+  timeBranch?: string;
 
   // 五行信息
   yearWuXing?: string;
   monthWuXing?: string;
   dayWuXing?: string;
-  hourWuXing?: string;
+  timeWuXing?: string;
 
   // 藏干信息
   yearHideGan?: string | string[];
   monthHideGan?: string | string[];
   dayHideGan?: string | string[];
-  hourHideGan?: string | string[];
+  timeHideGan?: string | string[];
 
   // 纳音信息
   yearNaYin?: string;
   monthNaYin?: string;
   dayNaYin?: string;
-  hourNaYin?: string;
+  timeNaYin?: string;
   taiYuanNaYin?: string;
   mingGongNaYin?: string;
 
@@ -46,13 +46,13 @@ export interface BaziInfo {
   yearShengXiao?: string;
   monthShengXiao?: string;
   dayShengXiao?: string;
-  hourShengXiao?: string;
+  timeShengXiao?: string;
 
   // 旬空信息
   yearXunKong?: string;
   monthXunKong?: string;
   dayXunKong?: string;
-  hourXunKong?: string;
+  timeXunKong?: string;
 
   // 十神信息
   yearShiShenGan?: string;
@@ -62,7 +62,7 @@ export interface BaziInfo {
   yearShiShen?: string;
   monthShiShen?: string;
   dayShiShen?: string;
-  hourShiShen?: string;
+  timeShiShen?: string;
 
   // 地支十神信息
   yearShiShenZhi?: string | string[];
@@ -93,7 +93,7 @@ export interface BaziInfo {
   yearShenSha?: string[];
   monthShenSha?: string[];
   dayShenSha?: string[];
-  hourShenSha?: string[];
+  timeShenSha?: string[];
 
   // 组合信息
   sanHeJu?: string | null; // 三合局
@@ -130,7 +130,7 @@ export interface BaziInfo {
   qiYunAge?: number; // 起运年龄
   qiYunMonth?: number; // 起运月份
   qiYunDay?: number; // 起运天数
-  qiYunHour?: number; // 起运小时数
+  qiYunTime?: number; // 起运小时数
 
   // 流年信息
   liuNian?: LiuNianInfo[];
@@ -166,7 +166,7 @@ export interface BaziInfo {
   yearPillar?: string;
   monthPillar?: string;
   dayPillar?: string;
-  hourPillar?: string;
+  timePillar?: string;
 
   // 设置信息
   baziSect?: string;
@@ -184,7 +184,7 @@ export interface BaziInfo {
     year: number;
     month: number;
     day: number;
-    hour: number;
+    time: number;
   };
 
   // 完整信息
@@ -297,7 +297,7 @@ export interface LiuShiInfo {
   year?: number;
   month?: number;
   day?: number;
-  hour: number;
+  time: number;
   index?: number;
   ganZhi: string;
   naYin?: string;

@@ -59,7 +59,7 @@ export class BaziView {
     console.log('年柱神煞:', this.baziInfo.yearShenSha);
     console.log('月柱神煞:', this.baziInfo.monthShenSha);
     console.log('日柱神煞:', this.baziInfo.dayShenSha);
-    console.log('时柱神煞:', this.baziInfo.hourShenSha);
+    console.log('时柱神煞:', this.baziInfo.timeShenSha);
 
     // 检查大运神煞
     console.log('大运神煞数据:');
@@ -204,8 +204,8 @@ export class BaziView {
       cls: `wuxing-${this.getWuXingClass(this.baziInfo.dayWuXing || '')}`
     });
     stemRow.createEl('td', {
-      text: this.baziInfo.hourStem,
-      cls: `wuxing-${this.getWuXingClass(this.baziInfo.hourWuXing || '')}`
+      text: this.baziInfo.timeStem,
+      cls: `wuxing-${this.getWuXingClass(this.baziInfo.timeWuXing || '')}`
     });
 
     // 地支行
@@ -213,25 +213,25 @@ export class BaziView {
     branchRow.createEl('td', { text: this.baziInfo.yearBranch });
     branchRow.createEl('td', { text: this.baziInfo.monthBranch });
     branchRow.createEl('td', { text: this.baziInfo.dayBranch });
-    branchRow.createEl('td', { text: this.baziInfo.hourBranch });
+    branchRow.createEl('td', { text: this.baziInfo.timeBranch });
 
     // 藏干行
     const hideGanRow = tbody.createEl('tr');
     hideGanRow.createEl('td', { text: Array.isArray(this.baziInfo.yearHideGan) ? this.baziInfo.yearHideGan.join(', ') : this.baziInfo.yearHideGan || '' });
     hideGanRow.createEl('td', { text: Array.isArray(this.baziInfo.monthHideGan) ? this.baziInfo.monthHideGan.join(', ') : this.baziInfo.monthHideGan || '' });
     hideGanRow.createEl('td', { text: Array.isArray(this.baziInfo.dayHideGan) ? this.baziInfo.dayHideGan.join(', ') : this.baziInfo.dayHideGan || '' });
-    hideGanRow.createEl('td', { text: Array.isArray(this.baziInfo.hourHideGan) ? this.baziInfo.hourHideGan.join(', ') : this.baziInfo.hourHideGan || '' });
+    hideGanRow.createEl('td', { text: Array.isArray(this.baziInfo.timeHideGan) ? this.baziInfo.timeHideGan.join(', ') : this.baziInfo.timeHideGan || '' });
 
     // 纳音行
     const naYinRow = tbody.createEl('tr');
     naYinRow.createEl('td', { text: this.baziInfo.yearNaYin });
     naYinRow.createEl('td', { text: this.baziInfo.monthNaYin });
     naYinRow.createEl('td', { text: this.baziInfo.dayNaYin });
-    naYinRow.createEl('td', { text: this.baziInfo.hourNaYin });
+    naYinRow.createEl('td', { text: this.baziInfo.timeNaYin });
 
     // 神煞行
     if (this.baziInfo.yearShenSha || this.baziInfo.monthShenSha ||
-        this.baziInfo.dayShenSha || this.baziInfo.hourShenSha) {
+        this.baziInfo.dayShenSha || this.baziInfo.timeShenSha) {
       const shenShaRow = tbody.createEl('tr');
       shenShaRow.setAttribute('data-row-type', 'shensha-row'); // 添加标识属性
 
@@ -410,19 +410,19 @@ export class BaziView {
       }
 
       // 时柱神煞
-      const hourShenShaCell = shenShaRow.createEl('td');
-      console.log('时柱神煞数据:', this.baziInfo.hourShenSha);
-      console.log('时柱神煞数据类型:', typeof this.baziInfo.hourShenSha);
-      console.log('时柱神煞数据是否为数组:', Array.isArray(this.baziInfo.hourShenSha));
-      console.log('时柱神煞数据长度:', this.baziInfo.hourShenSha ? this.baziInfo.hourShenSha.length : 0);
+      const timeShenShaCell = shenShaRow.createEl('td');
+      console.log('时柱神煞数据:', this.baziInfo.timeShenSha);
+      console.log('时柱神煞数据类型:', typeof this.baziInfo.timeShenSha);
+      console.log('时柱神煞数据是否为数组:', Array.isArray(this.baziInfo.timeShenSha));
+      console.log('时柱神煞数据长度:', this.baziInfo.timeShenSha ? this.baziInfo.timeShenSha.length : 0);
 
       // 确保神煞数据是数组
-      const hourShenSha = Array.isArray(this.baziInfo.hourShenSha) ? this.baziInfo.hourShenSha : [];
+      const timeShenSha = Array.isArray(this.baziInfo.timeShenSha) ? this.baziInfo.timeShenSha : [];
 
-      if (hourShenSha.length > 0) {
-        const shenShaList = hourShenShaCell.createEl('div', { cls: 'bazi-shensha-list' });
+      if (timeShenSha.length > 0) {
+        const shenShaList = timeShenShaCell.createEl('div', { cls: 'bazi-shensha-list' });
         try {
-          hourShenSha.forEach((shenSha: string, i: number) => {
+          timeShenSha.forEach((shenSha: string, i: number) => {
             console.log(`处理时柱第 ${i+1} 个神煞: ${shenSha}`);
 
             const shenShaInfo = this.getShenShaInfo(shenSha);
@@ -454,11 +454,11 @@ export class BaziView {
           });
         } catch (e) {
           console.error('处理时柱神煞出错:', e);
-          hourShenShaCell.setText('神煞处理错误');
+          timeShenShaCell.setText('神煞处理错误');
         }
       } else {
         console.log('时柱没有神煞数据');
-        hourShenShaCell.setText('无神煞');
+        timeShenShaCell.setText('无神煞');
       }
     }
   }
@@ -490,8 +490,8 @@ export class BaziView {
     });
 
     wuxingList.createEl('span', {
-      text: `${this.baziInfo.hourStem}(${this.baziInfo.hourWuXing})`,
-      cls: `wuxing-tag wuxing-${this.getWuXingClass(this.baziInfo.hourWuXing || '')}`
+      text: `${this.baziInfo.timeStem}(${this.baziInfo.timeWuXing})`,
+      cls: `wuxing-tag wuxing-${this.getWuXingClass(this.baziInfo.timeWuXing || '')}`
     });
   }
 
@@ -516,9 +516,9 @@ export class BaziView {
 
     // 添加旬空信息
     if (this.baziInfo.yearXunKong || this.baziInfo.monthXunKong ||
-        this.baziInfo.dayXunKong || this.baziInfo.hourXunKong) {
+        this.baziInfo.dayXunKong || this.baziInfo.timeXunKong) {
       const xunKongDiv = infoList.createEl('div', { cls: 'bazi-view-info-item' });
-      xunKongDiv.innerHTML = `旬空：年(${this.baziInfo.yearXunKong || '无'}) 月(${this.baziInfo.monthXunKong || '无'}) 日(${this.baziInfo.dayXunKong || '无'}) 时(${this.baziInfo.hourXunKong || '无'})`;
+      xunKongDiv.innerHTML = `旬空：年(${this.baziInfo.yearXunKong || '无'}) 月(${this.baziInfo.monthXunKong || '无'}) 日(${this.baziInfo.dayXunKong || '无'}) 时(${this.baziInfo.timeXunKong || '无'})`;
     }
 
     // 创建大运信息

@@ -9,15 +9,15 @@ export class BaziCalculator {
     return month > 2 || (month === 2 && day >= 4);
   }
 
-  static calculate(year: number, month: number, day: number, hour: number): {
+  static calculate(year: number, month: number, day: number, time: number): {
     yearStem: HeavenlyStem;
     yearBranch: EarthlyBranch;
     monthStem: HeavenlyStem;
     monthBranch: EarthlyBranch;
     dayStem: HeavenlyStem;
     dayBranch: EarthlyBranch;
-    hourStem: HeavenlyStem;
-    hourBranch: EarthlyBranch;
+    timeStem: HeavenlyStem;
+    timeBranch: EarthlyBranch;
   } {
     // 年柱计算（考虑立春分界）
     const calcYear = this.isAfterSpringStart(year, month, day) ? year : year - 1;
@@ -32,8 +32,8 @@ export class BaziCalculator {
       monthBranch: '丑',
       dayStem: '丙', // TODO: 实现日柱计算
       dayBranch: '寅',
-      hourStem: '丁', // TODO: 实现时柱计算
-      hourBranch: '卯'
+      timeStem: '丁', // TODO: 实现时柱计算
+      timeBranch: '卯'
     };
   }
 }

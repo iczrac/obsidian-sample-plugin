@@ -34,18 +34,18 @@ export class LiuShiCalculator {
 
     // 12个时辰
     const timeRanges = [
-      { hour: 23, name: '子时', range: '23:00-01:00' },
-      { hour: 1, name: '丑时', range: '01:00-03:00' },
-      { hour: 3, name: '寅时', range: '03:00-05:00' },
-      { hour: 5, name: '卯时', range: '05:00-07:00' },
-      { hour: 7, name: '辰时', range: '07:00-09:00' },
-      { hour: 9, name: '巳时', range: '09:00-11:00' },
-      { hour: 11, name: '午时', range: '11:00-13:00' },
-      { hour: 13, name: '未时', range: '13:00-15:00' },
-      { hour: 15, name: '申时', range: '15:00-17:00' },
-      { hour: 17, name: '酉时', range: '17:00-19:00' },
-      { hour: 19, name: '戌时', range: '19:00-21:00' },
-      { hour: 21, name: '亥时', range: '21:00-23:00' }
+      { time: 23, name: '子时', range: '23:00-01:00' },
+      { time: 1, name: '丑时', range: '01:00-03:00' },
+      { time: 3, name: '寅时', range: '03:00-05:00' },
+      { time: 5, name: '卯时', range: '05:00-07:00' },
+      { time: 7, name: '辰时', range: '07:00-09:00' },
+      { time: 9, name: '巳时', range: '09:00-11:00' },
+      { time: 11, name: '午时', range: '11:00-13:00' },
+      { time: 13, name: '未时', range: '13:00-15:00' },
+      { time: 15, name: '申时', range: '15:00-17:00' },
+      { time: 17, name: '酉时', range: '17:00-19:00' },
+      { time: 19, name: '戌时', range: '19:00-21:00' },
+      { time: 21, name: '亥时', range: '21:00-23:00' }
     ];
 
     for (let i = 0; i < timeRanges.length; i++) {
@@ -54,8 +54,8 @@ export class LiuShiCalculator {
 
         // 使用lunar-typescript库创建该时辰的Solar对象
         // 使用时辰的中间时间点（如子时使用0点）
-        const hourTime = i * 2; // 每个时辰2小时，子时=0点，丑时=2点...
-        const solar = Solar.fromYmdHms(year, month, day, hourTime, 0, 0);
+        const timeTime = i * 2; // 每个时辰2小时，子时=0点，丑时=2点...
+        const solar = Solar.fromYmdHms(year, month, day, timeTime, 0, 0);
         const lunar = solar.getLunar();
         const eightChar = lunar.getEightChar();
 
@@ -84,7 +84,7 @@ export class LiuShiCalculator {
           year,
           month,
           day,
-          hour: timeInfo.hour,
+          time: timeInfo.time,
           index: i,
           ganZhi,
           naYin,
@@ -109,25 +109,25 @@ export class LiuShiCalculator {
 
   /**
    * 获取时辰名称
-   * @param hourIndex 时辰索引（0-11）
+   * @param timeIndex 时辰索引（0-11）
    * @returns 时辰名称
    */
-  static getHourName(hourIndex: number): string {
-    const hourNames = ['子时', '丑时', '寅时', '卯时', '辰时', '巳时', '午时', '未时', '申时', '酉时', '戌时', '亥时'];
-    return hourNames[hourIndex] || `${hourIndex}时`;
+  static getTimeName(timeIndex: number): string {
+    const timeNames = ['子时', '丑时', '寅时', '卯时', '辰时', '巳时', '午时', '未时', '申时', '酉时', '戌时', '亥时'];
+    return timeNames[timeIndex] || `${timeIndex}时`;
   }
 
   /**
    * 获取时辰时间范围
-   * @param hourIndex 时辰索引（0-11）
+   * @param timeIndex 时辰索引（0-11）
    * @returns 时间范围字符串
    */
-  static getHourRange(hourIndex: number): string {
-    const hourRanges = [
+  static getTimeRange(timeIndex: number): string {
+    const timeRanges = [
       '23:00-01:00', '01:00-03:00', '03:00-05:00', '05:00-07:00',
       '07:00-09:00', '09:00-11:00', '11:00-13:00', '13:00-15:00',
       '15:00-17:00', '17:00-19:00', '19:00-21:00', '21:00-23:00'
     ];
-    return hourRanges[hourIndex] || '';
+    return timeRanges[timeIndex] || '';
   }
 }

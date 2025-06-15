@@ -129,7 +129,7 @@ export class DaYunCalculator {
     qiYunDate?: string;
     qiYunMonth?: number;
     qiYunDay?: number;
-    qiYunHour?: number;
+    qiYunTime?: number;
   } {
     if (gender !== '1' && gender !== '0') {
       return {};
@@ -149,7 +149,7 @@ export class DaYunCalculator {
         qiYunDate,
         qiYunMonth: startSolar.getMonth(),
         qiYunDay: startSolar.getDay(),
-        qiYunHour: startSolar.getHour()
+        qiYunTime: startSolar.getHour()
       };
     } catch (e) {
       console.error('计算起运信息出错:', e);

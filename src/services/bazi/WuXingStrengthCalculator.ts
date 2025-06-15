@@ -63,7 +63,7 @@ export class WuXingStrengthCalculator {
       },
       // 全局信息
       eightChar: { yearStem: '', yearBranch: '', monthStem: '', monthBranch: '',
-                   dayStem: '', dayBranch: '', hourStem: '', hourBranch: '' },
+                   dayStem: '', dayBranch: '', timeStem: '', timeBranch: '' },
       season: '',
       monthBranch: ''
     };
@@ -83,9 +83,9 @@ export class WuXingStrengthCalculator {
       const monthBranch = eightChar.getMonthZhi();
       const dayStem = eightChar.getDayGan();
       const dayBranch = eightChar.getDayZhi();
-      const hourStem = eightChar.getTimeGan();
-      const hourBranch = eightChar.getTimeZhi();
-      console.log(`🔍 八字: ${yearStem}${yearBranch} ${monthStem}${monthBranch} ${dayStem}${dayBranch} ${hourStem}${hourBranch}`);
+      const timeStem = eightChar.getTimeGan();
+      const timeBranch = eightChar.getTimeZhi();
+      console.log(`🔍 八字: ${yearStem}${yearBranch} ${monthStem}${monthBranch} ${dayStem}${dayBranch} ${timeStem}${timeBranch}`);
 
       // 计算天干五行强度（使用统一配置）
       console.log(`🔍 天干: 年干${yearStem}(${BaziUtils.getStemWuXing(yearStem)})=${WuXingConfig.tianGanWeight.year}`);
@@ -93,16 +93,16 @@ export class WuXingStrengthCalculator {
       this.addWuXingStrengthWithDetails(BaziUtils.getStemWuXing(yearStem), WuXingConfig.tianGanWeight.year, strength, details, 'tianGan');
       this.addWuXingStrengthWithDetails(BaziUtils.getStemWuXing(monthStem), WuXingConfig.tianGanWeight.month, strength, details, 'tianGan');
       this.addWuXingStrengthWithDetails(BaziUtils.getStemWuXing(dayStem), WuXingConfig.tianGanWeight.day, strength, details, 'tianGan');
-      this.addWuXingStrengthWithDetails(BaziUtils.getStemWuXing(hourStem), WuXingConfig.tianGanWeight.hour, strength, details, 'tianGan');
+      this.addWuXingStrengthWithDetails(BaziUtils.getStemWuXing(timeStem), WuXingConfig.tianGanWeight.time, strength, details, 'tianGan');
 
       // 计算地支五行强度（使用统一配置）
       this.addWuXingStrengthWithDetails(BaziUtils.getBranchWuXing(yearBranch), WuXingConfig.diZhiWeight.year, strength, details, 'diZhi');
       this.addWuXingStrengthWithDetails(BaziUtils.getBranchWuXing(monthBranch), WuXingConfig.diZhiWeight.month, strength, details, 'diZhi');
       this.addWuXingStrengthWithDetails(BaziUtils.getBranchWuXing(dayBranch), WuXingConfig.diZhiWeight.day, strength, details, 'diZhi');
-      this.addWuXingStrengthWithDetails(BaziUtils.getBranchWuXing(hourBranch), WuXingConfig.diZhiWeight.hour, strength, details, 'diZhi');
+      this.addWuXingStrengthWithDetails(BaziUtils.getBranchWuXing(timeBranch), WuXingConfig.diZhiWeight.time, strength, details, 'diZhi');
 
       // 计算地支藏干五行强度
-      this.processHideGanForStrengthWithDetails([yearBranch, monthBranch, dayBranch, hourBranch], strength, details);
+      this.processHideGanForStrengthWithDetails([yearBranch, monthBranch, dayBranch, timeBranch], strength, details);
 
       // 计算纳音五行强度
       this.addNaYinWuXingStrengthWithDetails(eightChar, strength, details);
@@ -192,7 +192,7 @@ export class WuXingStrengthCalculator {
       WuXingConfig.diZhiCangWeight.year,   // 年支藏干权重
       WuXingConfig.diZhiCangWeight.month,  // 月支藏干权重
       WuXingConfig.diZhiCangWeight.day,    // 日支藏干权重
-      WuXingConfig.diZhiCangWeight.hour    // 时支藏干权重
+      WuXingConfig.diZhiCangWeight.time    // 时支藏干权重
     ];
 
     for (let branchIndex = 0; branchIndex < branches.length; branchIndex++) {
@@ -241,19 +241,19 @@ export class WuXingStrengthCalculator {
       const yearNaYin = eightChar.getYearNaYin();
       const monthNaYin = eightChar.getMonthNaYin();
       const dayNaYin = eightChar.getDayNaYin();
-      const hourNaYin = eightChar.getTimeNaYin();
+      const timeNaYin = eightChar.getTimeNaYin();
 
       // 提取纳音五行
       const yearNaYinWuXing = this.extractNaYinWuXing(yearNaYin);
       const monthNaYinWuXing = this.extractNaYinWuXing(monthNaYin);
       const dayNaYinWuXing = this.extractNaYinWuXing(dayNaYin);
-      const hourNaYinWuXing = this.extractNaYinWuXing(hourNaYin);
+      const timeNaYinWuXing = this.extractNaYinWuXing(timeNaYin);
 
       // 按权重添加纳音五行强度（使用统一配置）
       this.addWuXingStrengthWithDetails(yearNaYinWuXing, WuXingConfig.naYinWeight.year, strength, details, 'naYin');
       this.addWuXingStrengthWithDetails(monthNaYinWuXing, WuXingConfig.naYinWeight.month, strength, details, 'naYin');
       this.addWuXingStrengthWithDetails(dayNaYinWuXing, WuXingConfig.naYinWeight.day, strength, details, 'naYin');
-      this.addWuXingStrengthWithDetails(hourNaYinWuXing, WuXingConfig.naYinWeight.hour, strength, details, 'naYin');
+      this.addWuXingStrengthWithDetails(timeNaYinWuXing, WuXingConfig.naYinWeight.time, strength, details, 'naYin');
 
     } catch (error) {
       console.error('计算纳音五行强度出错:', error);
@@ -391,11 +391,11 @@ export class WuXingStrengthCalculator {
       const monthBranch = eightChar.getMonthZhi();
       const dayStem = eightChar.getDayGan();
       const dayBranch = eightChar.getDayZhi();
-      const hourStem = eightChar.getTimeGan();
-      const hourBranch = eightChar.getTimeZhi();
+      const timeStem = eightChar.getTimeGan();
+      const timeBranch = eightChar.getTimeZhi();
 
-      const stems = [yearStem, monthStem, dayStem, hourStem];
-      const branches = [yearBranch, monthBranch, dayBranch, hourBranch];
+      const stems = [yearStem, monthStem, dayStem, timeStem];
+      const branches = [yearBranch, monthBranch, dayBranch, timeBranch];
 
       // 检查天干五合
       this.checkStemCombinationWithDetails(stems, strength, details);
@@ -566,18 +566,18 @@ export class WuXingStrengthCalculator {
    * @param monthBranch 月支
    * @param dayStem 日干
    * @param dayBranch 日支
-   * @param hourStem 时干
-   * @param hourBranch 时支
+   * @param timeStem 时干
+   * @param timeBranch 时支
    * @returns 五行强度结果
    */
   static calculateWuXingStrengthFromBazi(
     yearStem: string, yearBranch: string,
     monthStem: string, monthBranch: string,
     dayStem: string, dayBranch: string,
-    hourStem: string, hourBranch: string
+    timeStem: string, timeBranch: string
   ): any {
     console.log('🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 WuXingStrengthCalculator.calculateWuXingStrengthFromBazi 开始 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀');
-    console.log('🔍 独立计算八字:', `${yearStem}${yearBranch} ${monthStem}${monthBranch} ${dayStem}${dayBranch} ${hourStem}${hourBranch}`);
+    console.log('🔍 独立计算八字:', `${yearStem}${yearBranch} ${monthStem}${monthBranch} ${dayStem}${dayBranch} ${timeStem}${timeBranch}`);
 
     // 创建简化的八字对象用于计算
     const simpleBazi = {
@@ -587,14 +587,14 @@ export class WuXingStrengthCalculator {
       getMonthZhi: () => monthBranch,
       getDayGan: () => dayStem,
       getDayZhi: () => dayBranch,
-      getTimeGan: () => hourStem,
-      getTimeZhi: () => hourBranch,
+      getTimeGan: () => timeStem,
+      getTimeZhi: () => timeBranch,
 
       // 纳音方法（简化实现）
       getYearNaYin: () => BaziCalculator.getNaYin(yearStem + yearBranch),
       getMonthNaYin: () => BaziCalculator.getNaYin(monthStem + monthBranch),
       getDayNaYin: () => BaziCalculator.getNaYin(dayStem + dayBranch),
-      getTimeNaYin: () => BaziCalculator.getNaYin(hourStem + hourBranch)
+      getTimeNaYin: () => BaziCalculator.getNaYin(timeStem + timeBranch)
     };
 
     // 使用现有的计算方法

@@ -534,7 +534,7 @@ export class BaziLinkToolbar {
         sections.push(`- **出生日期**: ${this.baziInfo.solarDate || '未知'}`);
         sections.push(`- **农历**: ${this.baziInfo.lunarDate || '未知'}`);
         sections.push(`- **生肖**: ${this.baziInfo.yearShengXiao || '未知'}`);
-        sections.push(`- **八字**: ${this.baziInfo.yearPillar || ''} ${this.baziInfo.monthPillar || ''} ${this.baziInfo.dayPillar || ''} ${this.baziInfo.hourPillar || ''}`);
+        sections.push(`- **八字**: ${this.baziInfo.yearPillar || ''} ${this.baziInfo.monthPillar || ''} ${this.baziInfo.dayPillar || ''} ${this.baziInfo.timePillar || ''}`);
         sections.push('');
         sections.push('<!-- 基本信息区块 结束 -->');
         sections.push('');
@@ -1038,7 +1038,7 @@ export class BaziLinkToolbar {
         }
 
         // 检查各个柱的神煞
-        ['yearShenSha', 'monthShenSha', 'dayShenSha', 'hourShenSha'].forEach(key => {
+        ['yearShenSha', 'monthShenSha', 'dayShenSha', 'timeShenSha'].forEach(key => {
             const shenShaArray = (this.baziInfo as any)[key];
             if (Array.isArray(shenShaArray)) {
                 shenShaArray.forEach((shenSha: any) => {

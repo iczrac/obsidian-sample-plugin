@@ -236,7 +236,7 @@ export class LinkService {
         }
 
         // 从各柱神煞字段收集（不区分柱位）
-        ['yearShenSha', 'monthShenSha', 'dayShenSha', 'hourShenSha'].forEach(key => {
+        ['yearShenSha', 'monthShenSha', 'dayShenSha', 'timeShenSha'].forEach(key => {
             const shenShaArray = baziInfo[key];
             if (Array.isArray(shenShaArray)) {
                 shenShaArray.forEach((shenSha: any) => {

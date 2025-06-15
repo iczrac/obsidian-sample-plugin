@@ -32,15 +32,15 @@ export class BaziCalculator {
 
   /**
    * 计算命宫
-   * @param hourStem 时干
-   * @param hourBranch 时支
+   * @param timeStem 时干
+   * @param timeBranch 时支
    * @returns 命宫干支
    */
-  static calculateMingGong(hourStem: string, hourBranch: string): string {
+  static calculateMingGong(timeStem: string, timeBranch: string): string {
     // 计算时干的索引
-    const stemIndex = BaziUtils.getStemIndex(hourStem);
+    const stemIndex = BaziUtils.getStemIndex(timeStem);
     // 计算时支的索引
-    const branchIndex = BaziUtils.getBranchIndex(hourBranch);
+    const branchIndex = BaziUtils.getBranchIndex(timeBranch);
 
     if (stemIndex === -1 || branchIndex === -1) {
       return "未知";
