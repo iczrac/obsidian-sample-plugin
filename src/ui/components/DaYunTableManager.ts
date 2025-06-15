@@ -397,4 +397,22 @@ export class DaYunTableManager {
     console.log(`神煞说明: ${shenSha}`);
     // TODO: 实现神煞说明弹窗
   }
+
+  /**
+   * 更新神煞显示设置
+   */
+  updateShenShaSettings(showShenSha: any) {
+    if (!this.daYunTable) return;
+
+    const shenShaRow = this.daYunTable.querySelector('.bazi-dayun-shensha-row');
+    if (shenShaRow) {
+      if (showShenSha.daYun === false) {
+        (shenShaRow as HTMLElement).style.display = 'none';
+        console.log('🎯 隐藏大运神煞行');
+      } else {
+        (shenShaRow as HTMLElement).style.display = '';
+        console.log('🎯 显示大运神煞行');
+      }
+    }
+  }
 }

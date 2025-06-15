@@ -335,24 +335,78 @@ export class BaziTableManager {
    * 创建神煞行
    */
   private createShenShaRow(tbody: HTMLElement) {
+    // 检查是否应该显示神煞
+    if (this.baziInfo.showShenSha && this.baziInfo.showShenSha.siZhu === false) {
+      return;
+    }
+
+    // 解析神煞数据
+    const shenShaData = this.parseShenShaData();
+
+    // 如果没有神煞数据，不创建行
+    if (!shenShaData.hasAny) {
+      return;
+    }
+
     const shenShaRow = tbody.createEl('tr', { cls: 'bazi-shensha-row' });
     shenShaRow.createEl('td', { text: '神煞', cls: 'bazi-table-label' });
 
     // 年柱神煞
     const yearShenShaCell = shenShaRow.createEl('td');
-    this.createShenShaContent(yearShenShaCell, this.baziInfo.yearShenSha);
+    this.createShenShaContent(yearShenShaCell, shenShaData.year);
 
     // 月柱神煞
     const monthShenShaCell = shenShaRow.createEl('td');
-    this.createShenShaContent(monthShenShaCell, this.baziInfo.monthShenSha);
+    this.createShenShaContent(monthShenShaCell, shenShaData.month);
 
     // 日柱神煞
     const dayShenShaCell = shenShaRow.createEl('td');
-    this.createShenShaContent(dayShenShaCell, this.baziInfo.dayShenSha);
+    this.createShenShaContent(dayShenShaCell, shenShaData.day);
 
     // 时柱神煞
     const timeShenShaCell = shenShaRow.createEl('td');
-    this.createShenShaContent(timeShenShaCell, this.baziInfo.timeShenSha);
+    this.createShenShaContent(timeShenShaCell, shenShaData.time);
+  }
+
+  /**
+   * 解析神煞数据，兼容新旧格式
+   */
+  private parseShenShaData() {
+    const result = {
+      year: [] as string[],
+      month: [] as string[],
+      day: [] as string[],
+      time: [] as string[],
+      hasAny: false
+    };
+
+    // 优先使用新格式（分柱神煞）
+    if (this.baziInfo.yearShenSha || this.baziInfo.monthShenSha ||
+        this.baziInfo.dayShenSha || this.baziInfo.timeShenSha) {
+      result.year = this.baziInfo.yearShenSha || [];
+      result.month = this.baziInfo.monthShenSha || [];
+      result.day = this.baziInfo.dayShenSha || [];
+      result.time = this.baziInfo.timeShenSha || [];
+    }
+    // 兼容旧格式（带柱位前缀的神煞数组）
+    else if (this.baziInfo.shenSha && this.baziInfo.shenSha.length > 0) {
+      this.baziInfo.shenSha.forEach(shenSha => {
+        if (shenSha.startsWith('年柱:')) {
+          result.year.push(shenSha.substring(3));
+        } else if (shenSha.startsWith('月柱:')) {
+          result.month.push(shenSha.substring(3));
+        } else if (shenSha.startsWith('日柱:')) {
+          result.day.push(shenSha.substring(3));
+        } else if (shenSha.startsWith('时柱:')) {
+          result.time.push(shenSha.substring(3));
+        }
+      });
+    }
+
+    result.hasAny = result.year.length > 0 || result.month.length > 0 ||
+                    result.day.length > 0 || result.time.length > 0;
+
+    return result;
   }
 
   /**

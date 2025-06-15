@@ -5,6 +5,8 @@ import { HorizontalSelectorManager } from './components/interactive/HorizontalSe
 import { ModalManager } from './components/interactive/ModalManager';
 import { StyleAndUtilsManager } from './components/interactive/StyleAndUtilsManager';
 import { DaYunTableManager } from './components/DaYunTableManager';
+import { LiuNianTableManager } from './components/LiuNianTableManager';
+import { LiuYueTableManager } from './components/LiuYueTableManager';
 import { BaziService } from '../services/BaziService';
 import { ExplanationServiceManager } from '../services/ExplanationServiceManager';
 import { PillarCalculationService } from '../services/bazi/PillarCalculationService';
@@ -30,6 +32,8 @@ export class InteractiveBaziView {
   private modalManager: ModalManager;
   private styleAndUtilsManager: StyleAndUtilsManager;
   private daYunTableManager: DaYunTableManager;
+  private liuNianTableManager: LiuNianTableManager;
+  private liuYueTableManager: LiuYueTableManager;
   private interactionManager: InteractionManager;
   private sectionRenderManager: SectionRenderManager;
 
@@ -106,6 +110,20 @@ export class InteractiveBaziView {
       this.container,
       this.baziInfo,
       this.plugin
+    );
+
+    // 初始化流年表格管理器
+    this.liuNianTableManager = new LiuNianTableManager(
+      this.container, // 临时容器，实际使用时会传入正确的容器
+      this.baziInfo,
+      (liunian) => this.handleLiuNianSelect(liunian)
+    );
+
+    // 初始化流月表格管理器
+    this.liuYueTableManager = new LiuYueTableManager(
+      this.container, // 临时容器，实际使用时会传入正确的容器
+      this.baziInfo,
+      (liuyue) => this.handleLiuYueSelect(liuyue)
     );
 
     // 初始化交互管理器
@@ -400,15 +418,12 @@ export class InteractiveBaziView {
   private updateLiuNianTable(daYunIndex: number) {
     if (!this.liuNianTable) return;
 
-    // 清空现有内容
-    this.liuNianTable.empty();
-
     // 获取大运数据
     const daYun = this.baziInfo.daYun?.[daYunIndex];
     if (!daYun) {
-      this.liuNianTable.createEl('div', { 
-        text: '无法获取大运数据', 
-        cls: 'bazi-empty-message' 
+      this.liuNianTable.createEl('div', {
+        text: '无法获取大运数据',
+        cls: 'bazi-empty-message'
       });
       return;
     }
@@ -416,8 +431,13 @@ export class InteractiveBaziView {
     // 生成流年数据
     const liuNianData = this.generateLiuNianForDaYun(daYun);
 
-    // 创建流年表格
-    this.createLiuNianTable(this.liuNianTable, liuNianData);
+    // 使用流年表格管理器创建表格
+    this.liuNianTableManager = new LiuNianTableManager(
+      this.liuNianTable,
+      this.baziInfo,
+      (liunian) => this.handleLiuNianSelect(liunian)
+    );
+    this.liuNianTableManager.createLiuNianTable(liuNianData);
   }
 
   /**
@@ -637,14 +657,16 @@ export class InteractiveBaziView {
   private updateLiuYueTable(year: number) {
     if (!this.liuYueTable) return;
 
-    // 清空现有内容
-    this.liuYueTable.empty();
-
     // 生成流月数据
     const liuYueData = DataGenerationService.generateLiuYueForYear(year);
 
-    // 创建流月表格
-    this.createLiuYueTable(this.liuYueTable, liuYueData);
+    // 使用流月表格管理器创建表格
+    this.liuYueTableManager = new LiuYueTableManager(
+      this.liuYueTable,
+      this.baziInfo,
+      (liuyue) => this.handleLiuYueSelect(liuyue)
+    );
+    this.liuYueTableManager.createLiuYueTable(liuYueData);
   }
 
   /**
@@ -744,6 +766,39 @@ export class InteractiveBaziView {
   private handleLiuYueSelect(liuYue: any) {
     this.selectLiuYue(liuYue);
   }
+
+  /**
+   * 更新神煞显示设置
+   * @param showShenSha 神煞显示设置
+   */
+  public updateShenShaSettings(showShenSha: any): void {
+    this.baziInfo.showShenSha = showShenSha;
+    console.log('🎯 更新神煞显示设置:', showShenSha);
+
+    // 更新八字表格管理器的神煞设置
+    if (this.baziTableManager) {
+      // BaziTableManager 会根据 baziInfo.showShenSha 自动处理显示逻辑
+      // 重新创建表格以应用新设置
+      this.createBaziTable();
+    }
+
+    // 更新大运表格管理器的神煞设置
+    if (this.daYunTableManager) {
+      this.daYunTableManager.updateShenShaSettings(showShenSha);
+    }
+
+    // 更新流年表格管理器的神煞设置
+    if (this.liuNianTableManager) {
+      this.liuNianTableManager.updateShenShaSettings(showShenSha);
+    }
+
+    // 更新流月表格管理器的神煞设置
+    if (this.liuYueTableManager) {
+      this.liuYueTableManager.updateShenShaSettings(showShenSha);
+    }
+  }
+
+
 
   /**
    * 处理流日选择
