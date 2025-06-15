@@ -18,6 +18,7 @@ import { ShiErChangShengCalculator } from './bazi/ShiErChangShengCalculator';
 import { LiuRiCalculator } from './bazi/LiuRiCalculator';
 import { LiuShiCalculator } from './bazi/LiuShiCalculator';
 import { LiuYueCalculator } from './bazi/LiuYueCalculator';
+import { QiYunCalculator } from './bazi/QiYunCalculator';
 
 /**
  * 八字服务类，封装lunar-typescript的八字功能
@@ -30,9 +31,12 @@ export class BaziService {
    * @param month 月
    * @param day 日
    * @param time 时（0-23）
+   * @param gender 性别
+   * @param sect 八字流派
+   * @param qiYunSect 起运流派
    * @returns 八字信息对象
    */
-  static getBaziFromDate(year: number, month: number, day: number, time = 0, gender = '', sect = '2'): BaziInfo {
+  static getBaziFromDate(year: number, month: number, day: number, time = 0, gender = '', sect = '2', qiYunSect = 1): BaziInfo {
     // 创建阳历对象
     const solar = Solar.fromYmdHms(year, month, day, time, 0, 0);
     // 转换为农历
@@ -40,7 +44,7 @@ export class BaziService {
     // 获取八字
     const eightChar = lunar.getEightChar();
 
-    return this.formatBaziInfo(solar, lunar, eightChar, gender, sect);
+    return this.formatBaziInfo(solar, lunar, eightChar, gender, sect, undefined, qiYunSect);
   }
 
   /**
@@ -50,9 +54,12 @@ export class BaziService {
    * @param day 农历日
    * @param time 时（0-23）
    * @param isLeapMonth 是否闰月
+   * @param gender 性别
+   * @param sect 八字流派
+   * @param qiYunSect 起运流派
    * @returns 八字信息对象
    */
-  static getBaziFromLunarDate(year: number, month: number, day: number, time = 0, isLeapMonth = false, gender = '', sect = '2'): BaziInfo {
+  static getBaziFromLunarDate(year: number, month: number, day: number, time = 0, isLeapMonth = false, gender = '', sect = '2', qiYunSect = 1): BaziInfo {
     // 创建农历对象
     // Lunar.fromYmdHms只接受6个参数，不支持isLeapMonth参数
     // 需要使用其他方法处理闰月
@@ -69,18 +76,19 @@ export class BaziService {
     // 获取八字
     const eightChar = lunar.getEightChar();
 
-    return this.formatBaziInfo(solar, lunar, eightChar, gender, sect);
+    return this.formatBaziInfo(solar, lunar, eightChar, gender, sect, undefined, qiYunSect);
   }
 
   /**
    * 解析八字字符串
    * @param baziStr 八字字符串，如"甲子 乙丑 丙寅 丁卯"
+   * @param specifiedYear 指定的年份，如果提供则使用此年份而不是反推
    * @param gender 性别（1-男，0-女）
    * @param sect 八字流派（1或2）
-   * @param specifiedYear 指定的年份，如果提供则使用此年份而不是反推
+   * @param qiYunSect 起运流派（1或2）
    * @returns 八字信息对象
    */
-  static parseBaziString(baziStr: string, specifiedYear?: string, gender = '', sect = '2'): BaziInfo {
+  static parseBaziString(baziStr: string, specifiedYear?: string, gender = '', sect = '2', qiYunSect = 1): BaziInfo {
     console.log('🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 BaziService.parseBaziString 开始 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥');
     console.log('🔥 ========== BaziService.parseBaziString 开始 ==========');
     console.log('🔥 输入参数:');
@@ -242,7 +250,7 @@ export class BaziService {
 
       // 使用formatBaziInfo获取完整的八字信息
       // 注意：传递用户输入八字信息，对五行强度计算使用虚拟八字对象，对大运计算使用原始八字对象
-      const baziInfo = this.formatBaziInfo(solar, lunar, eightChar, gender, sect, userInputBazi);
+      const baziInfo = this.formatBaziInfo(solar, lunar, eightChar, gender, sect, userInputBazi, qiYunSect);
 
       console.log('🔥 ✅ formatBaziInfo已使用虚拟八字对象，计算完成');
 
@@ -405,16 +413,28 @@ export class BaziService {
     if ((gender === '1' || gender === '0') && eightChar && solar) {
       console.log('🔥 ✅ 开始计算大运流年信息');
       try {
-        // 计算起运信息
+        // 使用新的起运计算器
         console.log('🔥 计算起运信息...');
-        const qiYunInfo = DaYunCalculator.calculateQiYunInfo(eightChar, solar, gender);
-        qiYunYear = qiYunInfo.qiYunYear;
-        qiYunAge = qiYunInfo.qiYunAge;
-        qiYunDate = qiYunInfo.qiYunDate;
-        qiYunMonth = qiYunInfo.qiYunMonth;
-        qiYunDay = qiYunInfo.qiYunDay;
-        qiYunTime = qiYunInfo.qiYunTime;
-        console.log('🔥 起运信息计算完成:', qiYunInfo);
+        try {
+          const qiYunInfo = QiYunCalculator.calculateQiYun(eightChar, parseInt(gender), qiYunSect);
+          qiYunYear = qiYunInfo.startYear;
+          qiYunMonth = qiYunInfo.startMonth;
+          qiYunDay = qiYunInfo.startDay;
+          qiYunTime = qiYunInfo.startHour;
+          qiYunAge = qiYunInfo.startYear; // 起运年数就是起运年龄
+          qiYunDate = qiYunInfo.startSolar.toYmd(); // 格式化起运日期
+          console.log('🔥 ✅ QiYunCalculator: 起运信息计算完成:', qiYunInfo);
+        } catch (error) {
+          console.error('🔥 ❌ QiYunCalculator: 起运计算失败，回退到旧方法', error);
+          // 回退到旧的计算方法
+          const qiYunInfo = DaYunCalculator.calculateQiYunInfo(eightChar, solar, gender);
+          qiYunYear = qiYunInfo.qiYunYear;
+          qiYunAge = qiYunInfo.qiYunAge;
+          qiYunDate = qiYunInfo.qiYunDate;
+          qiYunMonth = qiYunInfo.qiYunMonth;
+          qiYunDay = qiYunInfo.qiYunDay;
+          qiYunTime = qiYunInfo.qiYunTime;
+        }
 
         // 计算大运信息
         console.log('🔥 计算大运信息...');
@@ -574,9 +594,10 @@ export class BaziService {
    * @param gender 性别（1-男，0-女）
    * @param sect 八字流派（1或2）
    * @param userInputBazi 可选的用户输入八字信息
+   * @param qiYunSect 起运流派（1或2）
    * @returns 格式化后的八字信息
    */
-  private static formatBaziInfo(solar: Solar, lunar: Lunar, eightChar: EightChar, gender = '', sect = '2', userInputBazi?: any): BaziInfo {
+  private static formatBaziInfo(solar: Solar, lunar: Lunar, eightChar: EightChar, gender = '', sect = '2', userInputBazi?: any, qiYunSect = 1): BaziInfo {
     // 设置八字流派
     eightChar.setSect(parseInt(sect));
 
@@ -751,14 +772,35 @@ export class BaziService {
 
     // 计算大运和流年信息
     if (gender === '1' || gender === '0') {
-      // 计算起运信息
-      const qiYunInfo = DaYunCalculator.calculateQiYunInfo(eightChar, solar, gender);
-      qiYunYear = qiYunInfo.qiYunYear;
-      qiYunAge = qiYunInfo.qiYunAge;
-      qiYunDate = qiYunInfo.qiYunDate;
-      qiYunMonth = qiYunInfo.qiYunMonth;
-      qiYunDay = qiYunInfo.qiYunDay;
-      qiYunTime = qiYunInfo.qiYunTime;
+      // 使用新的起运计算器
+      try {
+        const qiYunInfo = QiYunCalculator.calculateQiYun(eightChar, parseInt(gender), qiYunSect);
+        qiYunYear = qiYunInfo.startYear;
+        qiYunMonth = qiYunInfo.startMonth;
+        qiYunDay = qiYunInfo.startDay;
+        qiYunTime = qiYunInfo.startHour;
+        qiYunAge = qiYunInfo.startYear; // 起运年数就是起运年龄
+        qiYunDate = qiYunInfo.startSolar.toYmd(); // 格式化起运日期
+
+        console.log('✅ QiYunCalculator: 起运信息计算完成', {
+          startYear: qiYunInfo.startYear,
+          startMonth: qiYunInfo.startMonth,
+          startDay: qiYunInfo.startDay,
+          startHour: qiYunInfo.startHour,
+          startDate: qiYunInfo.startSolar.toYmd(),
+          sect: qiYunInfo.sect
+        });
+      } catch (error) {
+        console.error('❌ QiYunCalculator: 起运计算失败，回退到旧方法', error);
+        // 回退到旧的计算方法
+        const qiYunInfo = DaYunCalculator.calculateQiYunInfo(eightChar, solar, gender);
+        qiYunYear = qiYunInfo.qiYunYear;
+        qiYunAge = qiYunInfo.qiYunAge;
+        qiYunDate = qiYunInfo.qiYunDate;
+        qiYunMonth = qiYunInfo.qiYunMonth;
+        qiYunDay = qiYunInfo.qiYunDay;
+        qiYunTime = qiYunInfo.qiYunTime;
+      }
 
       // 计算大运信息
       daYun = DaYunCalculator.calculateDaYun(eightChar, solar, gender, dayStem, 10);

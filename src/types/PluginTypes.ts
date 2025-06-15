@@ -48,6 +48,7 @@ export interface BaziPluginSettings {
 	autoUpdateCodeBlock: boolean;
 	codeBlockUpdateDelay: number;
 	baziSect: string; // 八字流派
+	qiYunSect: number; // 起运流派：1为流派1，2为流派2
 	showShenSha: {
 		siZhu: boolean; // 四柱神煞
 		daYun: boolean; // 大运神煞

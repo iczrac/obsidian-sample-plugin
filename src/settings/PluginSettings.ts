@@ -12,6 +12,7 @@ export const DEFAULT_SETTINGS: BaziPluginSettings = {
 	autoUpdateCodeBlock: true, // 自动更新代码块
 	codeBlockUpdateDelay: 500, // 代码块更新延迟（毫秒）
 	baziSect: '2', // 默认使用流派2（晚子时日柱算当天）
+	qiYunSect: 1, // 默认使用起运流派1
 	showShenSha: {
 		siZhu: true, // 默认显示四柱神煞
 		daYun: true, // 默认显示大运神煞
@@ -68,6 +69,21 @@ export class BaziSettingTab extends PluginSettingTab {
 						this.plugin.settings.baziSect = value;
 						await this.plugin.saveSettings();
 						new Notice('八字流派已更改为: ' + (value === '1' ? '流派1' : '流派2'), 3000);
+					});
+			});
+
+		new Setting(containerEl)
+			.setName('起运流派')
+			.setDesc('选择起运计算的流派。流派1：按3天=1年换算，精度到天；流派2：按4320分钟=1年换算，精度到小时')
+			.addDropdown(dropdown => {
+				dropdown
+					.addOption('1', '流派1 (3天=1年，精度到天)')
+					.addOption('2', '流派2 (4320分钟=1年，精度到小时)')
+					.setValue(this.plugin.settings.qiYunSect.toString())
+					.onChange(async (value) => {
+						this.plugin.settings.qiYunSect = parseInt(value);
+						await this.plugin.saveSettings();
+						new Notice('起运流派已更改为: ' + (value === '1' ? '流派1' : '流派2'), 3000);
 					});
 			});
 

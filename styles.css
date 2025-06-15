@@ -1799,6 +1799,102 @@ td.wuxing-tu, span.wuxing-tu, .wuxing-tu {
   background-color: var(--interactive-accent-hover);
 }
 
+/* 起运信息样式 */
+.bazi-qiyun-info {
+  margin-bottom: 15px;
+  padding: 10px;
+  background-color: var(--background-secondary);
+  border-radius: 6px;
+  border-left: 3px solid var(--interactive-accent);
+}
+
+.bazi-qiyun-details {
+  font-size: 0.9em;
+  color: var(--text-normal);
+}
+
+.bazi-qiyun-main {
+  font-weight: 600;
+  color: var(--interactive-accent);
+}
+
+.bazi-qiyun-date {
+  color: var(--text-muted);
+  font-size: 0.85em;
+}
+
+.bazi-qiyun-placeholder {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.bazi-qiyun-error {
+  color: var(--text-error);
+  font-size: 0.85em;
+}
+
+/* 扩展柱样式 */
+.bazi-extended-column {
+  background-color: rgba(var(--interactive-accent-rgb), 0.1);
+  border-left: 2px solid var(--interactive-accent);
+  position: relative;
+  animation: slideInFromRight 0.3s ease-out;
+}
+
+@keyframes slideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.bazi-clear-extended {
+  color: var(--text-error);
+  cursor: pointer;
+  font-size: 0.8em;
+  margin-left: 5px;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.bazi-clear-extended:hover {
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+/* 扩展柱表头样式 */
+.bazi-view-table th.bazi-extended-column {
+  background-color: rgba(var(--interactive-accent-rgb), 0.15);
+  color: var(--interactive-accent);
+  font-weight: bold;
+  text-align: center;
+}
+
+/* 扩展柱单元格样式 */
+.bazi-view-table td.bazi-extended-column {
+  text-align: center;
+  font-weight: 500;
+}
+
+/* 扩展柱中的标签样式 */
+.bazi-extended-column .shishen-tag-small,
+.bazi-extended-column .dishi-tag-small,
+.bazi-extended-column .xunkong-tag-small {
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(var(--interactive-accent-rgb), 0.3);
+}
+
+/* 扩展柱神煞样式 */
+.bazi-extended-column .bazi-shensha {
+  background-color: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(var(--interactive-accent-rgb), 0.3);
+}
+}
+
 /* 表格标题栏样式 */
 .bazi-table-label {
   font-weight: bold;

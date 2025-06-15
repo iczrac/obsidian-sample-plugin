@@ -290,7 +290,8 @@ export class BaziSettingsModal extends Modal {
       this.currentDate.day,
       this.currentDate.time,
       this.gender, // 传递性别参数
-      this.baziSect // 传递流派参数
+      this.baziSect, // 传递流派参数
+      1 // 默认使用起运流派1
     );
 
     // 添加显示选项

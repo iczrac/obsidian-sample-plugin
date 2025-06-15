@@ -132,8 +132,8 @@ export class CodeBlockProcessor {
 			console.log('🔍 性别参数处理结果:', gender);
 
 			// 获取八字信息
-			console.log('📊 调用BaziService.getBaziFromDate，参数:', {year, month, day, time, gender, sect: this.plugin.settings.baziSect});
-			const baziInfo = BaziService.getBaziFromDate(year, month, day, time, gender, this.plugin.settings.baziSect);
+			console.log('📊 调用BaziService.getBaziFromDate，参数:', {year, month, day, time, gender, sect: this.plugin.settings.baziSect, qiYunSect: this.plugin.settings.qiYunSect});
+			const baziInfo = BaziService.getBaziFromDate(year, month, day, time, gender, this.plugin.settings.baziSect, this.plugin.settings.qiYunSect);
 			console.log('📊 BaziService返回结果:', baziInfo);
 
 			// 添加姓名信息
@@ -221,7 +221,8 @@ export class CodeBlockProcessor {
 			console.log('🔥 参数 bazi:', params.bazi);
 			console.log('🔥 参数 year:', params.year);
 			console.log('🔥 参数 gender:', gender);
-			const baziInfo = BaziService.parseBaziString(params.bazi!, params.year, gender);
+			console.log('🔥 参数 qiYunSect:', this.plugin.settings.qiYunSect);
+			const baziInfo = BaziService.parseBaziString(params.bazi!, params.year, gender, this.plugin.settings.baziSect, this.plugin.settings.qiYunSect);
 			console.log('🔥🔥🔥🔥🔥 BaziService.parseBaziString 返回结果:', baziInfo);
 			console.log('🔥 返回结果中的 wuXingStrength:', baziInfo.wuXingStrength);
 
@@ -303,7 +304,7 @@ export class CodeBlockProcessor {
 			console.log('🌙 性别参数处理结果:', gender);
 
 			// 获取八字信息（使用农历日期）
-			const baziInfo = BaziService.getBaziFromLunarDate(year, month, day, time, false, gender, this.plugin.settings.baziSect);
+			const baziInfo = BaziService.getBaziFromLunarDate(year, month, day, time, false, gender, this.plugin.settings.baziSect, this.plugin.settings.qiYunSect);
 			console.log('🌙 农历八字结果:', baziInfo);
 
 			// 生成唯一ID
@@ -364,7 +365,7 @@ export class CodeBlockProcessor {
 			console.log('⏰ 性别参数处理结果:', gender);
 
 			// 获取八字信息
-			const baziInfo = BaziService.getBaziFromDate(year, month, day, time, gender, this.plugin.settings.baziSect);
+			const baziInfo = BaziService.getBaziFromDate(year, month, day, time, gender, this.plugin.settings.baziSect, this.plugin.settings.qiYunSect);
 			console.log('⏰ 当前时间八字结果:', baziInfo);
 
 			// 生成唯一ID

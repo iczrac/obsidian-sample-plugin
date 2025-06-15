@@ -1,5 +1,5 @@
 import { Solar } from 'lunar-typescript';
-import { BaziInfo } from '../types/BaziInfo';
+import { BaziInfo, DaYunInfo, LiuNianInfo, LiuYueInfo } from '../types/BaziInfo';
 import { ShenShaExplanationService } from '../services/ShenShaExplanationService';
 import { WuXingExplanationService } from '../services/WuXingExplanationService';
 import { MarkdownView, Notice } from 'obsidian';
@@ -11,6 +11,26 @@ import { ShiShenCalculator } from '../services/bazi/ShiShenCalculator';
 import { BaziCalculator } from '../services/bazi/BaziCalculator';
 import { BaziUtils } from '../services/bazi/BaziUtils';
 import { WuXingConfig } from '../config/WuXingConfig';
+
+/**
+ * 扩展柱信息接口
+ */
+interface ExtendedPillarInfo {
+  type: 'dayun' | 'liunian' | 'liuyue' | 'liuri' | 'liushi';
+  name: string; // 显示名称，如"大运"、"流年"等
+  stem: string; // 天干
+  branch: string; // 地支
+  ganZhi: string; // 干支组合
+  hideGan: string; // 藏干
+  shiShenGan: string; // 天干十神
+  shiShenZhi: string[]; // 地支藏干十神
+  diShi: string; // 地势
+  naYin: string; // 纳音
+  xunKong: string; // 旬空
+  shengXiao: string; // 生肖
+  shenSha: string[]; // 神煞
+  wuXing: string; // 五行
+}
 
 /**
  * 交互式八字命盘视图
@@ -28,6 +48,22 @@ export class InteractiveBaziView {
 
   // 十二长生显示模式：0=地势，1=自坐，2=月令
   private changShengMode: number = 0;
+
+  // 扩展柱状态管理
+  private extendedPillars: ExtendedPillarInfo[] = [];
+  private baziTable: HTMLTableElement | null = null;
+  private currentExtendedLevel: 'none' | 'dayun' | 'liunian' | 'liuyue' | 'liuri' | 'liushi' = 'none';
+
+  // 当前选中的流月数据
+  private currentSelectedLiuYue: any = null;
+
+  // 当前大运的流年数据缓存
+  private currentDaYunLiuNianData: any[] = [];
+
+  // 强制更新状态跟踪
+  private lastExtendedDaYunIndex = -1; // 记录上次扩展的大运索引
+  private lastExtendedLiuNianYear = 0; // 记录上次扩展的流年年份
+
   private readonly CHANG_SHENG_MODES = [
     { key: 'diShi', name: '地势', description: '日干在各地支的十二长生状态' },
     { key: 'ziZuo', name: '自坐', description: '各柱天干相对于各柱地支的十二长生状态' },
@@ -602,6 +638,15 @@ export class InteractiveBaziView {
   }
 
   /**
+   * 重置扩展状态
+   */
+  private resetExtendedState() {
+    if (this.extendedPillars.length > 0) {
+      this.clearAllExtendedColumns();
+    }
+  }
+
+  /**
    * 添加表格单元格监听器
    */
   private addTableCellListeners() {
@@ -667,6 +712,621 @@ export class InteractiveBaziView {
     });
   }
 
+
+
+  /**
+   * 添加单个扩展列
+   * @param pillarInfo 扩展柱信息
+   */
+  private addExtendedColumn(pillarInfo: ExtendedPillarInfo) {
+    if (!this.baziTable) {
+      console.error('八字表格未初始化');
+      return;
+    }
+
+    // 添加表头列
+    const headerRow = this.baziTable.querySelector('thead tr');
+    if (headerRow) {
+      const extendedHeader = headerRow.createEl('th', {
+        cls: 'bazi-extended-column'
+      });
+
+      // 正常显示表头
+      extendedHeader.textContent = pillarInfo.name;
+      // 添加清除按钮
+      const clearBtn = extendedHeader.createEl('span', {
+        text: ' ✕',
+        cls: 'bazi-clear-extended',
+        attr: { 'title': '清除所有扩展柱' }
+      });
+      clearBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.clearAllExtendedColumns();
+      });
+    }
+
+    // 为每一行添加扩展列
+    const tbody = this.baziTable.querySelector('tbody');
+    if (tbody) {
+      const rows = tbody.querySelectorAll('tr');
+
+      // 天干行
+      if (rows[0]) {
+        const stemCell = rows[0].createEl('td', {
+          text: pillarInfo.stem,
+          cls: 'bazi-extended-column'
+        });
+        this.applyStemWuXingColor(stemCell, pillarInfo.stem);
+      }
+
+      // 地支行
+      if (rows[1]) {
+        const branchCell = rows[1].createEl('td', {
+          text: pillarInfo.branch,
+          cls: 'bazi-extended-column'
+        });
+        this.applyBranchWuXingColor(branchCell, pillarInfo.branch);
+      }
+
+      // 藏干行
+      if (rows[2]) {
+        const hideGanCell = rows[2].createEl('td', { cls: 'bazi-extended-column' });
+        this.createColoredHideGan(hideGanCell, pillarInfo.hideGan);
+      }
+
+      // 十神行
+      if (rows[3]) {
+        const shiShenCell = rows[3].createEl('td', { cls: 'bazi-extended-column' });
+        // 天干十神
+        if (pillarInfo.shiShenGan) {
+          shiShenCell.createSpan({
+            text: pillarInfo.shiShenGan,
+            cls: 'shishen-tag-small'
+          });
+        }
+        // 换行
+        shiShenCell.createEl('br');
+        // 地支藏干十神
+        if (pillarInfo.shiShenZhi && pillarInfo.shiShenZhi.length > 0) {
+          shiShenCell.createSpan({
+            text: pillarInfo.shiShenZhi.join(','),
+            cls: 'shishen-tag-small shishen-tag-hide'
+          });
+        }
+      }
+
+      // 地势行
+      if (rows[4]) {
+        const diShiCell = rows[4].createEl('td', { cls: 'bazi-extended-column' });
+        if (pillarInfo.diShi) {
+          diShiCell.createSpan({
+            text: pillarInfo.diShi,
+            cls: 'dishi-tag-small'
+          });
+        }
+      }
+
+      // 纳音行
+      if (rows[5]) {
+        const naYinCell = rows[5].createEl('td', { cls: 'bazi-extended-column' });
+        if (pillarInfo.naYin) {
+          const wuXing = this.extractWuXingFromNaYin(pillarInfo.naYin);
+          const naYinSpan = naYinCell.createSpan({ text: pillarInfo.naYin });
+          this.setWuXingColorDirectly(naYinSpan, wuXing);
+        }
+      }
+
+      // 旬空行
+      if (rows[6]) {
+        const xunKongCell = rows[6].createEl('td', { cls: 'bazi-extended-column' });
+        if (pillarInfo.xunKong) {
+          xunKongCell.createSpan({
+            text: pillarInfo.xunKong,
+            cls: 'xunkong-tag-small'
+          });
+        }
+      }
+
+      // 生肖行
+      if (rows[7]) {
+        rows[7].createEl('td', {
+          text: pillarInfo.shengXiao || '',
+          cls: 'bazi-extended-column'
+        });
+      }
+
+      // 神煞行（如果存在）
+      const shenShaRowIndex = this.findShenShaRowIndex();
+      if (shenShaRowIndex >= 0 && rows[shenShaRowIndex]) {
+        const shenShaCell = rows[shenShaRowIndex].createEl('td', {
+          cls: 'bazi-shensha-cell bazi-extended-column'
+        });
+        const shenShaList = shenShaCell.createDiv({ cls: 'bazi-shensha-list' });
+
+        if (pillarInfo.shenSha && pillarInfo.shenSha.length > 0) {
+          pillarInfo.shenSha.forEach(shenSha => {
+            const shenShaInfo = ShenShaExplanationService.getShenShaInfo(shenSha);
+            const type = shenShaInfo?.type || '未知';
+
+            let cssClass = '';
+            if (type === '吉神') {
+              cssClass = 'shensha-good';
+            } else if (type === '凶神') {
+              cssClass = 'shensha-bad';
+            } else if (type === '吉凶神') {
+              cssClass = 'shensha-mixed';
+            }
+
+            const shenShaEl = shenShaList.createEl('span', {
+              text: shenSha,
+              cls: `bazi-shensha ${cssClass}`,
+              attr: {
+                'data-shensha': shenSha,
+                'data-type': type,
+                'title': shenShaInfo?.explanation || ''
+              }
+            });
+
+            shenShaEl.addEventListener('click', () => {
+              this.showShenShaExplanation(shenSha);
+            });
+          });
+        } else {
+          shenShaCell.textContent = '无';
+        }
+      }
+    }
+
+    // 保存扩展柱信息
+    this.extendedPillars.push(pillarInfo);
+    console.log(`✅ 已添加${pillarInfo.name}柱到四柱表格`);
+  }
+
+  /**
+   * 清除所有扩展列
+   */
+  private clearAllExtendedColumns() {
+    if (!this.baziTable) {
+      return;
+    }
+
+    // 移除表头的所有扩展列
+    const headerRow = this.baziTable.querySelector('thead tr');
+    if (headerRow) {
+      const extendedHeaders = headerRow.querySelectorAll('.bazi-extended-column');
+      extendedHeaders.forEach(header => header.remove());
+    }
+
+    // 移除每一行的所有扩展列
+    const tbody = this.baziTable.querySelector('tbody');
+    if (tbody) {
+      const extendedCells = tbody.querySelectorAll('.bazi-extended-column');
+      extendedCells.forEach(cell => cell.remove());
+    }
+
+    // 清除扩展柱信息
+    this.extendedPillars = [];
+    this.currentExtendedLevel = 'none';
+    console.log('✅ 已清除所有扩展柱');
+  }
+
+  /**
+   * 获取当前选中的流月柱信息
+   */
+  private getCurrentLiuYuePillar(): ExtendedPillarInfo | null {
+    console.log('🔍 getCurrentLiuYuePillar: 开始获取流月柱信息');
+
+    // 从当前选中的流月数据中获取信息
+    if (!this.currentSelectedLiuYue) {
+      console.log('❌ getCurrentLiuYuePillar: 没有当前选中的流月数据');
+      return null;
+    }
+
+    const liuYue = this.currentSelectedLiuYue;
+    console.log('🗓️ getCurrentLiuYuePillar: 使用当前选中流月', liuYue);
+
+    const result = this.calculateLiuYuePillar(liuYue);
+    console.log('🗓️ getCurrentLiuYuePillar: 计算结果', result);
+
+    return result;
+  }
+
+  /**
+   * 获取当前选中的流日柱信息
+   */
+  private getCurrentLiuRiPillar(): ExtendedPillarInfo | null {
+    // 这里需要实现获取当前选中流日的逻辑
+    // 暂时返回null，后续可以根据实际需求实现
+    return null;
+  }
+
+  /**
+   * 获取当前选中的流时柱信息
+   */
+  private getCurrentLiuShiPillar(): ExtendedPillarInfo | null {
+    // 这里需要实现获取当前选中流时的逻辑
+    // 暂时返回null，后续可以根据实际需求实现
+    return null;
+  }
+
+
+
+  /**
+   * 扩展四柱表格到指定层级，自动包含所有上级层级
+   * @param targetLevel 目标层级
+   */
+  private extendBaziTableToLevel(targetLevel: 'dayun' | 'liunian' | 'liuyue' | 'liuri' | 'liushi') {
+    console.log(`🚀 extendBaziTableToLevel 开始，目标层级: ${targetLevel}`);
+
+    if (!this.baziTable) {
+      console.error('❌ 八字表格未初始化');
+      return;
+    }
+
+    // 检查目标层级是否可达
+    const actualTargetLevel = this.getActualTargetLevel(targetLevel);
+    console.log(`🎯 实际目标层级: ${actualTargetLevel} (请求层级: ${targetLevel})`);
+
+    // 检查是否需要强制更新（例如大运切换时）
+    const needsForceUpdate = this.needsForceUpdate(actualTargetLevel);
+
+    // 如果已经是实际目标层级且不需要强制更新，跳过重复扩展
+    if (this.currentExtendedLevel === actualTargetLevel && !needsForceUpdate) {
+      console.log(`⚠️ 已扩展到${actualTargetLevel}层级，跳过重复扩展`);
+      return;
+    }
+
+    if (needsForceUpdate) {
+      console.log(`🔄 强制更新${actualTargetLevel}层级内容`);
+    }
+
+    console.log(`🧹 清除现有扩展，当前层级: ${this.currentExtendedLevel}`);
+    // 清除现有扩展
+    this.clearAllExtendedColumns();
+
+    // 根据实际目标层级确定需要扩展的层级列表
+    const levelsToExtend = this.getLevelsToExtend(actualTargetLevel);
+    console.log(`📋 需要扩展的层级列表: ${levelsToExtend.join(' → ')}`);
+
+    // 逐级扩展
+    for (const level of levelsToExtend) {
+      console.log(`🔄 正在处理层级: ${level}`);
+      const pillarInfo = this.getPillarInfoForLevel(level);
+      if (pillarInfo) {
+        console.log(`✅ 获取到${level}柱信息:`, pillarInfo.name, pillarInfo.ganZhi);
+        this.addExtendedColumn(pillarInfo);
+      } else {
+        console.log(`❌ 无法获取${level}柱信息`);
+      }
+    }
+
+    // 更新当前扩展层级
+    this.currentExtendedLevel = actualTargetLevel;
+    console.log(`✅ 已扩展到${actualTargetLevel}层级，包含层级：${levelsToExtend.join(' → ')}`);
+
+    // 更新状态跟踪
+    this.updateExtendedStateTracking(actualTargetLevel);
+  }
+
+  /**
+   * 检查是否需要强制更新
+   */
+  private needsForceUpdate(targetLevel: string): boolean {
+    switch (targetLevel) {
+      case 'dayun': {
+        // 大运切换时需要强制更新
+        const needsDaYunUpdate = this.lastExtendedDaYunIndex !== this.selectedDaYunIndex;
+        console.log(`🔍 大运强制更新检查: lastIndex=${this.lastExtendedDaYunIndex}, currentIndex=${this.selectedDaYunIndex}, needsUpdate=${needsDaYunUpdate}`);
+        return needsDaYunUpdate;
+      }
+
+      case 'liunian': {
+        // 流年切换时需要强制更新
+        const needsLiuNianUpdate = this.lastExtendedLiuNianYear !== this.selectedLiuNianYear;
+        console.log(`🔍 流年强制更新检查: lastYear=${this.lastExtendedLiuNianYear}, currentYear=${this.selectedLiuNianYear}, needsUpdate=${needsLiuNianUpdate}`);
+        return needsLiuNianUpdate;
+      }
+
+      default:
+        return false;
+    }
+  }
+
+  /**
+   * 更新扩展状态跟踪
+   */
+  private updateExtendedStateTracking(targetLevel: string): void {
+    switch (targetLevel) {
+      case 'dayun':
+        this.lastExtendedDaYunIndex = this.selectedDaYunIndex;
+        console.log(`📝 更新大运状态跟踪: ${this.lastExtendedDaYunIndex}`);
+        break;
+
+      case 'liunian':
+        this.lastExtendedDaYunIndex = this.selectedDaYunIndex;
+        this.lastExtendedLiuNianYear = this.selectedLiuNianYear;
+        console.log(`📝 更新流年状态跟踪: 大运=${this.lastExtendedDaYunIndex}, 流年=${this.lastExtendedLiuNianYear}`);
+        break;
+    }
+  }
+
+  /**
+   * 获取实际可达的目标层级
+   * @param requestedLevel 请求的层级
+   * @returns 实际可达的层级
+   */
+  private getActualTargetLevel(requestedLevel: string): 'dayun' | 'liunian' | 'liuyue' | 'liuri' | 'liushi' {
+    // 检查各层级的可用性
+    if (requestedLevel === 'liushi' || requestedLevel === 'liuri') {
+      // 流时和流日暂不支持，降级到流月
+      if (this.currentSelectedLiuYue) {
+        return 'liuyue';
+      } else if (this.selectedLiuNianYear && this.selectedLiuNianYear !== 0) {
+        return 'liunian';
+      } else {
+        return 'dayun';
+      }
+    } else if (requestedLevel === 'liuyue') {
+      // 流月需要选择流月
+      if (this.currentSelectedLiuYue) {
+        return 'liuyue';
+      } else if (this.selectedLiuNianYear && this.selectedLiuNianYear !== 0) {
+        return 'liunian';
+      } else {
+        return 'dayun';
+      }
+    } else if (requestedLevel === 'liunian') {
+      // 流年需要选择流年
+      if (this.selectedLiuNianYear && this.selectedLiuNianYear !== 0) {
+        return 'liunian';
+      } else {
+        return 'dayun';
+      }
+    } else {
+      // 大运总是可用
+      return 'dayun';
+    }
+  }
+
+  /**
+   * 根据目标层级获取需要扩展的层级列表
+   * @param targetLevel 目标层级
+   * @returns 层级列表
+   */
+  private getLevelsToExtend(targetLevel: string): string[] {
+    const levelHierarchy = ['dayun', 'liunian', 'liuyue', 'liuri', 'liushi'];
+    const targetIndex = levelHierarchy.indexOf(targetLevel);
+
+    if (targetIndex === -1) {
+      return [];
+    }
+
+    const levels = levelHierarchy.slice(0, targetIndex + 1);
+
+    // 过滤掉无法获取数据的层级
+    return levels.filter(level => {
+      if (level === 'dayun') {
+        return true; // 大运总是可用
+      } else if (level === 'liunian') {
+        return this.selectedLiuNianYear && this.selectedLiuNianYear !== 0; // 需要选择流年
+      } else if (level === 'liuyue') {
+        return this.currentSelectedLiuYue !== null; // 需要选择流月
+      } else {
+        return false; // 其他层级暂不支持
+      }
+    });
+  }
+
+  /**
+   * 获取指定层级的柱信息
+   * @param level 层级
+   * @returns 柱信息
+   */
+  private getPillarInfoForLevel(level: string): ExtendedPillarInfo | null {
+    console.log(`🔍 getPillarInfoForLevel: 处理层级 ${level}`);
+
+    switch (level) {
+      case 'dayun':
+        console.log(`🔍 大运层级: selectedDaYunIndex=${this.selectedDaYunIndex}`);
+        return this.calculateDaYunPillar(this.selectedDaYunIndex);
+      case 'liunian':
+        console.log(`🔍 流年层级: selectedLiuNianYear=${this.selectedLiuNianYear}`);
+        // 如果没有选择流年，返回null，不显示流年柱
+        if (!this.selectedLiuNianYear || this.selectedLiuNianYear === 0) {
+          console.log(`❌ 流年层级: 没有选择流年，跳过流年柱显示`);
+          return null;
+        }
+        return this.calculateLiuNianPillar(this.selectedLiuNianYear);
+      case 'liuyue':
+        console.log(`🔍 流月层级: currentSelectedLiuYue=`, this.currentSelectedLiuYue);
+        // 需要获取当前选中的流月数据
+        return this.getCurrentLiuYuePillar();
+      case 'liuri':
+        console.log(`🔍 流日层级: 暂未实现`);
+        // 需要获取当前选中的流日数据
+        return this.getCurrentLiuRiPillar();
+      case 'liushi':
+        console.log(`🔍 流时层级: 暂未实现`);
+        // 需要获取当前选中的流时数据
+        return this.getCurrentLiuShiPillar();
+      default:
+        console.log(`🔍 未知层级: ${level}`);
+        return null;
+    }
+  }
+
+  /**
+   * 查找神煞行的索引
+   */
+  private findShenShaRowIndex(): number {
+    if (!this.baziTable) return -1;
+
+    const tbody = this.baziTable.querySelector('tbody');
+    if (!tbody) return -1;
+
+    const rows = tbody.querySelectorAll('tr');
+    for (let i = 0; i < rows.length; i++) {
+      const labelCell = rows[i].querySelector('.bazi-table-label');
+      if (labelCell && labelCell.textContent === '神煞') {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  /**
+   * 计算大运扩展柱信息
+   * @param daYunIndex 大运索引
+   */
+  private calculateDaYunPillar(daYunIndex: number): ExtendedPillarInfo | null {
+    console.log(`🔍 calculateDaYunPillar: 计算大运 ${daYunIndex}`);
+    console.log(`🔍 calculateDaYunPillar: 大运数据存在=${!!this.baziInfo.daYun}, 是数组=${Array.isArray(this.baziInfo.daYun)}`);
+
+    if (!this.baziInfo.daYun || !Array.isArray(this.baziInfo.daYun) || daYunIndex >= this.baziInfo.daYun.length) {
+      console.log(`❌ calculateDaYunPillar: 大运数据无效或索引超出范围`);
+      return null;
+    }
+
+    console.log(`🔍 calculateDaYunPillar: 大运数组长度=${this.baziInfo.daYun.length}, 当前索引=${daYunIndex}`);
+
+    const daYun = this.baziInfo.daYun[daYunIndex] as DaYunInfo;
+    const ganZhi = daYun.ganZhi || '';
+
+    console.log(`🔍 calculateDaYunPillar: 大运[${daYunIndex}]数据:`, daYun);
+    console.log(`🔍 calculateDaYunPillar: 干支=${ganZhi}, 长度=${ganZhi.length}`);
+
+    // 如果当前大运为空（前运期间），后端应该已经计算了前运
+    if (!ganZhi || ganZhi.length < 2) {
+      console.log(`❌ calculateDaYunPillar: 大运${daYunIndex}为空，后端应该已经处理前运`);
+      return null;
+    }
+
+    const stem = ganZhi[0];
+    const branch = ganZhi[1];
+    const dayStem = this.baziInfo.dayStem || '';
+
+    // 检查是否为前运（通过isQianYun标记）
+    const isQianYun = (daYun as any).isQianYun === true;
+    const displayName = isQianYun ? '前运' : '大运';
+
+    return {
+      type: 'dayun',
+      name: displayName,
+      stem,
+      branch,
+      ganZhi,
+      hideGan: BaziCalculator.getHideGan(branch),
+      shiShenGan: ShiShenCalculator.getShiShen(dayStem, stem),
+      shiShenZhi: ShiShenCalculator.getHiddenShiShen(dayStem, branch),
+      diShi: this.calculateDiShiForPillar(dayStem, branch),
+      naYin: BaziCalculator.getNaYin(ganZhi),
+      xunKong: BaziCalculator.calculateXunKong(stem, branch),
+      shengXiao: BaziUtils.getShengXiao(branch),
+      shenSha: daYun.shenSha || [],
+      wuXing: BaziUtils.getStemWuXing(stem)
+    };
+  }
+
+
+
+  /**
+   * 计算流年扩展柱信息
+   * @param year 流年年份
+   */
+  private calculateLiuNianPillar(year: number): ExtendedPillarInfo | null {
+    console.log(`🔍 calculateLiuNianPillar: 计算流年 ${year}`);
+
+    // 查找流年数据
+    const liuNian = this.findLiuNianByYear(year);
+    console.log(`🔍 calculateLiuNianPillar: 找到流年数据`, liuNian);
+
+    if (!liuNian || !liuNian.ganZhi) {
+      console.log(`❌ calculateLiuNianPillar: 流年数据无效，liuNian=${!!liuNian}, ganZhi=${liuNian?.ganZhi}`);
+      return null;
+    }
+
+    const ganZhi = liuNian.ganZhi;
+    if (ganZhi.length < 2) {
+      return null;
+    }
+
+    const stem = ganZhi[0];
+    const branch = ganZhi[1];
+    const dayStem = this.baziInfo.dayStem || '';
+
+    return {
+      type: 'liunian',
+      name: '流年',
+      stem,
+      branch,
+      ganZhi,
+      hideGan: BaziCalculator.getHideGan(branch),
+      shiShenGan: ShiShenCalculator.getShiShen(dayStem, stem),
+      shiShenZhi: ShiShenCalculator.getHiddenShiShen(dayStem, branch),
+      diShi: this.calculateDiShiForPillar(dayStem, branch),
+      naYin: BaziCalculator.getNaYin(ganZhi),
+      xunKong: BaziCalculator.calculateXunKong(stem, branch),
+      shengXiao: BaziUtils.getShengXiao(branch),
+      shenSha: liuNian.shenSha || [],
+      wuXing: BaziUtils.getStemWuXing(stem)
+    };
+  }
+
+  /**
+   * 计算流月扩展柱信息
+   * @param liuYue 流月数据
+   */
+  private calculateLiuYuePillar(liuYue: any): ExtendedPillarInfo | null {
+    if (!liuYue || !liuYue.ganZhi) {
+      return null;
+    }
+
+    const ganZhi = liuYue.ganZhi;
+    if (ganZhi.length < 2) {
+      return null;
+    }
+
+    const stem = ganZhi[0];
+    const branch = ganZhi[1];
+    const dayStem = this.baziInfo.dayStem || '';
+
+    return {
+      type: 'liuyue',
+      name: '流月',
+      stem,
+      branch,
+      ganZhi,
+      hideGan: BaziCalculator.getHideGan(branch),
+      shiShenGan: ShiShenCalculator.getShiShen(dayStem, stem),
+      shiShenZhi: ShiShenCalculator.getHiddenShiShen(dayStem, branch),
+      diShi: this.calculateDiShiForPillar(dayStem, branch),
+      naYin: BaziCalculator.getNaYin(ganZhi),
+      xunKong: BaziCalculator.calculateXunKong(stem, branch),
+      shengXiao: BaziUtils.getShengXiao(branch),
+      shenSha: liuYue.shenSha || [],
+      wuXing: BaziUtils.getStemWuXing(stem)
+    };
+  }
+
+  /**
+   * 计算地势信息
+   * @param dayStem 日干
+   * @param branch 地支
+   */
+  private calculateDiShiForPillar(dayStem: string, branch: string): string {
+    // 根据当前十二长生模式计算地势
+    switch (this.changShengMode) {
+      case 0: // 地势
+        return BaziCalculator.getDiShi(dayStem, branch);
+      case 1: // 自坐 - 这里简化处理，实际需要更复杂的计算
+        return BaziCalculator.getDiShi(dayStem, branch);
+      case 2: // 月令 - 这里简化处理，实际需要更复杂的计算
+        return BaziCalculator.getDiShi(dayStem, branch);
+      default:
+        return BaziCalculator.getDiShi(dayStem, branch);
+    }
+  }
+
   /**
    * 创建八字表格
    */
@@ -700,6 +1360,7 @@ export class InteractiveBaziView {
 
     // 创建表格
     const table = tableSection.createEl('table', { cls: 'bazi-view-table' });
+    this.baziTable = table; // 保存表格引用
 
     // 创建表头
     const thead = table.createEl('thead');
@@ -1511,6 +2172,93 @@ export class InteractiveBaziView {
   }
 
   /**
+   * 创建起运信息
+   * @param daYunSection 大运区域容器
+   */
+  private createQiYunInfo(daYunSection: HTMLElement) {
+    // 创建起运信息容器
+    const qiYunContainer = daYunSection.createDiv({ cls: 'bazi-qiyun-info' });
+
+    // 从八字信息中获取起运数据
+    const qiYunYear = this.baziInfo.qiYunYear;
+    const qiYunAge = this.baziInfo.qiYunAge;
+    const qiYunDate = this.baziInfo.qiYunDate;
+    const qiYunMonth = this.baziInfo.qiYunMonth;
+    const qiYunDay = this.baziInfo.qiYunDay;
+    const qiYunTime = this.baziInfo.qiYunTime;
+
+    console.log('🔍 起运信息:', { qiYunYear, qiYunAge, qiYunDate, qiYunMonth, qiYunDay, qiYunTime });
+
+    // 创建起运信息显示
+    const qiYunInfo = qiYunContainer.createDiv({ cls: 'bazi-qiyun-details' });
+
+    if (qiYunYear !== undefined && qiYunAge !== undefined) {
+      // 构建丰富的起运信息
+      let qiYunText = '起运：出生';
+
+      // 添加起运年数
+      if (qiYunYear > 0) {
+        qiYunText += `${qiYunYear}年`;
+      }
+
+      // 添加起运月数
+      if (qiYunMonth !== undefined && qiYunMonth > 0) {
+        qiYunText += `${qiYunMonth}个月`;
+      }
+
+      // 添加起运天数
+      if (qiYunDay !== undefined && qiYunDay > 0) {
+        qiYunText += `${qiYunDay}天`;
+      }
+
+      // 添加起运小时数（如果有）
+      if (qiYunTime !== undefined && qiYunTime > 0) {
+        qiYunText += `${qiYunTime}小时`;
+      }
+
+      qiYunText += '后起运';
+
+      // 主要起运信息
+      const mainInfo = qiYunInfo.createDiv({ cls: 'bazi-qiyun-main' });
+      mainInfo.textContent = qiYunText;
+
+      // 起运公历日期
+      if (qiYunDate) {
+        const dateInfo = qiYunInfo.createDiv({ cls: 'bazi-qiyun-date' });
+        dateInfo.textContent = `起运公历：${qiYunDate}`;
+      }
+    } else {
+      // 如果没有起运信息，尝试从lunar-typescript计算
+      this.calculateQiYunFromLunar(qiYunInfo);
+    }
+
+    console.log('✅ 起运信息已创建');
+  }
+
+  /**
+   * 从lunar-typescript计算起运信息
+   * @param container 容器元素
+   */
+  private calculateQiYunFromLunar(container: HTMLElement) {
+    try {
+      // 起运信息应该在后端计算，前端只负责显示
+      // 如果没有起运信息，显示提示
+      container.createSpan({
+        text: '起运信息需要完整的出生日期和性别',
+        cls: 'bazi-qiyun-placeholder'
+      });
+
+      console.log('⚠️ 起运信息应该在后端BaziService中计算');
+    } catch (error) {
+      console.error('❌ 起运信息获取失败:', error);
+      container.createSpan({
+        text: '起运信息获取失败',
+        cls: 'bazi-qiyun-error'
+      });
+    }
+  }
+
+  /**
    * 创建大运信息
    */
   private createDaYunInfo() {
@@ -1528,6 +2276,9 @@ export class InteractiveBaziView {
     const daYunSection = this.container.createDiv({ cls: 'bazi-view-section bazi-dayun-section' });
     daYunSection.createEl('h4', { text: '大运信息', cls: 'bazi-view-subtitle' });
     console.log('🎯 大运信息区域已创建');
+
+    // 添加起运信息
+    this.createQiYunInfo(daYunSection);
 
     // 创建大运表格
     const tableContainer = daYunSection.createDiv({ cls: 'bazi-view-table-container' });
@@ -1560,10 +2311,13 @@ export class InteractiveBaziView {
     const gzRow = this.daYunTable.createEl('tr');
     gzRow.createEl('th', { text: '干支' });
     if (Array.isArray(daYunData)) {
-      daYunData.slice(0, 10).forEach((dy, index) => {
+      daYunData.slice(0, 10).forEach((dy, sliceIndex) => {
+        // 使用原始数组索引，而不是slice后的索引
+        const originalIndex = sliceIndex; // 因为slice从0开始，所以sliceIndex就是原始索引
+
         const cell = gzRow.createEl('td', {
           cls: 'bazi-dayun-cell',
-          attr: { 'data-index': index.toString() }
+          attr: { 'data-index': originalIndex.toString() }
         });
 
         // 如果有干支，按五行颜色显示
@@ -1578,18 +2332,28 @@ export class InteractiveBaziView {
           // 创建地支元素并设置五行颜色
           const branchSpan = cell.createSpan({ text: branch });
           this.setWuXingColorDirectly(branchSpan, this.getBranchWuXing(branch));
+
+          // 如果是前运，添加换行和小红字标注
+          if ((dy as any).isQianYun === true) {
+            cell.createEl('br'); // 换行
+            cell.createEl('small', {
+              text: '前运',
+              attr: { style: 'color: #d73027; font-size: 0.6em;' }
+            });
+          }
         } else {
           // 如果没有干支或格式不正确，直接显示原文本
           cell.textContent = dy.ganZhi || '';
         }
 
-        // 添加点击事件
+        // 添加点击事件 - 使用原始索引
         cell.addEventListener('click', () => {
-          this.selectDaYun(index);
+          console.log(`🎯 大运单元格点击: sliceIndex=${sliceIndex}, originalIndex=${originalIndex}`);
+          this.selectDaYun(originalIndex);
         });
 
-        // 如果是当前选中的大运，添加选中样式
-        if (index === this.selectedDaYunIndex) {
+        // 如果是当前选中的大运，添加选中样式 - 使用原始索引
+        if (originalIndex === this.selectedDaYunIndex) {
           cell.classList.add('selected');
         }
       });
@@ -1805,6 +2569,9 @@ export class InteractiveBaziView {
       liuNianData = this.generateLiuNianForDaYun(selectedDaYun);
     }
 
+    // 缓存当前大运的流年数据，供扩展表格使用
+    this.currentDaYunLiuNianData = liuNianData;
+
     // 尝试从原始八字数据中筛选出属于该大运的小运
     let xiaoYunData = this.baziInfo.xiaoYun?.filter(xy => {
       if (!selectedDaYun) return false;
@@ -1824,10 +2591,12 @@ export class InteractiveBaziView {
     // 更新流年和小运合并表格
     this.updateLiuNianXiaoYunTable(liuNianData, xiaoYunData);
 
-    // 如果有流年，选择第一个流年
-    if (liuNianData.length > 0) {
-      this.selectLiuNian(liuNianData[0].year);
-    }
+    // 重置流年选择状态，允许重新选择流年
+    this.selectedLiuNianYear = 0;
+    this.currentSelectedLiuYue = null;
+
+    // 扩展四柱表格到大运层级
+    this.extendBaziTableToLevel('dayun');
   }
 
   /**
@@ -1880,6 +2649,14 @@ export class InteractiveBaziView {
 
     // 更新流月表格
     this.updateLiuYueTable(liuYueData);
+
+    // 重置流月选择状态
+    this.currentSelectedLiuYue = null;
+
+    // 扩展四柱表格到流年层级
+    console.log('🚀 selectLiuNian: 准备调用 extendBaziTableToLevel(liunian)');
+    this.extendBaziTableToLevel('liunian');
+    console.log('🚀 selectLiuNian: extendBaziTableToLevel(liunian) 调用完成');
   }
 
   /**
@@ -1964,13 +2741,44 @@ export class InteractiveBaziView {
    * @returns 流年数据对象
    */
   private findLiuNianByYear(year: number): any {
-    // 从原始流年数据中查找
-    if (this.baziInfo.liuNian) {
-      for (const liuNian of this.baziInfo.liuNian) {
+    console.log(`🔍 findLiuNianByYear: 查找年份 ${year}`);
+    console.log(`🔍 findLiuNianByYear: baziInfo.liuNian 存在=${!!this.baziInfo.liuNian}`);
+    console.log(`🔍 findLiuNianByYear: currentDaYunLiuNianData 长度=${this.currentDaYunLiuNianData.length}`);
+
+    // 优先从当前大运的流年数据缓存中查找
+    if (this.currentDaYunLiuNianData.length > 0) {
+      console.log(`🔍 findLiuNianByYear: 从当前大运流年缓存中查找`);
+
+      for (let i = 0; i < this.currentDaYunLiuNianData.length; i++) {
+        const liuNian = this.currentDaYunLiuNianData[i];
+        console.log(`🔍 findLiuNianByYear: 检查缓存流年[${i}]: year=${liuNian.year}, ganZhi=${liuNian.ganZhi}`);
+
         if (liuNian.year === year) {
+          console.log(`✅ findLiuNianByYear: 从缓存中找到匹配的流年数据`, liuNian);
           return liuNian;
         }
       }
+
+      console.log(`❌ findLiuNianByYear: 缓存中未找到年份 ${year} 的流年数据`);
+    }
+
+    // 从原始流年数据中查找
+    if (this.baziInfo.liuNian) {
+      console.log(`🔍 findLiuNianByYear: 从原始流年数据中查找，长度=${this.baziInfo.liuNian.length}`);
+
+      for (let i = 0; i < this.baziInfo.liuNian.length; i++) {
+        const liuNian = this.baziInfo.liuNian[i];
+        console.log(`🔍 findLiuNianByYear: 检查原始流年[${i}]: year=${liuNian.year}, ganZhi=${liuNian.ganZhi}`);
+
+        if (liuNian.year === year) {
+          console.log(`✅ findLiuNianByYear: 从原始数据中找到匹配的流年数据`, liuNian);
+          return liuNian;
+        }
+      }
+
+      console.log(`❌ findLiuNianByYear: 原始数据中未找到年份 ${year} 的流年数据`);
+    } else {
+      console.log(`❌ findLiuNianByYear: baziInfo.liuNian 不存在`);
     }
 
     return null;
@@ -5589,6 +6397,9 @@ export class InteractiveBaziView {
     console.log('🗓️ 流月数据结构:', JSON.stringify(liuYue, null, 2));
     console.log('🗓️ this.selectedLiuNianYear:', this.selectedLiuNianYear);
 
+    // 保存当前选中的流月数据
+    this.currentSelectedLiuYue = liuYue;
+
     // 获取年份和月柱干支
     const year = liuYue.year || this.selectedLiuNianYear;
     const monthGanZhi = liuYue.ganZhi;
@@ -5644,6 +6455,11 @@ export class InteractiveBaziView {
 
     // 显示流日横向滚动选择器
     this.showLiuRiSelector(year, monthGanZhi, liuRiData || []);
+
+    // 扩展四柱表格到流月层级
+    console.log('🚀 selectLiuYue: 准备调用 extendBaziTableToLevel(liuyue)');
+    this.extendBaziTableToLevel('liuyue');
+    console.log('🚀 selectLiuYue: extendBaziTableToLevel(liuyue) 调用完成');
   }
 
   /**

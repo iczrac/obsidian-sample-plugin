@@ -87,7 +87,8 @@ export class BaziParserModal extends Modal {
                 this.baziString,
                 this.specifiedYear ? this.specifiedYear.toString() : undefined,
                 this.gender,
-                '2' // 使用默认流派
+                '2', // 使用默认流派
+                1 // 默认使用起运流派1
               );
 
               // 确保性别和指定年份信息被传递给回调函数

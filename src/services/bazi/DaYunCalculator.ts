@@ -49,22 +49,44 @@ export class DaYunCalculator {
 
         // 检查干支是否有效
         if (!ganZhi || ganZhi.trim() === '') {
-          console.log(`🔍 DaYunCalculator: 跳过前运，干支为空，索引: ${index}（还未排上大运）`);
-          // 返回一个空的大运对象，表示前运（还未排上大运）
-          return {
-            startYear: dy.getStartYear(),
-            endYear: dy.getEndYear(),
-            startAge: dy.getStartAge(),
-            endAge: dy.getEndAge(),
-            index: dy.getIndex(),
-            ganZhi: '',
-            naYin: '',
-            shiShenGan: '',
-            shiShenZhi: '',
-            diShi: '',
-            xunKong: '',
-            shenSha: []
-          };
+          console.log(`🔍 DaYunCalculator: 发现前运期间，索引: ${index}（还未排上大运）`);
+          // 计算前运干支
+          const qianYunInfo = this.calculateQianYun(daYunList, index, eightChar, gender, dayStem);
+          if (qianYunInfo) {
+            console.log(`✅ DaYunCalculator: 前运计算成功: ${qianYunInfo.ganZhi}`);
+            return {
+              startYear: dy.getStartYear(),
+              endYear: dy.getEndYear(),
+              startAge: dy.getStartAge(),
+              endAge: dy.getEndAge(),
+              index: dy.getIndex(),
+              ganZhi: qianYunInfo.ganZhi,
+              naYin: qianYunInfo.naYin,
+              shiShenGan: qianYunInfo.shiShenGan,
+              shiShenZhi: qianYunInfo.shiShenZhi,
+              diShi: qianYunInfo.diShi,
+              xunKong: qianYunInfo.xunKong,
+              shenSha: qianYunInfo.shenSha,
+              isQianYun: true // 标记为前运
+            };
+          } else {
+            console.log(`❌ DaYunCalculator: 前运计算失败，返回空对象`);
+            // 返回一个空的大运对象，表示前运（还未排上大运）
+            return {
+              startYear: dy.getStartYear(),
+              endYear: dy.getEndYear(),
+              startAge: dy.getStartAge(),
+              endAge: dy.getEndAge(),
+              index: dy.getIndex(),
+              ganZhi: '',
+              naYin: '',
+              shiShenGan: '',
+              shiShenZhi: '',
+              diShi: '',
+              xunKong: '',
+              shenSha: []
+            };
+          }
         }
 
         const naYin = BaziCalculator.getNaYin(ganZhi);
@@ -114,6 +136,93 @@ export class DaYunCalculator {
       console.error('计算大运出错:', e);
       return [];
     }
+  }
+
+  /**
+   * 计算前运信息
+   * @param daYunList 大运列表
+   * @param currentIndex 当前索引
+   * @param eightChar 八字对象
+   * @param gender 性别
+   * @param dayStem 日干
+   * @returns 前运信息
+   */
+  private static calculateQianYun(
+    daYunList: any[],
+    currentIndex: number,
+    eightChar: EightChar,
+    gender: string,
+    dayStem: string
+  ): {
+    ganZhi: string;
+    naYin: string;
+    shiShenGan: string;
+    shiShenZhi: string;
+    diShi: string;
+    xunKong: string;
+    shenSha: string[];
+  } | null {
+    console.log(`🔍 DaYunCalculator.calculateQianYun: 开始计算前运，当前索引=${currentIndex}`);
+
+    // 查找第一个有效的大运来反推前运
+    let firstValidDaYun: any = null;
+    let firstValidIndex = -1;
+
+    for (let i = currentIndex + 1; i < daYunList.length; i++) {
+      const dy = daYunList[i];
+      const ganZhi = dy.getGanZhi();
+      if (ganZhi && ganZhi.trim() !== '') {
+        firstValidDaYun = dy;
+        firstValidIndex = i;
+        console.log(`🔍 calculateQianYun: 找到第一个有效大运[${i}]: ${ganZhi}`);
+        break;
+      }
+    }
+
+    if (!firstValidDaYun) {
+      console.log(`❌ calculateQianYun: 未找到有效大运，无法计算前运`);
+      return null;
+    }
+
+    // 获取年干来判断阴阳年
+    const yearStem = eightChar.getYear();
+    const isYangYear = this.isYangStem(yearStem);
+
+    // 男性：阳年顺行，阴年逆行
+    // 女性：阳年逆行，阴年顺行
+    const isShunXing = (gender === '1') ? isYangYear : !isYangYear;
+
+    console.log(`🔍 calculateQianYun: 年干=${yearStem}, 阳年=${isYangYear}, 性别=${gender === '1' ? '男' : '女'}, 顺行=${isShunXing}`);
+
+    // 计算前运干支（反推）
+    const stepsBack = firstValidIndex - currentIndex;
+    const firstValidGanZhi = firstValidDaYun.getGanZhi();
+    const qianYunGanZhi = this.calculateGanZhiStepsBack(firstValidGanZhi, stepsBack, isShunXing);
+
+    if (!qianYunGanZhi || qianYunGanZhi.length < 2) {
+      console.log(`❌ calculateQianYun: 前运干支计算失败`);
+      return null;
+    }
+
+    console.log(`✅ calculateQianYun: 前运干支=${qianYunGanZhi}`);
+
+    // 计算前运的其他信息
+    const naYin = BaziCalculator.getNaYin(qianYunGanZhi);
+    const shiShenGan = ShiShenCalculator.getShiShen(dayStem, qianYunGanZhi.charAt(0));
+    const shiShenZhi = ShiShenCalculator.getHiddenShiShen(dayStem, qianYunGanZhi.charAt(1));
+    const diShi = this.calculateDiShi(qianYunGanZhi.charAt(0), qianYunGanZhi.charAt(1));
+    const xunKong = this.calculateXunKongSafe(qianYunGanZhi);
+    const shenSha = this.calculateDaYunShenSha(qianYunGanZhi, dayStem);
+
+    return {
+      ganZhi: qianYunGanZhi,
+      naYin,
+      shiShenGan,
+      shiShenZhi: Array.isArray(shiShenZhi) ? shiShenZhi.join(',') : shiShenZhi,
+      diShi,
+      xunKong,
+      shenSha
+    };
   }
 
   /**
@@ -244,6 +353,62 @@ export class DaYunCalculator {
       console.warn('统一旬空计算失败:', e);
       return '';
     }
+  }
+
+  /**
+   * 判断是否为阳干
+   * @param stem 天干
+   * @returns 是否为阳干
+   */
+  private static isYangStem(stem: string): boolean {
+    const yangStems = ['甲', '丙', '戊', '庚', '壬'];
+    return yangStems.includes(stem);
+  }
+
+  /**
+   * 计算干支向前推算指定步数
+   * @param ganZhi 起始干支
+   * @param steps 步数
+   * @param isShunXing 是否顺行
+   * @returns 推算后的干支
+   */
+  private static calculateGanZhiStepsBack(ganZhi: string, steps: number, isShunXing: boolean): string {
+    if (!ganZhi || ganZhi.length < 2 || steps <= 0) {
+      return ganZhi;
+    }
+
+    const stems = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
+    const branches = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
+
+    const currentStem = ganZhi[0];
+    const currentBranch = ganZhi[1];
+
+    const stemIndex = stems.indexOf(currentStem);
+    const branchIndex = branches.indexOf(currentBranch);
+
+    if (stemIndex === -1 || branchIndex === -1) {
+      console.log(`❌ calculateGanZhiStepsBack: 无效的干支 ${ganZhi}`);
+      return ganZhi;
+    }
+
+    // 计算新的干支索引
+    let newStemIndex: number;
+    let newBranchIndex: number;
+
+    if (isShunXing) {
+      // 顺行：向前推算是减法
+      newStemIndex = (stemIndex - steps + stems.length * 10) % stems.length;
+      newBranchIndex = (branchIndex - steps + branches.length * 10) % branches.length;
+    } else {
+      // 逆行：向前推算是加法
+      newStemIndex = (stemIndex + steps) % stems.length;
+      newBranchIndex = (branchIndex + steps) % branches.length;
+    }
+
+    const newGanZhi = stems[newStemIndex] + branches[newBranchIndex];
+    console.log(`🔍 calculateGanZhiStepsBack: ${ganZhi} ${isShunXing ? '顺行' : '逆行'} 前推${steps}步 → ${newGanZhi}`);
+
+    return newGanZhi;
   }
 
   /**

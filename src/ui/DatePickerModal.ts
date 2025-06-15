@@ -90,7 +90,7 @@ export class DatePickerModal extends Modal {
               const day = this.date.date();
 
               // 获取八字信息
-              const baziInfo = BaziService.getBaziFromDate(year, month, day, this.time, this.gender, this.baziSect);
+              const baziInfo = BaziService.getBaziFromDate(year, month, day, this.time, this.gender, this.baziSect, 1); // 默认使用起运流派1
 
               // 确保性别信息被传递给回调函数
               baziInfo.gender = this.gender;

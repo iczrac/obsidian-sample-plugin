@@ -216,6 +216,7 @@ export interface DaYunInfo {
     tu: number;
   };
   riZhuStrength?: string;
+  isQianYun?: boolean; // 是否为前运
 }
 
 /**
