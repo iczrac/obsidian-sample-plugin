@@ -18,18 +18,21 @@ export class HorizontalSelectorManager {
    * 显示流日横向滚动选择器
    */
   showLiuRiSelector(
-    year: number, 
-    monthGanZhi: string, 
-    liuRiData: any[], 
+    year: number,
+    monthGanZhi: string,
+    liuRiData: any[],
     onSelect: (year: number, month: number, day: number) => void
   ) {
     // 查找或创建流日选择器容器
     let liuRiContainer = this.container.querySelector('.bazi-liuri-selector-container') as HTMLElement;
     if (!liuRiContainer) {
-      // 在流月表格后面创建流日选择器
+      // 在流月section后面创建独立的流日section
       const liuYueSection = this.container.querySelector('.bazi-liuyue-section');
       if (liuYueSection) {
-        liuRiContainer = liuYueSection.createDiv({ cls: 'bazi-liuri-selector-container' });
+        // 创建独立的流日section
+        const liuRiSection = this.container.createDiv({ cls: 'bazi-view-section bazi-liuri-section' });
+        liuRiSection.createEl('h3', { text: '流日信息' });
+        liuRiContainer = liuRiSection.createDiv({ cls: 'bazi-liuri-selector-container' });
       } else {
         return;
       }
@@ -160,19 +163,22 @@ export class HorizontalSelectorManager {
    * 显示流时横向滚动选择器
    */
   showLiuShiSelector(
-    year: number, 
-    month: number, 
-    day: number, 
-    liuShiData: any[], 
+    year: number,
+    month: number,
+    day: number,
+    liuShiData: any[],
     onSelect: (timeIndex: number, ganZhi: string, name: string) => void
   ) {
     // 查找或创建流时选择器容器
     let liuShiContainer = this.container.querySelector('.bazi-liushi-selector-container') as HTMLElement;
     if (!liuShiContainer) {
-      // 在流日选择器后面创建流时选择器
-      const liuRiContainer = this.container.querySelector('.bazi-liuri-selector-container');
-      if (liuRiContainer) {
-        liuShiContainer = liuRiContainer.createDiv({ cls: 'bazi-liushi-selector-container' });
+      // 在流日section后面创建独立的流时section
+      const liuRiSection = this.container.querySelector('.bazi-liuri-section');
+      if (liuRiSection) {
+        // 创建独立的流时section
+        const liuShiSection = this.container.createDiv({ cls: 'bazi-view-section bazi-liushi-section' });
+        liuShiSection.createEl('h3', { text: '流时信息' });
+        liuShiContainer = liuShiSection.createDiv({ cls: 'bazi-liushi-selector-container' });
       } else {
         return;
       }

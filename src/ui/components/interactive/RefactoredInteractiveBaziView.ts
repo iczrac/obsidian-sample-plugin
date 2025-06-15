@@ -279,35 +279,19 @@ export class RefactoredInteractiveBaziView {
   }
 
   /**
-   * 创建流日信息
+   * 创建流日信息（不再创建固定的section，改为动态创建）
    */
   private createLiuRiInfo() {
-    const liuRiSection = this.container.createDiv({ cls: 'bazi-view-section' });
-    liuRiSection.createEl('h3', { text: '流日信息' });
-
-    // 初始显示提示信息
-    liuRiSection.createEl('div', { 
-      text: '请先选择流月', 
-      cls: 'bazi-empty-message' 
-    });
-
-    console.log('✅ 流日信息创建完成');
+    // 不再创建固定的流日信息section，改为在HorizontalSelectorManager中动态创建
+    console.log('✅ 流日信息将在选择流月时动态创建');
   }
 
   /**
-   * 创建流时信息
+   * 创建流时信息（不再创建固定的section，改为动态创建）
    */
   private createLiuShiInfo() {
-    const liuShiSection = this.container.createDiv({ cls: 'bazi-view-section' });
-    liuShiSection.createEl('h3', { text: '流时信息' });
-
-    // 初始显示提示信息
-    liuShiSection.createEl('div', { 
-      text: '请先选择流日', 
-      cls: 'bazi-empty-message' 
-    });
-
-    console.log('✅ 流时信息创建完成');
+    // 不再创建固定的流时信息section，改为在HorizontalSelectorManager中动态创建
+    console.log('✅ 流时信息将在选择流日时动态创建');
   }
 
   /**
