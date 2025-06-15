@@ -57,12 +57,21 @@ export class InteractiveBaziView {
   // 当前选中的流月数据
   private currentSelectedLiuYue: any = null;
 
+  // 当前选中的流日数据
+  private currentSelectedLiuRi: any = null;
+
+  // 当前选中的流时数据
+  private currentSelectedLiuShi: any = null;
+
   // 当前大运的流年数据缓存
   private currentDaYunLiuNianData: any[] = [];
 
   // 强制更新状态跟踪
   private lastExtendedDaYunIndex = -1; // 记录上次扩展的大运索引
   private lastExtendedLiuNianYear = 0; // 记录上次扩展的流年年份
+  private lastExtendedLiuYue: any = null; // 记录上次扩展的流月
+  private lastExtendedLiuRi: any = null; // 记录上次扩展的流日
+  private lastExtendedLiuShi: any = null; // 记录上次扩展的流时
 
   private readonly CHANG_SHENG_MODES = [
     { key: 'diShi', name: '地势', description: '日干在各地支的十二长生状态' },
@@ -75,6 +84,8 @@ export class InteractiveBaziView {
   private liuNianTable: HTMLElement | null = null;
   private xiaoYunTable: HTMLElement | null = null;
   private liuYueTable: HTMLElement | null = null;
+  private liuRiTable: HTMLElement | null = null;
+  private liuShiTable: HTMLElement | null = null;
 
   // 已显示的弹窗列表，用于防止重复显示
   private shownModals: HTMLElement[] = [];
@@ -628,6 +639,12 @@ export class InteractiveBaziView {
     // 创建流月信息
     this.createLiuYueInfo();
 
+    // 创建流日信息
+    this.createLiuRiInfo();
+
+    // 创建流时信息
+    this.createLiuShiInfo();
+
     // 添加表格单元格监听器
     this.addTableCellListeners();
 
@@ -931,23 +948,7 @@ export class InteractiveBaziView {
     return result;
   }
 
-  /**
-   * 获取当前选中的流日柱信息
-   */
-  private getCurrentLiuRiPillar(): ExtendedPillarInfo | null {
-    // 这里需要实现获取当前选中流日的逻辑
-    // 暂时返回null，后续可以根据实际需求实现
-    return null;
-  }
 
-  /**
-   * 获取当前选中的流时柱信息
-   */
-  private getCurrentLiuShiPillar(): ExtendedPillarInfo | null {
-    // 这里需要实现获取当前选中流时的逻辑
-    // 暂时返回null，后续可以根据实际需求实现
-    return null;
-  }
 
 
 
@@ -1027,6 +1028,27 @@ export class InteractiveBaziView {
         return needsLiuNianUpdate;
       }
 
+      case 'liuyue': {
+        // 流月切换时需要强制更新
+        const needsLiuYueUpdate = JSON.stringify(this.lastExtendedLiuYue) !== JSON.stringify(this.currentSelectedLiuYue);
+        console.log(`🔍 流月强制更新检查: lastLiuYue=${JSON.stringify(this.lastExtendedLiuYue)}, currentLiuYue=${JSON.stringify(this.currentSelectedLiuYue)}, needsUpdate=${needsLiuYueUpdate}`);
+        return needsLiuYueUpdate;
+      }
+
+      case 'liuri': {
+        // 流日切换时需要强制更新
+        const needsLiuRiUpdate = JSON.stringify(this.lastExtendedLiuRi) !== JSON.stringify(this.currentSelectedLiuRi);
+        console.log(`🔍 流日强制更新检查: lastLiuRi=${JSON.stringify(this.lastExtendedLiuRi)}, currentLiuRi=${JSON.stringify(this.currentSelectedLiuRi)}, needsUpdate=${needsLiuRiUpdate}`);
+        return needsLiuRiUpdate;
+      }
+
+      case 'liushi': {
+        // 流时切换时需要强制更新
+        const needsLiuShiUpdate = JSON.stringify(this.lastExtendedLiuShi) !== JSON.stringify(this.currentSelectedLiuShi);
+        console.log(`🔍 流时强制更新检查: lastLiuShi=${JSON.stringify(this.lastExtendedLiuShi)}, currentLiuShi=${JSON.stringify(this.currentSelectedLiuShi)}, needsUpdate=${needsLiuShiUpdate}`);
+        return needsLiuShiUpdate;
+      }
+
       default:
         return false;
     }
@@ -1047,6 +1069,30 @@ export class InteractiveBaziView {
         this.lastExtendedLiuNianYear = this.selectedLiuNianYear;
         console.log(`📝 更新流年状态跟踪: 大运=${this.lastExtendedDaYunIndex}, 流年=${this.lastExtendedLiuNianYear}`);
         break;
+
+      case 'liuyue':
+        this.lastExtendedDaYunIndex = this.selectedDaYunIndex;
+        this.lastExtendedLiuNianYear = this.selectedLiuNianYear;
+        this.lastExtendedLiuYue = this.currentSelectedLiuYue ? JSON.parse(JSON.stringify(this.currentSelectedLiuYue)) : null;
+        console.log(`📝 更新流月状态跟踪: 大运=${this.lastExtendedDaYunIndex}, 流年=${this.lastExtendedLiuNianYear}, 流月=${JSON.stringify(this.lastExtendedLiuYue)}`);
+        break;
+
+      case 'liuri':
+        this.lastExtendedDaYunIndex = this.selectedDaYunIndex;
+        this.lastExtendedLiuNianYear = this.selectedLiuNianYear;
+        this.lastExtendedLiuYue = this.currentSelectedLiuYue ? JSON.parse(JSON.stringify(this.currentSelectedLiuYue)) : null;
+        this.lastExtendedLiuRi = this.currentSelectedLiuRi ? JSON.parse(JSON.stringify(this.currentSelectedLiuRi)) : null;
+        console.log(`📝 更新流日状态跟踪: 大运=${this.lastExtendedDaYunIndex}, 流年=${this.lastExtendedLiuNianYear}, 流月=${JSON.stringify(this.lastExtendedLiuYue)}, 流日=${JSON.stringify(this.lastExtendedLiuRi)}`);
+        break;
+
+      case 'liushi':
+        this.lastExtendedDaYunIndex = this.selectedDaYunIndex;
+        this.lastExtendedLiuNianYear = this.selectedLiuNianYear;
+        this.lastExtendedLiuYue = this.currentSelectedLiuYue ? JSON.parse(JSON.stringify(this.currentSelectedLiuYue)) : null;
+        this.lastExtendedLiuRi = this.currentSelectedLiuRi ? JSON.parse(JSON.stringify(this.currentSelectedLiuRi)) : null;
+        this.lastExtendedLiuShi = this.currentSelectedLiuShi ? JSON.parse(JSON.stringify(this.currentSelectedLiuShi)) : null;
+        console.log(`📝 更新流时状态跟踪: 大运=${this.lastExtendedDaYunIndex}, 流年=${this.lastExtendedLiuNianYear}, 流月=${JSON.stringify(this.lastExtendedLiuYue)}, 流日=${JSON.stringify(this.lastExtendedLiuRi)}, 流时=${JSON.stringify(this.lastExtendedLiuShi)}`);
+        break;
     }
   }
 
@@ -1057,9 +1103,24 @@ export class InteractiveBaziView {
    */
   private getActualTargetLevel(requestedLevel: string): 'dayun' | 'liunian' | 'liuyue' | 'liuri' | 'liushi' {
     // 检查各层级的可用性
-    if (requestedLevel === 'liushi' || requestedLevel === 'liuri') {
-      // 流时和流日暂不支持，降级到流月
-      if (this.currentSelectedLiuYue) {
+    if (requestedLevel === 'liushi') {
+      // 流时需要选择流时
+      if (this.currentSelectedLiuShi) {
+        return 'liushi';
+      } else if (this.currentSelectedLiuRi) {
+        return 'liuri';
+      } else if (this.currentSelectedLiuYue) {
+        return 'liuyue';
+      } else if (this.selectedLiuNianYear && this.selectedLiuNianYear !== 0) {
+        return 'liunian';
+      } else {
+        return 'dayun';
+      }
+    } else if (requestedLevel === 'liuri') {
+      // 流日需要选择流日
+      if (this.currentSelectedLiuRi) {
+        return 'liuri';
+      } else if (this.currentSelectedLiuYue) {
         return 'liuyue';
       } else if (this.selectedLiuNianYear && this.selectedLiuNianYear !== 0) {
         return 'liunian';
@@ -1111,8 +1172,12 @@ export class InteractiveBaziView {
         return this.selectedLiuNianYear && this.selectedLiuNianYear !== 0; // 需要选择流年
       } else if (level === 'liuyue') {
         return this.currentSelectedLiuYue !== null; // 需要选择流月
+      } else if (level === 'liuri') {
+        return this.currentSelectedLiuRi !== null; // 需要选择流日
+      } else if (level === 'liushi') {
+        return this.currentSelectedLiuShi !== null; // 需要选择流时
       } else {
-        return false; // 其他层级暂不支持
+        return false; // 其他层级不支持
       }
     });
   }
@@ -1142,11 +1207,11 @@ export class InteractiveBaziView {
         // 需要获取当前选中的流月数据
         return this.getCurrentLiuYuePillar();
       case 'liuri':
-        console.log(`🔍 流日层级: 暂未实现`);
+        console.log(`🔍 流日层级: currentSelectedLiuRi=`, this.currentSelectedLiuRi);
         // 需要获取当前选中的流日数据
         return this.getCurrentLiuRiPillar();
       case 'liushi':
-        console.log(`🔍 流时层级: 暂未实现`);
+        console.log(`🔍 流时层级: currentSelectedLiuShi=`, this.currentSelectedLiuShi);
         // 需要获取当前选中的流时数据
         return this.getCurrentLiuShiPillar();
       default:
@@ -6609,7 +6674,7 @@ export class InteractiveBaziView {
    * @param day 日期
    */
   private selectLiuRi(year: number, month: number, day: number) {
-    console.log(`选择流日: ${year}-${month}-${day}`);
+    console.log(`🗓️ 选择流日: ${year}-${month}-${day}`);
 
     // 获取日干用于计算
     const dayStem = this.baziInfo.dayStem;
@@ -6618,11 +6683,28 @@ export class InteractiveBaziView {
       return;
     }
 
+    // 计算该日的干支
+    const dayGanZhi = this.calculateDayGanZhi(year, month, day);
+    console.log(`🗓️ 流日干支: ${dayGanZhi}`);
+
+    // 保存当前选中的流日信息
+    this.currentSelectedLiuRi = {
+      year,
+      month,
+      day,
+      ganZhi: dayGanZhi
+    };
+
     // 计算该日的流时信息
     const liuShiData = BaziService.getLiuShi(year, month, day, dayStem);
 
     // 显示流时横向滚动选择器
     this.showLiuShiSelector(year, month, day, liuShiData);
+
+    // 扩展四柱表格到流日层级
+    console.log('🚀 selectLiuRi: 准备调用 extendBaziTableToLevel(liuri)');
+    this.extendBaziTableToLevel('liuri');
+    console.log('🚀 selectLiuRi: extendBaziTableToLevel(liuri) 调用完成');
   }
 
   /**
@@ -6774,7 +6856,19 @@ export class InteractiveBaziView {
         timeItem.style.background = 'var(--interactive-accent)';
         timeItem.style.color = 'var(--text-on-accent)';
 
-        console.log(`选择流时: ${timeInfo[index]?.name} (${liuShi.ganZhi})`);
+        console.log(`🕐 选择流时: ${timeInfo[index]?.name} (${liuShi.ganZhi})`);
+
+        // 保存当前选中的流时信息
+        this.currentSelectedLiuShi = {
+          time: index,
+          name: timeInfo[index]?.name,
+          ganZhi: liuShi.ganZhi
+        };
+
+        // 扩展四柱表格到流时层级
+        console.log('🚀 selectLiuShi: 准备调用 extendBaziTableToLevel(liushi)');
+        this.extendBaziTableToLevel('liushi');
+        console.log('🚀 selectLiuShi: extendBaziTableToLevel(liushi) 调用完成');
       });
 
       // 默认选中第一个
@@ -6783,4 +6877,125 @@ export class InteractiveBaziView {
       }
     });
   }
+
+  /**
+   * 创建流日信息
+   */
+  private createLiuRiInfo() {
+    const liuRiSection = this.container.createDiv({ cls: 'bazi-view-section' });
+    liuRiSection.createEl('h3', { text: '流日信息' });
+
+    // 创建流日表格容器
+    this.liuRiTable = liuRiSection.createEl('table', { cls: 'bazi-view-table bazi-liuri-table' });
+
+    // 初始显示提示信息
+    this.liuRiTable.createEl('div', {
+      text: '请先选择流月',
+      cls: 'bazi-empty-message'
+    });
+
+    console.log('✅ 流日信息创建完成');
+  }
+
+  /**
+   * 创建流时信息
+   */
+  private createLiuShiInfo() {
+    const liuShiSection = this.container.createDiv({ cls: 'bazi-view-section' });
+    liuShiSection.createEl('h3', { text: '流时信息' });
+
+    // 创建流时表格容器
+    this.liuShiTable = liuShiSection.createEl('table', { cls: 'bazi-view-table bazi-liushi-table' });
+
+    // 初始显示提示信息
+    this.liuShiTable.createEl('div', {
+      text: '请先选择流日',
+      cls: 'bazi-empty-message'
+    });
+
+    console.log('✅ 流时信息创建完成');
+  }
+
+  /**
+   * 获取当前选中的流日柱信息
+   */
+  private getCurrentLiuRiPillar(): ExtendedPillarInfo | null {
+    console.log(`📅 getCurrentLiuRiPillar: 开始获取流日柱信息`);
+
+    if (!this.currentSelectedLiuRi) {
+      console.log(`❌ getCurrentLiuRiPillar: 没有选中的流日`);
+      return null;
+    }
+
+    console.log(`📅 getCurrentLiuRiPillar: 使用当前选中流日`, this.currentSelectedLiuRi);
+
+    const ganZhi = this.currentSelectedLiuRi.ganZhi;
+    if (!ganZhi || ganZhi.length < 2) {
+      console.log(`❌ getCurrentLiuRiPillar: 流日干支无效`, ganZhi);
+      return null;
+    }
+
+    const stem = ganZhi[0];
+    const branch = ganZhi[1];
+    const dayStem = this.baziInfo.dayStem || '';
+
+    return {
+      type: 'liuri',
+      name: '流日',
+      stem,
+      branch,
+      ganZhi,
+      hideGan: BaziCalculator.getHideGan(branch),
+      shiShenGan: ShiShenCalculator.getShiShen(dayStem, stem),
+      shiShenZhi: ShiShenCalculator.getHiddenShiShen(dayStem, branch),
+      diShi: this.calculateDiShiForPillar(dayStem, branch),
+      naYin: BaziCalculator.getNaYin(ganZhi),
+      xunKong: BaziCalculator.calculateXunKong(stem, branch),
+      shengXiao: BaziUtils.getShengXiao(branch),
+      shenSha: [], // TODO: 计算流日神煞
+      wuXing: BaziUtils.getStemWuXing(stem)
+    };
+  }
+
+  /**
+   * 获取当前选中的流时柱信息
+   */
+  private getCurrentLiuShiPillar(): ExtendedPillarInfo | null {
+    console.log(`⏰ getCurrentLiuShiPillar: 开始获取流时柱信息`);
+
+    if (!this.currentSelectedLiuShi) {
+      console.log(`❌ getCurrentLiuShiPillar: 没有选中的流时`);
+      return null;
+    }
+
+    console.log(`⏰ getCurrentLiuShiPillar: 使用当前选中流时`, this.currentSelectedLiuShi);
+
+    const ganZhi = this.currentSelectedLiuShi.ganZhi;
+    if (!ganZhi || ganZhi.length < 2) {
+      console.log(`❌ getCurrentLiuShiPillar: 流时干支无效`, ganZhi);
+      return null;
+    }
+
+    const stem = ganZhi[0];
+    const branch = ganZhi[1];
+    const dayStem = this.baziInfo.dayStem || '';
+
+    return {
+      type: 'liushi',
+      name: '流时',
+      stem,
+      branch,
+      ganZhi,
+      hideGan: BaziCalculator.getHideGan(branch),
+      shiShenGan: ShiShenCalculator.getShiShen(dayStem, stem),
+      shiShenZhi: ShiShenCalculator.getHiddenShiShen(dayStem, branch),
+      diShi: this.calculateDiShiForPillar(dayStem, branch),
+      naYin: BaziCalculator.getNaYin(ganZhi),
+      xunKong: BaziCalculator.calculateXunKong(stem, branch),
+      shengXiao: BaziUtils.getShengXiao(branch),
+      shenSha: [], // TODO: 计算流时神煞
+      wuXing: BaziUtils.getStemWuXing(stem)
+    };
+  }
+
 }

@@ -209,8 +209,36 @@ export class RefactoredBaziView {
     // 更新扩展表格管理器的选中流月
     this.extendedTableManager.setCurrentSelectedLiuYue(liuYue);
 
+    // 重置流日和流时选择状态
+    this.extendedTableManager.resetLiuRiSelection();
+
     // 扩展四柱表格到流月层级
     this.extendedTableManager.extendBaziTableToLevel('liuyue');
+  }
+
+  /**
+   * 处理流日选择
+   */
+  private handleLiuRiSelect(liuRi: any) {
+    // 更新扩展表格管理器的选中流日
+    this.extendedTableManager.setCurrentSelectedLiuRi(liuRi);
+
+    // 重置流时选择状态
+    this.extendedTableManager.resetLiuShiSelection();
+
+    // 扩展四柱表格到流日层级
+    this.extendedTableManager.extendBaziTableToLevel('liuri');
+  }
+
+  /**
+   * 处理流时选择
+   */
+  private handleLiuShiSelect(liuShi: any) {
+    // 更新扩展表格管理器的选中流时
+    this.extendedTableManager.setCurrentSelectedLiuShi(liuShi);
+
+    // 扩展四柱表格到流时层级
+    this.extendedTableManager.extendBaziTableToLevel('liushi');
   }
 
   /**

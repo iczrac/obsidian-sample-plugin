@@ -37,6 +37,8 @@ export class ExtendedTableManager {
   private selectedDaYunIndex = 0;
   private selectedLiuNianYear = 0;
   private currentSelectedLiuYue: any = null;
+  private currentSelectedLiuRi: any = null;
+  private currentSelectedLiuShi: any = null;
   private currentDaYunLiuNianData: any[] = [];
 
   constructor(baziInfo: BaziInfo, baziTable: HTMLTableElement) {
@@ -101,6 +103,34 @@ export class ExtendedTableManager {
   }
 
   /**
+   * 设置当前选中的流日
+   */
+  setCurrentSelectedLiuRi(liuRi: any) {
+    this.currentSelectedLiuRi = liuRi;
+  }
+
+  /**
+   * 获取当前选中的流日
+   */
+  getCurrentSelectedLiuRi(): any {
+    return this.currentSelectedLiuRi;
+  }
+
+  /**
+   * 设置当前选中的流时
+   */
+  setCurrentSelectedLiuShi(liuShi: any) {
+    this.currentSelectedLiuShi = liuShi;
+  }
+
+  /**
+   * 获取当前选中的流时
+   */
+  getCurrentSelectedLiuShi(): any {
+    return this.currentSelectedLiuShi;
+  }
+
+  /**
    * 设置当前大运的流年数据缓存
    */
   setCurrentDaYunLiuNianData(data: any[]) {
@@ -121,6 +151,8 @@ export class ExtendedTableManager {
     this.selectedDaYunIndex = 0;
     this.selectedLiuNianYear = 0;
     this.currentSelectedLiuYue = null;
+    this.currentSelectedLiuRi = null;
+    this.currentSelectedLiuShi = null;
     this.currentDaYunLiuNianData = [];
   }
 
@@ -130,6 +162,8 @@ export class ExtendedTableManager {
   resetLiuNianAndLiuYueSelections() {
     this.selectedLiuNianYear = 0;
     this.currentSelectedLiuYue = null;
+    this.currentSelectedLiuRi = null;
+    this.currentSelectedLiuShi = null;
   }
 
   /**
@@ -137,6 +171,23 @@ export class ExtendedTableManager {
    */
   resetLiuYueSelection() {
     this.currentSelectedLiuYue = null;
+    this.currentSelectedLiuRi = null;
+    this.currentSelectedLiuShi = null;
+  }
+
+  /**
+   * 重置流日选择状态
+   */
+  resetLiuRiSelection() {
+    this.currentSelectedLiuRi = null;
+    this.currentSelectedLiuShi = null;
+  }
+
+  /**
+   * 重置流时选择状态
+   */
+  resetLiuShiSelection() {
+    this.currentSelectedLiuShi = null;
   }
 
   /**
@@ -190,9 +241,24 @@ export class ExtendedTableManager {
    */
   private getActualTargetLevel(requestedLevel: string): 'dayun' | 'liunian' | 'liuyue' | 'liuri' | 'liushi' {
     // 检查各层级的可用性
-    if (requestedLevel === 'liushi' || requestedLevel === 'liuri') {
-      // 流时和流日暂不支持，降级到流月
-      if (this.currentSelectedLiuYue) {
+    if (requestedLevel === 'liushi') {
+      // 流时需要选择流时
+      if (this.currentSelectedLiuShi) {
+        return 'liushi';
+      } else if (this.currentSelectedLiuRi) {
+        return 'liuri';
+      } else if (this.currentSelectedLiuYue) {
+        return 'liuyue';
+      } else if (this.selectedLiuNianYear && this.selectedLiuNianYear !== 0) {
+        return 'liunian';
+      } else {
+        return 'dayun';
+      }
+    } else if (requestedLevel === 'liuri') {
+      // 流日需要选择流日
+      if (this.currentSelectedLiuRi) {
+        return 'liuri';
+      } else if (this.currentSelectedLiuYue) {
         return 'liuyue';
       } else if (this.selectedLiuNianYear && this.selectedLiuNianYear !== 0) {
         return 'liunian';
@@ -242,8 +308,12 @@ export class ExtendedTableManager {
         return this.selectedLiuNianYear && this.selectedLiuNianYear !== 0; // 需要选择流年
       } else if (level === 'liuyue') {
         return this.currentSelectedLiuYue !== null; // 需要选择流月
+      } else if (level === 'liuri') {
+        return this.currentSelectedLiuRi !== null; // 需要选择流日
+      } else if (level === 'liushi') {
+        return this.currentSelectedLiuShi !== null; // 需要选择流时
       } else {
-        return false; // 其他层级暂不支持
+        return false; // 其他层级不支持
       }
     });
   }
@@ -467,19 +537,85 @@ export class ExtendedTableManager {
   }
 
   /**
-   * 获取当前选中的流日柱信息（暂未实现）
+   * 获取当前选中的流日柱信息
    */
   private getCurrentLiuRiPillar(): ExtendedPillarInfo | null {
-    console.log(`📅 getCurrentLiuRiPillar: 流日功能暂未实现`);
-    return null;
+    console.log(`📅 getCurrentLiuRiPillar: 开始获取流日柱信息`);
+
+    if (!this.currentSelectedLiuRi) {
+      console.log(`❌ getCurrentLiuRiPillar: 没有选中的流日`);
+      return null;
+    }
+
+    console.log(`📅 getCurrentLiuRiPillar: 使用当前选中流日`, this.currentSelectedLiuRi);
+
+    const ganZhi = this.currentSelectedLiuRi.ganZhi;
+    if (!ganZhi || ganZhi.length < 2) {
+      console.log(`❌ getCurrentLiuRiPillar: 流日干支无效`, ganZhi);
+      return null;
+    }
+
+    const stem = ganZhi[0];
+    const branch = ganZhi[1];
+    const dayStem = this.baziInfo.dayStem || '';
+
+    return {
+      type: 'liuri',
+      name: '流日',
+      stem,
+      branch,
+      ganZhi,
+      hideGan: BaziCalculator.getHideGan(branch),
+      shiShenGan: ShiShenCalculator.getShiShen(dayStem, stem),
+      shiShenZhi: ShiShenCalculator.getHiddenShiShen(dayStem, branch),
+      diShi: this.calculateDiShiForPillar(dayStem, branch),
+      naYin: BaziCalculator.getNaYin(ganZhi),
+      xunKong: BaziCalculator.calculateXunKong(stem, branch),
+      shengXiao: BaziUtils.getShengXiao(branch),
+      shenSha: this.currentSelectedLiuRi.shenSha || [],
+      wuXing: BaziUtils.getStemWuXing(stem)
+    };
   }
 
   /**
-   * 获取当前选中的流时柱信息（暂未实现）
+   * 获取当前选中的流时柱信息
    */
   private getCurrentLiuShiPillar(): ExtendedPillarInfo | null {
-    console.log(`⏰ getCurrentLiuShiPillar: 流时功能暂未实现`);
-    return null;
+    console.log(`⏰ getCurrentLiuShiPillar: 开始获取流时柱信息`);
+
+    if (!this.currentSelectedLiuShi) {
+      console.log(`❌ getCurrentLiuShiPillar: 没有选中的流时`);
+      return null;
+    }
+
+    console.log(`⏰ getCurrentLiuShiPillar: 使用当前选中流时`, this.currentSelectedLiuShi);
+
+    const ganZhi = this.currentSelectedLiuShi.ganZhi;
+    if (!ganZhi || ganZhi.length < 2) {
+      console.log(`❌ getCurrentLiuShiPillar: 流时干支无效`, ganZhi);
+      return null;
+    }
+
+    const stem = ganZhi[0];
+    const branch = ganZhi[1];
+    const dayStem = this.baziInfo.dayStem || '';
+
+    return {
+      type: 'liushi',
+      name: '流时',
+      stem,
+      branch,
+      ganZhi,
+      hideGan: BaziCalculator.getHideGan(branch),
+      shiShenGan: ShiShenCalculator.getShiShen(dayStem, stem),
+      shiShenZhi: ShiShenCalculator.getHiddenShiShen(dayStem, branch),
+      diShi: this.calculateDiShiForPillar(dayStem, branch),
+      naYin: BaziCalculator.getNaYin(ganZhi),
+      xunKong: BaziCalculator.calculateXunKong(stem, branch),
+      shengXiao: BaziUtils.getShengXiao(branch),
+      shenSha: this.currentSelectedLiuShi.shenSha || [],
+      wuXing: BaziUtils.getStemWuXing(stem)
+    };
   }
 
   /**
