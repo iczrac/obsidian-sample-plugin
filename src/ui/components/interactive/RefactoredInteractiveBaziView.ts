@@ -9,6 +9,7 @@ import { BaziService } from '../../../services/BaziService';
 import { ExplanationServiceManager } from '../../../services/ExplanationServiceManager';
 import { PillarCalculationService } from '../../../services/bazi/PillarCalculationService';
 import { StyleUtilsService } from '../../../services/bazi/StyleUtilsService';
+import { DataGenerationService } from '../../../services/bazi/DataGenerationService';
 
 /**
  * 重构后的交互式八字命盘视图
@@ -379,14 +380,246 @@ export class RefactoredInteractiveBaziView {
     });
   }
 
-  // 临时方法，将在后续实现中完善
-  private generateLiuNianForDaYun(_daYun: any): any[] {
-    // TODO: 实现流年数据生成逻辑
-    return [];
+  /**
+   * 为指定大运生成流年数据
+   * @param daYun 大运信息
+   * @returns 流年数据数组
+   */
+  private generateLiuNianForDaYun(daYun: any): any[] {
+    return DataGenerationService.generateLiuNianForDaYun(daYun);
   }
 
-  private createLiuNianTable(container: HTMLElement, _data: any[]) {
-    // TODO: 实现流年表格创建逻辑
-    container.createEl('div', { text: '流年表格功能开发中...', cls: 'bazi-empty-message' });
+  /**
+   * 创建流年表格
+   * @param container 容器元素
+   * @param data 流年数据
+   */
+  private createLiuNianTable(container: HTMLElement, data: any[]) {
+    if (!data || data.length === 0) {
+      container.createEl('div', {
+        text: '无流年数据',
+        cls: 'bazi-empty-message'
+      });
+      return;
+    }
+
+    // 创建表格
+    const table = container.createEl('table', { cls: 'bazi-view-table bazi-liunian-table' });
+
+    // 创建表头
+    const thead = table.createEl('thead');
+    const headerRow = thead.createEl('tr');
+    headerRow.createEl('th', { text: '年份' });
+    headerRow.createEl('th', { text: '干支' });
+    headerRow.createEl('th', { text: '操作' });
+
+    // 创建表体
+    const tbody = table.createEl('tbody');
+
+    data.forEach((liunian, index) => {
+      const row = tbody.createEl('tr', { cls: 'bazi-liunian-row' });
+
+      // 年份列
+      const yearCell = row.createEl('td', {
+        text: liunian.year.toString(),
+        cls: 'bazi-liunian-year'
+      });
+
+      // 干支列
+      const ganZhiCell = row.createEl('td', { cls: 'bazi-liunian-ganzhi' });
+      StyleUtilsService.createGanZhiElement(ganZhiCell, liunian.ganZhi, 'ganzhi-display');
+
+      // 操作列
+      const actionCell = row.createEl('td', { cls: 'bazi-liunian-action' });
+      const selectBtn = actionCell.createEl('button', {
+        text: '选择',
+        cls: 'bazi-select-button'
+      });
+
+      // 添加点击事件
+      selectBtn.addEventListener('click', () => {
+        // 高亮选中的行
+        tbody.querySelectorAll('.bazi-liunian-row').forEach(r => {
+          r.classList.remove('selected');
+        });
+        row.classList.add('selected');
+
+        // 处理流年选择
+        this.handleLiuNianSelect(liunian);
+      });
+
+      // 默认选中第一个
+      if (index === 0) {
+        selectBtn.click();
+      }
+    });
+  }
+
+  /**
+   * 处理流年选择
+   * @param liunian 流年数据
+   */
+  private handleLiuNianSelect(liunian: any) {
+    console.log(`🎯 选择流年: ${liunian.year} (${liunian.ganZhi})`);
+
+    // 更新扩展列管理器的选中流年
+    this.extendedColumnManager.setSelectedLiuNianYear(liunian.year);
+
+    // 扩展四柱表格到流年层级
+    this.extendedColumnManager.extendBaziTableToLevel('liunian');
+
+    // 生成流月数据并更新流月表格
+    this.updateLiuYueTable(liunian.year);
+  }
+
+  /**
+   * 更新流月表格
+   * @param year 年份
+   */
+  private updateLiuYueTable(year: number) {
+    if (!this.liuYueTable) return;
+
+    // 清空现有内容
+    this.liuYueTable.empty();
+
+    // 生成流月数据
+    const liuYueData = DataGenerationService.generateLiuYueForYear(year);
+
+    // 创建流月表格
+    this.createLiuYueTable(this.liuYueTable, liuYueData);
+  }
+
+  /**
+   * 创建流月表格
+   * @param container 容器元素
+   * @param data 流月数据
+   */
+  private createLiuYueTable(container: HTMLElement, data: any[]) {
+    if (!data || data.length === 0) {
+      container.createEl('div', {
+        text: '无流月数据',
+        cls: 'bazi-empty-message'
+      });
+      return;
+    }
+
+    // 创建流月表格
+    const table = container.createEl('table', { cls: 'bazi-view-table bazi-liuyue-table' });
+
+    // 创建表头
+    const thead = table.createEl('thead');
+    const headerRow = thead.createEl('tr');
+    headerRow.createEl('th', { text: '月份' });
+    headerRow.createEl('th', { text: '干支' });
+    headerRow.createEl('th', { text: '开始' });
+
+    // 创建表体
+    const tbody = table.createEl('tbody');
+
+    data.forEach((liuyue, index) => {
+      const row = tbody.createEl('tr', { cls: 'bazi-liuyue-row' });
+
+      // 月份列
+      row.createEl('td', {
+        text: liuyue.name,
+        cls: 'bazi-liuyue-month'
+      });
+
+      // 干支列
+      const ganZhiCell = row.createEl('td', { cls: 'bazi-liuyue-ganzhi' });
+      StyleUtilsService.createGanZhiElement(ganZhiCell, liuyue.ganZhi, 'ganzhi-display');
+
+      // 开始日期列
+      row.createEl('td', {
+        text: liuyue.startDate,
+        cls: 'bazi-liuyue-start'
+      });
+
+      // 添加点击事件
+      row.addEventListener('click', () => {
+        // 高亮选中的行
+        tbody.querySelectorAll('.bazi-liuyue-row').forEach(r => {
+          r.classList.remove('selected');
+        });
+        row.classList.add('selected');
+
+        // 处理流月选择
+        this.handleLiuYueSelect(liuyue);
+      });
+
+      // 默认选中第一个
+      if (index === 0) {
+        row.click();
+      }
+    });
+  }
+
+  /**
+   * 处理流月选择
+   * @param liuYue 流月数据
+   */
+  private handleLiuYueSelect(liuYue: any) {
+    console.log(`🎯 选择流月: ${liuYue.month}月 (${liuYue.ganZhi})`);
+
+    // 更新扩展列管理器的选中流月
+    this.extendedColumnManager.setCurrentSelectedLiuYue(liuYue);
+
+    // 扩展四柱表格到流月层级
+    this.extendedColumnManager.extendBaziTableToLevel('liuyue');
+
+    // 生成流日数据并显示流日选择器
+    const liuRiData = DataGenerationService.generateLiuRiForMonth(liuYue.year, liuYue.month);
+    this.horizontalSelectorManager.showLiuRiSelector(
+      liuYue.year,
+      liuYue.ganZhi,
+      liuRiData,
+      (year, month, day) => {
+        this.handleLiuRiSelect(year, month, day);
+      }
+    );
+  }
+
+  /**
+   * 处理流日选择
+   * @param year 年份
+   * @param month 月份
+   * @param day 日期
+   */
+  private handleLiuRiSelect(year: number, month: number, day: number) {
+    console.log(`🎯 选择流日: ${year}-${month}-${day}`);
+
+    // 更新扩展列管理器的选中流日
+    this.extendedColumnManager.setCurrentSelectedLiuRi({ year, month, day });
+
+    // 扩展四柱表格到流日层级
+    this.extendedColumnManager.extendBaziTableToLevel('liuri');
+
+    // 生成流时数据并显示流时选择器
+    const liuShiData = DataGenerationService.generateLiuShiForDay(year, month, day);
+    this.horizontalSelectorManager.showLiuShiSelector(
+      year,
+      month,
+      day,
+      liuShiData,
+      (timeIndex, ganZhi, name) => {
+        this.handleLiuShiSelect(timeIndex, ganZhi, name);
+      }
+    );
+  }
+
+  /**
+   * 处理流时选择
+   * @param timeIndex 时辰索引
+   * @param ganZhi 干支
+   * @param name 时辰名称
+   */
+  private handleLiuShiSelect(timeIndex: number, ganZhi: string, name: string) {
+    console.log(`🎯 选择流时: ${name} (${ganZhi})`);
+
+    // 更新扩展列管理器的选中流时
+    this.extendedColumnManager.setCurrentSelectedLiuShi({ timeIndex, ganZhi, name });
+
+    // 扩展四柱表格到流时层级
+    this.extendedColumnManager.extendBaziTableToLevel('liushi');
   }
 }
