@@ -327,37 +327,67 @@ export class BaziTableManager {
   }
 
   /**
-   * 创建纳音行
+   * 创建纳音行（使用统一颜色方案）
    */
   private createNaYinRow(tbody: HTMLElement) {
     const naYinRow = tbody.createEl('tr', { cls: 'bazi-nayin-row' });
     naYinRow.createEl('td', { text: '纳音', cls: 'bazi-table-label' });
 
     // 年柱纳音
-    naYinRow.createEl('td', { text: this.baziInfo.yearNaYin || '' });
+    const yearNaYinCell = naYinRow.createEl('td', { text: this.baziInfo.yearNaYin || '' });
+    if (this.baziInfo.yearNaYin) {
+      ColorSchemeService.setNaYinColor(yearNaYinCell, this.baziInfo.yearNaYin);
+    }
+
     // 月柱纳音
-    naYinRow.createEl('td', { text: this.baziInfo.monthNaYin || '' });
+    const monthNaYinCell = naYinRow.createEl('td', { text: this.baziInfo.monthNaYin || '' });
+    if (this.baziInfo.monthNaYin) {
+      ColorSchemeService.setNaYinColor(monthNaYinCell, this.baziInfo.monthNaYin);
+    }
+
     // 日柱纳音
-    naYinRow.createEl('td', { text: this.baziInfo.dayNaYin || '' });
+    const dayNaYinCell = naYinRow.createEl('td', { text: this.baziInfo.dayNaYin || '' });
+    if (this.baziInfo.dayNaYin) {
+      ColorSchemeService.setNaYinColor(dayNaYinCell, this.baziInfo.dayNaYin);
+    }
+
     // 时柱纳音
-    naYinRow.createEl('td', { text: this.baziInfo.timeNaYin || '' });
+    const timeNaYinCell = naYinRow.createEl('td', { text: this.baziInfo.timeNaYin || '' });
+    if (this.baziInfo.timeNaYin) {
+      ColorSchemeService.setNaYinColor(timeNaYinCell, this.baziInfo.timeNaYin);
+    }
   }
 
   /**
-   * 创建旬空行
+   * 创建旬空行（使用统一颜色方案）
    */
   private createXunKongRow(tbody: HTMLElement) {
     const xunKongRow = tbody.createEl('tr', { cls: 'bazi-xunkong-row' });
     xunKongRow.createEl('td', { text: '旬空', cls: 'bazi-table-label' });
 
     // 年柱旬空
-    xunKongRow.createEl('td', { text: this.baziInfo.yearXunKong || '' });
+    const yearXunKongCell = xunKongRow.createEl('td');
+    if (this.baziInfo.yearXunKong) {
+      ColorSchemeService.createColoredXunKongElement(yearXunKongCell, this.baziInfo.yearXunKong);
+    }
+
     // 月柱旬空
-    xunKongRow.createEl('td', { text: this.baziInfo.monthXunKong || '' });
+    const monthXunKongCell = xunKongRow.createEl('td');
+    if (this.baziInfo.monthXunKong) {
+      ColorSchemeService.createColoredXunKongElement(monthXunKongCell, this.baziInfo.monthXunKong);
+    }
+
     // 日柱旬空
-    xunKongRow.createEl('td', { text: this.baziInfo.dayXunKong || '' });
+    const dayXunKongCell = xunKongRow.createEl('td');
+    if (this.baziInfo.dayXunKong) {
+      ColorSchemeService.createColoredXunKongElement(dayXunKongCell, this.baziInfo.dayXunKong);
+    }
+
     // 时柱旬空
-    xunKongRow.createEl('td', { text: this.baziInfo.timeXunKong || '' });
+    const timeXunKongCell = xunKongRow.createEl('td');
+    if (this.baziInfo.timeXunKong) {
+      ColorSchemeService.createColoredXunKongElement(timeXunKongCell, this.baziInfo.timeXunKong);
+    }
   }
 
   /**
@@ -463,19 +493,17 @@ export class BaziTableManager {
   }
 
   /**
-   * 应用天干五行颜色
+   * 应用天干五行颜色（使用统一颜色方案）
    */
   private applyStemWuXingColor(element: HTMLElement, stem: string) {
-    const wuXing = this.getStemWuXing(stem);
-    this.setWuXingColorDirectly(element, wuXing);
+    ColorSchemeService.setGanColor(element, stem);
   }
 
   /**
-   * 应用地支五行颜色
+   * 应用地支五行颜色（使用统一颜色方案）
    */
   private applyBranchWuXingColor(element: HTMLElement, branch: string) {
-    const wuXing = this.getBranchWuXing(branch);
-    this.setWuXingColorDirectly(element, wuXing);
+    ColorSchemeService.setZhiColor(element, branch);
   }
 
   /**
@@ -521,31 +549,7 @@ export class BaziTableManager {
     this.container.dispatchEvent(event);
   }
 
-  /**
-   * 获取天干五行
-   */
-  private getStemWuXing(stem: string): string {
-    const stemWuXing: { [key: string]: string } = {
-      '甲': '木', '乙': '木',
-      '丙': '火', '丁': '火',
-      '戊': '土', '己': '土',
-      '庚': '金', '辛': '金',
-      '壬': '水', '癸': '水'
-    };
-    return stemWuXing[stem] || '';
-  }
 
-  /**
-   * 获取地支五行
-   */
-  private getBranchWuXing(branch: string): string {
-    const branchWuXing: { [key: string]: string } = {
-      '子': '水', '丑': '土', '寅': '木', '卯': '木',
-      '辰': '土', '巳': '火', '午': '火', '未': '土',
-      '申': '金', '酉': '金', '戌': '土', '亥': '水'
-    };
-    return branchWuXing[branch] || '';
-  }
 
   /**
    * 直接设置五行颜色（使用统一颜色方案）
