@@ -1,6 +1,7 @@
 import { BaziInfo, DaYunInfo } from '../../types/BaziInfo';
 import { ExtendedTableManager } from './ExtendedTableManager';
 import { ColorSchemeService } from '../../services/bazi/ColorSchemeService';
+import { BaziCalculator } from '../../services/bazi/BaziCalculator';
 
 /**
  * 大运表格管理器
@@ -81,8 +82,8 @@ export class DaYunTableManager {
       this.createShiShenRow(daYunData);
     }
 
-    // 第五行：地势（如果有）
-    if (Array.isArray(daYunData) && daYunData.some(dy => dy.diShi)) {
+    // 第五行：地势（总是创建，支持动态计算）
+    if (Array.isArray(daYunData)) {
       this.createDiShiRow(daYunData);
     }
 
@@ -192,13 +193,41 @@ export class DaYunTableManager {
 
     daYunData.slice(0, 10).forEach(dy => {
       const cell = diShiRow.createEl('td', {
-        text: dy.diShi || '',
         cls: 'bazi-dishi-cell'
       });
-      if (dy.diShi) {
-        ColorSchemeService.setDiShiColor(cell, dy.diShi);
+
+      // 动态计算地势值
+      let diShiValue = dy.diShi || '';
+
+      // 如果没有预计算的地势值，则动态计算
+      if (!diShiValue && dy.ganZhi && dy.ganZhi.length >= 2) {
+        const dayStem = this.baziInfo.dayStem || '';
+        const branch = dy.ganZhi[1]; // 地支
+        if (dayStem && branch) {
+          diShiValue = this.calculateDiShi(dayStem, branch);
+        }
+      }
+
+      // 设置单元格内容和颜色
+      if (diShiValue) {
+        cell.textContent = diShiValue;
+        ColorSchemeService.setDiShiColor(cell, diShiValue);
+      } else {
+        cell.textContent = '';
       }
     });
+  }
+
+  /**
+   * 计算地势（使用BaziCalculator）
+   */
+  private calculateDiShi(stem: string, branch: string): string {
+    try {
+      return BaziCalculator.getDiShi(stem, branch);
+    } catch (error) {
+      console.error('计算地势失败:', error);
+      return '';
+    }
   }
 
   /**
