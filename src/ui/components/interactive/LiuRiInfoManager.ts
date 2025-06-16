@@ -13,7 +13,7 @@ export class LiuRiInfoManager {
   private plugin?: any;
   private onLiuRiSelect?: (liuri: any) => void;
   private selectedYear: number = 0;
-  private selectedMonth: number = 0;
+  private selectedMonthGanZhi: string = '';
   private isExpanded: boolean = false; // 默认收起
   private liuRiSection: HTMLElement | null = null;
   private infoContainer: HTMLElement | null = null;
@@ -123,7 +123,7 @@ export class LiuRiInfoManager {
     }
 
     // 如果展开且有数据，重新渲染
-    if (this.isExpanded && this.selectedYear > 0 && this.selectedMonth > 0) {
+    if (this.isExpanded && this.selectedYear > 0 && this.selectedMonthGanZhi) {
       this.reRenderTable();
     }
   }
@@ -134,7 +134,7 @@ export class LiuRiInfoManager {
   private addLiuRiInfo() {
     if (!this.infoContainer) return;
 
-    if (this.selectedYear === 0 || this.selectedMonth === 0) {
+    if (this.selectedYear === 0 || !this.selectedMonthGanZhi) {
       this.infoContainer.createEl('div', {
         text: '请选择流月查看对应流日',
         cls: 'bazi-empty-message'
@@ -155,17 +155,17 @@ export class LiuRiInfoManager {
    * 创建流日表格
    */
   private createLiuRiTable() {
-    if (!this.infoContainer || this.selectedYear === 0 || this.selectedMonth === 0) return;
+    if (!this.infoContainer || this.selectedYear === 0 || !this.selectedMonthGanZhi) return;
 
     // 清空容器
     this.infoContainer.empty();
 
     // 生成流日数据
-    const liuRiData = this.generateLiuRiData(this.selectedYear, this.selectedMonth);
-    
+    const liuRiData = this.generateLiuRiData(this.selectedYear, this.selectedMonthGanZhi);
+
     if (!liuRiData || liuRiData.length === 0) {
       this.infoContainer.createEl('div', {
-        text: `${this.selectedYear}年${this.selectedMonth}月无流日数据`,
+        text: `${this.selectedYear}年${this.selectedMonthGanZhi}月无流日数据`,
         cls: 'bazi-empty-message'
       }).style.cssText = `
         padding: 20px;
@@ -205,16 +205,14 @@ export class LiuRiInfoManager {
   /**
    * 生成流日数据
    */
-  private generateLiuRiData(year: number, month: number): any[] {
+  private generateLiuRiData(year: number, monthGanZhi: string): any[] {
     try {
-      // 获取日干和月柱干支用于计算
+      // 获取日干用于计算
       const dayStem = this.baziInfo.dayStem || '甲';
-      // 这里需要根据月份获取对应的月柱干支，暂时简化处理
-      const monthGanZhi = '甲寅'; // 简化，实际应该根据年份和月份计算
 
       // 使用数据生成服务（统一后端算法）
       const liuRiData = DataGenerationService.generateLiuRiForMonth(year, monthGanZhi, dayStem);
-      console.log(`🎯 生成${year}年${month}月流日数据:`, liuRiData);
+      console.log(`🎯 生成${year}年${monthGanZhi}月流日数据:`, liuRiData);
       return liuRiData;
     } catch (error) {
       console.error('❌ 生成流日数据失败:', error);
@@ -222,7 +220,7 @@ export class LiuRiInfoManager {
       // 返回简化的备用数据（假设30天）
       return Array.from({ length: 30 }, (_, index) => ({
         year,
-        month,
+        month: 1, // 简化
         day: index + 1,
         ganZhi: '甲子', // 简化
         shiShen: '比肩',
@@ -512,10 +510,10 @@ export class LiuRiInfoManager {
   /**
    * 设置选中的年月
    */
-  setSelectedYearMonth(year: number, month: number) {
-    console.log(`🎯 LiuRiInfoManager: 设置年月 ${year}年${month}月`);
+  setSelectedYearMonth(year: number, monthGanZhi: string) {
+    console.log(`🎯 LiuRiInfoManager: 设置年月 ${year}年${monthGanZhi}月`);
     this.selectedYear = year;
-    this.selectedMonth = month;
+    this.selectedMonthGanZhi = monthGanZhi;
 
     // 清空容器并重新创建流日表格
     if (this.infoContainer) {

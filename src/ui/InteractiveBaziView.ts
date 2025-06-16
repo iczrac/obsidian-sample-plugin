@@ -635,8 +635,8 @@ export class InteractiveBaziView {
     // 扩展四柱表格到流月层级
     this.extendedColumnManager.extendBaziTableToLevel('liuyue');
 
-    // 生成流日数据并显示流日选择器
-    const liuRiData = DataGenerationService.generateLiuRiForMonth(liuYue.year, liuYue.month);
+    // 生成流日数据并显示流日选择器（使用干支而不是月份数字）
+    const liuRiData = DataGenerationService.generateLiuRiForMonth(liuYue.year, liuYue.ganZhi, this.baziInfo.dayStem || '甲');
     this.horizontalSelectorManager.showLiuRiSelector(
       liuYue.year,
       liuYue.ganZhi,
@@ -715,8 +715,8 @@ export class InteractiveBaziView {
     // 重置下级选择状态
     this.resetLowerLevelSelections('liuyue');
 
-    // 生成并显示流日数据
-    this.generateAndShowLiuRiData(liuYue.year, liuYue.month);
+    // 生成并显示流日数据（使用干支而不是月份数字）
+    this.generateAndShowLiuRiData(liuYue.year, liuYue.ganZhi);
   }
 
   /**

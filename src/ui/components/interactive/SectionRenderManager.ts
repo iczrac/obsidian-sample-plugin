@@ -245,9 +245,9 @@ export class SectionRenderManager {
   private handleLiuYueSelect(liuyue: any) {
     console.log(`🎯 SectionRenderManager: 流月选择 ${liuyue.month}月`);
 
-    // 更新流日信息管理器的年月
+    // 更新流日信息管理器的年月（传递干支而不是月份数字）
     if (this.liuRiInfoManager) {
-      this.liuRiInfoManager.setSelectedYearMonth(liuyue.year, liuyue.month);
+      this.liuRiInfoManager.setSelectedYearMonth(liuyue.year, liuyue.ganZhi);
     }
 
     // 触发自定义事件，让父组件处理

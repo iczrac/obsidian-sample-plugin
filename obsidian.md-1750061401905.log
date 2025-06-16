@@ -1,0 +1,159 @@
+ 🎯 流月选择: 4月 (癸巳)
+plugin:bazi-obsidian:1068 🎯 SectionRenderManager: 流月选择 4月
+plugin:bazi-obsidian:971 🎯 LiuRiInfoManager: 设置年月 1986年4月
+plugin:bazi-obsidian:535 🎯 DataGenerationService.generateLiuRiForMonth: 使用后端算法生成1986年甲寅月流日数据
+plugin:bazi-obsidian:7 🗓️ LiuRiCalculator.calculateLiuRi 开始计算干支月流日
+plugin:bazi-obsidian:7 🗓️ 参数: year = 1986, monthGanZhi = 甲寅, dayStem = 丙
+plugin:bazi-obsidian:7 🗓️ 查找起始节气: 立春 (年份: 1986)
+plugin:bazi-obsidian:7 🔍 查找节气 立春，年份: 1986
+plugin:bazi-obsidian:7 🔍 创建Solar对象: 1986-06-15
+plugin:bazi-obsidian:7 🔍 获取Lunar对象: 一九八六年五月初九
+plugin:bazi-obsidian:7 🔍 节气表键值: (31) ['DA_XUE', '冬至', '小寒', '大寒', '立春', '雨水', '惊蛰', '春分', '清明', '谷雨', '立夏', '小满', '芒种', '夏至', '小暑', '大暑', '立秋', '处暑', '白露', '秋分', '寒露', '霜降', '立冬', '小雪', '大雪', 'DONG_ZHI', 'XIAO_HAN', 'DA_HAN', 'LI_CHUN', 'YU_SHUI', 'JING_ZHE']
+plugin:bazi-obsidian:7 🌸 找到节气 立春: 1986-2-4
+plugin:bazi-obsidian:7 🔍 返回节气日期: 1986-02-04
+plugin:bazi-obsidian:7 🗓️ 起始节气日期: 1986-02-04
+plugin:bazi-obsidian:7 🗓️ 查找结束节气: 惊蛰 (年份: 1986)
+plugin:bazi-obsidian:7 🔍 查找节气 惊蛰，年份: 1986
+plugin:bazi-obsidian:7 🔍 创建Solar对象: 1986-06-15
+plugin:bazi-obsidian:7 🔍 获取Lunar对象: 一九八六年五月初九
+plugin:bazi-obsidian:7 🔍 节气表键值: (31) ['DA_XUE', '冬至', '小寒', '大寒', '立春', '雨水', '惊蛰', '春分', '清明', '谷雨', '立夏', '小满', '芒种', '夏至', '小暑', '大暑', '立秋', '处暑', '白露', '秋分', '寒露', '霜降', '立冬', '小雪', '大雪', 'DONG_ZHI', 'XIAO_HAN', 'DA_HAN', 'LI_CHUN', 'YU_SHUI', 'JING_ZHE']
+plugin:bazi-obsidian:7 🌸 找到节气 惊蛰: 1986-3-6
+plugin:bazi-obsidian:7 🔍 返回节气日期: 1986-03-06
+plugin:bazi-obsidian:7 🗓️ 结束节气日期: 1986-03-06
+plugin:bazi-obsidian:7 🗓️ 解析日期: 开始=1986-2-4, 结束=1986-3-6
+plugin:bazi-obsidian:7 🗓️ 最终日期范围: 1986-02-04 到 1986-03-05
+plugin:bazi-obsidian:7 🗓️ 甲寅月范围: 1986-02-04 到 1986-03-05
+plugin:bazi-obsidian:7 🗓️ 流日 1986-2-4 (己卯) 计算完成
+plugin:bazi-obsidian:7 🗓️ 流日 1986-2-5 (庚辰) 计算完成
+plugin:bazi-obsidian:7 🗓️ 流日 1986-2-6 (辛巳) 计算完成
+plugin:bazi-obsidian:7 🗓️ 流日 1986-2-7 (壬午) 计算完成
+plugin:bazi-obsidian:7 🗓️ 流日 1986-2-8 (癸未) 计算完成
+plugin:bazi-obsidian:7 🗓️ 流日 1986-2-9 (甲申) 计算完成
+plugin:bazi-obsidian:7 🗓️ 流日 1986-2-10 (乙酉) 计算完成
+plugin:bazi-obsidian:7 🗓️ 流日 1986-2-11 (丙戌) 计算完成
+plugin:bazi-obsidian:7 🗓️ 流日 1986-2-12 (丁亥) 计算完成
+plugin:bazi-obsidian:7 🗓️ 流日 1986-2-13 (戊子) 计算完成
+plugin:bazi-obsidian:7 🗓️ 流日 1986-2-14 (己丑) 计算完成
+plugin:bazi-obsidian:7 🗓️ 流日 1986-2-15 (庚寅) 计算完成
+plugin:bazi-obsidian:7 🗓️ 流日 1986-2-16 (辛卯) 计算完成
+plugin:bazi-obsidian:7 🗓️ 流日 1986-2-17 (壬辰) 计算完成
+plugin:bazi-obsidian:7 🗓️ 流日 1986-2-18 (癸巳) 计算完成
+plugin:bazi-obsidian:7 🗓️ 流日 1986-2-19 (甲午) 计算完成
+plugin:bazi-obsidian:7 🗓️ 流日 1986-2-20 (乙未) 计算完成
+plugin:bazi-obsidian:7 🗓️ 流日 1986-2-21 (丙申) 计算完成
+plugin:bazi-obsidian:7 🗓️ 流日 1986-2-22 (丁酉) 计算完成
+plugin:bazi-obsidian:7 🗓️ 流日 1986-2-23 (戊戌) 计算完成
+plugin:bazi-obsidian:7 🗓️ 流日 1986-2-24 (己亥) 计算完成
+plugin:bazi-obsidian:7 🗓️ 流日 1986-2-25 (庚子) 计算完成
+plugin:bazi-obsidian:7 🗓️ 流日 1986-2-26 (辛丑) 计算完成
+plugin:bazi-obsidian:7 🗓️ 流日 1986-2-27 (壬寅) 计算完成
+plugin:bazi-obsidian:7 🗓️ 流日 1986-2-28 (癸卯) 计算完成
+plugin:bazi-obsidian:7 🗓️ 流日 1986-3-1 (甲辰) 计算完成
+plugin:bazi-obsidian:7 🗓️ 流日 1986-3-2 (乙巳) 计算完成
+plugin:bazi-obsidian:7 🗓️ 流日 1986-3-3 (丙午) 计算完成
+plugin:bazi-obsidian:7 🗓️ 流日 1986-3-4 (丁未) 计算完成
+plugin:bazi-obsidian:7 🗓️ 流日 1986-3-5 (戊申) 计算完成
+plugin:bazi-obsidian:7 🗓️ LiuRiCalculator.calculateLiuRi 完成，共计算 30 天
+plugin:bazi-obsidian:947 🎯 生成1986年4月流日数据: (30) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+plugin:bazi-obsidian:1093 🎯 收到流月选择事件: 4月
+plugin:bazi-obsidian:1093 🎯 处理流月选择: 1986年 4
+plugin:bazi-obsidian:1093 🎯 选择流月: 4月 (癸巳)
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuyue层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuyue (请求层级: liuyue)
+plugin:bazi-obsidian:305 🔍 流月强制更新检查: lastLiuYue={"year":1986,"month":5,"ganZhi":"甲午","name":"五月","displayName":"甲午月","startDate":"6.6","endDate":"7.6","shiShen":"偏印","shiShenZhi":["劫财","伤官"],"diShi":"帝旺","xunKong":"辰巳","naYin":"","shenSha":[],"isBackend":true}, currentLiuYue={"year":1986,"month":4,"ganZhi":"癸巳","name":"四月","displayName":"癸巳月","startDate":"5.6","endDate":"6.5","shiShen":"正官","shiShenZhi":["比肩","偏财","食神"],"diShi":"临官","xunKong":"午未","naYin":"","shenSha":[],"isBackend":true}, needsUpdate=true
+plugin:bazi-obsidian:305 🔄 强制更新liuyue层级内容
+plugin:bazi-obsidian:305 🧹 清除现有扩展，当前层级: liuyue
+plugin:bazi-obsidian:305 🧹 开始清除扩展列，当前扩展柱数量: 3
+plugin:bazi-obsidian:305 ✅ 扩展列清除完成
+plugin:bazi-obsidian:305 📋 需要扩展的层级列表: dayun → liunian → liuyue
+plugin:bazi-obsidian:305 🔄 正在处理层级: dayun
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: dayun
+plugin:bazi-obsidian:305 ✅ 获取大运柱信息: 壬午
+plugin:bazi-obsidian:305 ✅ 获取到dayun柱信息: 前运 壬午
+plugin:bazi-obsidian:305 🔄 添加扩展列: 前运 (壬午)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 前运
+plugin:bazi-obsidian:305 🔄 正在处理层级: liunian
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liunian
+plugin:bazi-obsidian:305 ✅ 获取流年柱信息: 1986年 丙寅
+plugin:bazi-obsidian:305 ✅ 获取到liunian柱信息: 流年 丙寅
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流年 (丙寅)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流年
+plugin:bazi-obsidian:305 🔄 正在处理层级: liuyue
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liuyue
+plugin:bazi-obsidian:305 ✅ 获取流月柱信息: 癸巳
+plugin:bazi-obsidian:305 ✅ 获取到liuyue柱信息: 流月 癸巳
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流月 (癸巳)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流月
+plugin:bazi-obsidian:305 ✅ 已扩展到liuyue层级，包含层级：dayun → liunian → liuyue
+plugin:bazi-obsidian:305 📝 更新流月状态跟踪: 大运=0, 流年=1986, 流月={"year":1986,"month":4,"ganZhi":"癸巳","name":"四月","displayName":"癸巳月","startDate":"5.6","endDate":"6.5","shiShen":"正官","shiShenZhi":["比肩","偏财","食神"],"diShi":"临官","xunKong":"午未","naYin":"","shenSha":[],"isBackend":true}
+plugin:bazi-obsidian:535 🎯 DataGenerationService.generateLiuRiForMonth: 使用后端算法生成1986年4月流日数据
+plugin:bazi-obsidian:7 🗓️ LiuRiCalculator.calculateLiuRi 开始计算干支月流日
+plugin:bazi-obsidian:7 🗓️ 参数: year = 1986, monthGanZhi = 4, dayStem = 甲
+plugin:bazi-obsidian:7 🗓️ 无法确定干支月 4 的日期范围
+calculateLiuRi @ plugin:bazi-obsidian:7
+getLiuRi @ plugin:bazi-obsidian:7
+generateLiuRiForMonth @ plugin:bazi-obsidian:535
+selectLiuYue @ plugin:bazi-obsidian:1093
+handleLiuYueSelect @ plugin:bazi-obsidian:1093
+eval @ plugin:bazi-obsidian:1093
+handleLiuYueSelect @ plugin:bazi-obsidian:1068
+eval @ plugin:bazi-obsidian:1052
+selectLiuYue @ plugin:bazi-obsidian:887
+eval @ plugin:bazi-obsidian:887
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuyue层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuyue (请求层级: liuyue)
+plugin:bazi-obsidian:305 🔍 流月强制更新检查: lastLiuYue={"year":1986,"month":4,"ganZhi":"癸巳","name":"四月","displayName":"癸巳月","startDate":"5.6","endDate":"6.5","shiShen":"正官","shiShenZhi":["比肩","偏财","食神"],"diShi":"临官","xunKong":"午未","naYin":"","shenSha":[],"isBackend":true}, currentLiuYue={"year":1986,"month":4,"ganZhi":"癸巳","name":"四月","displayName":"癸巳月","startDate":"5.6","endDate":"6.5","shiShen":"正官","shiShenZhi":["比肩","偏财","食神"],"diShi":"临官","xunKong":"午未","naYin":"","shenSha":[],"isBackend":true}, needsUpdate=false
+plugin:bazi-obsidian:305 ⚠️ 已扩展到liuyue层级，跳过重复扩展
+plugin:bazi-obsidian:1093 🔄 重置下级选择状态: liuyue
+plugin:bazi-obsidian:1093 🔄 生成流日数据: 1986年 4
+plugin:bazi-obsidian:535 🎯 DataGenerationService.generateLiuRiForMonth: 使用后端算法生成1986年4月流日数据
+plugin:bazi-obsidian:7 🗓️ LiuRiCalculator.calculateLiuRi 开始计算干支月流日
+plugin:bazi-obsidian:7 🗓️ 参数: year = 1986, monthGanZhi = 4, dayStem = 丙
+plugin:bazi-obsidian:7 🗓️ 无法确定干支月 4 的日期范围
+calculateLiuRi @ plugin:bazi-obsidian:7
+getLiuRi @ plugin:bazi-obsidian:7
+generateLiuRiForMonth @ plugin:bazi-obsidian:535
+generateAndShowLiuRiData @ plugin:bazi-obsidian:1093
+handleLiuYueSelect @ plugin:bazi-obsidian:1093
+eval @ plugin:bazi-obsidian:1093
+handleLiuYueSelect @ plugin:bazi-obsidian:1068
+eval @ plugin:bazi-obsidian:1052
+selectLiuYue @ plugin:bazi-obsidian:887
+eval @ plugin:bazi-obsidian:887
+plugin:bazi-obsidian:1093 🎯 收到流月选择事件: 4月
+plugin:bazi-obsidian:1093 🎯 处理流月选择: 1986年 4
+plugin:bazi-obsidian:1093 🎯 选择流月: 4月 (癸巳)
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuyue层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuyue (请求层级: liuyue)
+plugin:bazi-obsidian:305 🔍 流月强制更新检查: lastLiuYue={"year":1986,"month":4,"ganZhi":"癸巳","name":"四月","displayName":"癸巳月","startDate":"5.6","endDate":"6.5","shiShen":"正官","shiShenZhi":["比肩","偏财","食神"],"diShi":"临官","xunKong":"午未","naYin":"","shenSha":[],"isBackend":true}, currentLiuYue={"year":1986,"month":4,"ganZhi":"癸巳","name":"四月","displayName":"癸巳月","startDate":"5.6","endDate":"6.5","shiShen":"正官","shiShenZhi":["比肩","偏财","食神"],"diShi":"临官","xunKong":"午未","naYin":"","shenSha":[],"isBackend":true}, needsUpdate=false
+plugin:bazi-obsidian:305 ⚠️ 已扩展到liuyue层级，跳过重复扩展
+plugin:bazi-obsidian:535 🎯 DataGenerationService.generateLiuRiForMonth: 使用后端算法生成1986年4月流日数据
+plugin:bazi-obsidian:7 🗓️ LiuRiCalculator.calculateLiuRi 开始计算干支月流日
+plugin:bazi-obsidian:7 🗓️ 参数: year = 1986, monthGanZhi = 4, dayStem = 甲
+plugin:bazi-obsidian:7 🗓️ 无法确定干支月 4 的日期范围
+calculateLiuRi @ plugin:bazi-obsidian:7
+getLiuRi @ plugin:bazi-obsidian:7
+generateLiuRiForMonth @ plugin:bazi-obsidian:535
+selectLiuYue @ plugin:bazi-obsidian:1093
+handleLiuYueSelect @ plugin:bazi-obsidian:1093
+eval @ plugin:bazi-obsidian:1093
+selectLiuYue @ plugin:bazi-obsidian:887
+eval @ plugin:bazi-obsidian:887
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuyue层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuyue (请求层级: liuyue)
+plugin:bazi-obsidian:305 🔍 流月强制更新检查: lastLiuYue={"year":1986,"month":4,"ganZhi":"癸巳","name":"四月","displayName":"癸巳月","startDate":"5.6","endDate":"6.5","shiShen":"正官","shiShenZhi":["比肩","偏财","食神"],"diShi":"临官","xunKong":"午未","naYin":"","shenSha":[],"isBackend":true}, currentLiuYue={"year":1986,"month":4,"ganZhi":"癸巳","name":"四月","displayName":"癸巳月","startDate":"5.6","endDate":"6.5","shiShen":"正官","shiShenZhi":["比肩","偏财","食神"],"diShi":"临官","xunKong":"午未","naYin":"","shenSha":[],"isBackend":true}, needsUpdate=false
+plugin:bazi-obsidian:305 ⚠️ 已扩展到liuyue层级，跳过重复扩展
+plugin:bazi-obsidian:1093 🔄 重置下级选择状态: liuyue
+plugin:bazi-obsidian:1093 🔄 生成流日数据: 1986年 4
+plugin:bazi-obsidian:535 🎯 DataGenerationService.generateLiuRiForMonth: 使用后端算法生成1986年4月流日数据
+plugin:bazi-obsidian:7 🗓️ LiuRiCalculator.calculateLiuRi 开始计算干支月流日
+plugin:bazi-obsidian:7 🗓️ 参数: year = 1986, monthGanZhi = 4, dayStem = 丙
+plugin:bazi-obsidian:7 🗓️ 无法确定干支月 4 的日期范围
+calculateLiuRi @ plugin:bazi-obsidian:7
+getLiuRi @ plugin:bazi-obsidian:7
+generateLiuRiForMonth @ plugin:bazi-obsidian:535
+generateAndShowLiuRiData @ plugin:bazi-obsidian:1093
+handleLiuYueSelect @ plugin:bazi-obsidian:1093
+eval @ plugin:bazi-obsidian:1093
+selectLiuYue @ plugin:bazi-obsidian:887
+eval @ plugin:bazi-obsidian:887
