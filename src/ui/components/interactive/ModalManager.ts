@@ -30,18 +30,18 @@ export class ModalManager {
     const shenShaInfo = ShenShaExplanationService.getShenShaInfo(shenSha);
     if (!shenShaInfo) {
       console.log(`未找到神煞 ${shenSha} 的解释`);
+      // 尝试从新的神煞数据服务获取信息
+      const explanation = this.createFallbackShenShaContent(shenSha);
+      this.createModal({
+        title: shenSha,
+        content: explanation,
+        type: 'shensha',
+        event
+      });
       return;
     }
 
-    const explanation = `
-      <div class="shensha-explanation">
-        <p><strong>类型：</strong>${shenShaInfo.type}</p>
-        <p><strong>解释：</strong>${shenShaInfo.explanation}</p>
-        <p><strong>影响：</strong>${shenShaInfo.influence}</p>
-        <p><strong>建议：</strong>${shenShaInfo.advice}</p>
-        <p><strong>计算：</strong>${shenShaInfo.calculation}</p>
-      </div>
-    `;
+    const explanation = this.createEnhancedShenShaContent(shenShaInfo);
 
     this.createModal({
       title: shenSha,
@@ -49,6 +49,179 @@ export class ModalManager {
       type: 'shensha',
       event
     });
+  }
+
+  /**
+   * 创建增强的神煞内容
+   */
+  private createEnhancedShenShaContent(shenShaInfo: any): string {
+    return `
+      <div class="shensha-explanation-enhanced">
+        <div class="shensha-header">
+          <div class="shensha-type-badge shensha-type-${shenShaInfo.type.toLowerCase()}">
+            ${shenShaInfo.type}
+          </div>
+        </div>
+
+        <div class="shensha-content">
+          <div class="shensha-section">
+            <h4 class="section-title">
+              <span class="section-icon">📖</span>
+              概述
+            </h4>
+            <p class="section-content">${shenShaInfo.explanation}</p>
+          </div>
+
+          <div class="shensha-section">
+            <h4 class="section-title">
+              <span class="section-icon">🎯</span>
+              主要影响
+            </h4>
+            <p class="section-content">${shenShaInfo.influence}</p>
+          </div>
+
+          <div class="shensha-section">
+            <h4 class="section-title">
+              <span class="section-icon">💡</span>
+              化解建议
+            </h4>
+            <p class="section-content">${shenShaInfo.advice}</p>
+          </div>
+
+          <div class="shensha-section calculation-section">
+            <h4 class="section-title">
+              <span class="section-icon">🔢</span>
+              计算方法
+            </h4>
+            <div class="calculation-content">${shenShaInfo.calculation}</div>
+          </div>
+        </div>
+
+        <style>
+          .shensha-explanation-enhanced {
+            font-family: var(--font-interface);
+            line-height: 1.6;
+          }
+
+          .shensha-header {
+            margin-bottom: 20px;
+            text-align: center;
+          }
+
+          .shensha-type-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+          }
+
+          .shensha-type-吉神 { background: linear-gradient(135deg, #4CAF50, #45a049); }
+          .shensha-type-凶神 { background: linear-gradient(135deg, #f44336, #d32f2f); }
+          .shensha-type-吉凶神 { background: linear-gradient(135deg, #FF9800, #F57C00); }
+
+          .shensha-content {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+          }
+
+          .shensha-section {
+            background: var(--background-secondary);
+            border: 1px solid var(--background-modifier-border);
+            border-radius: 8px;
+            padding: 16px;
+            transition: all 0.2s ease;
+          }
+
+          .shensha-section:hover {
+            border-color: var(--text-accent);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+          }
+
+          .section-title {
+            margin: 0 0 12px 0;
+            color: var(--text-accent);
+            font-size: 14px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+          }
+
+          .section-icon {
+            font-size: 16px;
+          }
+
+          .section-content {
+            margin: 0;
+            color: var(--text-normal);
+            font-size: 13px;
+          }
+
+          .calculation-section {
+            background: var(--background-primary);
+          }
+
+          .calculation-content {
+            font-family: var(--font-monospace);
+            font-size: 12px;
+            color: var(--text-muted);
+            background: var(--background-secondary);
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid var(--background-modifier-border);
+            line-height: 1.4;
+          }
+        </style>
+      </div>
+    `;
+  }
+
+  /**
+   * 创建备用神煞内容（当主要服务没有信息时）
+   */
+  private createFallbackShenShaContent(shenSha: string): string {
+    return `
+      <div class="shensha-fallback">
+        <div class="fallback-header">
+          <h3 style="margin: 0; color: var(--text-accent); text-align: center;">${shenSha}</h3>
+        </div>
+
+        <div class="fallback-content">
+          <div class="fallback-message">
+            <p style="text-align: center; color: var(--text-muted); margin: 20px 0;">
+              📚 此神煞的详细资料正在整理中
+            </p>
+            <p style="text-align: center; color: var(--text-faint); font-size: 12px; margin: 0;">
+              您可以参考传统命理典籍了解更多信息
+            </p>
+          </div>
+        </div>
+
+        <style>
+          .shensha-fallback {
+            padding: 20px;
+            text-align: center;
+          }
+
+          .fallback-content {
+            margin-top: 20px;
+          }
+
+          .fallback-message {
+            background: var(--background-secondary);
+            border: 1px solid var(--background-modifier-border);
+            border-radius: 8px;
+            padding: 20px;
+          }
+        </style>
+      </div>
+    `;
   }
 
   /**
@@ -142,16 +315,18 @@ export class ModalManager {
       position: fixed;
       background: var(--background-primary);
       border: 2px solid var(--background-modifier-border);
-      border-radius: 8px;
-      padding: 16px;
-      max-width: 400px;
-      max-height: 300px;
+      border-radius: 12px;
+      padding: 20px;
+      min-width: 480px;
+      max-width: 600px;
+      max-height: 70vh;
       overflow-y: auto;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
       z-index: 1000;
       opacity: 0;
       transform: scale(0.9);
       transition: all ${this.animationDuration}ms ease;
+      font-family: var(--font-interface);
     `;
 
     // 创建标题
