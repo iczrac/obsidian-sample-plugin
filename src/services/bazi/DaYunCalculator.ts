@@ -2,7 +2,7 @@ import { EightChar, Solar } from 'lunar-typescript';
 import { DaYunInfo } from '../../types/BaziInfo';
 import { BaziCalculator } from './BaziCalculator';
 import { ShiShenCalculator } from './ShiShenCalculator';
-import { ShenShaCalculator } from './ShenShaCalculator';
+import { UnifiedShenShaService } from './UnifiedShenShaService';
 
 /**
  * 大运计算器
@@ -94,7 +94,7 @@ export class DaYunCalculator {
         const shiShenZhi = ShiShenCalculator.getHiddenShiShen(dayStem, ganZhi.charAt(1));
 
         // 计算大运神煞
-        const shenSha = this.calculateDaYunShenSha(ganZhi, dayStem);
+        const shenSha = UnifiedShenShaService.calculateDaYunShenSha(dayStem, ganZhi);
 
         // 计算地势
         const diShi = this.calculateDiShi(ganZhi.charAt(0), ganZhi.charAt(1));
@@ -212,7 +212,7 @@ export class DaYunCalculator {
     const shiShenZhi = ShiShenCalculator.getHiddenShiShen(dayStem, qianYunGanZhi.charAt(1));
     const diShi = this.calculateDiShi(qianYunGanZhi.charAt(0), qianYunGanZhi.charAt(1));
     const xunKong = this.calculateXunKongSafe(qianYunGanZhi);
-    const shenSha = this.calculateDaYunShenSha(qianYunGanZhi, dayStem);
+    const shenSha = UnifiedShenShaService.calculateDaYunShenSha(dayStem, qianYunGanZhi);
 
     return {
       ganZhi: qianYunGanZhi,
@@ -266,49 +266,7 @@ export class DaYunCalculator {
     }
   }
 
-  /**
-   * 计算大运神煞
-   * @param ganZhi 大运干支
-   * @param dayStem 日干
-   * @returns 神煞数组
-   */
-  private static calculateDaYunShenSha(ganZhi: string, dayStem: string): string[] {
-    const shenSha: string[] = [];
-    
-    if (ganZhi.length !== 2) {
-      return shenSha;
-    }
 
-    const stem = ganZhi.charAt(0);
-    const branch = ganZhi.charAt(1);
-
-    // 天乙贵人
-    if (ShenShaCalculator.isTianYiGuiRen(dayStem, branch)) {
-      shenSha.push('天乙贵人');
-    }
-
-    // 羊刃
-    if (ShenShaCalculator.isYangRen(dayStem, branch)) {
-      shenSha.push('羊刃');
-    }
-
-    // 桃花
-    if (ShenShaCalculator.isTaoHua(branch)) {
-      shenSha.push('桃花');
-    }
-
-    // 华盖
-    if (ShenShaCalculator.isHuaGai(branch)) {
-      shenSha.push('华盖');
-    }
-
-    // 文昌
-    if (ShenShaCalculator.isWenChang(branch)) {
-      shenSha.push('文昌');
-    }
-
-    return shenSha;
-  }
 
   /**
    * 计算地势

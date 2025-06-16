@@ -2,7 +2,7 @@ import { EightChar, Solar } from 'lunar-typescript';
 import { LiuNianInfo } from '../../types/BaziInfo';
 import { BaziCalculator } from './BaziCalculator';
 import { ShiShenCalculator } from './ShiShenCalculator';
-import { ShenShaCalculator } from './ShenShaCalculator';
+import { UnifiedShenShaService } from './UnifiedShenShaService';
 
 /**
  * 流年计算器
@@ -52,7 +52,7 @@ export class LiuNianCalculator {
         const shiShenZhi = ShiShenCalculator.getHiddenShiShen(dayStem, ganZhi.charAt(1));
 
         // 计算流年神煞
-        const shenSha = this.calculateLiuNianShenSha(ganZhi, dayStem);
+        const shenSha = UnifiedShenShaService.calculateLiuNianShenSha(dayStem, ganZhi);
 
         // 计算地势
         const diShi = this.calculateDiShi(ganZhi.charAt(0), ganZhi.charAt(1));
@@ -110,7 +110,7 @@ export class LiuNianCalculator {
       const shiShenZhi = ShiShenCalculator.getHiddenShiShen(dayStem, ganZhi.charAt(1));
 
       // 计算流年神煞
-      const shenSha = this.calculateLiuNianShenSha(ganZhi, dayStem);
+      const shenSha = UnifiedShenShaService.calculateLiuNianShenSha(dayStem, ganZhi);
 
       // 计算地势
       const diShi = this.calculateDiShi(ganZhi.charAt(0), ganZhi.charAt(1));
@@ -154,52 +154,7 @@ export class LiuNianCalculator {
     return stems[stemIndex] + branches[branchIndex];
   }
 
-  /**
-   * 计算流年神煞
-   * @param ganZhi 流年干支
-   * @param dayStem 日干
-   * @returns 神煞数组
-   */
-  private static calculateLiuNianShenSha(ganZhi: string, dayStem: string): string[] {
-    const shenSha: string[] = [];
-    
-    if (ganZhi.length !== 2) {
-      return shenSha;
-    }
 
-    const stem = ganZhi.charAt(0);
-    const branch = ganZhi.charAt(1);
-
-    // 天乙贵人
-    if (ShenShaCalculator.isTianYiGuiRen(dayStem, branch)) {
-      shenSha.push('天乙贵人');
-    }
-
-    // 羊刃
-    if (ShenShaCalculator.isYangRen(dayStem, branch)) {
-      shenSha.push('羊刃');
-    }
-
-    // 桃花
-    if (ShenShaCalculator.isTaoHua(branch)) {
-      shenSha.push('桃花');
-    }
-
-    // 华盖
-    if (ShenShaCalculator.isHuaGai(branch)) {
-      shenSha.push('华盖');
-    }
-
-    // 文昌
-    if (ShenShaCalculator.isWenChang(branch)) {
-      shenSha.push('文昌');
-    }
-
-    // 太岁（流年特有）
-    shenSha.push('太岁');
-
-    return shenSha;
-  }
 
   /**
    * 计算地势

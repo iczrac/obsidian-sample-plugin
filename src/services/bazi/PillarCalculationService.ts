@@ -1,6 +1,7 @@
 import { BaziInfo, DaYunInfo } from '../../types/BaziInfo';
 import { BaziCalculator } from './BaziCalculator';
 import { ShiShenCalculator } from './ShiShenCalculator';
+import { UnifiedShenShaService } from './UnifiedShenShaService';
 import { BaziUtils } from './BaziUtils';
 
 /**
@@ -130,7 +131,7 @@ export class PillarCalculationService {
       naYin: BaziCalculator.getNaYin(ganZhi),
       xunKong: BaziCalculator.calculateXunKong(stem, branch),
       shengXiao: BaziUtils.getShengXiao(branch),
-      shenSha: liuYue.shenSha || [],
+      shenSha: liuYue.shenSha || UnifiedShenShaService.calculateLiuYueShenSha(dayStem, stem + branch),
       wuXing: BaziUtils.getStemWuXing(stem)
     };
   }
@@ -163,7 +164,7 @@ export class PillarCalculationService {
       naYin: BaziCalculator.getNaYin(ganZhi),
       xunKong: BaziCalculator.calculateXunKong(stem, branch),
       shengXiao: BaziUtils.getShengXiao(branch),
-      shenSha: [], // TODO: 计算流日神煞
+      shenSha: UnifiedShenShaService.calculateLiuRiShenSha(dayStem, stem + branch),
       wuXing: BaziUtils.getStemWuXing(stem)
     };
   }
@@ -196,7 +197,7 @@ export class PillarCalculationService {
       naYin: BaziCalculator.getNaYin(ganZhi),
       xunKong: BaziCalculator.calculateXunKong(stem, branch),
       shengXiao: BaziUtils.getShengXiao(branch),
-      shenSha: [], // TODO: 计算流时神煞
+      shenSha: UnifiedShenShaService.calculateLiuShiShenSha(dayStem, stem + branch),
       wuXing: BaziUtils.getStemWuXing(stem)
     };
   }
@@ -224,4 +225,6 @@ export class PillarCalculationService {
 
     return shiErChangSheng[dayStem]?.[branch] || '';
   }
+
+
 }

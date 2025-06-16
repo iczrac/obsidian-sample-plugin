@@ -661,19 +661,22 @@ export class ExtendedColumnManager {
    * 填充单元格内容
    */
   private fillCellContent(cell: HTMLElement, pillarInfo: ExtendedPillarInfo, rowIndex: number) {
-    // 根据行索引确定要显示的内容
-    const rowLabels = ['干支', '纳音', '十神', '地势', '旬空', '神煞'];
+    // 根据行索引确定要显示的内容，与四柱表格的行顺序保持一致
+    const rowLabels = ['天干', '地支', '藏干', '十神', '地势', '纳音', '旬空', '生肖', '神煞'];
 
     if (rowIndex >= rowLabels.length) return;
 
     const rowType = rowLabels[rowIndex];
 
     switch (rowType) {
-      case '干支':
-        this.fillGanZhiCell(cell, pillarInfo);
+      case '天干':
+        this.fillStemCell(cell, pillarInfo);
         break;
-      case '纳音':
-        this.fillNaYinCell(cell, pillarInfo);
+      case '地支':
+        this.fillBranchCell(cell, pillarInfo);
+        break;
+      case '藏干':
+        this.fillHideGanCell(cell, pillarInfo);
         break;
       case '十神':
         this.fillShiShenCell(cell, pillarInfo);
@@ -681,8 +684,14 @@ export class ExtendedColumnManager {
       case '地势':
         this.fillDiShiCell(cell, pillarInfo);
         break;
+      case '纳音':
+        this.fillNaYinCell(cell, pillarInfo);
+        break;
       case '旬空':
         this.fillXunKongCell(cell, pillarInfo);
+        break;
+      case '生肖':
+        this.fillShengXiaoCell(cell, pillarInfo);
         break;
       case '神煞':
         this.fillShenShaCell(cell, pillarInfo);
@@ -691,12 +700,70 @@ export class ExtendedColumnManager {
   }
 
   /**
-   * 填充干支单元格
+   * 填充天干单元格
    */
-  private fillGanZhiCell(cell: HTMLElement, pillarInfo: ExtendedPillarInfo) {
-    if (pillarInfo.ganZhi) {
-      // 使用ColorSchemeService创建带颜色的干支显示
-      ColorSchemeService.createColoredGanZhiElement(cell, pillarInfo.ganZhi);
+  private fillStemCell(cell: HTMLElement, pillarInfo: ExtendedPillarInfo) {
+    if (pillarInfo.stem) {
+      // 创建天干span并设置五行颜色
+      const stemSpan = cell.createSpan({ text: pillarInfo.stem });
+      ColorSchemeService.setGanColor(stemSpan, pillarInfo.stem);
+    }
+  }
+
+  /**
+   * 填充地支单元格
+   */
+  private fillBranchCell(cell: HTMLElement, pillarInfo: ExtendedPillarInfo) {
+    if (pillarInfo.branch) {
+      // 创建地支span并设置五行颜色
+      const branchSpan = cell.createSpan({ text: pillarInfo.branch });
+      ColorSchemeService.setZhiColor(branchSpan, pillarInfo.branch);
+    }
+  }
+
+  /**
+   * 填充藏干单元格
+   */
+  private fillHideGanCell(cell: HTMLElement, pillarInfo: ExtendedPillarInfo) {
+    if (pillarInfo.hideGan) {
+      // 使用ColorSchemeService创建带颜色的藏干显示
+      ColorSchemeService.createColoredHideGanElement(cell, pillarInfo.hideGan);
+    }
+  }
+
+  /**
+   * 填充十神单元格
+   */
+  private fillShiShenCell(cell: HTMLElement, pillarInfo: ExtendedPillarInfo) {
+    // 天干十神
+    if (pillarInfo.shiShenGan) {
+      cell.createSpan({
+        text: pillarInfo.shiShenGan,
+        cls: 'shishen-tag-small'
+      });
+    }
+
+    // 换行
+    cell.createEl('br');
+
+    // 地支藏干十神
+    if (pillarInfo.shiShenZhi && pillarInfo.shiShenZhi.length > 0) {
+      cell.createSpan({
+        text: pillarInfo.shiShenZhi.join(','),
+        cls: 'shishen-tag-small shishen-tag-hide'
+      });
+    }
+  }
+
+  /**
+   * 填充地势单元格
+   */
+  private fillDiShiCell(cell: HTMLElement, pillarInfo: ExtendedPillarInfo) {
+    if (pillarInfo.diShi) {
+      cell.createSpan({
+        text: pillarInfo.diShi,
+        cls: 'dishi-tag-small'
+      });
     }
   }
 
@@ -710,29 +777,21 @@ export class ExtendedColumnManager {
   }
 
   /**
-   * 填充十神单元格
-   */
-  private fillShiShenCell(cell: HTMLElement, pillarInfo: ExtendedPillarInfo) {
-    if (pillarInfo.shiShenGan) {
-      cell.textContent = pillarInfo.shiShenGan;
-    }
-  }
-
-  /**
-   * 填充地势单元格
-   */
-  private fillDiShiCell(cell: HTMLElement, pillarInfo: ExtendedPillarInfo) {
-    if (pillarInfo.diShi) {
-      cell.textContent = pillarInfo.diShi;
-    }
-  }
-
-  /**
    * 填充旬空单元格
    */
   private fillXunKongCell(cell: HTMLElement, pillarInfo: ExtendedPillarInfo) {
     if (pillarInfo.xunKong) {
-      cell.textContent = pillarInfo.xunKong;
+      // 使用ColorSchemeService创建带颜色的旬空显示
+      ColorSchemeService.createColoredXunKongElement(cell, pillarInfo.xunKong);
+    }
+  }
+
+  /**
+   * 填充生肖单元格
+   */
+  private fillShengXiaoCell(cell: HTMLElement, pillarInfo: ExtendedPillarInfo) {
+    if (pillarInfo.shengXiao) {
+      cell.textContent = pillarInfo.shengXiao;
     }
   }
 
@@ -741,7 +800,26 @@ export class ExtendedColumnManager {
    */
   private fillShenShaCell(cell: HTMLElement, pillarInfo: ExtendedPillarInfo) {
     if (pillarInfo.shenSha && pillarInfo.shenSha.length > 0) {
-      cell.textContent = pillarInfo.shenSha.join(' ');
+      pillarInfo.shenSha.forEach((sha, index) => {
+        if (index > 0) {
+          cell.createSpan({ text: ' ' });
+        }
+
+        const shenShaSpan = cell.createSpan({
+          text: sha,
+          cls: 'shensha-tag'
+        });
+        shenShaSpan.style.cssText = `
+          display: inline-block;
+          padding: 2px 4px;
+          margin: 1px;
+          border-radius: 3px;
+          font-size: 10px;
+          background: var(--background-modifier-border);
+          color: var(--text-muted);
+          cursor: pointer;
+        `;
+      });
     }
   }
 }

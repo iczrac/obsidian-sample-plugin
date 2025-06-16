@@ -3,7 +3,7 @@ import { XiaoYunInfo } from '../../types/BaziInfo';
 import { ShiShenCalculator } from './ShiShenCalculator';
 import { XunKongCalculator } from './XunKongCalculator';
 import { ShiErChangShengCalculator } from './ShiErChangShengCalculator';
-import { ShenShaCalculator } from './ShenShaCalculator';
+import { UnifiedShenShaService } from './UnifiedShenShaService';
 
 /**
  * 小运计算器
@@ -94,7 +94,7 @@ export class XiaoYunCalculator {
         const diShi = this.calculateDiShiForXiaoYun(dayStem, xiaoYunGanZhi[1]);
 
         // 计算神煞（简化版本，只计算基本神煞）
-        const shenSha = this.calculateShenShaForXiaoYun(dayStem, xiaoYunGanZhi);
+        const shenSha = UnifiedShenShaService.calculateXiaoYunShenSha(dayStem, xiaoYunGanZhi);
 
         const xiaoYunInfo: XiaoYunInfo = {
           year,
@@ -306,44 +306,5 @@ export class XiaoYunCalculator {
     return changShengMap[dayStem]?.[branch] || '';
   }
 
-  /**
-   * 计算小运神煞
-   * @param dayStem 日干
-   * @param ganZhi 干支
-   * @returns 神煞数组
-   */
-  private static calculateShenShaForXiaoYun(dayStem: string, ganZhi: string): string[] {
-    if (ganZhi.length !== 2) return [];
 
-    const gan = ganZhi[0];
-    const zhi = ganZhi[1];
-    const shenShaList: string[] = [];
-
-    // 计算基本神煞
-    if (ShenShaCalculator.isTianYiGuiRen(dayStem, zhi)) {
-      shenShaList.push('天乙贵人');
-    }
-
-    if (ShenShaCalculator.isLuShen(gan, zhi)) {
-      shenShaList.push('禄神');
-    }
-
-    if (ShenShaCalculator.isTaoHua(zhi)) {
-      shenShaList.push('桃花');
-    }
-
-    if (ShenShaCalculator.isYangRen(dayStem, zhi)) {
-      shenShaList.push('羊刃');
-    }
-
-    if (ShenShaCalculator.isHuaGai(zhi)) {
-      shenShaList.push('华盖');
-    }
-
-    if (ShenShaCalculator.isWenChang(zhi)) {
-      shenShaList.push('文昌');
-    }
-
-    return shenShaList;
-  }
 }

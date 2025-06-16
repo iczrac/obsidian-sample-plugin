@@ -7,7 +7,7 @@ import { CombinationCalculator } from './bazi/CombinationCalculator';
 import { DaYunCalculator } from './bazi/DaYunCalculator';
 import { LiuNianCalculator } from './bazi/LiuNianCalculator';
 import { XiaoYunCalculator } from './bazi/XiaoYunCalculator';
-import { ComprehensiveShenShaCalculator } from './bazi/ComprehensiveShenShaCalculator';
+import { UnifiedShenShaService } from './bazi/UnifiedShenShaService';
 import { YearMatchCalculator } from './bazi/YearMatchCalculator';
 import { XunKongCalculator } from './bazi/XunKongCalculator';
 import { GeJuExplanationService } from './GeJuExplanationService';
@@ -360,7 +360,7 @@ export class BaziService {
     // 计算神煞（即使没有完整日期信息也可以计算基本神煞）
     let shenSha: string[] = [];
     if (eightChar) {
-      const shenShaResult = ComprehensiveShenShaCalculator.calculateCompleteShenSha(eightChar);
+      const shenShaResult = UnifiedShenShaService.calculateCompleteFourPillarShenSha(eightChar);
       shenSha = shenShaResult.allShenSha;
     }
 
@@ -698,7 +698,7 @@ export class BaziService {
     const sanHuiJu = CombinationCalculator.checkSanHuiJu(branches);
 
     // 计算神煞
-    const shenShaResult = ComprehensiveShenShaCalculator.calculateCompleteShenSha(eightChar);
+    const shenShaResult = UnifiedShenShaService.calculateCompleteFourPillarShenSha(eightChar);
     const shenSha = shenShaResult.allShenSha;
 
     // 计算身宫
