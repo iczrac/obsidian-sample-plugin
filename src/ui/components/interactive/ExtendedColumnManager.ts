@@ -2,6 +2,7 @@ import { BaziInfo, DaYunInfo } from '../../../types/BaziInfo';
 import { PillarCalculationService, ExtendedPillarInfo } from '../../../services/bazi/PillarCalculationService';
 import { ColorSchemeService } from '../../../services/bazi/ColorSchemeService';
 import { BaziCalculator } from '../../../services/bazi/BaziCalculator';
+import { Solar } from 'lunar-typescript';
 
 /**
  * 扩展列管理器
@@ -514,21 +515,43 @@ export class ExtendedColumnManager {
   }
 
   /**
-   * 计算日期干支（简化版，实际应使用lunar-typescript）
+   * 计算日期干支（使用lunar-typescript）
    */
-  private calculateDayGanZhi(_year: number, _month: number, _day: number): string {
-    // 这里应该使用lunar-typescript库来计算准确的日柱干支
-    // 暂时返回一个占位符
-    return '甲子'; // TODO: 实现准确的日柱计算
+  private calculateDayGanZhi(year: number, month: number, day: number): string {
+    try {
+      // 使用lunar-typescript库来计算准确的日柱干支
+      const solar = Solar.fromYmd(year, month, day);
+      const lunar = solar.getLunar();
+      const eightChar = lunar.getEightChar();
+
+      const dayStem = eightChar.getDayGan();
+      const dayBranch = eightChar.getDayZhi();
+
+      return dayStem + dayBranch;
+    } catch (error) {
+      console.error('计算日期干支失败:', error);
+      return '甲子'; // 失败时返回默认值
+    }
   }
 
   /**
-   * 计算时辰干支（简化版，实际应使用lunar-typescript）
+   * 计算时辰干支（使用lunar-typescript）
    */
-  private calculateTimeGanZhi(_year: number, _month: number, _day: number, _time: number): string {
-    // 这里应该使用lunar-typescript库来计算准确的时柱干支
-    // 暂时返回一个占位符
-    return '甲子'; // TODO: 实现准确的时柱计算
+  private calculateTimeGanZhi(year: number, month: number, day: number, time: number): string {
+    try {
+      // 使用lunar-typescript库来计算准确的时柱干支
+      const solar = Solar.fromYmdHms(year, month, day, time, 0, 0);
+      const lunar = solar.getLunar();
+      const eightChar = lunar.getEightChar();
+
+      const timeStem = eightChar.getTimeGan();
+      const timeBranch = eightChar.getTimeZhi();
+
+      return timeStem + timeBranch;
+    } catch (error) {
+      console.error('计算时辰干支失败:', error);
+      return '甲子'; // 失败时返回默认值
+    }
   }
 
   /**

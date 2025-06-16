@@ -107,7 +107,14 @@ export class DataGenerationService {
 
     try {
       // 使用后端已有的LiuRiCalculator
+      console.log(`🔍 DataGenerationService.generateLiuRiForMonth: 调用BaziService.getLiuRi(${year}, ${monthGanZhi}, ${dayStem})`);
       const liuRiData = BaziService.getLiuRi(year, monthGanZhi, dayStem);
+      console.log(`🔍 DataGenerationService.generateLiuRiForMonth: 后端返回数据数量=${liuRiData.length}`);
+
+      if (liuRiData.length === 0) {
+        console.warn(`⚠️ DataGenerationService.generateLiuRiForMonth: 后端返回空数据，可能是节气查找失败`);
+        throw new Error('后端返回空数据');
+      }
 
       // 转换为前端需要的格式
       return liuRiData.map((liuRi) => ({
@@ -168,7 +175,14 @@ export class DataGenerationService {
       console.log(`🎯 使用八字流派: ${sect} (${sect === 1 ? '晚子时日柱算明天' : '晚子时日柱算当天'})`);
 
       // 使用后端已有的LiuShiCalculator
+      console.log(`🔍 DataGenerationService.generateLiuShiForDay: 调用BaziService.getLiuShi(${year}, ${month}, ${day}, ${dayStem}, ${sect})`);
       const liuShiData = BaziService.getLiuShi(year, month, day, dayStem, sect);
+      console.log(`🔍 DataGenerationService.generateLiuShiForDay: 后端返回数据数量=${liuShiData.length}`);
+
+      if (liuShiData.length === 0) {
+        console.warn(`⚠️ DataGenerationService.generateLiuShiForDay: 后端返回空数据`);
+        throw new Error('后端返回空数据');
+      }
 
       // 转换为前端需要的格式
       return liuShiData.map((liuShi) => ({
