@@ -291,21 +291,46 @@ export class LiuShiInfoManager {
 
 
   /**
-   * 创建十神行
+   * 创建十神行（参考流年实现）
    */
   private createShiShenRow(table: HTMLElement, liuShiData: any[]) {
+    if (!liuShiData.some(ls => ls.shiShenGan || ls.shiShenZhi)) return;
+
     const row = table.createEl('tr', { cls: 'bazi-liushi-shishen-row' });
     row.createEl('th', { text: '十神' }).style.cssText = this.getHeaderCellStyle();
 
     liuShiData.forEach((ls) => {
       const cell = row.createEl('td', {
-        text: ls.shiShen || '',
         cls: 'bazi-liushi-cell'
       });
-      cell.style.cssText = this.getDataCellStyle();
-      
-      if (ls.shiShen) {
-        ColorSchemeService.setShiShenColor(cell, ls.shiShen);
+      cell.style.cssText = this.getDataCellStyle() + 'line-height: 1.2;';
+
+      // 天干十神
+      if (ls.shiShenGan) {
+        const ganShiShen = cell.createDiv({
+          text: ls.shiShenGan,
+          cls: 'bazi-shishen-gan'
+        });
+        ganShiShen.style.cssText = `
+          font-size: 10px;
+          margin-bottom: 1px;
+          font-weight: bold;
+        `;
+        ColorSchemeService.setShiShenColor(ganShiShen, ls.shiShenGan);
+      }
+
+      // 地支十神
+      if (ls.shiShenZhi) {
+        const zhiShiShenText = Array.isArray(ls.shiShenZhi) ? ls.shiShenZhi.join(' ') : ls.shiShenZhi;
+        const zhiShiShen = cell.createDiv({
+          text: zhiShiShenText,
+          cls: 'bazi-shishen-zhi'
+        });
+        zhiShiShen.style.cssText = `
+          font-size: 9px;
+          opacity: 0.8;
+        `;
+        ColorSchemeService.setShiShenColor(zhiShiShen, zhiShiShenText.split(' ')[0]);
       }
 
       cell.addEventListener('click', () => this.selectLiuShi(ls));
@@ -342,10 +367,10 @@ export class LiuShiInfoManager {
   }
 
   /**
-   * 创建旬空行
+   * 创建旬空行（参考流年实现）
    */
   private createXunKongRow(table: HTMLElement, liuShiData: any[]) {
-    // 总是创建旬空行，支持动态计算
+    if (!liuShiData.some(ls => ls.xunKong)) return;
 
     const row = table.createEl('tr', { cls: 'bazi-liushi-xunkong-row' });
     row.createEl('th', { text: '旬空' }).style.cssText = this.getHeaderCellStyle();
@@ -353,8 +378,9 @@ export class LiuShiInfoManager {
     liuShiData.forEach((ls) => {
       const cell = row.createEl('td', { cls: 'bazi-liushi-cell' });
       cell.style.cssText = this.getDataCellStyle();
-      
-      if (ls.xunKong && Array.isArray(ls.xunKong)) {
+
+      // 处理旬空干支颜色显示
+      if (ls.xunKong) {
         ColorSchemeService.createColoredXunKongElement(cell, ls.xunKong);
       } else {
         cell.textContent = '';

@@ -290,9 +290,11 @@ export class LiuYueInfoManager {
 
 
   /**
-   * 创建十神行
+   * 创建十神行（参考流年实现）
    */
   private createShiShenRow(table: HTMLElement, liuYueData: any[]) {
+    if (!liuYueData.some(ly => ly.shiShenGan || ly.shiShenZhi)) return;
+
     const row = table.createEl('tr', { cls: 'bazi-liuyue-shishen-row' });
     row.createEl('th', { text: '十神' }).style.cssText = this.getHeaderCellStyle();
 
@@ -302,7 +304,7 @@ export class LiuYueInfoManager {
       });
       cell.style.cssText = this.getDataCellStyle() + 'line-height: 1.2;';
 
-      // 显示天干十神（如果有）
+      // 天干十神
       if (ly.shiShenGan) {
         const ganShiShen = cell.createDiv({
           text: ly.shiShenGan,
@@ -316,7 +318,7 @@ export class LiuYueInfoManager {
         ColorSchemeService.setShiShenColor(ganShiShen, ly.shiShenGan);
       }
 
-      // 显示地支十神（如果有）
+      // 地支十神
       if (ly.shiShenZhi) {
         const zhiShiShenText = Array.isArray(ly.shiShenZhi) ? ly.shiShenZhi.join(' ') : ly.shiShenZhi;
         const zhiShiShen = cell.createDiv({
@@ -328,12 +330,6 @@ export class LiuYueInfoManager {
           opacity: 0.8;
         `;
         ColorSchemeService.setShiShenColor(zhiShiShen, zhiShiShenText.split(' ')[0]);
-      }
-
-      // 如果都没有，显示简化的十神（向后兼容）
-      if (!ly.shiShenGan && !ly.shiShenZhi && ly.shiShen) {
-        cell.textContent = ly.shiShen;
-        ColorSchemeService.setShiShenColor(cell, ly.shiShen);
       }
 
       cell.addEventListener('click', () => this.selectLiuYue(ly));
@@ -370,10 +366,10 @@ export class LiuYueInfoManager {
   }
 
   /**
-   * 创建旬空行
+   * 创建旬空行（参考流年实现）
    */
   private createXunKongRow(table: HTMLElement, liuYueData: any[]) {
-    // 总是创建旬空行，支持动态计算
+    if (!liuYueData.some(ly => ly.xunKong)) return;
 
     const row = table.createEl('tr', { cls: 'bazi-liuyue-xunkong-row' });
     row.createEl('th', { text: '旬空' }).style.cssText = this.getHeaderCellStyle();
@@ -381,8 +377,9 @@ export class LiuYueInfoManager {
     liuYueData.forEach((ly) => {
       const cell = row.createEl('td', { cls: 'bazi-liuyue-cell' });
       cell.style.cssText = this.getDataCellStyle();
-      
-      if (ly.xunKong && Array.isArray(ly.xunKong)) {
+
+      // 处理旬空干支颜色显示
+      if (ly.xunKong) {
         ColorSchemeService.createColoredXunKongElement(cell, ly.xunKong);
       } else {
         cell.textContent = '';
