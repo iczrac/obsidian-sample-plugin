@@ -2,6 +2,7 @@ import { BaziInfo } from '../../../types/BaziInfo';
 import { BaziCalculator } from '../../../services/bazi/BaziCalculator';
 import { ShiShenCalculator } from '../../../services/bazi/ShiShenCalculator';
 import { BaziUtils } from '../../../services/bazi/BaziUtils';
+import { ColorSchemeService } from '../../../services/bazi/ColorSchemeService';
 
 /**
  * 八字表格管理器
@@ -171,6 +172,15 @@ export class BaziTableManager {
     const shiShenRow = tbody.createEl('tr', { cls: 'bazi-shishen-row' });
     shiShenRow.createEl('td', { text: '十神', cls: 'bazi-table-label' });
 
+    // 调试：检查十神数据
+    console.log('🔍🔍🔍 BaziTableManager 十神数据检查开始 🔍🔍🔍');
+    console.log('yearShiShenGan:', this.baziInfo.yearShiShenGan);
+    console.log('monthShiShenGan:', this.baziInfo.monthShiShenGan);
+    console.log('dayShiShen:', this.baziInfo.dayShiShen);
+    console.log('dayShiShenGan:', this.baziInfo.dayShiShenGan);
+    console.log('timeShiShenGan:', this.baziInfo.timeShiShenGan);
+    console.log('🔍🔍🔍 BaziTableManager 十神数据检查结束 🔍🔍🔍');
+
     // 年柱十神
     const yearShiShenCell = shiShenRow.createEl('td');
     // 天干十神
@@ -261,12 +271,19 @@ export class BaziTableManager {
    */
   private createDiShiRow(tbody: HTMLElement) {
     const diShiRow = tbody.createEl('tr', { cls: 'bazi-dishi-row' });
-    
+
     // 创建可点击的标签
     const labelCell = diShiRow.createEl('td', { cls: 'bazi-table-label bazi-changsheng-label' });
     labelCell.textContent = '地势';
     labelCell.setAttribute('title', '日干在各地支的十二长生状态 (点击切换)');
     labelCell.style.cursor = 'pointer';
+
+    // 调试：检查地势数据
+    console.log('🔍 BaziTableManager 地势数据检查:');
+    console.log('yearDiShi:', this.baziInfo.yearDiShi);
+    console.log('monthDiShi:', this.baziInfo.monthDiShi);
+    console.log('dayDiShi:', this.baziInfo.dayDiShi);
+    console.log('timeDiShi:', this.baziInfo.timeDiShi);
 
     // 年柱地势
     const yearDiShiCell = diShiRow.createEl('td');
@@ -550,72 +567,46 @@ export class BaziTableManager {
   }
 
   /**
-   * 直接设置五行颜色
+   * 直接设置五行颜色（使用统一颜色方案）
    */
   private setWuXingColorDirectly(element: HTMLElement, wuXing: string) {
-    const colorMap: { [key: string]: string } = {
-      '木': '#22c55e',  // 绿色
-      '火': '#ef4444',  // 红色
-      '土': '#eab308',  // 黄色
-      '金': '#64748b',  // 灰色
-      '水': '#3b82f6'   // 蓝色
-    };
-
-    const color = colorMap[wuXing];
-    if (color) {
-      element.style.color = color;
-      element.style.fontWeight = 'bold';
+    const color = ColorSchemeService.getWuXingColor(wuXing);
+    if (color && color !== 'var(--text-normal)') {
+      element.style.setProperty('color', color, 'important');
+      element.style.setProperty('font-weight', 'bold', 'important');
+      element.style.setProperty('text-shadow', '0 1px 2px rgba(0, 0, 0, 0.2)', 'important');
     }
   }
 
   /**
-   * 应用十神颜色
+   * 应用十神颜色（使用统一颜色方案）
    */
   private applyShiShenColor(element: HTMLElement, shiShen: string) {
-    const colorMap: { [key: string]: string } = {
-      '日主': '#8B4513', // 棕色
-      '比肩': '#228B22', // 绿色
-      '劫财': '#32CD32', // 浅绿色
-      '食神': '#FFD700', // 金色
-      '伤官': '#FFA500', // 橙色
-      '偏财': '#DC143C', // 红色
-      '正财': '#B22222', // 深红色
-      '七杀': '#8B0000', // 暗红色
-      '正官': '#4B0082', // 靛蓝色
-      '偏印': '#9370DB', // 紫色
-      '正印': '#4169E1'  // 蓝色
-    };
+    const color = ColorSchemeService.getShiShenColor(shiShen);
+    if (color && color !== 'var(--text-normal)') {
+      // 使用!important确保样式优先级
+      element.style.setProperty('color', color, 'important');
+      element.style.setProperty('font-weight', 'bold', 'important');
+      element.style.setProperty('text-shadow', '0 1px 2px rgba(0, 0, 0, 0.2)', 'important');
 
-    const color = colorMap[shiShen];
-    if (color) {
-      element.style.color = color;
-      element.style.fontWeight = 'bold';
+      // 调试：确认样式应用
+      console.log(`🎨 应用十神颜色: ${shiShen} -> ${color}`);
     }
   }
 
   /**
-   * 应用地势颜色
+   * 应用地势颜色（使用统一颜色方案）
    */
   private applyDiShiColor(element: HTMLElement, diShi: string) {
-    const colorMap: { [key: string]: string } = {
-      '长生': '#32CD32', // 浅绿色
-      '沐浴': '#87CEEB', // 天蓝色
-      '冠带': '#FFD700', // 金色
-      '临官': '#FF6347', // 番茄红
-      '帝旺': '#DC143C', // 红色
-      '衰': '#DDA0DD',   // 梅花色
-      '病': '#D3D3D3',   // 浅灰色
-      '死': '#696969',   // 暗灰色
-      '墓': '#2F4F4F',   // 暗灰绿
-      '绝': '#000000',   // 黑色
-      '胎': '#F0E68C',   // 卡其色
-      '养': '#98FB98'    // 浅绿色
-    };
+    const color = ColorSchemeService.getDiShiColor(diShi);
+    if (color && color !== 'var(--text-normal)') {
+      // 使用!important确保样式优先级
+      element.style.setProperty('color', color, 'important');
+      element.style.setProperty('font-weight', 'bold', 'important');
+      element.style.setProperty('text-shadow', '0 1px 2px rgba(0, 0, 0, 0.2)', 'important');
 
-    const color = colorMap[diShi];
-    if (color) {
-      element.style.color = color;
-      element.style.fontWeight = 'bold';
+      // 调试：确认样式应用
+      console.log(`🎨 应用地势颜色: ${diShi} -> ${color}`);
     }
   }
 }
