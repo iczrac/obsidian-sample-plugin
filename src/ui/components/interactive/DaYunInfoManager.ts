@@ -1,6 +1,7 @@
 import { BaziInfo, DaYunInfo } from '../../../types/BaziInfo';
 import { ColorSchemeService } from '../../../services/bazi/ColorSchemeService';
 import { LiuNianInfoManager } from './LiuNianInfoManager';
+import { BaziCalculator } from '../../../services/bazi/BaziCalculator';
 
 /**
  * 大运信息管理器
@@ -297,15 +298,15 @@ export class DaYunInfoManager {
     // 清空表格
     table.empty();
 
-    // 始终显示的行：年份和干支
+    // 始终显示的行：年份、干支和地势
     this.createYearRow(table, daYunData);
     this.createGanZhiRow(table, daYunData);
+    this.createDiShiRow(table, daYunData); // 地势行总是显示
 
     // 展开时显示的详细信息
     if (this.isExpanded) {
       this.createAgeRow(table, daYunData);
       this.createShiShenRow(table, daYunData);
-      this.createDiShiRow(table, daYunData);
       this.createXunKongRow(table, daYunData);
       this.createNaYinRow(table, daYunData);
       this.createShenShaRow(table, daYunData);
@@ -437,21 +438,45 @@ export class DaYunInfoManager {
    * 创建地势行
    */
   private createDiShiRow(table: HTMLElement, daYunData: DaYunInfo[]) {
-    if (!daYunData.some(dy => dy.diShi)) return;
+    // 总是创建地势行，支持动态计算
 
     const row = table.createEl('tr', { cls: 'bazi-dayun-dishi-row' });
-    row.createEl('th', { text: '地势' }).style.cssText = this.getHeaderCellStyle();
+
+    // 创建可点击的地势标签
+    const headerCell = row.createEl('th', {
+      text: '地势',
+      cls: 'bazi-changsheng-label'
+    });
+    headerCell.style.cssText = this.getHeaderCellStyle() + 'cursor: pointer;';
+    headerCell.setAttribute('title', '日干在各地支的十二长生状态 (点击切换)');
 
     daYunData.forEach((dy, index) => {
       const cell = row.createEl('td', {
-        text: dy.diShi || '',
         cls: 'bazi-dayun-cell',
         attr: { 'data-index': index.toString() }
       });
       cell.style.cssText = this.getDataCellStyle();
-      if (dy.diShi) {
-        ColorSchemeService.setDiShiColor(cell, dy.diShi);
+
+      // 动态计算地势值
+      let diShiValue = dy.diShi || '';
+
+      // 如果没有预计算的地势值，则动态计算
+      if (!diShiValue && dy.ganZhi && dy.ganZhi.length >= 2) {
+        const dayStem = this.baziInfo.dayStem || '';
+        const branch = dy.ganZhi[1]; // 地支
+        if (dayStem && branch) {
+          diShiValue = this.calculateDiShi(dayStem, branch);
+        }
       }
+
+      // 设置单元格内容和颜色
+      if (diShiValue) {
+        cell.textContent = diShiValue;
+        ColorSchemeService.setDiShiColor(cell, diShiValue);
+      } else {
+        cell.textContent = '';
+      }
+
       cell.addEventListener('click', () => this.selectDaYun(index));
     });
   }
@@ -467,11 +492,18 @@ export class DaYunInfoManager {
 
     daYunData.forEach((dy, index) => {
       const cell = row.createEl('td', {
-        text: dy.xunKong || '',
         cls: 'bazi-dayun-cell',
         attr: { 'data-index': index.toString() }
       });
       cell.style.cssText = this.getDataCellStyle();
+
+      // 使用统一的旬空颜色显示方法
+      if (dy.xunKong) {
+        ColorSchemeService.createColoredXunKongElement(cell, dy.xunKong);
+      } else {
+        cell.textContent = '';
+      }
+
       cell.addEventListener('click', () => this.selectDaYun(index));
     });
   }
@@ -487,11 +519,19 @@ export class DaYunInfoManager {
 
     daYunData.forEach((dy, index) => {
       const cell = row.createEl('td', {
-        text: dy.naYin || '',
         cls: 'bazi-dayun-cell',
         attr: { 'data-index': index.toString() }
       });
       cell.style.cssText = this.getDataCellStyle();
+
+      // 使用统一的纳音颜色显示方法
+      if (dy.naYin) {
+        cell.textContent = dy.naYin;
+        ColorSchemeService.setNaYinColor(cell, dy.naYin);
+      } else {
+        cell.textContent = '';
+      }
+
       cell.addEventListener('click', () => this.selectDaYun(index));
     });
   }
@@ -512,8 +552,14 @@ export class DaYunInfoManager {
       });
       cell.style.cssText = this.getDataCellStyle();
 
+      // 使用统一的神煞颜色显示方法
       if (dy.shenSha && dy.shenSha.length > 0) {
-        cell.textContent = dy.shenSha.join(' ');
+        ColorSchemeService.createColoredShenShaElement(
+          cell,
+          dy.shenSha,
+          (shenSha) => this.handleShenShaClick(shenSha),
+          'bazi-shensha-list'
+        );
       } else {
         cell.textContent = '';
       }
@@ -652,5 +698,30 @@ export class DaYunInfoManager {
     }
   }
 
+  /**
+   * 计算地势（使用BaziCalculator）
+   */
+  private calculateDiShi(stem: string, branch: string): string {
+    try {
+      return BaziCalculator.getDiShi(stem, branch);
+    } catch (error) {
+      console.error('计算地势失败:', error);
+      return '';
+    }
+  }
+
+  /**
+   * 处理神煞点击事件
+   */
+  private handleShenShaClick(shenSha: string) {
+    console.log(`🎯 大运神煞被点击: ${shenSha}`);
+
+    // 触发自定义事件，让父组件处理
+    const event = new CustomEvent('shensha-click', {
+      detail: { shenSha },
+      bubbles: true
+    });
+    this.container.dispatchEvent(event);
+  }
 
 }

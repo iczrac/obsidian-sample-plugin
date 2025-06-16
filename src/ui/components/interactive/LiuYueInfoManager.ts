@@ -298,12 +298,41 @@ export class LiuYueInfoManager {
 
     liuYueData.forEach((ly) => {
       const cell = row.createEl('td', {
-        text: ly.shiShen || '',
         cls: 'bazi-liuyue-cell'
       });
-      cell.style.cssText = this.getDataCellStyle();
-      
-      if (ly.shiShen) {
+      cell.style.cssText = this.getDataCellStyle() + 'line-height: 1.2;';
+
+      // 显示天干十神（如果有）
+      if (ly.shiShenGan) {
+        const ganShiShen = cell.createDiv({
+          text: ly.shiShenGan,
+          cls: 'bazi-shishen-gan'
+        });
+        ganShiShen.style.cssText = `
+          font-size: 10px;
+          margin-bottom: 1px;
+          font-weight: bold;
+        `;
+        ColorSchemeService.setShiShenColor(ganShiShen, ly.shiShenGan);
+      }
+
+      // 显示地支十神（如果有）
+      if (ly.shiShenZhi) {
+        const zhiShiShenText = Array.isArray(ly.shiShenZhi) ? ly.shiShenZhi.join(' ') : ly.shiShenZhi;
+        const zhiShiShen = cell.createDiv({
+          text: zhiShiShenText,
+          cls: 'bazi-shishen-zhi'
+        });
+        zhiShiShen.style.cssText = `
+          font-size: 9px;
+          opacity: 0.8;
+        `;
+        ColorSchemeService.setShiShenColor(zhiShiShen, zhiShiShenText.split(' ')[0]);
+      }
+
+      // 如果都没有，显示简化的十神（向后兼容）
+      if (!ly.shiShenGan && !ly.shiShenZhi && ly.shiShen) {
+        cell.textContent = ly.shiShen;
         ColorSchemeService.setShiShenColor(cell, ly.shiShen);
       }
 
@@ -315,7 +344,7 @@ export class LiuYueInfoManager {
    * 创建地势行
    */
   private createDiShiRow(table: HTMLElement, liuYueData: any[]) {
-    if (!liuYueData.some(ly => ly.diShi)) return;
+    // 总是创建地势行，支持动态计算
 
     const row = table.createEl('tr', { cls: 'bazi-liuyue-dishi-row' });
 
@@ -344,7 +373,7 @@ export class LiuYueInfoManager {
    * 创建旬空行
    */
   private createXunKongRow(table: HTMLElement, liuYueData: any[]) {
-    if (!liuYueData.some(ly => ly.xunKong)) return;
+    // 总是创建旬空行，支持动态计算
 
     const row = table.createEl('tr', { cls: 'bazi-liuyue-xunkong-row' });
     row.createEl('th', { text: '旬空' }).style.cssText = this.getHeaderCellStyle();

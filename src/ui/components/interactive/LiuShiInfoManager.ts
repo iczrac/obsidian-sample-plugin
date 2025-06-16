@@ -316,7 +316,7 @@ export class LiuShiInfoManager {
    * 创建地势行
    */
   private createDiShiRow(table: HTMLElement, liuShiData: any[]) {
-    if (!liuShiData.some(ls => ls.diShi)) return;
+    // 总是创建地势行，支持动态计算
 
     const row = table.createEl('tr', { cls: 'bazi-liushi-dishi-row' });
 
@@ -345,7 +345,7 @@ export class LiuShiInfoManager {
    * 创建旬空行
    */
   private createXunKongRow(table: HTMLElement, liuShiData: any[]) {
-    if (!liuShiData.some(ls => ls.xunKong)) return;
+    // 总是创建旬空行，支持动态计算
 
     const row = table.createEl('tr', { cls: 'bazi-liushi-xunkong-row' });
     row.createEl('th', { text: '旬空' }).style.cssText = this.getHeaderCellStyle();

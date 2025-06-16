@@ -1,7 +1,7 @@
 import { BaziInfo, LiuNianInfo } from '../../../types/BaziInfo';
 import { ColorSchemeService } from '../../../services/bazi/ColorSchemeService';
-import { LiuNianCalculator } from '../../../services/bazi/LiuNianCalculator';
 import { BaziCalculator } from '../../../services/bazi/BaziCalculator';
+import { LiuNianCalculator } from '../../../services/bazi/LiuNianCalculator';
 import { ShiShenCalculator } from '../../../services/bazi/ShiShenCalculator';
 
 /**
@@ -740,7 +740,7 @@ export class LiuNianInfoManager {
    * 创建流年地势行
    */
   private createLiuNianDiShiRow(table: HTMLElement, liuNianData: LiuNianInfo[]) {
-    if (!liuNianData.some(ln => ln.diShi)) return;
+    // 总是创建地势行，支持动态计算
 
     const row = table.createEl('tr', { cls: 'bazi-liunian-dishi-row' });
 
@@ -754,14 +754,31 @@ export class LiuNianInfoManager {
 
     liuNianData.forEach((ln, index) => {
       const cell = row.createEl('td', {
-        text: ln.diShi || '',
         cls: 'bazi-liunian-cell',
         attr: { 'data-year': ln.year.toString() }
       });
       cell.style.cssText = this.getDataCellStyle();
-      if (ln.diShi) {
-        ColorSchemeService.setDiShiColor(cell, ln.diShi);
+
+      // 动态计算地势值
+      let diShiValue = ln.diShi || '';
+
+      // 如果没有预计算的地势值，则动态计算
+      if (!diShiValue && ln.ganZhi && ln.ganZhi.length >= 2) {
+        const dayStem = this.baziInfo.dayStem || '';
+        const branch = ln.ganZhi[1]; // 地支
+        if (dayStem && branch) {
+          diShiValue = this.calculateDiShi(dayStem, branch);
+        }
       }
+
+      // 设置单元格内容和颜色
+      if (diShiValue) {
+        cell.textContent = diShiValue;
+        ColorSchemeService.setDiShiColor(cell, diShiValue);
+      } else {
+        cell.textContent = '';
+      }
+
       cell.addEventListener('click', () => this.selectLiuNian(ln.year));
     });
   }
@@ -979,5 +996,16 @@ export class LiuNianInfoManager {
     this.addLiuNianInfo();
   }
 
+  /**
+   * 计算地势（使用BaziCalculator）
+   */
+  private calculateDiShi(stem: string, branch: string): string {
+    try {
+      return BaziCalculator.getDiShi(stem, branch);
+    } catch (error) {
+      console.error('计算地势失败:', error);
+      return '';
+    }
+  }
 
 }

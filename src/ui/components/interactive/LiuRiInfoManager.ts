@@ -300,7 +300,7 @@ export class LiuRiInfoManager {
    * 创建地势行
    */
   private createDiShiRow(table: HTMLElement, liuRiData: any[]) {
-    if (!liuRiData.some(lr => lr.diShi)) return;
+    // 总是创建地势行，支持动态计算
 
     const row = table.createEl('tr', { cls: 'bazi-liuri-dishi-row' });
 
@@ -329,7 +329,7 @@ export class LiuRiInfoManager {
    * 创建旬空行
    */
   private createXunKongRow(table: HTMLElement, liuRiData: any[]) {
-    if (!liuRiData.some(lr => lr.xunKong)) return;
+    // 总是创建旬空行，支持动态计算
 
     const row = table.createEl('tr', { cls: 'bazi-liuri-xunkong-row' });
     row.createEl('th', { text: '旬空' }).style.cssText = this.getHeaderCellStyle();
