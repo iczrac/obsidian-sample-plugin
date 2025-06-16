@@ -65,8 +65,8 @@ export class DataGenerationService {
         displayName: `${liuYue.ganZhi}月`,
         startDate: liuYue.startDate,
         endDate: liuYue.endDate,
-        shiShen: liuYue.shiShenGan,
-        shiShenZhi: liuYue.shiShenZhi,
+        shiShenGan: liuYue.shiShenGan, // 修复：正确映射天干十神
+        shiShenZhi: liuYue.shiShenZhi, // 修复：正确映射地支十神
         diShi: liuYue.diShi,
         xunKong: liuYue.xunKong,
         naYin: '', // 流月通常不计算纳音
@@ -118,8 +118,8 @@ export class DataGenerationService {
         name: `${liuRi.day}日`,
         displayName: liuRi.ganZhi,
         monthGanZhi: liuRi.monthGanZhi,
-        shiShen: liuRi.shiShenGan,
-        shiShenZhi: liuRi.shiShenZhi,
+        shiShenGan: liuRi.shiShenGan, // 修复：正确映射天干十神
+        shiShenZhi: liuRi.shiShenZhi, // 修复：正确映射地支十神
         diShi: liuRi.diShi,
         xunKong: liuRi.xunKong,
         naYin: liuRi.naYin,
@@ -180,8 +180,8 @@ export class DataGenerationService {
         name: liuShi.name,
         time: liuShi.time,
         displayName: liuShi.ganZhi,
-        shiShen: liuShi.shiShenGan,
-        shiShenZhi: liuShi.shiShenZhi,
+        shiShenGan: liuShi.shiShenGan, // 修复：正确映射天干十神
+        shiShenZhi: liuShi.shiShenZhi, // 修复：正确映射地支十神
         diShi: liuShi.diShi,
         xunKong: liuShi.xunKong,
         naYin: liuShi.naYin,
