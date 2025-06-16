@@ -438,7 +438,7 @@ export class InteractionManager {
   }
 
   /**
-   * 重新计算大运地势
+   * 重新计算大运地势（包含前运）
    */
   private recalculateDaYunChangSheng(diShiRow: Element, currentMode: any) {
     const cells = diShiRow.querySelectorAll('td');
@@ -454,10 +454,24 @@ export class InteractionManager {
       if (daYunIndex >= daYunData.length) return;
 
       const daYun = daYunData[daYunIndex];
-      if (!daYun || !daYun.ganZhi) return;
+      if (!daYun) return;
 
-      const stem = daYun.ganZhi[0]; // 天干
-      const branch = daYun.ganZhi[1]; // 地支
+      // 检查干支数据（包括前运）
+      let stem = '';
+      let branch = '';
+
+      if (daYun.ganZhi && daYun.ganZhi.length >= 2) {
+        stem = daYun.ganZhi[0]; // 天干
+        branch = daYun.ganZhi[1]; // 地支
+      } else if (typeof daYun.ganZhi === 'string' && daYun.ganZhi.length >= 2) {
+        // 处理字符串格式的干支
+        stem = daYun.ganZhi[0];
+        branch = daYun.ganZhi[1];
+      } else {
+        // 如果没有干支数据，跳过（可能是空的前运期间）
+        console.log(`🔍 大运[${daYunIndex}]没有干支数据，跳过地势计算:`, daYun);
+        return;
+      }
 
       // 根据模式计算地势值
       let diShiValue = '';
@@ -486,6 +500,11 @@ export class InteractionManager {
           cls: 'dishi-tag-small'
         });
         this.applyDiShiColor(span, diShiValue);
+
+        // 如果是前运，添加标识
+        if (daYun.isQianYun) {
+          console.log(`🎯 前运地势计算: ${stem}${branch} -> ${diShiValue} (模式: ${currentMode.key})`);
+        }
       }
     });
   }
