@@ -318,7 +318,14 @@ export class LiuYueInfoManager {
     if (!liuYueData.some(ly => ly.diShi)) return;
 
     const row = table.createEl('tr', { cls: 'bazi-liuyue-dishi-row' });
-    row.createEl('th', { text: '地势' }).style.cssText = this.getHeaderCellStyle();
+
+    // 创建可点击的地势标签
+    const headerCell = row.createEl('th', {
+      text: '地势',
+      cls: 'bazi-changsheng-label'
+    });
+    headerCell.style.cssText = this.getHeaderCellStyle() + 'cursor: pointer;';
+    headerCell.setAttribute('title', '日干在各地支的十二长生状态 (点击切换)');
 
     liuYueData.forEach((ly) => {
       const cell = row.createEl('td', {

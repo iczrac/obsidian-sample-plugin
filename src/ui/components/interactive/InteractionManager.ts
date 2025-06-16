@@ -5,6 +5,7 @@ import { ExtendedColumnManager } from './ExtendedColumnManager';
 import { HorizontalSelectorManager } from './HorizontalSelectorManager';
 import { EventManager } from '../EventManager';
 import { ColorSchemeService } from '../../../services/bazi/ColorSchemeService';
+import { BaziCalculator } from '../../../services/bazi/BaziCalculator';
 
 /**
  * 交互管理器
@@ -380,12 +381,10 @@ export class InteractionManager {
   }
 
   /**
-   * 计算地势（使用简化算法）
+   * 计算地势（使用BaziCalculator）
    */
   private calculateDiShi(stem: string, branch: string): string {
-    // 这里应该使用BaziCalculator.getDiShi，但为了避免循环依赖，先用简化版本
-    // 实际项目中应该通过依赖注入或其他方式获取
-    return '长生'; // 简化返回，实际应该计算
+    return BaziCalculator.getDiShi(stem, branch);
   }
 
   /**

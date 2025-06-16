@@ -1,6 +1,7 @@
 import { BaziInfo, DaYunInfo } from '../../../types/BaziInfo';
 import { PillarCalculationService, ExtendedPillarInfo } from '../../../services/bazi/PillarCalculationService';
 import { ColorSchemeService } from '../../../services/bazi/ColorSchemeService';
+import { BaziCalculator } from '../../../services/bazi/BaziCalculator';
 
 /**
  * 扩展列管理器
@@ -889,11 +890,9 @@ export class ExtendedColumnManager {
   }
 
   /**
-   * 计算地势（简化版本，实际应该使用BaziCalculator）
+   * 计算地势（使用BaziCalculator）
    */
   private calculateDiShiForPillar(stem: string, branch: string): string {
-    // 这里应该使用BaziCalculator.getDiShi(stem, branch)
-    // 为了避免循环依赖，暂时返回简化值
-    return '长生'; // TODO: 实现准确的地势计算
+    return BaziCalculator.getDiShi(stem, branch);
   }
 }

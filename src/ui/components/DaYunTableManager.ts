@@ -180,13 +180,24 @@ export class DaYunTableManager {
    * 创建地势行
    */
   private createDiShiRow(daYunData: DaYunInfo[]) {
-    const diShiRow = this.daYunTable!.createEl('tr');
-    diShiRow.createEl('th', { text: '地势' });
+    const diShiRow = this.daYunTable!.createEl('tr', { cls: 'bazi-dayun-dishi-row' });
+
+    // 创建可点击的地势标签
+    const headerCell = diShiRow.createEl('th', {
+      text: '地势',
+      cls: 'bazi-changsheng-label'
+    });
+    headerCell.setAttribute('title', '日干在各地支的十二长生状态 (点击切换)');
+    headerCell.style.cursor = 'pointer';
+
     daYunData.slice(0, 10).forEach(dy => {
-      diShiRow.createEl('td', {
+      const cell = diShiRow.createEl('td', {
         text: dy.diShi || '',
         cls: 'bazi-dishi-cell'
       });
+      if (dy.diShi) {
+        ColorSchemeService.setDiShiColor(cell, dy.diShi);
+      }
     });
   }
 
