@@ -491,39 +491,20 @@ export class BaziTableManager {
   }
 
   /**
-   * 创建神煞内容
+   * 创建神煞内容（使用统一的ColorSchemeService）
    */
   private createShenShaContent(element: HTMLElement, shenSha: string[] | undefined) {
     if (!shenSha || shenSha.length === 0) {
       return;
     }
 
-    shenSha.forEach((sha, index) => {
-      if (index > 0) {
-        element.createSpan({ text: ' ' });
-      }
-
-      const shenShaSpan = element.createSpan({
-        text: sha,
-        cls: 'shensha-tag'
-      });
-      shenShaSpan.style.cssText = `
-        display: inline-block;
-        padding: 2px 4px;
-        margin: 1px;
-        border-radius: 3px;
-        font-size: 10px;
-        background: var(--background-modifier-border);
-        color: var(--text-muted);
-        cursor: pointer;
-      `;
-
-      // 添加点击事件
-      shenShaSpan.addEventListener('click', (e) => {
-        e.stopPropagation();
-        this.handleShenShaClick(sha);
-      });
-    });
+    // 直接使用ColorSchemeService的统一神煞元素创建方法
+    ColorSchemeService.createColoredShenShaElement(
+      element,
+      shenSha,
+      (sha) => this.handleShenShaClick(sha),
+      'shensha-element'
+    );
   }
 
   /**
@@ -609,4 +590,5 @@ export class BaziTableManager {
       console.log(`🎨 应用地势颜色: ${diShi} -> ${color}`);
     }
   }
+
 }

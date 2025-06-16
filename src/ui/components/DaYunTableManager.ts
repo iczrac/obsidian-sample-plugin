@@ -1,5 +1,4 @@
 import { BaziInfo, DaYunInfo } from '../../types/BaziInfo';
-import { ShenShaExplanationService } from '../../services/bazi/shensha/ShenShaExplanationService';
 import { ExtendedTableManager } from './ExtendedTableManager';
 import { ColorSchemeService } from '../../services/bazi/ColorSchemeService';
 
@@ -267,36 +266,13 @@ export class DaYunTableManager {
       });
 
       if (dy.shenSha && dy.shenSha.length > 0) {
-        const shenShaList = cell.createDiv({ cls: 'bazi-shensha-list' });
-        dy.shenSha.forEach((shenSha: string) => {
-          const shenShaInfo = ShenShaExplanationService.getShenShaInfo(shenSha);
-          const type = shenShaInfo?.type || '未知';
-
-          let cssClass = '';
-          if (type === '吉神') {
-            cssClass = 'shensha-good';
-          } else if (type === '凶神') {
-            cssClass = 'shensha-bad';
-          } else if (type === '吉凶神') {
-            cssClass = 'shensha-mixed';
-          }
-
-          const shenShaEl = shenShaList.createEl('span', {
-            text: shenSha,
-            cls: `bazi-shensha ${cssClass}`,
-            attr: {
-              'data-shensha': shenSha,
-              'data-type': type,
-              'title': shenShaInfo?.explanation || ''
-            }
-          });
-
-          // 添加点击事件显示神煞详情
-          shenShaEl.addEventListener('click', (e) => {
-            e.stopPropagation();
-            this.showShenShaExplanation(shenSha);
-          });
-        });
+        // 直接使用ColorSchemeService的统一神煞元素创建方法
+        ColorSchemeService.createColoredShenShaElement(
+          cell,
+          dy.shenSha,
+          (shenSha) => this.showShenShaExplanation(shenSha),
+          'bazi-shensha-list'
+        );
       } else {
         cell.textContent = '无';
       }
@@ -367,4 +343,5 @@ export class DaYunTableManager {
       }
     }
   }
+
 }
