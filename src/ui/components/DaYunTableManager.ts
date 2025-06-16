@@ -1,6 +1,7 @@
 import { BaziInfo, DaYunInfo } from '../../types/BaziInfo';
 import { ShenShaExplanationService } from '../../services/bazi/shensha/ShenShaExplanationService';
 import { ExtendedTableManager } from './ExtendedTableManager';
+import { ColorSchemeService } from '../../services/bazi/ColorSchemeService';
 
 /**
  * 大运表格管理器
@@ -128,11 +129,11 @@ export class DaYunTableManager {
 
           // 创建天干元素并设置五行颜色
           const stemSpan = cell.createSpan({ text: stem });
-          this.setWuXingColorDirectly(stemSpan, this.getStemWuXing(stem));
+          ColorSchemeService.setGanColor(stemSpan, stem);
 
           // 创建地支元素并设置五行颜色
           const branchSpan = cell.createSpan({ text: branch });
-          this.setWuXingColorDirectly(branchSpan, this.getBranchWuXing(branch));
+          ColorSchemeService.setZhiColor(branchSpan, branch);
 
           // 如果是前运，添加换行和小红字标注
           if ((dy as any).isQianYun === true) {
@@ -208,11 +209,11 @@ export class DaYunTableManager {
 
         // 创建第一个旬空地支元素并设置五行颜色
         const xk1Span = cell.createSpan({ text: xk1 });
-        this.setWuXingColorDirectly(xk1Span, this.getBranchWuXing(xk1));
+        ColorSchemeService.setZhiColor(xk1Span, xk1);
 
         // 创建第二个旬空地支元素并设置五行颜色
         const xk2Span = cell.createSpan({ text: xk2 });
-        this.setWuXingColorDirectly(xk2Span, this.getBranchWuXing(xk2));
+        ColorSchemeService.setZhiColor(xk2Span, xk2);
       } else {
         // 如果没有旬空或格式不正确，直接显示原文本
         cell.textContent = dy.xunKong || '';
@@ -233,9 +234,12 @@ export class DaYunTableManager {
       });
 
       if (naYin) {
-        const wuXing = this.extractWuXingFromNaYin(naYin);
         const naYinSpan = cell.createSpan({ text: naYin });
-        this.setWuXingColorDirectly(naYinSpan, wuXing);
+        const color = ColorSchemeService.getNaYinColor(naYin);
+        if (color && color !== 'var(--text-normal)') {
+          naYinSpan.style.setProperty('color', color, 'important');
+          naYinSpan.style.setProperty('font-weight', 'bold', 'important');
+        }
       }
     });
   }
@@ -338,59 +342,7 @@ export class DaYunTableManager {
     }
   }
 
-  // 工具方法 - 直接设置五行颜色（与原InteractiveBaziView保持一致）
-  private setWuXingColorDirectly(element: HTMLElement, wuXing: string) {
-    // 使用内联样式设置五行颜色，与原代码保持一致
-    switch (wuXing) {
-      case '金':
-        element.style.color = '#FFD700'; // 金 - 黄色
-        break;
-      case '木':
-        element.style.color = '#2e8b57'; // 木 - 绿色
-        break;
-      case '水':
-        element.style.color = '#1e90ff'; // 水 - 蓝色
-        break;
-      case '火':
-        element.style.color = '#ff4500'; // 火 - 红色
-        break;
-      case '土':
-        element.style.color = '#cd853f'; // 土 - 棕色
-        break;
-    }
-  }
 
-  private getStemWuXing(stem: string): string {
-    // 直接使用映射表，与原代码保持一致
-    const stemWuXingMap: { [key: string]: string } = {
-      '甲': '木', '乙': '木',
-      '丙': '火', '丁': '火',
-      '戊': '土', '己': '土',
-      '庚': '金', '辛': '金',
-      '壬': '水', '癸': '水'
-    };
-    return stemWuXingMap[stem] || '';
-  }
-
-  private getBranchWuXing(branch: string): string {
-    // 临时实现，实际应该从BaziUtils获取
-    const branchWuXingMap: { [key: string]: string } = {
-      '子': '水', '丑': '土', '寅': '木', '卯': '木',
-      '辰': '土', '巳': '火', '午': '火', '未': '土',
-      '申': '金', '酉': '金', '戌': '土', '亥': '水'
-    };
-    return branchWuXingMap[branch] || '';
-  }
-
-  private extractWuXingFromNaYin(naYin: string): string {
-    // 纳音通常以五行结尾，如"金箔金"、"炉中火"等
-    if (naYin.includes('金')) return '金';
-    if (naYin.includes('木')) return '木';
-    if (naYin.includes('水')) return '水';
-    if (naYin.includes('火')) return '火';
-    if (naYin.includes('土')) return '土';
-    return '';
-  }
 
   private showShenShaExplanation(shenSha: string) {
     // 简化实现，实际应该显示详细的神煞说明弹窗
