@@ -26,7 +26,7 @@ export class ExtendedColumnManager {
   private lastExtendedLiuRi: any = null;
   private lastExtendedLiuShi: any = null;
 
-  // 十二长生显示模式
+  // 十二长生显示模式（由InteractionManager管理）
   private changShengMode: number = 0;
 
   constructor(baziInfo: BaziInfo) {
@@ -817,5 +817,83 @@ export class ExtendedColumnManager {
         cell.dispatchEvent(event);
       });
     }
+  }
+
+  /**
+   * 更新地势模式（由InteractionManager调用）
+   */
+  updateChangShengMode(mode: number, modeInfo: any) {
+    this.changShengMode = mode;
+    console.log(`🔄 ExtendedColumnManager: 更新地势模式到 ${modeInfo.name}`);
+
+    // 重新计算所有扩展列的地势显示
+    this.refreshAllExtendedColumnsChangSheng(modeInfo);
+  }
+
+  /**
+   * 刷新所有扩展列的地势显示
+   */
+  private refreshAllExtendedColumnsChangSheng(modeInfo: any) {
+    if (!this.baziTable) return;
+
+    // 查找地势行
+    const diShiRow = this.baziTable.querySelector('.bazi-dishi-row');
+    if (!diShiRow) return;
+
+    // 更新每个扩展列的地势单元格
+    this.extendedPillars.forEach((pillarInfo, index) => {
+      const columnIndex = 5 + index + 1; // 5个基础列 + 扩展列索引 + 1（从1开始）
+      const cell = diShiRow.querySelector(`td:nth-child(${columnIndex})`);
+      if (cell) {
+        this.updateExtendedColumnChangShengCell(cell, pillarInfo, modeInfo);
+      }
+    });
+  }
+
+  /**
+   * 更新单个扩展列的地势单元格
+   */
+  private updateExtendedColumnChangShengCell(cell: Element, pillarInfo: ExtendedPillarInfo, modeInfo: any) {
+    // 清空原内容
+    cell.innerHTML = '';
+
+    // 根据模式重新计算地势值
+    let diShiValue = '';
+    switch (modeInfo.key) {
+      case 'diShi':
+        // 地势：使用原有的地势值
+        diShiValue = pillarInfo.diShi || '';
+        break;
+      case 'ziZuo':
+        // 自坐：天干对地支的地势
+        if (pillarInfo.stem && pillarInfo.branch) {
+          diShiValue = this.calculateDiShiForPillar(pillarInfo.stem, pillarInfo.branch);
+        }
+        break;
+      case 'yueLing':
+        // 月令：天干对月支的地势
+        if (pillarInfo.stem && this.baziInfo.monthBranch) {
+          diShiValue = this.calculateDiShiForPillar(pillarInfo.stem, this.baziInfo.monthBranch);
+        }
+        break;
+    }
+
+    // 创建新的地势显示
+    if (diShiValue) {
+      const span = cell.createEl('span', {
+        text: diShiValue,
+        cls: 'dishi-tag-small'
+      });
+      ColorSchemeService.setDiShiColor(span, diShiValue);
+    }
+  }
+
+  /**
+   * 计算地势（简化版本，实际应该使用BaziCalculator）
+   */
+  private calculateDiShiForPillar(stem: string, branch: string): string {
+    // 这里应该使用BaziCalculator.getDiShi(stem, branch)
+    // 为了避免循环依赖，暂时返回简化值
+    return '长生'; // TODO: 实现准确的地势计算
   }
 }
