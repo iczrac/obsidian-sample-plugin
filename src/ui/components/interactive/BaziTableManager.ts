@@ -13,6 +13,14 @@ export class BaziTableManager {
   private baziInfo: BaziInfo;
   private baziTable: HTMLTableElement | null = null;
 
+  // 十二长生显示模式：0=地势，1=自坐，2=月令
+  private changShengMode: number = 0;
+  private readonly CHANG_SHENG_MODES = [
+    { key: 'diShi', name: '地势', description: '日干在各地支的十二长生状态' },
+    { key: 'ziZuo', name: '自坐', description: '各柱天干相对于各柱地支的十二长生状态' },
+    { key: 'yueLing', name: '月令', description: '各柱天干相对于月令的十二长生状态' }
+  ];
+
   constructor(container: HTMLElement, baziInfo: BaziInfo) {
     this.container = container;
     this.baziInfo = baziInfo;
@@ -278,6 +286,11 @@ export class BaziTableManager {
     labelCell.setAttribute('title', '日干在各地支的十二长生状态 (点击切换)');
     labelCell.style.cursor = 'pointer';
 
+    // 添加点击事件切换地势模式
+    labelCell.addEventListener('click', () => {
+      this.toggleChangShengMode();
+    });
+
     // 调试：检查地势数据
     console.log('🔍 BaziTableManager 地势数据检查:');
     console.log('yearDiShi:', this.baziInfo.yearDiShi);
@@ -490,6 +503,143 @@ export class BaziTableManager {
    */
   getBaziTable(): HTMLTableElement | null {
     return this.baziTable;
+  }
+
+  /**
+   * 切换十二长生显示模式
+   */
+  toggleChangShengMode() {
+    // 切换到下一个模式
+    this.changShengMode = (this.changShengMode + 1) % this.CHANG_SHENG_MODES.length;
+
+    // 更新地势行显示
+    this.updateChangShengDisplay();
+
+    // 显示切换提示
+    const currentMode = this.CHANG_SHENG_MODES[this.changShengMode];
+    console.log(`🔄 已切换到${currentMode.name}模式：${currentMode.description}`);
+  }
+
+  /**
+   * 更新十二长生显示
+   */
+  private updateChangShengDisplay() {
+    const currentMode = this.CHANG_SHENG_MODES[this.changShengMode];
+
+    // 更新标签文本和提示
+    const diShiLabel = this.container.querySelector('.bazi-changsheng-label');
+    if (diShiLabel) {
+      diShiLabel.textContent = currentMode.name;
+      diShiLabel.setAttribute('title', currentMode.description + ' (点击切换)');
+    }
+
+    // 更新各柱的十二长生状态显示
+    this.updatePillarChangShengDisplay('year', 2);
+    this.updatePillarChangShengDisplay('month', 3);
+    this.updatePillarChangShengDisplay('day', 4);
+    this.updatePillarChangShengDisplay('time', 5);
+  }
+
+  /**
+   * 更新单个柱的十二长生状态显示
+   */
+  private updatePillarChangShengDisplay(pillar: 'year' | 'month' | 'day' | 'time', columnIndex: number) {
+    const currentMode = this.CHANG_SHENG_MODES[this.changShengMode];
+    let value = '';
+
+    // 根据当前模式获取对应的值
+    switch (currentMode.key) {
+      case 'diShi':
+        value = this.baziInfo[`${pillar}DiShi`] || '';
+        break;
+      case 'ziZuo':
+        // 需要计算自坐数据
+        value = this.calculateZiZuo(pillar);
+        break;
+      case 'yueLing':
+        // 需要计算月令数据
+        value = this.calculateYueLing(pillar);
+        break;
+    }
+
+    // 更新对应的显示元素
+    const diShiRow = this.baziTable?.querySelector('.bazi-dishi-row');
+    if (diShiRow) {
+      const cell = diShiRow.querySelector(`td:nth-child(${columnIndex})`);
+      if (cell) {
+        // 清空原内容
+        cell.empty();
+
+        // 添加新内容
+        if (value) {
+          const span = cell.createSpan({
+            text: value,
+            cls: 'dishi-tag-small'
+          });
+          this.applyDiShiColor(span, value);
+        }
+      }
+    }
+  }
+
+  /**
+   * 计算自坐（各柱天干相对于各柱地支的十二长生状态）
+   */
+  private calculateZiZuo(pillar: 'year' | 'month' | 'day' | 'time'): string {
+    let stem = '';
+    let branch = '';
+
+    switch (pillar) {
+      case 'year':
+        stem = this.baziInfo.yearStem || '';
+        branch = this.baziInfo.yearBranch || '';
+        break;
+      case 'month':
+        stem = this.baziInfo.monthStem || '';
+        branch = this.baziInfo.monthBranch || '';
+        break;
+      case 'day':
+        stem = this.baziInfo.dayStem || '';
+        branch = this.baziInfo.dayBranch || '';
+        break;
+      case 'time':
+        stem = this.baziInfo.timeStem || '';
+        branch = this.baziInfo.timeBranch || '';
+        break;
+    }
+
+    if (!stem || !branch) return '';
+
+    // 使用BaziCalculator计算地势（自坐就是各柱天干对各柱地支的地势）
+    return BaziCalculator.getDiShi(stem, branch);
+  }
+
+  /**
+   * 计算月令（各柱天干相对于月令的十二长生状态）
+   */
+  private calculateYueLing(pillar: 'year' | 'month' | 'day' | 'time'): string {
+    let stem = '';
+    const monthBranch = this.baziInfo.monthBranch || '';
+
+    switch (pillar) {
+      case 'year':
+        stem = this.baziInfo.yearStem || '';
+        break;
+      case 'month':
+        stem = this.baziInfo.monthStem || '';
+        break;
+      case 'day':
+        stem = this.baziInfo.dayStem || '';
+        break;
+      case 'time':
+        stem = this.baziInfo.timeStem || '';
+        break;
+    }
+
+    if (!stem || !monthBranch) return '';
+
+    // 使用BaziCalculator计算地势（月令就是各柱天干对月支的地势）
+    return BaziCalculator.getDiShi(stem, monthBranch);
   }
 
   /**

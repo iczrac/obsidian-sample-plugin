@@ -201,21 +201,11 @@ export class DaYunTableManager {
         cls: 'bazi-xunkong-cell'
       });
 
-      // 如果有旬空，按五行颜色显示
-      if (dy.xunKong && dy.xunKong.length >= 2) {
-        const xk1 = dy.xunKong[0]; // 第一个旬空地支
-        const xk2 = dy.xunKong[1]; // 第二个旬空地支
-
-        // 创建第一个旬空地支元素并设置五行颜色
-        const xk1Span = cell.createSpan({ text: xk1 });
-        ColorSchemeService.setZhiColor(xk1Span, xk1);
-
-        // 创建第二个旬空地支元素并设置五行颜色
-        const xk2Span = cell.createSpan({ text: xk2 });
-        ColorSchemeService.setZhiColor(xk2Span, xk2);
+      // 使用统一的旬空颜色显示方法
+      if (dy.xunKong) {
+        ColorSchemeService.createColoredXunKongElement(cell, dy.xunKong);
       } else {
-        // 如果没有旬空或格式不正确，直接显示原文本
-        cell.textContent = dy.xunKong || '';
+        cell.textContent = '';
       }
     });
   }

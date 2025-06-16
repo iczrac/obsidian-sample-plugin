@@ -732,15 +732,16 @@ export class ExtendedColumnManager {
   }
 
   /**
-   * 填充十神单元格
+   * 填充十神单元格（使用统一颜色方案）
    */
   private fillShiShenCell(cell: HTMLElement, pillarInfo: ExtendedPillarInfo) {
     // 天干十神
     if (pillarInfo.shiShenGan) {
-      cell.createSpan({
+      const shiShenSpan = cell.createSpan({
         text: pillarInfo.shiShenGan,
         cls: 'shishen-tag-small'
       });
+      ColorSchemeService.setShiShenColor(shiShenSpan, pillarInfo.shiShenGan);
     }
 
     // 换行
@@ -748,31 +749,37 @@ export class ExtendedColumnManager {
 
     // 地支藏干十神
     if (pillarInfo.shiShenZhi && pillarInfo.shiShenZhi.length > 0) {
-      cell.createSpan({
+      const shiShenZhiSpan = cell.createSpan({
         text: pillarInfo.shiShenZhi.join(','),
         cls: 'shishen-tag-small shishen-tag-hide'
       });
+      // 为第一个十神应用颜色（简化处理）
+      if (pillarInfo.shiShenZhi.length > 0) {
+        ColorSchemeService.setShiShenColor(shiShenZhiSpan, pillarInfo.shiShenZhi[0]);
+      }
     }
   }
 
   /**
-   * 填充地势单元格
+   * 填充地势单元格（使用统一颜色方案）
    */
   private fillDiShiCell(cell: HTMLElement, pillarInfo: ExtendedPillarInfo) {
     if (pillarInfo.diShi) {
-      cell.createSpan({
+      const diShiSpan = cell.createSpan({
         text: pillarInfo.diShi,
         cls: 'dishi-tag-small'
       });
+      ColorSchemeService.setDiShiColor(diShiSpan, pillarInfo.diShi);
     }
   }
 
   /**
-   * 填充纳音单元格
+   * 填充纳音单元格（使用统一颜色方案）
    */
   private fillNaYinCell(cell: HTMLElement, pillarInfo: ExtendedPillarInfo) {
     if (pillarInfo.naYin) {
       cell.textContent = pillarInfo.naYin;
+      ColorSchemeService.setNaYinColor(cell, pillarInfo.naYin);
     }
   }
 
