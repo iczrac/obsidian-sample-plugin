@@ -623,7 +623,7 @@ export class ExtendedColumnManager {
       border: 1px solid var(--background-modifier-border);
       font-weight: bold;
       text-align: center;
-      font-size: 13px;
+      font-size: 14px;
       min-width: 60px;
       position: relative;
     `;
@@ -647,7 +647,7 @@ export class ExtendedColumnManager {
         padding: 6px 4px;
         border: 1px solid var(--background-modifier-border);
         text-align: center;
-        font-size: 13px;
+        font-size: 14px;
         min-width: 60px;
         background: var(--background-primary-alt);
       `;
@@ -800,25 +800,14 @@ export class ExtendedColumnManager {
    */
   private fillShenShaCell(cell: HTMLElement, pillarInfo: ExtendedPillarInfo) {
     if (pillarInfo.shenSha && pillarInfo.shenSha.length > 0) {
-      pillarInfo.shenSha.forEach((sha, index) => {
-        if (index > 0) {
-          cell.createSpan({ text: ' ' });
-        }
-
-        const shenShaSpan = cell.createSpan({
-          text: sha,
-          cls: 'shensha-tag'
+      // 使用ColorSchemeService创建带颜色和点击事件的神煞显示
+      ColorSchemeService.createColoredShenShaElement(cell, pillarInfo.shenSha, (shenSha: string) => {
+        // 触发神煞点击事件
+        const event = new CustomEvent('shensha-click', {
+          detail: { shenSha },
+          bubbles: true
         });
-        shenShaSpan.style.cssText = `
-          display: inline-block;
-          padding: 2px 4px;
-          margin: 1px;
-          border-radius: 3px;
-          font-size: 10px;
-          background: var(--background-modifier-border);
-          color: var(--text-muted);
-          cursor: pointer;
-        `;
+        cell.dispatchEvent(event);
       });
     }
   }

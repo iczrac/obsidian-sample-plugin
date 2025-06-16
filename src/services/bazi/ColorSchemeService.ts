@@ -1,3 +1,5 @@
+import { ShenShaAlgorithms } from './shensha/ShenShaAlgorithms';
+
 /**
  * 全局颜色方案服务
  * 统一管理所有五行相关元素的颜色配置
@@ -6,11 +8,11 @@ export class ColorSchemeService {
   
   // 五行颜色配置
   private static readonly WU_XING_COLORS = {
-    '金': '#D4AF37', // 金色
+    '金': '#FFD700', // 金黄色
     '木': '#228B22', // 绿色
     '水': '#4169E1', // 蓝色
     '火': '#DC143C', // 红色
-    '土': '#DAA520'  // 土黄色
+    '土': '#CD853F'  // 土黄色
   };
 
   // 十神颜色配置
@@ -369,6 +371,135 @@ export class ColorSchemeService {
     }
 
     return hideGanEl;
+  }
+
+  /**
+   * 创建带颜色和点击事件的神煞元素
+   * @param container 容器元素
+   * @param shenShaList 神煞列表
+   * @param onShenShaClick 神煞点击回调函数
+   * @param className CSS类名（可选）
+   * @returns 创建的元素
+   */
+  static createColoredShenShaElement(
+    container: HTMLElement,
+    shenShaList: string[],
+    onShenShaClick?: (shenSha: string) => void,
+    className?: string
+  ): HTMLElement {
+    const shenShaEl = container.createDiv({ cls: className || 'shensha-element' });
+    shenShaEl.style.cssText = `
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2px;
+    `;
+
+    shenShaList.forEach((sha, index) => {
+      if (index > 0) {
+        shenShaEl.createSpan({ text: ' ' });
+      }
+
+      const shenShaSpan = shenShaEl.createSpan({
+        text: sha,
+        cls: 'shensha-tag'
+      });
+
+      // 获取神煞类型并应用对应的颜色
+      const shenShaTypeChinese = ShenShaAlgorithms.getShenShaType(sha);
+      const shenShaType = this.convertShenShaTypeToEnglish(shenShaTypeChinese);
+      const backgroundColor = this.getShenShaBackgroundColor(shenShaType);
+      const textColor = this.getShenShaTextColor(shenShaType);
+
+      shenShaSpan.style.cssText = `
+        display: inline-block;
+        padding: 2px 4px;
+        margin: 1px;
+        border-radius: 3px;
+        font-size: 10px;
+        background: ${backgroundColor};
+        color: ${textColor};
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border: 1px solid ${this.getShenShaBorderColor(shenShaType)};
+      `;
+
+      // 悬停效果
+      shenShaSpan.addEventListener('mouseenter', () => {
+        shenShaSpan.style.transform = 'scale(1.05)';
+        shenShaSpan.style.boxShadow = '0 2px 4px rgba(0,0,0,0.2)';
+      });
+
+      shenShaSpan.addEventListener('mouseleave', () => {
+        shenShaSpan.style.transform = 'scale(1)';
+        shenShaSpan.style.boxShadow = 'none';
+      });
+
+      // 点击事件
+      if (onShenShaClick) {
+        shenShaSpan.addEventListener('click', (e) => {
+          e.stopPropagation();
+          onShenShaClick(sha);
+        });
+      }
+    });
+
+    return shenShaEl;
+  }
+
+  /**
+   * 转换神煞类型为英文
+   * @param chineseType 中文类型
+   * @returns 英文类型
+   */
+  private static convertShenShaTypeToEnglish(chineseType: string): string {
+    switch (chineseType) {
+      case '吉神': return 'good';
+      case '凶神': return 'bad';
+      case '吉凶神': return 'mixed';
+      default: return 'mixed';
+    }
+  }
+
+  /**
+   * 获取神煞背景颜色
+   * @param type 神煞类型
+   * @returns 背景颜色
+   */
+  private static getShenShaBackgroundColor(type: string): string {
+    switch (type) {
+      case 'good': return 'rgba(34, 139, 34, 0.1)';
+      case 'bad': return 'rgba(220, 20, 60, 0.1)';
+      case 'mixed': return 'rgba(255, 165, 0, 0.1)';
+      default: return 'var(--background-modifier-border)';
+    }
+  }
+
+  /**
+   * 获取神煞文字颜色
+   * @param type 神煞类型
+   * @returns 文字颜色
+   */
+  private static getShenShaTextColor(type: string): string {
+    switch (type) {
+      case 'good': return '#228B22';
+      case 'bad': return '#DC143C';
+      case 'mixed': return '#FF8C00';
+      default: return 'var(--text-muted)';
+    }
+  }
+
+  /**
+   * 获取神煞边框颜色
+   * @param type 神煞类型
+   * @returns 边框颜色
+   */
+  private static getShenShaBorderColor(type: string): string {
+    switch (type) {
+      case 'good': return 'rgba(34, 139, 34, 0.3)';
+      case 'bad': return 'rgba(220, 20, 60, 0.3)';
+      case 'mixed': return 'rgba(255, 165, 0, 0.3)';
+      default: return 'var(--background-modifier-border)';
+    }
   }
 
   /**

@@ -7,14 +7,14 @@ import { BaziUtils } from './BaziUtils';
 export class StyleUtilsService {
   
   /**
-   * 五行颜色映射
+   * 五行颜色映射（使用ColorSchemeService统一管理）
    */
   private static readonly WU_XING_COLOR_MAP: { [key: string]: string } = {
-    '木': '#22c55e',  // 绿色
-    '火': '#ef4444',  // 红色
-    '土': '#eab308',  // 黄色
-    '金': '#64748b',  // 灰色
-    '水': '#3b82f6'   // 蓝色
+    '木': '#228B22', // 绿色
+    '火': '#DC143C', // 红色
+    '土': '#CD853F', // 土黄色
+    '金': '#FFD700', // 金黄色
+    '水': '#4169E1'  // 蓝色
   };
 
   /**
