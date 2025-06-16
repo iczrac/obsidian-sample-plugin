@@ -319,7 +319,331 @@ export class ExtendedColumnManager {
   getCurrentSelectedLiuRi(): any { return this.currentSelectedLiuRi; }
   getCurrentSelectedLiuShi(): any { return this.currentSelectedLiuShi; }
 
-  // 其他方法将在后续实现...
-  private getPillarInfoForLevel(level: string): ExtendedPillarInfo | null { return null; }
-  private addExtendedColumn(pillarInfo: ExtendedPillarInfo) { /* TODO */ }
+  /**
+   * 根据层级获取柱信息
+   */
+  private getPillarInfoForLevel(level: string): ExtendedPillarInfo | null {
+    console.log(`🔍 getPillarInfoForLevel: ${level}`);
+
+    try {
+      switch (level) {
+        case 'dayun':
+          return this.getDaYunPillarInfo();
+        case 'liunian':
+          return this.getLiuNianPillarInfo();
+        case 'liuyue':
+          return this.getLiuYuePillarInfo();
+        case 'liuri':
+          return this.getLiuRiPillarInfo();
+        case 'liushi':
+          return this.getLiuShiPillarInfo();
+        default:
+          console.warn(`❌ 未知层级: ${level}`);
+          return null;
+      }
+    } catch (error) {
+      console.error(`❌ 获取${level}柱信息时出错:`, error);
+      return null;
+    }
+  }
+
+  /**
+   * 获取大运柱信息
+   */
+  private getDaYunPillarInfo(): ExtendedPillarInfo | null {
+    if (!this.baziInfo.daYun || !Array.isArray(this.baziInfo.daYun) || this.selectedDaYunIndex >= this.baziInfo.daYun.length) {
+      console.warn('❌ 大运数据不可用');
+      return null;
+    }
+
+    const daYun = this.baziInfo.daYun[this.selectedDaYunIndex];
+    console.log(`✅ 获取大运柱信息: ${daYun.ganZhi}`);
+
+    // 使用现有的PillarCalculationService方法
+    return PillarCalculationService.calculateDaYunPillar(daYun, this.baziInfo.dayStem || '');
+  }
+
+  /**
+   * 获取流年柱信息
+   */
+  private getLiuNianPillarInfo(): ExtendedPillarInfo | null {
+    if (!this.selectedLiuNianYear || this.selectedLiuNianYear === 0) {
+      console.warn('❌ 流年年份未选择');
+      return null;
+    }
+
+    // 计算流年干支
+    const ganZhi = this.calculateYearGanZhi(this.selectedLiuNianYear);
+    console.log(`✅ 获取流年柱信息: ${this.selectedLiuNianYear}年 ${ganZhi}`);
+
+    // 创建流年对象
+    const liuNian = {
+      year: this.selectedLiuNianYear,
+      ganZhi: ganZhi
+    };
+
+    return PillarCalculationService.calculateLiuNianPillar(liuNian, this.baziInfo.dayStem || '');
+  }
+
+  /**
+   * 获取流月柱信息
+   */
+  private getLiuYuePillarInfo(): ExtendedPillarInfo | null {
+    if (!this.currentSelectedLiuYue) {
+      console.warn('❌ 流月未选择');
+      return null;
+    }
+
+    console.log(`✅ 获取流月柱信息: ${this.currentSelectedLiuYue.ganZhi}`);
+
+    return PillarCalculationService.calculateLiuYuePillar(this.currentSelectedLiuYue, this.baziInfo.dayStem || '');
+  }
+
+  /**
+   * 获取流日柱信息
+   */
+  private getLiuRiPillarInfo(): ExtendedPillarInfo | null {
+    if (!this.currentSelectedLiuRi) {
+      console.warn('❌ 流日未选择');
+      return null;
+    }
+
+    // 计算流日干支
+    const ganZhi = this.calculateDayGanZhi(
+      this.currentSelectedLiuRi.year,
+      this.currentSelectedLiuRi.month,
+      this.currentSelectedLiuRi.day
+    );
+
+    console.log(`✅ 获取流日柱信息: ${this.currentSelectedLiuRi.year}-${this.currentSelectedLiuRi.month}-${this.currentSelectedLiuRi.day} ${ganZhi}`);
+
+    return PillarCalculationService.calculateLiuRiPillar(ganZhi, this.baziInfo.dayStem || '');
+  }
+
+  /**
+   * 获取流时柱信息
+   */
+  private getLiuShiPillarInfo(): ExtendedPillarInfo | null {
+    if (!this.currentSelectedLiuShi) {
+      console.warn('❌ 流时未选择');
+      return null;
+    }
+
+    // 计算流时干支
+    const ganZhi = this.calculateTimeGanZhi(
+      this.currentSelectedLiuShi.year,
+      this.currentSelectedLiuShi.month,
+      this.currentSelectedLiuShi.day,
+      this.currentSelectedLiuShi.time
+    );
+
+    console.log(`✅ 获取流时柱信息: ${this.currentSelectedLiuShi.time}时 ${ganZhi}`);
+
+    return PillarCalculationService.calculateLiuShiPillar(ganZhi, this.baziInfo.dayStem || '');
+  }
+
+  /**
+   * 计算年份干支
+   */
+  private calculateYearGanZhi(year: number): string {
+    const gans = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
+    const zhis = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
+
+    // 以甲子年（1984年）为基准计算
+    const baseYear = 1984;
+    const offset = year - baseYear;
+
+    const ganIndex = offset % 10;
+    const zhiIndex = offset % 12;
+
+    const gan = gans[ganIndex >= 0 ? ganIndex : ganIndex + 10];
+    const zhi = zhis[zhiIndex >= 0 ? zhiIndex : zhiIndex + 12];
+
+    return gan + zhi;
+  }
+
+  /**
+   * 计算日期干支（简化版，实际应使用lunar-typescript）
+   */
+  private calculateDayGanZhi(_year: number, _month: number, _day: number): string {
+    // 这里应该使用lunar-typescript库来计算准确的日柱干支
+    // 暂时返回一个占位符
+    return '甲子'; // TODO: 实现准确的日柱计算
+  }
+
+  /**
+   * 计算时辰干支（简化版，实际应使用lunar-typescript）
+   */
+  private calculateTimeGanZhi(_year: number, _month: number, _day: number, _time: number): string {
+    // 这里应该使用lunar-typescript库来计算准确的时柱干支
+    // 暂时返回一个占位符
+    return '甲子'; // TODO: 实现准确的时柱计算
+  }
+
+  /**
+   * 添加扩展列到表格
+   */
+  private addExtendedColumn(pillarInfo: ExtendedPillarInfo) {
+    if (!this.baziTable) {
+      console.error('❌ 八字表格未初始化');
+      return;
+    }
+
+    console.log(`🔄 添加扩展列: ${pillarInfo.name} (${pillarInfo.ganZhi})`);
+
+    // 添加到扩展柱数组
+    this.extendedPillars.push(pillarInfo);
+
+    // 获取当前列索引（5 + 已有扩展列数量）
+    const columnIndex = 5 + this.extendedPillars.length - 1;
+
+    // 添加表头
+    this.addHeaderColumn(pillarInfo, columnIndex);
+
+    // 添加表体列
+    this.addBodyColumns(pillarInfo, columnIndex);
+
+    console.log(`✅ 扩展列添加完成: ${pillarInfo.name}`);
+  }
+
+  /**
+   * 添加表头列
+   */
+  private addHeaderColumn(pillarInfo: ExtendedPillarInfo, columnIndex: number) {
+    const thead = this.baziTable?.querySelector('thead');
+    if (!thead) return;
+
+    const headerRow = thead.querySelector('tr');
+    if (!headerRow) return;
+
+    const th = headerRow.createEl('th', {
+      text: pillarInfo.name,
+      cls: 'bazi-extended-header'
+    });
+
+    th.style.cssText = `
+      padding: 8px 6px;
+      background: var(--background-modifier-border);
+      border: 1px solid var(--background-modifier-border);
+      font-weight: bold;
+      text-align: center;
+      font-size: 12px;
+      min-width: 60px;
+    `;
+  }
+
+  /**
+   * 添加表体列
+   */
+  private addBodyColumns(pillarInfo: ExtendedPillarInfo, columnIndex: number) {
+    const tbody = this.baziTable?.querySelector('tbody');
+    if (!tbody) return;
+
+    const rows = tbody.querySelectorAll('tr');
+
+    rows.forEach((row, rowIndex) => {
+      const td = row.createEl('td', {
+        cls: 'bazi-extended-cell'
+      });
+
+      td.style.cssText = `
+        padding: 6px 4px;
+        border: 1px solid var(--background-modifier-border);
+        text-align: center;
+        font-size: 11px;
+        min-width: 60px;
+      `;
+
+      // 根据行类型填充内容
+      this.fillCellContent(td, pillarInfo, rowIndex);
+    });
+  }
+
+  /**
+   * 填充单元格内容
+   */
+  private fillCellContent(cell: HTMLElement, pillarInfo: ExtendedPillarInfo, rowIndex: number) {
+    // 根据行索引确定要显示的内容
+    const rowLabels = ['干支', '纳音', '十神', '地势', '旬空', '神煞'];
+
+    if (rowIndex >= rowLabels.length) return;
+
+    const rowType = rowLabels[rowIndex];
+
+    switch (rowType) {
+      case '干支':
+        this.fillGanZhiCell(cell, pillarInfo);
+        break;
+      case '纳音':
+        this.fillNaYinCell(cell, pillarInfo);
+        break;
+      case '十神':
+        this.fillShiShenCell(cell, pillarInfo);
+        break;
+      case '地势':
+        this.fillDiShiCell(cell, pillarInfo);
+        break;
+      case '旬空':
+        this.fillXunKongCell(cell, pillarInfo);
+        break;
+      case '神煞':
+        this.fillShenShaCell(cell, pillarInfo);
+        break;
+    }
+  }
+
+  /**
+   * 填充干支单元格
+   */
+  private fillGanZhiCell(cell: HTMLElement, pillarInfo: ExtendedPillarInfo) {
+    if (pillarInfo.ganZhi) {
+      // 这里应该使用ColorSchemeService来创建带颜色的干支显示
+      cell.textContent = pillarInfo.ganZhi;
+    }
+  }
+
+  /**
+   * 填充纳音单元格
+   */
+  private fillNaYinCell(cell: HTMLElement, pillarInfo: ExtendedPillarInfo) {
+    if (pillarInfo.naYin) {
+      cell.textContent = pillarInfo.naYin;
+    }
+  }
+
+  /**
+   * 填充十神单元格
+   */
+  private fillShiShenCell(cell: HTMLElement, pillarInfo: ExtendedPillarInfo) {
+    if (pillarInfo.shiShenGan) {
+      cell.textContent = pillarInfo.shiShenGan;
+    }
+  }
+
+  /**
+   * 填充地势单元格
+   */
+  private fillDiShiCell(cell: HTMLElement, pillarInfo: ExtendedPillarInfo) {
+    if (pillarInfo.diShi) {
+      cell.textContent = pillarInfo.diShi;
+    }
+  }
+
+  /**
+   * 填充旬空单元格
+   */
+  private fillXunKongCell(cell: HTMLElement, pillarInfo: ExtendedPillarInfo) {
+    if (pillarInfo.xunKong) {
+      cell.textContent = pillarInfo.xunKong;
+    }
+  }
+
+  /**
+   * 填充神煞单元格
+   */
+  private fillShenShaCell(cell: HTMLElement, pillarInfo: ExtendedPillarInfo) {
+    if (pillarInfo.shenSha && pillarInfo.shenSha.length > 0) {
+      cell.textContent = pillarInfo.shenSha.join(' ');
+    }
+  }
 }

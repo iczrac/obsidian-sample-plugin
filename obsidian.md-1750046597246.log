@@ -1,0 +1,1451 @@
+VM1302 plugin:bazi-obsidian:1404 🎯 bazi代码块被触发!
+VM1302 plugin:bazi-obsidian:1404 🔍 处理八字代码块开始
+VM1302 plugin:bazi-obsidian:1404 📝 源代码内容: bazi: 乙丑 壬午 丙午 癸巳
+
+year: 1985
+gender: 男
+style: 3
+VM1302 plugin:bazi-obsidian:1404 ⚙️ 解析后的参数: {bazi: '乙丑 壬午 丙午 癸巳', year: '1985', gender: '男', style: '3'}
+VM1302 plugin:bazi-obsidian:1405 🔥🔥🔥🔥🔥 调用 BaziService.parseBaziString
+VM1302 plugin:bazi-obsidian:1405 🔥 参数 bazi: 乙丑 壬午 丙午 癸巳
+VM1302 plugin:bazi-obsidian:1405 🔥 参数 year: 1985
+VM1302 plugin:bazi-obsidian:1405 🔥 参数 gender: 1
+VM1302 plugin:bazi-obsidian:1405 🔥 参数 qiYunSect: 2
+VM1302 plugin:bazi-obsidian:7 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 BaziService.parseBaziString 开始 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+VM1302 plugin:bazi-obsidian:7 🔥 ========== BaziService.parseBaziString 开始 ==========
+VM1302 plugin:bazi-obsidian:7 🔥 输入参数:
+VM1302 plugin:bazi-obsidian:7   - baziStr: 乙丑 壬午 丙午 癸巳
+VM1302 plugin:bazi-obsidian:7   - specifiedYear: 1985
+VM1302 plugin:bazi-obsidian:7   - gender: 1
+VM1302 plugin:bazi-obsidian:7   - sect: 1
+VM1302 plugin:bazi-obsidian:7 🔥 八字分割结果: (4) ['乙丑', '壬午', '丙午', '癸巳']
+VM1302 plugin:bazi-obsidian:7 🔍 年份匹配计算参数: {yearStem: '乙', yearBranch: '丑', monthStem: '壬', monthBranch: '午', dayStem: '丙', …}
+VM1302 plugin:bazi-obsidian:6 🔍 使用完整八字反推年份: {yearPillar: '乙丑', monthPillar: '壬午', dayPillar: '丙午', timePillar: '癸巳', sect: 1, …}
+VM1302 plugin:bazi-obsidian:6 ✅ 使用lunar-typescript库获取匹配年份: (19) [5, 65, 125, 245, 305, 365, 545, 605, 785, 845, 1025, 1085, 1265, 1325, 1505, 1565, 1745, 1805, 1985]
+VM1302 plugin:bazi-obsidian:7 🔥 尝试日期反推，年份: 1985
+VM1302 plugin:bazi-obsidian:7 🔥 匹配年份列表: (19) [5, 65, 125, 245, 305, 365, 545, 605, 785, 845, 1025, 1085, 1265, 1325, 1505, 1565, 1745, 1805, 1985]
+VM1302 plugin:bazi-obsidian:7 🔥 年份是否在匹配列表中: true
+VM1302 plugin:bazi-obsidian:7 🔥 fromBaZi返回的日期数量: 19
+VM1302 plugin:bazi-obsidian:7 🔥 检查日期: 5 7 8
+VM1302 plugin:bazi-obsidian:7 🔥 检查日期: 65 6 23
+VM1302 plugin:bazi-obsidian:7 🔥 检查日期: 125 6 8
+VM1302 plugin:bazi-obsidian:7 🔥 检查日期: 245 7 8
+VM1302 plugin:bazi-obsidian:7 🔥 检查日期: 305 6 23
+VM1302 plugin:bazi-obsidian:7 🔥 检查日期: 365 6 8
+VM1302 plugin:bazi-obsidian:7 🔥 检查日期: 545 6 23
+VM1302 plugin:bazi-obsidian:7 🔥 检查日期: 605 6 8
+VM1302 plugin:bazi-obsidian:7 🔥 检查日期: 785 6 23
+VM1302 plugin:bazi-obsidian:7 🔥 检查日期: 845 6 8
+ 🔥 检查日期: 1025 6 23
+ 🔥 检查日期: 1085 6 8
+ 🔥 检查日期: 1265 6 23
+ 🔥 检查日期: 1325 6 8
+ 🔥 检查日期: 1505 6 23
+ 🔥 检查日期: 1565 6 8
+ 🔥 检查日期: 1745 7 4
+ 🔥 检查日期: 1805 6 20
+ 🔥 检查日期: 1985 7 6
+ 🔥 ✅ 日期反推成功 - 指定年份: 1985
+ 🔥 ✅ 日期反推结果 - 阳历日期: 1985-07-06
+ 🔥 ✅ 日期反推结果 - 农历日期: 一九八五年五月十九
+ 🔥 formatBaziInfo路径：传递用户输入八字信息
+ 🎯 身宫计算结果: 戊子
+ 🎯 格局计算结果: {geJu: '七杀格', geJuType: '正格', detail: '月令七杀，需制化', geJuStrength: 7, isSpecialGeJu: false, …}
+ 🚀🚀🚀 formatBaziInfo: 开始独立五行强度计算
+ 🔍 formatBaziInfo使用用户输入八字进行独立计算
+ 🔍 formatBaziInfo当前八字: {year: '乙丑', month: '壬午', day: '丙午', time: '癸巳'}
+ 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 WuXingStrengthCalculator.calculateWuXingStrengthFromBazi 开始 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
+ 🔍 独立计算八字: 乙丑 壬午 丙午 癸巳
+ 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 WuXingStrengthCalculator.calculateWuXingStrength 开始 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
+ 🚀 开始计算五行强度 - WuXingStrengthCalculator.calculateWuXingStrengthWithDetails
+ 🔍 调用者: at He.calculateWuXingStrengthFromBazi (plugin:bazi-obsidian:7:11723)
+ 🔍 调用时间: 2025-06-16T03:50:07.517Z
+ 🔍 八字: 乙丑 壬午 丙午 癸巳
+ 🔍 天干: 年干乙(木)=2
+ 🔍 天干: 月干壬(水)=4
+ 🔍 地支丑藏干: 己,癸,辛, 权重分配: 0.6,0.3,0.1
+ 🔍   己(土) 本气: 2 × 0.6 = 1.20
+ 🔍   癸(水) 中气: 2 × 0.3 = 0.60
+ 🔍   辛(金) 余气: 2 × 0.1 = 0.20
+ 🔍 地支午藏干: 丁,己, 权重分配: 0.7,0.3
+ 🔍   丁(火) 本气: 8 × 0.7 = 5.60
+ 🔍   己(土) 中气: 8 × 0.3 = 2.40
+ 🔍 地支午藏干: 丁,己, 权重分配: 0.7,0.3
+ 🔍   丁(火) 本气: 5 × 0.7 = 3.50
+ 🔍   己(土) 中气: 5 × 0.3 = 1.50
+ 🔍 地支巳藏干: 丙,庚,戊, 权重分配: 0.6,0.3,0.1
+ 🔍   丙(火) 本气: 5 × 0.6 = 3.00
+ 🔍   庚(金) 中气: 5 × 0.3 = 1.50
+ 🔍   戊(土) 余气: 5 × 0.1 = 0.50
+ 🔍 季节调整: 月支=午, 季节=夏
+ 🔍 基础强度: 金=2.7, 木=4, 水=14.6, 火=54.1, 土=9.6
+ 🔍 火季节调整: 基础=54.10, 系数=1.5, 调整后=81.15, 调整量=27.05
+ 🔍 土季节调整: 基础=9.60, 系数=1.2, 调整后=11.52, 调整量=1.92
+ 🔍 木季节调整: 基础=4.00, 系数=1, 调整后=4.00, 调整量=0.00
+ 🔍 水季节调整: 基础=14.60, 系数=0.8, 调整后=11.68, 调整量=-2.92
+ 🔍 金季节调整: 基础=2.70, 系数=0.6, 调整后=1.62, 调整量=-1.08
+ 🎯🎯🎯🎯🎯 WuXingStrengthCalculator.calculateWuXingStrength 返回结果:
+ 🎯 金: 1.62
+ 🎯 木: 4
+ 🎯 水: 11.68
+ 🎯 火: 81.15
+ 🎯 土: 11.52
+ 🎯 是否有详细信息: true
+ 🎯 详细信息: {jin: {…}, mu: {…}, shui: {…}, huo: {…}, tu: {…}, …}
+VM1302 plugin:bazi-obsidian:7 🎯🎯🎯 formatBaziInfo: 五行强度计算结果: {jin: 1.62, mu: 4, shui: 11.68, huo: 81.15, tu: 11.52, …}
+VM1302 plugin:bazi-obsidian:7 🔍🔍🔍 formatBaziInfo: 土五行强度 = 11.52
+VM1302 plugin:bazi-obsidian:7 🔍🔍🔍 formatBaziInfo: 是否有详细信息 = true
+VM1302 plugin:bazi-obsidian:7 🔍 calculateRiZhuStrength: 使用已提供的五行强度，避免重复计算
+VM1302 plugin:bazi-obsidian:7 🎯 日主旺衰计算结果: {result: '身旺', details: {…}}
+VM1302 plugin:bazi-obsidian:7 🔍 QiYunCalculator.calculateQiYun: 开始计算起运，性别=1, 流派=2
+VM1302 plugin:bazi-obsidian:7 ✅ QiYunCalculator.calculateQiYun: 计算完成 {startYear: 10, startMonth: 1, startDay: 10, startHour: 2, startSolar: '1995-08-16', …}
+VM1302 plugin:bazi-obsidian:7 ✅ QiYunCalculator: 起运信息计算完成 {startYear: 10, startMonth: 1, startDay: 10, startHour: 2, startDate: '1995-08-16', …}
+VM1302 plugin:bazi-obsidian:6 🔍 DaYunCalculator.calculateDaYun 开始
+VM1302 plugin:bazi-obsidian:6 🔍 参数: gender = 1 , dayStem = 丙 , count = 10
+VM1302 plugin:bazi-obsidian:6 🔍 DaYunCalculator: 获取运势对象...
+VM1302 plugin:bazi-obsidian:6 🔍 DaYunCalculator: 运势对象获取成功: Mn {_gender: 1, _lunar: H, _forward: false, _startYear: 10, _startMonth: 1, …}
+VM1302 plugin:bazi-obsidian:6 🔍 DaYunCalculator: 获取大运列表...
+VM1302 plugin:bazi-obsidian:6 🔍 DaYunCalculator: 大运列表获取成功，数量: 10
+VM1302 plugin:bazi-obsidian:6 🔍 DaYunCalculator: 发现前运期间，索引: 0（还未排上大运）
+VM1302 plugin:bazi-obsidian:6 🔍 DaYunCalculator.calculateQianYun: 开始计算前运，当前索引=0
+VM1302 plugin:bazi-obsidian:6 🔍 calculateQianYun: 找到第一个有效大运[1]: 辛巳
+VM1302 plugin:bazi-obsidian:6 🔍 calculateQianYun: 年干=乙丑, 阳年=false, 性别=男, 顺行=false
+VM1302 plugin:bazi-obsidian:6 🔍 calculateGanZhiStepsBack: 辛巳 逆行 前推1步 → 壬午
+VM1302 plugin:bazi-obsidian:6 ✅ calculateQianYun: 前运干支=壬午
+VM1302 plugin:bazi-obsidian:6 ✅ DaYunCalculator: 前运计算成功: 壬午
+VM1302 plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 辛巳
+VM1302 plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy对象: jn {_startYear: 1995, _endYear: 2004, _startAge: 11, _endAge: 20, _index: 1, …}
+VM1302 plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy.getXunKong方法存在: true
+VM1302 plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 申酉
+VM1302 plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 庚辰
+VM1302 plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy对象: jn {_startYear: 2005, _endYear: 2014, _startAge: 21, _endAge: 30, _index: 2, …}
+VM1302 plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy.getXunKong方法存在: true
+VM1302 plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 申酉
+VM1302 plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 己卯
+VM1302 plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy对象: jn {_startYear: 2015, _endYear: 2024, _startAge: 31, _endAge: 40, _index: 3, …}
+VM1302 plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy.getXunKong方法存在: true
+VM1302 plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 申酉
+VM1302 plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 戊寅
+VM1302 plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy对象: jn {_startYear: 2025, _endYear: 2034, _startAge: 41, _endAge: 50, _index: 4, …}
+VM1302 plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy.getXunKong方法存在: true
+VM1302 plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 申酉
+VM1302 plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 丁丑
+VM1302 plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy对象: jn {_startYear: 2035, _endYear: 2044, _startAge: 51, _endAge: 60, _index: 5, …}
+VM1302 plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy.getXunKong方法存在: true
+VM1302 plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 申酉
+VM1302 plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 丙子
+VM1302 plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy对象: jn {_startYear: 2045, _endYear: 2054, _startAge: 61, _endAge: 70, _index: 6, …}
+VM1302 plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy.getXunKong方法存在: true
+VM1302 plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 申酉
+VM1302 plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 乙亥
+VM1302 plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy对象: jn {_startYear: 2055, _endYear: 2064, _startAge: 71, _endAge: 80, _index: 7, …}
+VM1302 plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy.getXunKong方法存在: true
+VM1302 plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 申酉
+VM1302 plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 甲戌
+VM1302 plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy对象: jn {_startYear: 2065, _endYear: 2074, _startAge: 81, _endAge: 90, _index: 8, …}
+VM1302 plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy.getXunKong方法存在: true
+VM1302 plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 申酉
+VM1302 plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 癸酉
+VM1302 plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy对象: jn {_startYear: 2075, _endYear: 2084, _startAge: 91, _endAge: 100, _index: 9, …}
+VM1302 plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy.getXunKong方法存在: true
+VM1302 plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 戌亥
+VM1302 plugin:bazi-obsidian:6 🎯 XiaoYunCalculator.calculateXiaoYun: 开始计算 {gender: '1', dayStem: '丙', startYear: 1985, count: 10}
+VM1302 plugin:bazi-obsidian:6 🎯 小运推算参数: {timeGan: '癸', timeZhi: '巳', yearGan: '乙', isYangYear: false, isShunXing: '逆行'}
+VM1302 plugin:bazi-obsidian:6 🎯 小运 1岁 (1985年): 壬辰
+VM1302 plugin:bazi-obsidian:6 🎯 小运 2岁 (1986年): 辛卯
+VM1302 plugin:bazi-obsidian:6 🎯 小运 3岁 (1987年): 庚寅
+VM1302 plugin:bazi-obsidian:6 🎯 小运 4岁 (1988年): 己丑
+VM1302 plugin:bazi-obsidian:6 🎯 小运 5岁 (1989年): 戊子
+VM1302 plugin:bazi-obsidian:6 🎯 小运 6岁 (1990年): 丁亥
+VM1302 plugin:bazi-obsidian:6 🎯 小运 7岁 (1991年): 丙戌
+VM1302 plugin:bazi-obsidian:6 🎯 小运 8岁 (1992年): 乙酉
+VM1302 plugin:bazi-obsidian:6 🎯 小运 9岁 (1993年): 甲申
+VM1302 plugin:bazi-obsidian:6 🎯 小运 10岁 (1994年): 癸未
+VM1302 plugin:bazi-obsidian:6 ✅ XiaoYunCalculator.calculateXiaoYun: 计算完成，共10个小运
+VM1302 plugin:bazi-obsidian:7 🔥 ✅ formatBaziInfo已使用虚拟八字对象，计算完成
+VM1302 plugin:bazi-obsidian:1405 🔥🔥🔥🔥🔥 BaziService.parseBaziString 返回结果: {solarDate: '1985-07-06', lunarDate: '一九八五年五月十九', solarTime: '10:00', yearPillar: '乙丑', yearStem: '乙', …}
+VM1302 plugin:bazi-obsidian:1405 🔥 返回结果中的 wuXingStrength: {jin: 1.62, mu: 4, shui: 11.68, huo: 81.15, tu: 11.52, …}
+VM1302 plugin:bazi-obsidian:1405 🎨 开始渲染八字命盘
+VM1302 plugin:bazi-obsidian:1417 🎨 插件完整设置: {defaultDisplayStyle: 'standard', debugMode: true, autoUpdateCodeBlock: true, codeBlockUpdateDelay: 500, baziSect: '1', …}
+VM1302 plugin:bazi-obsidian:1417 🎨 插件神煞设置: {siZhu: true, daYun: true, liuNian: true, xiaoYun: true, liuYue: true}
+VM1302 plugin:bazi-obsidian:1417 🎨 传递神煞显示设置到baziInfo: {siZhu: true, daYun: true, liuNian: true, xiaoYun: true, liuYue: true}
+VM1302 plugin:bazi-obsidian:1417 🎨 baziInfo完整内容: {solarDate: '1985-07-06', lunarDate: '一九八五年五月十九', solarTime: '10:00', yearPillar: '乙丑', yearStem: '乙', …}
+VM1302 plugin:bazi-obsidian:1417 🎨 使用显示样式: complete
+VM1302 plugin:bazi-obsidian:866 🎯 InteractiveBaziView构造函数开始
+VM1302 plugin:bazi-obsidian:866 🎯 接收到的baziInfo.showShenSha: {siZhu: true, daYun: true, liuNian: true, xiaoYun: true, liuYue: true}
+VM1302 plugin:bazi-obsidian:866 🎯 使用传递的神煞显示设置: {siZhu: true, daYun: true, liuNian: true, xiaoYun: true, liuYue: true}
+VM1302 plugin:bazi-obsidian:866 ✅ 所有功能组件初始化完成
+VM1302 plugin:bazi-obsidian:891 ✅ 八字表格创建完成
+VM1302 plugin:bazi-obsidian:820 ✅ 流年信息管理器创建完成
+VM1302 plugin:bazi-obsidian:891 ✅ 大运信息创建完成
+VM1302 plugin:bazi-obsidian:706 🎯 getCurrentDaYunLiuNian: 获取大运0的流年数据
+VM1302 plugin:bazi-obsidian:706 🎯 选中大运: 壬午, 起始年: 1985, 结束年: 1994
+VM1302 plugin:bazi-obsidian:706 ✅ 生成流年数据: 10年，从1985到1994
+VM1302 plugin:bazi-obsidian:891 ✅ 流年信息创建完成
+VM1302 plugin:bazi-obsidian:891 ✅ 流月信息创建完成, 容器: <div class=​"bazi-liuyue-container" data-section-type=​"liuyue-table" style=​"max-height:​ none;​ overflow:​ visible;​ min-height:​ 400px;​">​</div>​
+VM1302 plugin:bazi-obsidian:535 ✅ 点击交互设置完成
+VM1302 plugin:bazi-obsidian:535 ✅ 悬停交互设置完成
+VM1302 plugin:bazi-obsidian:535 ✅ 键盘交互设置完成
+VM1302 plugin:bazi-obsidian:535 ✅ 自定义事件设置完成
+VM1302 plugin:bazi-obsidian:535 ✅ InteractionManager 初始化完成
+VM1302 plugin:bazi-obsidian:891 ✅ 事件监听器设置完成
+VM1302 plugin:bazi-obsidian:891 🎯 选择大运: 0
+VM1302 plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到dayun层级
+VM1302 plugin:bazi-obsidian:305 🎯 实际目标层级: dayun (请求层级: dayun)
+VM1302 plugin:bazi-obsidian:305 🔍 大运强制更新检查: lastIndex=-1, currentIndex=0, needsUpdate=true
+VM1302 plugin:bazi-obsidian:305 🔄 强制更新dayun层级内容
+VM1302 plugin:bazi-obsidian:305 🧹 清除现有扩展，当前层级: none
+VM1302 plugin:bazi-obsidian:305 🧹 开始清除扩展列，当前扩展柱数量: 0
+VM1302 plugin:bazi-obsidian:305 ✅ 扩展列清除完成
+VM1302 plugin:bazi-obsidian:305 📋 需要扩展的层级列表: dayun
+VM1302 plugin:bazi-obsidian:305 🔄 正在处理层级: dayun
+VM1302 plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: dayun
+VM1302 plugin:bazi-obsidian:305 ✅ 获取大运柱信息: 壬午
+VM1302 plugin:bazi-obsidian:305 ✅ 获取到dayun柱信息: 前运 壬午
+VM1302 plugin:bazi-obsidian:305 🔄 添加扩展列: 前运 (壬午)
+VM1302 plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 前运
+VM1302 plugin:bazi-obsidian:305 ✅ 已扩展到dayun层级，包含层级：dayun
+VM1302 plugin:bazi-obsidian:305 📝 更新大运状态跟踪: 0
+VM1302 plugin:bazi-obsidian:768 🎯 LiuNianInfoManager: 设置大运索引 0
+VM1302 plugin:bazi-obsidian:706 🎯 getCurrentDaYunLiuNian: 获取大运0的流年数据
+VM1302 plugin:bazi-obsidian:706 🎯 选中大运: 壬午, 起始年: 1985, 结束年: 1994
+VM1302 plugin:bazi-obsidian:706 ✅ 生成流年数据: 10年，从1985到1994
+VM1302 plugin:bazi-obsidian:866 ✅ 视图初始化完成
+VM1302 plugin:bazi-obsidian:1417 ✅ 八字命盘渲染完成
+VM1302 plugin:bazi-obsidian:1405 ✅ 已有年份参数: 1985
+VM1302 plugin:bazi-obsidian:1405 ✅ 不需要显示性别选择界面，参数: 男
+VM1302 plugin:bazi-obsidian:535 🔄 十二长生模式切换
+VM1302 plugin:bazi-obsidian:535 🔄 十二长生模式切换
+VM1302 plugin:bazi-obsidian:535 🔄 十二长生模式切换
+VM1302 plugin:bazi-obsidian:535 🔄 十二长生模式切换
+VM1302 plugin:bazi-obsidian:535 🔄 十二长生模式切换
+VM1302 plugin:bazi-obsidian:535 🔄 十二长生模式切换
+VM1302 plugin:bazi-obsidian:535 🔄 十二长生模式切换
+VM1302 plugin:bazi-obsidian:751 🎯 流年选择: 年份 1987
+VM1302 plugin:bazi-obsidian:866 🎯 SectionRenderManager: 流年选择 1987
+VM1302 plugin:bazi-obsidian:1420 八字命盘插件已卸载
+plugin:bazi-obsidian:1420 🚀🚀🚀🚀🚀 八字命盘插件开始加载 - main.ts onload
+plugin:bazi-obsidian:1420 🚀 八字命盘插件开始加载...
+plugin:bazi-obsidian:1420 ⚙️ 设置已加载: {defaultDisplayStyle: 'standard', debugMode: true, autoUpdateCodeBlock: true, codeBlockUpdateDelay: 500, baziSect: '1', …}
+plugin:bazi-obsidian:921 🔧 配置合并完成: {globalEnabled: true, locationFields: 64, booksFields: 44, shenShaFields: 20, patternFields: 37}
+plugin:bazi-obsidian:921 🔗 双链标签设置加载完成: {globalEnabled: true, locationFields: 64, booksFields: 44, shenShaFields: 20, patternFields: 37}
+plugin:bazi-obsidian:1420 🔗 双链标签设置已加载
+plugin:bazi-obsidian:50 🎯 开始注册命令...
+plugin:bazi-obsidian:50 📅 注册日期选择命令: open-date-picker
+plugin:bazi-obsidian:53 🔍 注册八字解析命令: parse-selected-bazi
+plugin:bazi-obsidian:60 📝 注册样板笔记命令: create-bazi-template
+plugin:bazi-obsidian:50 ✅ 所有命令注册完成
+plugin:bazi-obsidian:1420 📋 命令已注册
+plugin:bazi-obsidian:1404 📝 注册bazi代码块处理器
+plugin:bazi-obsidian:1420 🔧 代码块处理器已注册
+plugin:bazi-obsidian:1420 八字命盘插件已加载，调试模式已启用
+plugin:bazi-obsidian:1404 🎯 bazi代码块被触发!
+plugin:bazi-obsidian:1404 🔍 处理八字代码块开始
+plugin:bazi-obsidian:1404 📝 源代码内容: bazi: 乙丑 壬午 丙午 癸巳
+
+year: 1985
+gender: 男
+style: 3
+plugin:bazi-obsidian:1404 ⚙️ 解析后的参数: {bazi: '乙丑 壬午 丙午 癸巳', year: '1985', gender: '男', style: '3'}
+plugin:bazi-obsidian:1405 🔥🔥🔥🔥🔥 调用 BaziService.parseBaziString
+plugin:bazi-obsidian:1405 🔥 参数 bazi: 乙丑 壬午 丙午 癸巳
+plugin:bazi-obsidian:1405 🔥 参数 year: 1985
+plugin:bazi-obsidian:1405 🔥 参数 gender: 1
+plugin:bazi-obsidian:1405 🔥 参数 qiYunSect: 2
+plugin:bazi-obsidian:7 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 BaziService.parseBaziString 开始 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+plugin:bazi-obsidian:7 🔥 ========== BaziService.parseBaziString 开始 ==========
+plugin:bazi-obsidian:7 🔥 输入参数:
+plugin:bazi-obsidian:7   - baziStr: 乙丑 壬午 丙午 癸巳
+plugin:bazi-obsidian:7   - specifiedYear: 1985
+plugin:bazi-obsidian:7   - gender: 1
+plugin:bazi-obsidian:7   - sect: 1
+plugin:bazi-obsidian:7 🔥 八字分割结果: (4) ['乙丑', '壬午', '丙午', '癸巳']
+plugin:bazi-obsidian:7 🔍 年份匹配计算参数: {yearStem: '乙', yearBranch: '丑', monthStem: '壬', monthBranch: '午', dayStem: '丙', …}
+plugin:bazi-obsidian:6 🔍 使用完整八字反推年份: {yearPillar: '乙丑', monthPillar: '壬午', dayPillar: '丙午', timePillar: '癸巳', sect: 1, …}
+ ✅ 使用lunar-typescript库获取匹配年份: (19) [5, 65, 125, 245, 305, 365, 545, 605, 785, 845, 1025, 1085, 1265, 1325, 1505, 1565, 1745, 1805, 1985]
+ 🔥 尝试日期反推，年份: 1985
+ 🔥 匹配年份列表: (19) [5, 65, 125, 245, 305, 365, 545, 605, 785, 845, 1025, 1085, 1265, 1325, 1505, 1565, 1745, 1805, 1985]
+ 🔥 年份是否在匹配列表中: true
+ 🔥 fromBaZi返回的日期数量: 19
+ 🔥 检查日期: 5 7 8
+ 🔥 检查日期: 65 6 23
+ 🔥 检查日期: 125 6 8
+ 🔥 检查日期: 245 7 8
+ 🔥 检查日期: 305 6 23
+ 🔥 检查日期: 365 6 8
+ 🔥 检查日期: 545 6 23
+ 🔥 检查日期: 605 6 8
+ 🔥 检查日期: 785 6 23
+ 🔥 检查日期: 845 6 8
+ 🔥 检查日期: 1025 6 23
+ 🔥 检查日期: 1085 6 8
+ 🔥 检查日期: 1265 6 23
+ 🔥 检查日期: 1325 6 8
+ 🔥 检查日期: 1505 6 23
+ 🔥 检查日期: 1565 6 8
+ 🔥 检查日期: 1745 7 4
+ 🔥 检查日期: 1805 6 20
+ 🔥 检查日期: 1985 7 6
+plugin:bazi-obsidian:7 🔥 ✅ 日期反推成功 - 指定年份: 1985
+plugin:bazi-obsidian:7 🔥 ✅ 日期反推结果 - 阳历日期: 1985-07-06
+plugin:bazi-obsidian:7 🔥 ✅ 日期反推结果 - 农历日期: 一九八五年五月十九
+plugin:bazi-obsidian:7 🔥 formatBaziInfo路径：传递用户输入八字信息
+plugin:bazi-obsidian:7 🎯 身宫计算结果: 戊子
+plugin:bazi-obsidian:7 🎯 格局计算结果: {geJu: '七杀格', geJuType: '正格', detail: '月令七杀，需制化', geJuStrength: 7, isSpecialGeJu: false, …}
+plugin:bazi-obsidian:7 🚀🚀🚀 formatBaziInfo: 开始独立五行强度计算
+plugin:bazi-obsidian:7 🔍 formatBaziInfo使用用户输入八字进行独立计算
+plugin:bazi-obsidian:7 🔍 formatBaziInfo当前八字: {year: '乙丑', month: '壬午', day: '丙午', time: '癸巳'}
+plugin:bazi-obsidian:7 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 WuXingStrengthCalculator.calculateWuXingStrengthFromBazi 开始 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
+plugin:bazi-obsidian:7 🔍 独立计算八字: 乙丑 壬午 丙午 癸巳
+plugin:bazi-obsidian:7 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 WuXingStrengthCalculator.calculateWuXingStrength 开始 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
+plugin:bazi-obsidian:7 🚀 开始计算五行强度 - WuXingStrengthCalculator.calculateWuXingStrengthWithDetails
+plugin:bazi-obsidian:7 🔍 调用者: at He.calculateWuXingStrengthFromBazi (plugin:bazi-obsidian:7:11723)
+plugin:bazi-obsidian:7 🔍 调用时间: 2025-06-16T04:02:02.958Z
+plugin:bazi-obsidian:7 🔍 八字: 乙丑 壬午 丙午 癸巳
+plugin:bazi-obsidian:7 🔍 天干: 年干乙(木)=2
+plugin:bazi-obsidian:7 🔍 天干: 月干壬(水)=4
+plugin:bazi-obsidian:7 🔍 地支丑藏干: 己,癸,辛, 权重分配: 0.6,0.3,0.1
+plugin:bazi-obsidian:7 🔍   己(土) 本气: 2 × 0.6 = 1.20
+plugin:bazi-obsidian:7 🔍   癸(水) 中气: 2 × 0.3 = 0.60
+plugin:bazi-obsidian:7 🔍   辛(金) 余气: 2 × 0.1 = 0.20
+plugin:bazi-obsidian:7 🔍 地支午藏干: 丁,己, 权重分配: 0.7,0.3
+plugin:bazi-obsidian:7 🔍   丁(火) 本气: 8 × 0.7 = 5.60
+plugin:bazi-obsidian:7 🔍   己(土) 中气: 8 × 0.3 = 2.40
+plugin:bazi-obsidian:7 🔍 地支午藏干: 丁,己, 权重分配: 0.7,0.3
+plugin:bazi-obsidian:7 🔍   丁(火) 本气: 5 × 0.7 = 3.50
+plugin:bazi-obsidian:7 🔍   己(土) 中气: 5 × 0.3 = 1.50
+plugin:bazi-obsidian:7 🔍 地支巳藏干: 丙,庚,戊, 权重分配: 0.6,0.3,0.1
+plugin:bazi-obsidian:7 🔍   丙(火) 本气: 5 × 0.6 = 3.00
+plugin:bazi-obsidian:7 🔍   庚(金) 中气: 5 × 0.3 = 1.50
+plugin:bazi-obsidian:7 🔍   戊(土) 余气: 5 × 0.1 = 0.50
+plugin:bazi-obsidian:7 🔍 季节调整: 月支=午, 季节=夏
+plugin:bazi-obsidian:7 🔍 基础强度: 金=2.7, 木=4, 水=14.6, 火=54.1, 土=9.6
+plugin:bazi-obsidian:7 🔍 火季节调整: 基础=54.10, 系数=1.5, 调整后=81.15, 调整量=27.05
+plugin:bazi-obsidian:7 🔍 土季节调整: 基础=9.60, 系数=1.2, 调整后=11.52, 调整量=1.92
+plugin:bazi-obsidian:7 🔍 木季节调整: 基础=4.00, 系数=1, 调整后=4.00, 调整量=0.00
+plugin:bazi-obsidian:7 🔍 水季节调整: 基础=14.60, 系数=0.8, 调整后=11.68, 调整量=-2.92
+plugin:bazi-obsidian:7 🔍 金季节调整: 基础=2.70, 系数=0.6, 调整后=1.62, 调整量=-1.08
+plugin:bazi-obsidian:7 🎯🎯🎯🎯🎯 WuXingStrengthCalculator.calculateWuXingStrength 返回结果:
+plugin:bazi-obsidian:7 🎯 金: 1.62
+plugin:bazi-obsidian:7 🎯 木: 4
+plugin:bazi-obsidian:7 🎯 水: 11.68
+plugin:bazi-obsidian:7 🎯 火: 81.15
+plugin:bazi-obsidian:7 🎯 土: 11.52
+plugin:bazi-obsidian:7 🎯 是否有详细信息: true
+plugin:bazi-obsidian:7 🎯 详细信息: {jin: {…}, mu: {…}, shui: {…}, huo: {…}, tu: {…}, …}
+plugin:bazi-obsidian:7 🎯🎯🎯 formatBaziInfo: 五行强度计算结果: {jin: 1.62, mu: 4, shui: 11.68, huo: 81.15, tu: 11.52, …}
+plugin:bazi-obsidian:7 🔍🔍🔍 formatBaziInfo: 土五行强度 = 11.52
+plugin:bazi-obsidian:7 🔍🔍🔍 formatBaziInfo: 是否有详细信息 = true
+plugin:bazi-obsidian:7 🔍 calculateRiZhuStrength: 使用已提供的五行强度，避免重复计算
+plugin:bazi-obsidian:7 🎯 日主旺衰计算结果: {result: '身旺', details: {…}}
+plugin:bazi-obsidian:7 🔍 QiYunCalculator.calculateQiYun: 开始计算起运，性别=1, 流派=2
+plugin:bazi-obsidian:7 ✅ QiYunCalculator.calculateQiYun: 计算完成 {startYear: 10, startMonth: 1, startDay: 10, startHour: 2, startSolar: '1995-08-16', …}
+plugin:bazi-obsidian:7 ✅ QiYunCalculator: 起运信息计算完成 {startYear: 10, startMonth: 1, startDay: 10, startHour: 2, startDate: '1995-08-16', …}
+plugin:bazi-obsidian:6 🔍 DaYunCalculator.calculateDaYun 开始
+plugin:bazi-obsidian:6 🔍 参数: gender = 1 , dayStem = 丙 , count = 10
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 获取运势对象...
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 运势对象获取成功: Mn {_gender: 1, _lunar: H, _forward: false, _startYear: 10, _startMonth: 1, …}
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 获取大运列表...
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 大运列表获取成功，数量: 10
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 发现前运期间，索引: 0（还未排上大运）
+plugin:bazi-obsidian:6 🔍 DaYunCalculator.calculateQianYun: 开始计算前运，当前索引=0
+plugin:bazi-obsidian:6 🔍 calculateQianYun: 找到第一个有效大运[1]: 辛巳
+plugin:bazi-obsidian:6 🔍 calculateQianYun: 年干=乙丑, 阳年=false, 性别=男, 顺行=false
+plugin:bazi-obsidian:6 🔍 calculateGanZhiStepsBack: 辛巳 逆行 前推1步 → 壬午
+plugin:bazi-obsidian:6 ✅ calculateQianYun: 前运干支=壬午
+plugin:bazi-obsidian:6 ✅ DaYunCalculator: 前运计算成功: 壬午
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 辛巳
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy对象: jn {_startYear: 1995, _endYear: 2004, _startAge: 11, _endAge: 20, _index: 1, …}
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy.getXunKong方法存在: true
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 申酉
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 庚辰
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy对象: jn {_startYear: 2005, _endYear: 2014, _startAge: 21, _endAge: 30, _index: 2, …}
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy.getXunKong方法存在: true
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 申酉
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 己卯
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy对象: jn {_startYear: 2015, _endYear: 2024, _startAge: 31, _endAge: 40, _index: 3, …}
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy.getXunKong方法存在: true
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 申酉
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 戊寅
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy对象: jn {_startYear: 2025, _endYear: 2034, _startAge: 41, _endAge: 50, _index: 4, …}
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy.getXunKong方法存在: true
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 申酉
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 丁丑
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy对象: jn {_startYear: 2035, _endYear: 2044, _startAge: 51, _endAge: 60, _index: 5, …}
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy.getXunKong方法存在: true
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 申酉
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 丙子
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy对象: jn {_startYear: 2045, _endYear: 2054, _startAge: 61, _endAge: 70, _index: 6, …}
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy.getXunKong方法存在: true
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 申酉
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 乙亥
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy对象: jn {_startYear: 2055, _endYear: 2064, _startAge: 71, _endAge: 80, _index: 7, …}
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy.getXunKong方法存在: true
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 申酉
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 甲戌
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy对象: jn {_startYear: 2065, _endYear: 2074, _startAge: 81, _endAge: 90, _index: 8, …}
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy.getXunKong方法存在: true
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 申酉
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 癸酉
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy对象: jn {_startYear: 2075, _endYear: 2084, _startAge: 91, _endAge: 100, _index: 9, …}
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy.getXunKong方法存在: true
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 戌亥
+plugin:bazi-obsidian:6 🎯 XiaoYunCalculator.calculateXiaoYun: 开始计算 {gender: '1', dayStem: '丙', startYear: 1985, count: 10}
+plugin:bazi-obsidian:6 🎯 小运推算参数: {timeGan: '癸', timeZhi: '巳', yearGan: '乙', isYangYear: false, isShunXing: '逆行'}
+plugin:bazi-obsidian:6 🎯 小运 1岁 (1985年): 壬辰
+plugin:bazi-obsidian:6 🎯 小运 2岁 (1986年): 辛卯
+plugin:bazi-obsidian:6 🎯 小运 3岁 (1987年): 庚寅
+plugin:bazi-obsidian:6 🎯 小运 4岁 (1988年): 己丑
+plugin:bazi-obsidian:6 🎯 小运 5岁 (1989年): 戊子
+plugin:bazi-obsidian:6 🎯 小运 6岁 (1990年): 丁亥
+plugin:bazi-obsidian:6 🎯 小运 7岁 (1991年): 丙戌
+plugin:bazi-obsidian:6 🎯 小运 8岁 (1992年): 乙酉
+plugin:bazi-obsidian:6 🎯 小运 9岁 (1993年): 甲申
+plugin:bazi-obsidian:6 🎯 小运 10岁 (1994年): 癸未
+plugin:bazi-obsidian:6 ✅ XiaoYunCalculator.calculateXiaoYun: 计算完成，共10个小运
+plugin:bazi-obsidian:7 🔥 ✅ formatBaziInfo已使用虚拟八字对象，计算完成
+plugin:bazi-obsidian:1405 🔥🔥🔥🔥🔥 BaziService.parseBaziString 返回结果: {solarDate: '1985-07-06', lunarDate: '一九八五年五月十九', solarTime: '10:00', yearPillar: '乙丑', yearStem: '乙', …}
+plugin:bazi-obsidian:1405 🔥 返回结果中的 wuXingStrength: {jin: 1.62, mu: 4, shui: 11.68, huo: 81.15, tu: 11.52, …}
+plugin:bazi-obsidian:1405 🎨 开始渲染八字命盘
+plugin:bazi-obsidian:1417 🎨 插件完整设置: {defaultDisplayStyle: 'standard', debugMode: true, autoUpdateCodeBlock: true, codeBlockUpdateDelay: 500, baziSect: '1', …}
+plugin:bazi-obsidian:1417 🎨 插件神煞设置: {siZhu: true, daYun: true, liuNian: true, xiaoYun: true, liuYue: true}
+plugin:bazi-obsidian:1417 🎨 传递神煞显示设置到baziInfo: {siZhu: true, daYun: true, liuNian: true, xiaoYun: true, liuYue: true}
+plugin:bazi-obsidian:1417 🎨 baziInfo完整内容: {solarDate: '1985-07-06', lunarDate: '一九八五年五月十九', solarTime: '10:00', yearPillar: '乙丑', yearStem: '乙', …}
+plugin:bazi-obsidian:1417 🎨 使用显示样式: complete
+plugin:bazi-obsidian:866 🎯 InteractiveBaziView构造函数开始
+plugin:bazi-obsidian:866 🎯 接收到的baziInfo.showShenSha: {siZhu: true, daYun: true, liuNian: true, xiaoYun: true, liuYue: true}
+plugin:bazi-obsidian:866 🎯 使用传递的神煞显示设置: {siZhu: true, daYun: true, liuNian: true, xiaoYun: true, liuYue: true}
+plugin:bazi-obsidian:866 ✅ 所有功能组件初始化完成
+plugin:bazi-obsidian:891 ✅ 八字表格创建完成
+plugin:bazi-obsidian:820 ✅ 流年信息管理器创建完成
+plugin:bazi-obsidian:891 ✅ 大运信息创建完成
+plugin:bazi-obsidian:706 🎯 getCurrentDaYunLiuNian: 获取大运0的流年数据
+plugin:bazi-obsidian:706 🎯 选中大运: 壬午, 起始年: 1985, 结束年: 1994
+plugin:bazi-obsidian:706 ✅ 生成流年数据: 10年，从1985到1994
+plugin:bazi-obsidian:891 ✅ 流年信息创建完成
+plugin:bazi-obsidian:891 ✅ 流月信息创建完成, 容器: <div class=​"bazi-liuyue-container" data-section-type=​"liuyue-table" style=​"max-height:​ none;​ overflow:​ visible;​ min-height:​ 400px;​">​</div>​
+plugin:bazi-obsidian:535 ✅ 点击交互设置完成
+plugin:bazi-obsidian:535 ✅ 悬停交互设置完成
+plugin:bazi-obsidian:535 ✅ 键盘交互设置完成
+plugin:bazi-obsidian:535 ✅ 自定义事件设置完成
+plugin:bazi-obsidian:535 ✅ InteractionManager 初始化完成
+plugin:bazi-obsidian:891 ✅ 事件监听器设置完成
+plugin:bazi-obsidian:891 🎯 选择大运: 0
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到dayun层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: dayun (请求层级: dayun)
+plugin:bazi-obsidian:305 🔍 大运强制更新检查: lastIndex=-1, currentIndex=0, needsUpdate=true
+plugin:bazi-obsidian:305 🔄 强制更新dayun层级内容
+plugin:bazi-obsidian:305 🧹 清除现有扩展，当前层级: none
+plugin:bazi-obsidian:305 🧹 开始清除扩展列，当前扩展柱数量: 0
+plugin:bazi-obsidian:305 ✅ 扩展列清除完成
+plugin:bazi-obsidian:305 📋 需要扩展的层级列表: dayun
+plugin:bazi-obsidian:305 🔄 正在处理层级: dayun
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: dayun
+plugin:bazi-obsidian:305 ✅ 获取大运柱信息: 壬午
+plugin:bazi-obsidian:305 ✅ 获取到dayun柱信息: 前运 壬午
+plugin:bazi-obsidian:305 🔄 添加扩展列: 前运 (壬午)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 前运
+plugin:bazi-obsidian:305 ✅ 已扩展到dayun层级，包含层级：dayun
+plugin:bazi-obsidian:305 📝 更新大运状态跟踪: 0
+plugin:bazi-obsidian:768 🎯 LiuNianInfoManager: 设置大运索引 0
+plugin:bazi-obsidian:706 🎯 getCurrentDaYunLiuNian: 获取大运0的流年数据
+plugin:bazi-obsidian:706 🎯 选中大运: 壬午, 起始年: 1985, 结束年: 1994
+plugin:bazi-obsidian:706 ✅ 生成流年数据: 10年，从1985到1994
+plugin:bazi-obsidian:866 ✅ 视图初始化完成
+plugin:bazi-obsidian:1417 ✅ 八字命盘渲染完成
+plugin:bazi-obsidian:1405 ✅ 已有年份参数: 1985
+plugin:bazi-obsidian:1405 ✅ 不需要显示性别选择界面，参数: 男
+plugin:bazi-obsidian:751 🎯 流年选择: 年份 1987
+plugin:bazi-obsidian:866 🎯 SectionRenderManager: 流年选择 1987
+plugin:bazi-obsidian:891 🎯 收到流年选择事件: 1987
+plugin:bazi-obsidian:891 🎯 处理流年选择: 1987
+plugin:bazi-obsidian:891 🧪 测试流月数据生成 (1987年): (12) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+plugin:bazi-obsidian:891 🎯 选择流年: 1987
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liunian层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liunian (请求层级: liunian)
+plugin:bazi-obsidian:305 🔍 流年强制更新检查: lastYear=0, currentYear=1987, needsUpdate=true
+plugin:bazi-obsidian:305 🔄 强制更新liunian层级内容
+plugin:bazi-obsidian:305 🧹 清除现有扩展，当前层级: dayun
+plugin:bazi-obsidian:305 🧹 开始清除扩展列，当前扩展柱数量: 1
+plugin:bazi-obsidian:305 ✅ 扩展列清除完成
+plugin:bazi-obsidian:305 📋 需要扩展的层级列表: dayun → liunian
+plugin:bazi-obsidian:305 🔄 正在处理层级: dayun
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: dayun
+plugin:bazi-obsidian:305 ✅ 获取大运柱信息: 壬午
+plugin:bazi-obsidian:305 ✅ 获取到dayun柱信息: 前运 壬午
+plugin:bazi-obsidian:305 🔄 添加扩展列: 前运 (壬午)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 前运
+plugin:bazi-obsidian:305 🔄 正在处理层级: liunian
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liunian
+plugin:bazi-obsidian:305 ✅ 获取流年柱信息: 1987年 丁卯
+plugin:bazi-obsidian:305 ✅ 获取到liunian柱信息: 流年 丁卯
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流年 (丁卯)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流年
+plugin:bazi-obsidian:305 ✅ 已扩展到liunian层级，包含层级：dayun → liunian
+plugin:bazi-obsidian:305 📝 更新流年状态跟踪: 大运=0, 流年=1987
+plugin:bazi-obsidian:891 🔄 重置下级选择状态: liunian
+plugin:bazi-obsidian:891 🔄 生成流月数据: 1987年
+plugin:bazi-obsidian:891 🔄 更新流月表格: 1987年
+plugin:bazi-obsidian:891 ✅ 流月表格容器找到: <div class=​"bazi-liuyue-container" data-section-type=​"liuyue-table" style=​"max-height:​ none;​ overflow:​ visible;​ min-height:​ 400px;​">​…​</div>​
+plugin:bazi-obsidian:891 ✅ 生成流月数据: (12) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+plugin:bazi-obsidian:891 🎯 处理流月选择: 1987年 1
+plugin:bazi-obsidian:891 🎯 选择流月: 1月 (辛丑)
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuyue层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuyue (请求层级: liuyue)
+plugin:bazi-obsidian:305 🔍 流月强制更新检查: lastLiuYue=null, currentLiuYue={"year":1987,"month":1,"ganZhi":"辛丑","name":"正月","displayName":"辛丑月","startDate":"2.4"}, needsUpdate=true
+plugin:bazi-obsidian:305 🔄 强制更新liuyue层级内容
+plugin:bazi-obsidian:305 🧹 清除现有扩展，当前层级: liunian
+plugin:bazi-obsidian:305 🧹 开始清除扩展列，当前扩展柱数量: 2
+plugin:bazi-obsidian:305 ✅ 扩展列清除完成
+plugin:bazi-obsidian:305 📋 需要扩展的层级列表: dayun → liunian → liuyue
+plugin:bazi-obsidian:305 🔄 正在处理层级: dayun
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: dayun
+plugin:bazi-obsidian:305 ✅ 获取大运柱信息: 壬午
+plugin:bazi-obsidian:305 ✅ 获取到dayun柱信息: 前运 壬午
+plugin:bazi-obsidian:305 🔄 添加扩展列: 前运 (壬午)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 前运
+plugin:bazi-obsidian:305 🔄 正在处理层级: liunian
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liunian
+plugin:bazi-obsidian:305 ✅ 获取流年柱信息: 1987年 丁卯
+plugin:bazi-obsidian:305 ✅ 获取到liunian柱信息: 流年 丁卯
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流年 (丁卯)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流年
+plugin:bazi-obsidian:305 🔄 正在处理层级: liuyue
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liuyue
+plugin:bazi-obsidian:305 ✅ 获取流月柱信息: 辛丑
+plugin:bazi-obsidian:305 ✅ 获取到liuyue柱信息: 流月 辛丑
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流月 (辛丑)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流月
+plugin:bazi-obsidian:305 ✅ 已扩展到liuyue层级，包含层级：dayun → liunian → liuyue
+plugin:bazi-obsidian:305 📝 更新流月状态跟踪: 大运=0, 流年=1987, 流月={"year":1987,"month":1,"ganZhi":"辛丑","name":"正月","displayName":"辛丑月","startDate":"2.4"}
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuyue层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuyue (请求层级: liuyue)
+plugin:bazi-obsidian:305 🔍 流月强制更新检查: lastLiuYue={"year":1987,"month":1,"ganZhi":"辛丑","name":"正月","displayName":"辛丑月","startDate":"2.4"}, currentLiuYue={"year":1987,"month":1,"ganZhi":"辛丑","name":"正月","displayName":"辛丑月","startDate":"2.4"}, needsUpdate=false
+plugin:bazi-obsidian:305 ⚠️ 已扩展到liuyue层级，跳过重复扩展
+plugin:bazi-obsidian:891 🔄 重置下级选择状态: liuyue
+plugin:bazi-obsidian:891 🔄 生成流日数据: 1987年 1
+plugin:bazi-obsidian:891 ✅ 流月表格创建完成
+plugin:bazi-obsidian:891 🎯 收到流年选择事件: 1987
+plugin:bazi-obsidian:891 🎯 处理流年选择: 1987
+plugin:bazi-obsidian:891 🧪 测试流月数据生成 (1987年): (12) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+plugin:bazi-obsidian:891 🎯 选择流年: 1987
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liunian层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liunian (请求层级: liunian)
+plugin:bazi-obsidian:305 🔍 流年强制更新检查: lastYear=1987, currentYear=1987, needsUpdate=false
+plugin:bazi-obsidian:305 🧹 清除现有扩展，当前层级: liuyue
+plugin:bazi-obsidian:305 🧹 开始清除扩展列，当前扩展柱数量: 3
+plugin:bazi-obsidian:305 ✅ 扩展列清除完成
+plugin:bazi-obsidian:305 📋 需要扩展的层级列表: dayun → liunian
+plugin:bazi-obsidian:305 🔄 正在处理层级: dayun
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: dayun
+plugin:bazi-obsidian:305 ✅ 获取大运柱信息: 壬午
+plugin:bazi-obsidian:305 ✅ 获取到dayun柱信息: 前运 壬午
+plugin:bazi-obsidian:305 🔄 添加扩展列: 前运 (壬午)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 前运
+plugin:bazi-obsidian:305 🔄 正在处理层级: liunian
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liunian
+plugin:bazi-obsidian:305 ✅ 获取流年柱信息: 1987年 丁卯
+plugin:bazi-obsidian:305 ✅ 获取到liunian柱信息: 流年 丁卯
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流年 (丁卯)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流年
+plugin:bazi-obsidian:305 ✅ 已扩展到liunian层级，包含层级：dayun → liunian
+plugin:bazi-obsidian:305 📝 更新流年状态跟踪: 大运=0, 流年=1987
+plugin:bazi-obsidian:891 🔄 重置下级选择状态: liunian
+plugin:bazi-obsidian:891 🔄 生成流月数据: 1987年
+plugin:bazi-obsidian:891 🔄 更新流月表格: 1987年
+plugin:bazi-obsidian:891 ✅ 流月表格容器找到: <div class=​"bazi-liuyue-container" data-section-type=​"liuyue-table" style=​"max-height:​ none;​ overflow:​ visible;​ min-height:​ 400px;​">​…​</div>​
+plugin:bazi-obsidian:891 ✅ 生成流月数据: (12) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+plugin:bazi-obsidian:891 🎯 处理流月选择: 1987年 1
+plugin:bazi-obsidian:891 🎯 选择流月: 1月 (辛丑)
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuyue层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuyue (请求层级: liuyue)
+plugin:bazi-obsidian:305 🔍 流月强制更新检查: lastLiuYue={"year":1987,"month":1,"ganZhi":"辛丑","name":"正月","displayName":"辛丑月","startDate":"2.4"}, currentLiuYue={"year":1987,"month":1,"ganZhi":"辛丑","name":"正月","displayName":"辛丑月","startDate":"2.4"}, needsUpdate=false
+plugin:bazi-obsidian:305 🧹 清除现有扩展，当前层级: liunian
+plugin:bazi-obsidian:305 🧹 开始清除扩展列，当前扩展柱数量: 2
+plugin:bazi-obsidian:305 ✅ 扩展列清除完成
+plugin:bazi-obsidian:305 📋 需要扩展的层级列表: dayun → liunian → liuyue
+plugin:bazi-obsidian:305 🔄 正在处理层级: dayun
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: dayun
+plugin:bazi-obsidian:305 ✅ 获取大运柱信息: 壬午
+plugin:bazi-obsidian:305 ✅ 获取到dayun柱信息: 前运 壬午
+plugin:bazi-obsidian:305 🔄 添加扩展列: 前运 (壬午)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 前运
+plugin:bazi-obsidian:305 🔄 正在处理层级: liunian
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liunian
+plugin:bazi-obsidian:305 ✅ 获取流年柱信息: 1987年 丁卯
+plugin:bazi-obsidian:305 ✅ 获取到liunian柱信息: 流年 丁卯
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流年 (丁卯)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流年
+plugin:bazi-obsidian:305 🔄 正在处理层级: liuyue
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liuyue
+plugin:bazi-obsidian:305 ✅ 获取流月柱信息: 辛丑
+plugin:bazi-obsidian:305 ✅ 获取到liuyue柱信息: 流月 辛丑
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流月 (辛丑)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流月
+plugin:bazi-obsidian:305 ✅ 已扩展到liuyue层级，包含层级：dayun → liunian → liuyue
+plugin:bazi-obsidian:305 📝 更新流月状态跟踪: 大运=0, 流年=1987, 流月={"year":1987,"month":1,"ganZhi":"辛丑","name":"正月","displayName":"辛丑月","startDate":"2.4"}
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuyue层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuyue (请求层级: liuyue)
+plugin:bazi-obsidian:305 🔍 流月强制更新检查: lastLiuYue={"year":1987,"month":1,"ganZhi":"辛丑","name":"正月","displayName":"辛丑月","startDate":"2.4"}, currentLiuYue={"year":1987,"month":1,"ganZhi":"辛丑","name":"正月","displayName":"辛丑月","startDate":"2.4"}, needsUpdate=false
+plugin:bazi-obsidian:305 ⚠️ 已扩展到liuyue层级，跳过重复扩展
+plugin:bazi-obsidian:891 🔄 重置下级选择状态: liuyue
+plugin:bazi-obsidian:891 🔄 生成流日数据: 1987年 1
+plugin:bazi-obsidian:891 ✅ 流月表格创建完成
+plugin:bazi-obsidian:891 🎯 处理流日选择: 1987年 1 2日
+plugin:bazi-obsidian:891 🎯 选择流日: 1987-1-2
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuri层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuri (请求层级: liuri)
+plugin:bazi-obsidian:305 🔍 流日强制更新检查: lastLiuRi=null, currentLiuRi={"year":1987,"month":1,"day":2}, needsUpdate=true
+plugin:bazi-obsidian:305 🔄 强制更新liuri层级内容
+plugin:bazi-obsidian:305 🧹 清除现有扩展，当前层级: liuyue
+plugin:bazi-obsidian:305 🧹 开始清除扩展列，当前扩展柱数量: 3
+plugin:bazi-obsidian:305 ✅ 扩展列清除完成
+plugin:bazi-obsidian:305 📋 需要扩展的层级列表: dayun → liunian → liuyue → liuri
+plugin:bazi-obsidian:305 🔄 正在处理层级: dayun
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: dayun
+plugin:bazi-obsidian:305 ✅ 获取大运柱信息: 壬午
+plugin:bazi-obsidian:305 ✅ 获取到dayun柱信息: 前运 壬午
+plugin:bazi-obsidian:305 🔄 添加扩展列: 前运 (壬午)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 前运
+plugin:bazi-obsidian:305 🔄 正在处理层级: liunian
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liunian
+plugin:bazi-obsidian:305 ✅ 获取流年柱信息: 1987年 丁卯
+plugin:bazi-obsidian:305 ✅ 获取到liunian柱信息: 流年 丁卯
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流年 (丁卯)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流年
+plugin:bazi-obsidian:305 🔄 正在处理层级: liuyue
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liuyue
+plugin:bazi-obsidian:305 ✅ 获取流月柱信息: 辛丑
+plugin:bazi-obsidian:305 ✅ 获取到liuyue柱信息: 流月 辛丑
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流月 (辛丑)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流月
+plugin:bazi-obsidian:305 🔄 正在处理层级: liuri
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liuri
+plugin:bazi-obsidian:305 ✅ 获取流日柱信息: 1987-1-2 甲子
+plugin:bazi-obsidian:305 ✅ 获取到liuri柱信息: 流日 甲子
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流日 (甲子)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流日
+plugin:bazi-obsidian:305 ✅ 已扩展到liuri层级，包含层级：dayun → liunian → liuyue → liuri
+plugin:bazi-obsidian:305 📝 更新流日状态跟踪: 大运=0, 流年=1987, 流月={"year":1987,"month":1,"ganZhi":"辛丑","name":"正月","displayName":"辛丑月","startDate":"2.4"}, 流日={"year":1987,"month":1,"day":2}
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuri层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuri (请求层级: liuri)
+plugin:bazi-obsidian:305 🔍 流日强制更新检查: lastLiuRi={"year":1987,"month":1,"day":2}, currentLiuRi={"year":1987,"month":1,"day":2}, needsUpdate=false
+plugin:bazi-obsidian:305 ⚠️ 已扩展到liuri层级，跳过重复扩展
+plugin:bazi-obsidian:891 🔄 重置下级选择状态: liuri
+plugin:bazi-obsidian:891 🔄 生成流时数据: 1987年 1月 2日
+plugin:bazi-obsidian:891 🎯 处理流日选择: 1987年 1 1日
+plugin:bazi-obsidian:891 🎯 选择流日: 1987-1-1
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuri层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuri (请求层级: liuri)
+plugin:bazi-obsidian:305 🔍 流日强制更新检查: lastLiuRi={"year":1987,"month":1,"day":2}, currentLiuRi={"year":1987,"month":1,"day":1}, needsUpdate=true
+plugin:bazi-obsidian:305 🔄 强制更新liuri层级内容
+plugin:bazi-obsidian:305 🧹 清除现有扩展，当前层级: liuri
+plugin:bazi-obsidian:305 🧹 开始清除扩展列，当前扩展柱数量: 4
+plugin:bazi-obsidian:305 ✅ 扩展列清除完成
+plugin:bazi-obsidian:305 📋 需要扩展的层级列表: dayun → liunian → liuyue → liuri
+plugin:bazi-obsidian:305 🔄 正在处理层级: dayun
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: dayun
+plugin:bazi-obsidian:305 ✅ 获取大运柱信息: 壬午
+plugin:bazi-obsidian:305 ✅ 获取到dayun柱信息: 前运 壬午
+plugin:bazi-obsidian:305 🔄 添加扩展列: 前运 (壬午)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 前运
+plugin:bazi-obsidian:305 🔄 正在处理层级: liunian
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liunian
+plugin:bazi-obsidian:305 ✅ 获取流年柱信息: 1987年 丁卯
+plugin:bazi-obsidian:305 ✅ 获取到liunian柱信息: 流年 丁卯
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流年 (丁卯)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流年
+plugin:bazi-obsidian:305 🔄 正在处理层级: liuyue
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liuyue
+plugin:bazi-obsidian:305 ✅ 获取流月柱信息: 辛丑
+plugin:bazi-obsidian:305 ✅ 获取到liuyue柱信息: 流月 辛丑
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流月 (辛丑)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流月
+plugin:bazi-obsidian:305 🔄 正在处理层级: liuri
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liuri
+plugin:bazi-obsidian:305 ✅ 获取流日柱信息: 1987-1-1 甲子
+plugin:bazi-obsidian:305 ✅ 获取到liuri柱信息: 流日 甲子
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流日 (甲子)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流日
+plugin:bazi-obsidian:305 ✅ 已扩展到liuri层级，包含层级：dayun → liunian → liuyue → liuri
+plugin:bazi-obsidian:305 📝 更新流日状态跟踪: 大运=0, 流年=1987, 流月={"year":1987,"month":1,"ganZhi":"辛丑","name":"正月","displayName":"辛丑月","startDate":"2.4"}, 流日={"year":1987,"month":1,"day":1}
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuri层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuri (请求层级: liuri)
+plugin:bazi-obsidian:305 🔍 流日强制更新检查: lastLiuRi={"year":1987,"month":1,"day":1}, currentLiuRi={"year":1987,"month":1,"day":1}, needsUpdate=false
+plugin:bazi-obsidian:305 ⚠️ 已扩展到liuri层级，跳过重复扩展
+plugin:bazi-obsidian:891 🔄 重置下级选择状态: liuri
+plugin:bazi-obsidian:891 🔄 生成流时数据: 1987年 1月 1日
+plugin:bazi-obsidian:891 🎯 处理流日选择: 1987年 1 2日
+plugin:bazi-obsidian:891 🎯 选择流日: 1987-1-2
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuri层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuri (请求层级: liuri)
+plugin:bazi-obsidian:305 🔍 流日强制更新检查: lastLiuRi={"year":1987,"month":1,"day":1}, currentLiuRi={"year":1987,"month":1,"day":2}, needsUpdate=true
+plugin:bazi-obsidian:305 🔄 强制更新liuri层级内容
+plugin:bazi-obsidian:305 🧹 清除现有扩展，当前层级: liuri
+plugin:bazi-obsidian:305 🧹 开始清除扩展列，当前扩展柱数量: 4
+plugin:bazi-obsidian:305 ✅ 扩展列清除完成
+plugin:bazi-obsidian:305 📋 需要扩展的层级列表: dayun → liunian → liuyue → liuri
+plugin:bazi-obsidian:305 🔄 正在处理层级: dayun
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: dayun
+plugin:bazi-obsidian:305 ✅ 获取大运柱信息: 壬午
+plugin:bazi-obsidian:305 ✅ 获取到dayun柱信息: 前运 壬午
+plugin:bazi-obsidian:305 🔄 添加扩展列: 前运 (壬午)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 前运
+plugin:bazi-obsidian:305 🔄 正在处理层级: liunian
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liunian
+plugin:bazi-obsidian:305 ✅ 获取流年柱信息: 1987年 丁卯
+plugin:bazi-obsidian:305 ✅ 获取到liunian柱信息: 流年 丁卯
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流年 (丁卯)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流年
+plugin:bazi-obsidian:305 🔄 正在处理层级: liuyue
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liuyue
+plugin:bazi-obsidian:305 ✅ 获取流月柱信息: 辛丑
+plugin:bazi-obsidian:305 ✅ 获取到liuyue柱信息: 流月 辛丑
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流月 (辛丑)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流月
+plugin:bazi-obsidian:305 🔄 正在处理层级: liuri
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liuri
+plugin:bazi-obsidian:305 ✅ 获取流日柱信息: 1987-1-2 甲子
+plugin:bazi-obsidian:305 ✅ 获取到liuri柱信息: 流日 甲子
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流日 (甲子)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流日
+plugin:bazi-obsidian:305 ✅ 已扩展到liuri层级，包含层级：dayun → liunian → liuyue → liuri
+plugin:bazi-obsidian:305 📝 更新流日状态跟踪: 大运=0, 流年=1987, 流月={"year":1987,"month":1,"ganZhi":"辛丑","name":"正月","displayName":"辛丑月","startDate":"2.4"}, 流日={"year":1987,"month":1,"day":2}
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuri层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuri (请求层级: liuri)
+plugin:bazi-obsidian:305 🔍 流日强制更新检查: lastLiuRi={"year":1987,"month":1,"day":2}, currentLiuRi={"year":1987,"month":1,"day":2}, needsUpdate=false
+plugin:bazi-obsidian:305 ⚠️ 已扩展到liuri层级，跳过重复扩展
+plugin:bazi-obsidian:891 🔄 重置下级选择状态: liuri
+plugin:bazi-obsidian:891 🔄 生成流时数据: 1987年 1月 2日
+plugin:bazi-obsidian:891 🎯 处理流日选择: 1987年 1 3日
+plugin:bazi-obsidian:891 🎯 选择流日: 1987-1-3
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuri层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuri (请求层级: liuri)
+plugin:bazi-obsidian:305 🔍 流日强制更新检查: lastLiuRi={"year":1987,"month":1,"day":2}, currentLiuRi={"year":1987,"month":1,"day":3}, needsUpdate=true
+plugin:bazi-obsidian:305 🔄 强制更新liuri层级内容
+plugin:bazi-obsidian:305 🧹 清除现有扩展，当前层级: liuri
+plugin:bazi-obsidian:305 🧹 开始清除扩展列，当前扩展柱数量: 4
+plugin:bazi-obsidian:305 ✅ 扩展列清除完成
+plugin:bazi-obsidian:305 📋 需要扩展的层级列表: dayun → liunian → liuyue → liuri
+plugin:bazi-obsidian:305 🔄 正在处理层级: dayun
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: dayun
+plugin:bazi-obsidian:305 ✅ 获取大运柱信息: 壬午
+plugin:bazi-obsidian:305 ✅ 获取到dayun柱信息: 前运 壬午
+plugin:bazi-obsidian:305 🔄 添加扩展列: 前运 (壬午)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 前运
+plugin:bazi-obsidian:305 🔄 正在处理层级: liunian
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liunian
+plugin:bazi-obsidian:305 ✅ 获取流年柱信息: 1987年 丁卯
+plugin:bazi-obsidian:305 ✅ 获取到liunian柱信息: 流年 丁卯
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流年 (丁卯)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流年
+plugin:bazi-obsidian:305 🔄 正在处理层级: liuyue
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liuyue
+plugin:bazi-obsidian:305 ✅ 获取流月柱信息: 辛丑
+plugin:bazi-obsidian:305 ✅ 获取到liuyue柱信息: 流月 辛丑
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流月 (辛丑)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流月
+plugin:bazi-obsidian:305 🔄 正在处理层级: liuri
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liuri
+plugin:bazi-obsidian:305 ✅ 获取流日柱信息: 1987-1-3 甲子
+plugin:bazi-obsidian:305 ✅ 获取到liuri柱信息: 流日 甲子
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流日 (甲子)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流日
+plugin:bazi-obsidian:305 ✅ 已扩展到liuri层级，包含层级：dayun → liunian → liuyue → liuri
+plugin:bazi-obsidian:305 📝 更新流日状态跟踪: 大运=0, 流年=1987, 流月={"year":1987,"month":1,"ganZhi":"辛丑","name":"正月","displayName":"辛丑月","startDate":"2.4"}, 流日={"year":1987,"month":1,"day":3}
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuri层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuri (请求层级: liuri)
+plugin:bazi-obsidian:305 🔍 流日强制更新检查: lastLiuRi={"year":1987,"month":1,"day":3}, currentLiuRi={"year":1987,"month":1,"day":3}, needsUpdate=false
+plugin:bazi-obsidian:305 ⚠️ 已扩展到liuri层级，跳过重复扩展
+plugin:bazi-obsidian:891 🔄 重置下级选择状态: liuri
+plugin:bazi-obsidian:891 🔄 生成流时数据: 1987年 1月 3日
+plugin:bazi-obsidian:891 🎯 处理流日选择: 1987年 1 4日
+plugin:bazi-obsidian:891 🎯 选择流日: 1987-1-4
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuri层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuri (请求层级: liuri)
+plugin:bazi-obsidian:305 🔍 流日强制更新检查: lastLiuRi={"year":1987,"month":1,"day":3}, currentLiuRi={"year":1987,"month":1,"day":4}, needsUpdate=true
+plugin:bazi-obsidian:305 🔄 强制更新liuri层级内容
+plugin:bazi-obsidian:305 🧹 清除现有扩展，当前层级: liuri
+plugin:bazi-obsidian:305 🧹 开始清除扩展列，当前扩展柱数量: 4
+plugin:bazi-obsidian:305 ✅ 扩展列清除完成
+plugin:bazi-obsidian:305 📋 需要扩展的层级列表: dayun → liunian → liuyue → liuri
+plugin:bazi-obsidian:305 🔄 正在处理层级: dayun
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: dayun
+plugin:bazi-obsidian:305 ✅ 获取大运柱信息: 壬午
+plugin:bazi-obsidian:305 ✅ 获取到dayun柱信息: 前运 壬午
+plugin:bazi-obsidian:305 🔄 添加扩展列: 前运 (壬午)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 前运
+plugin:bazi-obsidian:305 🔄 正在处理层级: liunian
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liunian
+plugin:bazi-obsidian:305 ✅ 获取流年柱信息: 1987年 丁卯
+plugin:bazi-obsidian:305 ✅ 获取到liunian柱信息: 流年 丁卯
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流年 (丁卯)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流年
+plugin:bazi-obsidian:305 🔄 正在处理层级: liuyue
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liuyue
+plugin:bazi-obsidian:305 ✅ 获取流月柱信息: 辛丑
+plugin:bazi-obsidian:305 ✅ 获取到liuyue柱信息: 流月 辛丑
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流月 (辛丑)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流月
+plugin:bazi-obsidian:305 🔄 正在处理层级: liuri
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liuri
+plugin:bazi-obsidian:305 ✅ 获取流日柱信息: 1987-1-4 甲子
+plugin:bazi-obsidian:305 ✅ 获取到liuri柱信息: 流日 甲子
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流日 (甲子)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流日
+plugin:bazi-obsidian:305 ✅ 已扩展到liuri层级，包含层级：dayun → liunian → liuyue → liuri
+plugin:bazi-obsidian:305 📝 更新流日状态跟踪: 大运=0, 流年=1987, 流月={"year":1987,"month":1,"ganZhi":"辛丑","name":"正月","displayName":"辛丑月","startDate":"2.4"}, 流日={"year":1987,"month":1,"day":4}
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuri层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuri (请求层级: liuri)
+plugin:bazi-obsidian:305 🔍 流日强制更新检查: lastLiuRi={"year":1987,"month":1,"day":4}, currentLiuRi={"year":1987,"month":1,"day":4}, needsUpdate=false
+plugin:bazi-obsidian:305 ⚠️ 已扩展到liuri层级，跳过重复扩展
+plugin:bazi-obsidian:891 🔄 重置下级选择状态: liuri
+plugin:bazi-obsidian:891 🔄 生成流时数据: 1987年 1月 4日
+plugin:bazi-obsidian:891 🎯 处理流月选择: 1987年 12
+plugin:bazi-obsidian:891 🎯 选择流月: 12月 (壬子)
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuyue层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuyue (请求层级: liuyue)
+plugin:bazi-obsidian:305 🔍 流月强制更新检查: lastLiuYue={"year":1987,"month":1,"ganZhi":"辛丑","name":"正月","displayName":"辛丑月","startDate":"2.4"}, currentLiuYue={"year":1987,"month":12,"ganZhi":"壬子","name":"十二月","displayName":"壬子月","startDate":"1.6"}, needsUpdate=true
+plugin:bazi-obsidian:305 🔄 强制更新liuyue层级内容
+plugin:bazi-obsidian:305 🧹 清除现有扩展，当前层级: liuri
+plugin:bazi-obsidian:305 🧹 开始清除扩展列，当前扩展柱数量: 4
+plugin:bazi-obsidian:305 ✅ 扩展列清除完成
+plugin:bazi-obsidian:305 📋 需要扩展的层级列表: dayun → liunian → liuyue
+plugin:bazi-obsidian:305 🔄 正在处理层级: dayun
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: dayun
+plugin:bazi-obsidian:305 ✅ 获取大运柱信息: 壬午
+plugin:bazi-obsidian:305 ✅ 获取到dayun柱信息: 前运 壬午
+plugin:bazi-obsidian:305 🔄 添加扩展列: 前运 (壬午)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 前运
+plugin:bazi-obsidian:305 🔄 正在处理层级: liunian
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liunian
+plugin:bazi-obsidian:305 ✅ 获取流年柱信息: 1987年 丁卯
+plugin:bazi-obsidian:305 ✅ 获取到liunian柱信息: 流年 丁卯
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流年 (丁卯)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流年
+plugin:bazi-obsidian:305 🔄 正在处理层级: liuyue
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liuyue
+plugin:bazi-obsidian:305 ✅ 获取流月柱信息: 壬子
+plugin:bazi-obsidian:305 ✅ 获取到liuyue柱信息: 流月 壬子
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流月 (壬子)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流月
+plugin:bazi-obsidian:305 ✅ 已扩展到liuyue层级，包含层级：dayun → liunian → liuyue
+plugin:bazi-obsidian:305 📝 更新流月状态跟踪: 大运=0, 流年=1987, 流月={"year":1987,"month":12,"ganZhi":"壬子","name":"十二月","displayName":"壬子月","startDate":"1.6"}
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuyue层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuyue (请求层级: liuyue)
+plugin:bazi-obsidian:305 🔍 流月强制更新检查: lastLiuYue={"year":1987,"month":12,"ganZhi":"壬子","name":"十二月","displayName":"壬子月","startDate":"1.6"}, currentLiuYue={"year":1987,"month":12,"ganZhi":"壬子","name":"十二月","displayName":"壬子月","startDate":"1.6"}, needsUpdate=false
+plugin:bazi-obsidian:305 ⚠️ 已扩展到liuyue层级，跳过重复扩展
+plugin:bazi-obsidian:891 🔄 重置下级选择状态: liuyue
+plugin:bazi-obsidian:891 🔄 生成流日数据: 1987年 12
+plugin:bazi-obsidian:535 🎯 流月选择: 0
+plugin:bazi-obsidian:891 🎯 处理流月选择: undefined年 0
+plugin:bazi-obsidian:891 🎯 选择流月: 0月 (undefined)
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuyue层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuyue (请求层级: liuyue)
+plugin:bazi-obsidian:305 🔍 流月强制更新检查: lastLiuYue={"year":1987,"month":12,"ganZhi":"壬子","name":"十二月","displayName":"壬子月","startDate":"1.6"}, currentLiuYue={"month":0}, needsUpdate=true
+plugin:bazi-obsidian:305 🔄 强制更新liuyue层级内容
+plugin:bazi-obsidian:305 🧹 清除现有扩展，当前层级: liuyue
+plugin:bazi-obsidian:305 🧹 开始清除扩展列，当前扩展柱数量: 3
+plugin:bazi-obsidian:305 ✅ 扩展列清除完成
+plugin:bazi-obsidian:305 📋 需要扩展的层级列表: dayun → liunian → liuyue
+plugin:bazi-obsidian:305 🔄 正在处理层级: dayun
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: dayun
+plugin:bazi-obsidian:305 ✅ 获取大运柱信息: 壬午
+plugin:bazi-obsidian:305 ✅ 获取到dayun柱信息: 前运 壬午
+plugin:bazi-obsidian:305 🔄 添加扩展列: 前运 (壬午)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 前运
+plugin:bazi-obsidian:305 🔄 正在处理层级: liunian
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liunian
+plugin:bazi-obsidian:305 ✅ 获取流年柱信息: 1987年 丁卯
+plugin:bazi-obsidian:305 ✅ 获取到liunian柱信息: 流年 丁卯
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流年 (丁卯)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流年
+plugin:bazi-obsidian:305 🔄 正在处理层级: liuyue
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liuyue
+plugin:bazi-obsidian:305 ✅ 获取流月柱信息: undefined
+plugin:bazi-obsidian:305 ❌ calculateLiuYuePillar: 流月干支无效 undefined
+plugin:bazi-obsidian:305 ❌ 无法获取liuyue柱信息
+plugin:bazi-obsidian:305 ✅ 已扩展到liuyue层级，包含层级：dayun → liunian → liuyue
+plugin:bazi-obsidian:305 📝 更新流月状态跟踪: 大运=0, 流年=1987, 流月={"month":0}
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuyue层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuyue (请求层级: liuyue)
+plugin:bazi-obsidian:305 🔍 流月强制更新检查: lastLiuYue={"month":0}, currentLiuYue={"month":0}, needsUpdate=false
+plugin:bazi-obsidian:305 ⚠️ 已扩展到liuyue层级，跳过重复扩展
+plugin:bazi-obsidian:891 🔄 重置下级选择状态: liuyue
+plugin:bazi-obsidian:891 🔄 生成流日数据: undefined年 0
+plugin:bazi-obsidian:891 🎯 处理流月选择: 1987年 11
+plugin:bazi-obsidian:891 🎯 选择流月: 11月 (辛亥)
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuyue层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuyue (请求层级: liuyue)
+plugin:bazi-obsidian:305 🔍 流月强制更新检查: lastLiuYue={"month":0}, currentLiuYue={"year":1987,"month":11,"ganZhi":"辛亥","name":"十一月","displayName":"辛亥月","startDate":"12.7"}, needsUpdate=true
+plugin:bazi-obsidian:305 🔄 强制更新liuyue层级内容
+plugin:bazi-obsidian:305 🧹 清除现有扩展，当前层级: liuyue
+plugin:bazi-obsidian:305 🧹 开始清除扩展列，当前扩展柱数量: 2
+plugin:bazi-obsidian:305 ✅ 扩展列清除完成
+plugin:bazi-obsidian:305 📋 需要扩展的层级列表: dayun → liunian → liuyue
+plugin:bazi-obsidian:305 🔄 正在处理层级: dayun
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: dayun
+plugin:bazi-obsidian:305 ✅ 获取大运柱信息: 壬午
+plugin:bazi-obsidian:305 ✅ 获取到dayun柱信息: 前运 壬午
+plugin:bazi-obsidian:305 🔄 添加扩展列: 前运 (壬午)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 前运
+plugin:bazi-obsidian:305 🔄 正在处理层级: liunian
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liunian
+plugin:bazi-obsidian:305 ✅ 获取流年柱信息: 1987年 丁卯
+plugin:bazi-obsidian:305 ✅ 获取到liunian柱信息: 流年 丁卯
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流年 (丁卯)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流年
+plugin:bazi-obsidian:305 🔄 正在处理层级: liuyue
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liuyue
+plugin:bazi-obsidian:305 ✅ 获取流月柱信息: 辛亥
+plugin:bazi-obsidian:305 ✅ 获取到liuyue柱信息: 流月 辛亥
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流月 (辛亥)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流月
+plugin:bazi-obsidian:305 ✅ 已扩展到liuyue层级，包含层级：dayun → liunian → liuyue
+plugin:bazi-obsidian:305 📝 更新流月状态跟踪: 大运=0, 流年=1987, 流月={"year":1987,"month":11,"ganZhi":"辛亥","name":"十一月","displayName":"辛亥月","startDate":"12.7"}
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuyue层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuyue (请求层级: liuyue)
+plugin:bazi-obsidian:305 🔍 流月强制更新检查: lastLiuYue={"year":1987,"month":11,"ganZhi":"辛亥","name":"十一月","displayName":"辛亥月","startDate":"12.7"}, currentLiuYue={"year":1987,"month":11,"ganZhi":"辛亥","name":"十一月","displayName":"辛亥月","startDate":"12.7"}, needsUpdate=false
+plugin:bazi-obsidian:305 ⚠️ 已扩展到liuyue层级，跳过重复扩展
+plugin:bazi-obsidian:891 🔄 重置下级选择状态: liuyue
+plugin:bazi-obsidian:891 🔄 生成流日数据: 1987年 11
+plugin:bazi-obsidian:535 🎯 流月选择: 0
+plugin:bazi-obsidian:891 🎯 处理流月选择: undefined年 0
+plugin:bazi-obsidian:891 🎯 选择流月: 0月 (undefined)
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuyue层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuyue (请求层级: liuyue)
+plugin:bazi-obsidian:305 🔍 流月强制更新检查: lastLiuYue={"year":1987,"month":11,"ganZhi":"辛亥","name":"十一月","displayName":"辛亥月","startDate":"12.7"}, currentLiuYue={"month":0}, needsUpdate=true
+plugin:bazi-obsidian:305 🔄 强制更新liuyue层级内容
+plugin:bazi-obsidian:305 🧹 清除现有扩展，当前层级: liuyue
+plugin:bazi-obsidian:305 🧹 开始清除扩展列，当前扩展柱数量: 3
+plugin:bazi-obsidian:305 ✅ 扩展列清除完成
+plugin:bazi-obsidian:305 📋 需要扩展的层级列表: dayun → liunian → liuyue
+plugin:bazi-obsidian:305 🔄 正在处理层级: dayun
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: dayun
+plugin:bazi-obsidian:305 ✅ 获取大运柱信息: 壬午
+plugin:bazi-obsidian:305 ✅ 获取到dayun柱信息: 前运 壬午
+plugin:bazi-obsidian:305 🔄 添加扩展列: 前运 (壬午)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 前运
+plugin:bazi-obsidian:305 🔄 正在处理层级: liunian
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liunian
+plugin:bazi-obsidian:305 ✅ 获取流年柱信息: 1987年 丁卯
+plugin:bazi-obsidian:305 ✅ 获取到liunian柱信息: 流年 丁卯
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流年 (丁卯)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流年
+plugin:bazi-obsidian:305 🔄 正在处理层级: liuyue
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liuyue
+plugin:bazi-obsidian:305 ✅ 获取流月柱信息: undefined
+plugin:bazi-obsidian:305 ❌ calculateLiuYuePillar: 流月干支无效 undefined
+plugin:bazi-obsidian:305 ❌ 无法获取liuyue柱信息
+plugin:bazi-obsidian:305 ✅ 已扩展到liuyue层级，包含层级：dayun → liunian → liuyue
+plugin:bazi-obsidian:305 📝 更新流月状态跟踪: 大运=0, 流年=1987, 流月={"month":0}
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuyue层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuyue (请求层级: liuyue)
+plugin:bazi-obsidian:305 🔍 流月强制更新检查: lastLiuYue={"month":0}, currentLiuYue={"month":0}, needsUpdate=false
+plugin:bazi-obsidian:305 ⚠️ 已扩展到liuyue层级，跳过重复扩展
+plugin:bazi-obsidian:891 🔄 重置下级选择状态: liuyue
+plugin:bazi-obsidian:891 🔄 生成流日数据: undefined年 0
+plugin:bazi-obsidian:891 🎯 处理流月选择: 1987年 8
+plugin:bazi-obsidian:891 🎯 选择流月: 8月 (戊申)
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuyue层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuyue (请求层级: liuyue)
+plugin:bazi-obsidian:305 🔍 流月强制更新检查: lastLiuYue={"month":0}, currentLiuYue={"year":1987,"month":8,"ganZhi":"戊申","name":"八月","displayName":"戊申月","startDate":"9.8"}, needsUpdate=true
+plugin:bazi-obsidian:305 🔄 强制更新liuyue层级内容
+plugin:bazi-obsidian:305 🧹 清除现有扩展，当前层级: liuyue
+plugin:bazi-obsidian:305 🧹 开始清除扩展列，当前扩展柱数量: 2
+plugin:bazi-obsidian:305 ✅ 扩展列清除完成
+plugin:bazi-obsidian:305 📋 需要扩展的层级列表: dayun → liunian → liuyue
+plugin:bazi-obsidian:305 🔄 正在处理层级: dayun
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: dayun
+plugin:bazi-obsidian:305 ✅ 获取大运柱信息: 壬午
+plugin:bazi-obsidian:305 ✅ 获取到dayun柱信息: 前运 壬午
+plugin:bazi-obsidian:305 🔄 添加扩展列: 前运 (壬午)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 前运
+plugin:bazi-obsidian:305 🔄 正在处理层级: liunian
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liunian
+plugin:bazi-obsidian:305 ✅ 获取流年柱信息: 1987年 丁卯
+plugin:bazi-obsidian:305 ✅ 获取到liunian柱信息: 流年 丁卯
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流年 (丁卯)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流年
+plugin:bazi-obsidian:305 🔄 正在处理层级: liuyue
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liuyue
+plugin:bazi-obsidian:305 ✅ 获取流月柱信息: 戊申
+plugin:bazi-obsidian:305 ✅ 获取到liuyue柱信息: 流月 戊申
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流月 (戊申)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流月
+plugin:bazi-obsidian:305 ✅ 已扩展到liuyue层级，包含层级：dayun → liunian → liuyue
+plugin:bazi-obsidian:305 📝 更新流月状态跟踪: 大运=0, 流年=1987, 流月={"year":1987,"month":8,"ganZhi":"戊申","name":"八月","displayName":"戊申月","startDate":"9.8"}
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuyue层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuyue (请求层级: liuyue)
+plugin:bazi-obsidian:305 🔍 流月强制更新检查: lastLiuYue={"year":1987,"month":8,"ganZhi":"戊申","name":"八月","displayName":"戊申月","startDate":"9.8"}, currentLiuYue={"year":1987,"month":8,"ganZhi":"戊申","name":"八月","displayName":"戊申月","startDate":"9.8"}, needsUpdate=false
+plugin:bazi-obsidian:305 ⚠️ 已扩展到liuyue层级，跳过重复扩展
+plugin:bazi-obsidian:891 🔄 重置下级选择状态: liuyue
+plugin:bazi-obsidian:891 🔄 生成流日数据: 1987年 8
+plugin:bazi-obsidian:535 🎯 流月选择: 0
+plugin:bazi-obsidian:891 🎯 处理流月选择: undefined年 0
+plugin:bazi-obsidian:891 🎯 选择流月: 0月 (undefined)
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuyue层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuyue (请求层级: liuyue)
+plugin:bazi-obsidian:305 🔍 流月强制更新检查: lastLiuYue={"year":1987,"month":8,"ganZhi":"戊申","name":"八月","displayName":"戊申月","startDate":"9.8"}, currentLiuYue={"month":0}, needsUpdate=true
+plugin:bazi-obsidian:305 🔄 强制更新liuyue层级内容
+plugin:bazi-obsidian:305 🧹 清除现有扩展，当前层级: liuyue
+plugin:bazi-obsidian:305 🧹 开始清除扩展列，当前扩展柱数量: 3
+plugin:bazi-obsidian:305 ✅ 扩展列清除完成
+plugin:bazi-obsidian:305 📋 需要扩展的层级列表: dayun → liunian → liuyue
+plugin:bazi-obsidian:305 🔄 正在处理层级: dayun
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: dayun
+plugin:bazi-obsidian:305 ✅ 获取大运柱信息: 壬午
+plugin:bazi-obsidian:305 ✅ 获取到dayun柱信息: 前运 壬午
+plugin:bazi-obsidian:305 🔄 添加扩展列: 前运 (壬午)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 前运
+plugin:bazi-obsidian:305 🔄 正在处理层级: liunian
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liunian
+plugin:bazi-obsidian:305 ✅ 获取流年柱信息: 1987年 丁卯
+plugin:bazi-obsidian:305 ✅ 获取到liunian柱信息: 流年 丁卯
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流年 (丁卯)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流年
+plugin:bazi-obsidian:305 🔄 正在处理层级: liuyue
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liuyue
+plugin:bazi-obsidian:305 ✅ 获取流月柱信息: undefined
+plugin:bazi-obsidian:305 ❌ calculateLiuYuePillar: 流月干支无效 undefined
+plugin:bazi-obsidian:305 ❌ 无法获取liuyue柱信息
+plugin:bazi-obsidian:305 ✅ 已扩展到liuyue层级，包含层级：dayun → liunian → liuyue
+plugin:bazi-obsidian:305 📝 更新流月状态跟踪: 大运=0, 流年=1987, 流月={"month":0}
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuyue层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuyue (请求层级: liuyue)
+plugin:bazi-obsidian:305 🔍 流月强制更新检查: lastLiuYue={"month":0}, currentLiuYue={"month":0}, needsUpdate=false
+plugin:bazi-obsidian:305 ⚠️ 已扩展到liuyue层级，跳过重复扩展
+plugin:bazi-obsidian:891 🔄 重置下级选择状态: liuyue
+plugin:bazi-obsidian:891 🔄 生成流日数据: undefined年 0
+plugin:bazi-obsidian:891 🎯 处理流月选择: 1987年 7
+plugin:bazi-obsidian:891 🎯 选择流月: 7月 (丁未)
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuyue层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuyue (请求层级: liuyue)
+plugin:bazi-obsidian:305 🔍 流月强制更新检查: lastLiuYue={"month":0}, currentLiuYue={"year":1987,"month":7,"ganZhi":"丁未","name":"七月","displayName":"丁未月","startDate":"8.7"}, needsUpdate=true
+plugin:bazi-obsidian:305 🔄 强制更新liuyue层级内容
+plugin:bazi-obsidian:305 🧹 清除现有扩展，当前层级: liuyue
+plugin:bazi-obsidian:305 🧹 开始清除扩展列，当前扩展柱数量: 2
+plugin:bazi-obsidian:305 ✅ 扩展列清除完成
+plugin:bazi-obsidian:305 📋 需要扩展的层级列表: dayun → liunian → liuyue
+plugin:bazi-obsidian:305 🔄 正在处理层级: dayun
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: dayun
+plugin:bazi-obsidian:305 ✅ 获取大运柱信息: 壬午
+plugin:bazi-obsidian:305 ✅ 获取到dayun柱信息: 前运 壬午
+plugin:bazi-obsidian:305 🔄 添加扩展列: 前运 (壬午)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 前运
+plugin:bazi-obsidian:305 🔄 正在处理层级: liunian
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liunian
+plugin:bazi-obsidian:305 ✅ 获取流年柱信息: 1987年 丁卯
+plugin:bazi-obsidian:305 ✅ 获取到liunian柱信息: 流年 丁卯
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流年 (丁卯)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流年
+plugin:bazi-obsidian:305 🔄 正在处理层级: liuyue
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liuyue
+plugin:bazi-obsidian:305 ✅ 获取流月柱信息: 丁未
+plugin:bazi-obsidian:305 ✅ 获取到liuyue柱信息: 流月 丁未
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流月 (丁未)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流月
+plugin:bazi-obsidian:305 ✅ 已扩展到liuyue层级，包含层级：dayun → liunian → liuyue
+plugin:bazi-obsidian:305 📝 更新流月状态跟踪: 大运=0, 流年=1987, 流月={"year":1987,"month":7,"ganZhi":"丁未","name":"七月","displayName":"丁未月","startDate":"8.7"}
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuyue层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuyue (请求层级: liuyue)
+plugin:bazi-obsidian:305 🔍 流月强制更新检查: lastLiuYue={"year":1987,"month":7,"ganZhi":"丁未","name":"七月","displayName":"丁未月","startDate":"8.7"}, currentLiuYue={"year":1987,"month":7,"ganZhi":"丁未","name":"七月","displayName":"丁未月","startDate":"8.7"}, needsUpdate=false
+plugin:bazi-obsidian:305 ⚠️ 已扩展到liuyue层级，跳过重复扩展
+plugin:bazi-obsidian:891 🔄 重置下级选择状态: liuyue
+plugin:bazi-obsidian:891 🔄 生成流日数据: 1987年 7
+plugin:bazi-obsidian:535 🎯 流月选择: 0
+plugin:bazi-obsidian:891 🎯 处理流月选择: undefined年 0
+plugin:bazi-obsidian:891 🎯 选择流月: 0月 (undefined)
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuyue层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuyue (请求层级: liuyue)
+plugin:bazi-obsidian:305 🔍 流月强制更新检查: lastLiuYue={"year":1987,"month":7,"ganZhi":"丁未","name":"七月","displayName":"丁未月","startDate":"8.7"}, currentLiuYue={"month":0}, needsUpdate=true
+plugin:bazi-obsidian:305 🔄 强制更新liuyue层级内容
+plugin:bazi-obsidian:305 🧹 清除现有扩展，当前层级: liuyue
+plugin:bazi-obsidian:305 🧹 开始清除扩展列，当前扩展柱数量: 3
+plugin:bazi-obsidian:305 ✅ 扩展列清除完成
+plugin:bazi-obsidian:305 📋 需要扩展的层级列表: dayun → liunian → liuyue
+plugin:bazi-obsidian:305 🔄 正在处理层级: dayun
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: dayun
+plugin:bazi-obsidian:305 ✅ 获取大运柱信息: 壬午
+plugin:bazi-obsidian:305 ✅ 获取到dayun柱信息: 前运 壬午
+plugin:bazi-obsidian:305 🔄 添加扩展列: 前运 (壬午)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 前运
+plugin:bazi-obsidian:305 🔄 正在处理层级: liunian
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liunian
+plugin:bazi-obsidian:305 ✅ 获取流年柱信息: 1987年 丁卯
+plugin:bazi-obsidian:305 ✅ 获取到liunian柱信息: 流年 丁卯
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流年 (丁卯)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流年
+plugin:bazi-obsidian:305 🔄 正在处理层级: liuyue
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liuyue
+plugin:bazi-obsidian:305 ✅ 获取流月柱信息: undefined
+plugin:bazi-obsidian:305 ❌ calculateLiuYuePillar: 流月干支无效 undefined
+plugin:bazi-obsidian:305 ❌ 无法获取liuyue柱信息
+plugin:bazi-obsidian:305 ✅ 已扩展到liuyue层级，包含层级：dayun → liunian → liuyue
+plugin:bazi-obsidian:305 📝 更新流月状态跟踪: 大运=0, 流年=1987, 流月={"month":0}
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuyue层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuyue (请求层级: liuyue)
+plugin:bazi-obsidian:305 🔍 流月强制更新检查: lastLiuYue={"month":0}, currentLiuYue={"month":0}, needsUpdate=false
+plugin:bazi-obsidian:305 ⚠️ 已扩展到liuyue层级，跳过重复扩展
+plugin:bazi-obsidian:891 🔄 重置下级选择状态: liuyue
+plugin:bazi-obsidian:891 🔄 生成流日数据: undefined年 0
+plugin:bazi-obsidian:891 🎯 处理流月选择: 1987年 10
+plugin:bazi-obsidian:891 🎯 选择流月: 10月 (庚戌)
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuyue层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuyue (请求层级: liuyue)
+plugin:bazi-obsidian:305 🔍 流月强制更新检查: lastLiuYue={"month":0}, currentLiuYue={"year":1987,"month":10,"ganZhi":"庚戌","name":"十月","displayName":"庚戌月","startDate":"11.7"}, needsUpdate=true
+plugin:bazi-obsidian:305 🔄 强制更新liuyue层级内容
+plugin:bazi-obsidian:305 🧹 清除现有扩展，当前层级: liuyue
+plugin:bazi-obsidian:305 🧹 开始清除扩展列，当前扩展柱数量: 2
+plugin:bazi-obsidian:305 ✅ 扩展列清除完成
+plugin:bazi-obsidian:305 📋 需要扩展的层级列表: dayun → liunian → liuyue
+plugin:bazi-obsidian:305 🔄 正在处理层级: dayun
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: dayun
+plugin:bazi-obsidian:305 ✅ 获取大运柱信息: 壬午
+plugin:bazi-obsidian:305 ✅ 获取到dayun柱信息: 前运 壬午
+plugin:bazi-obsidian:305 🔄 添加扩展列: 前运 (壬午)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 前运
+plugin:bazi-obsidian:305 🔄 正在处理层级: liunian
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liunian
+plugin:bazi-obsidian:305 ✅ 获取流年柱信息: 1987年 丁卯
+plugin:bazi-obsidian:305 ✅ 获取到liunian柱信息: 流年 丁卯
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流年 (丁卯)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流年
+plugin:bazi-obsidian:305 🔄 正在处理层级: liuyue
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liuyue
+plugin:bazi-obsidian:305 ✅ 获取流月柱信息: 庚戌
+plugin:bazi-obsidian:305 ✅ 获取到liuyue柱信息: 流月 庚戌
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流月 (庚戌)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流月
+plugin:bazi-obsidian:305 ✅ 已扩展到liuyue层级，包含层级：dayun → liunian → liuyue
+plugin:bazi-obsidian:305 📝 更新流月状态跟踪: 大运=0, 流年=1987, 流月={"year":1987,"month":10,"ganZhi":"庚戌","name":"十月","displayName":"庚戌月","startDate":"11.7"}
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuyue层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuyue (请求层级: liuyue)
+plugin:bazi-obsidian:305 🔍 流月强制更新检查: lastLiuYue={"year":1987,"month":10,"ganZhi":"庚戌","name":"十月","displayName":"庚戌月","startDate":"11.7"}, currentLiuYue={"year":1987,"month":10,"ganZhi":"庚戌","name":"十月","displayName":"庚戌月","startDate":"11.7"}, needsUpdate=false
+plugin:bazi-obsidian:305 ⚠️ 已扩展到liuyue层级，跳过重复扩展
+plugin:bazi-obsidian:891 🔄 重置下级选择状态: liuyue
+plugin:bazi-obsidian:891 🔄 生成流日数据: 1987年 10
+plugin:bazi-obsidian:535 🎯 流月选择: 0
+plugin:bazi-obsidian:891 🎯 处理流月选择: undefined年 0
+plugin:bazi-obsidian:891 🎯 选择流月: 0月 (undefined)
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuyue层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuyue (请求层级: liuyue)
+plugin:bazi-obsidian:305 🔍 流月强制更新检查: lastLiuYue={"year":1987,"month":10,"ganZhi":"庚戌","name":"十月","displayName":"庚戌月","startDate":"11.7"}, currentLiuYue={"month":0}, needsUpdate=true
+plugin:bazi-obsidian:305 🔄 强制更新liuyue层级内容
+plugin:bazi-obsidian:305 🧹 清除现有扩展，当前层级: liuyue
+plugin:bazi-obsidian:305 🧹 开始清除扩展列，当前扩展柱数量: 3
+plugin:bazi-obsidian:305 ✅ 扩展列清除完成
+plugin:bazi-obsidian:305 📋 需要扩展的层级列表: dayun → liunian → liuyue
+plugin:bazi-obsidian:305 🔄 正在处理层级: dayun
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: dayun
+plugin:bazi-obsidian:305 ✅ 获取大运柱信息: 壬午
+plugin:bazi-obsidian:305 ✅ 获取到dayun柱信息: 前运 壬午
+plugin:bazi-obsidian:305 🔄 添加扩展列: 前运 (壬午)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 前运
+plugin:bazi-obsidian:305 🔄 正在处理层级: liunian
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liunian
+plugin:bazi-obsidian:305 ✅ 获取流年柱信息: 1987年 丁卯
+plugin:bazi-obsidian:305 ✅ 获取到liunian柱信息: 流年 丁卯
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流年 (丁卯)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流年
+plugin:bazi-obsidian:305 🔄 正在处理层级: liuyue
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liuyue
+plugin:bazi-obsidian:305 ✅ 获取流月柱信息: undefined
+plugin:bazi-obsidian:305 ❌ calculateLiuYuePillar: 流月干支无效 undefined
+plugin:bazi-obsidian:305 ❌ 无法获取liuyue柱信息
+plugin:bazi-obsidian:305 ✅ 已扩展到liuyue层级，包含层级：dayun → liunian → liuyue
+plugin:bazi-obsidian:305 📝 更新流月状态跟踪: 大运=0, 流年=1987, 流月={"month":0}
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuyue层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuyue (请求层级: liuyue)
+plugin:bazi-obsidian:305 🔍 流月强制更新检查: lastLiuYue={"month":0}, currentLiuYue={"month":0}, needsUpdate=false
+plugin:bazi-obsidian:305 ⚠️ 已扩展到liuyue层级，跳过重复扩展
+plugin:bazi-obsidian:891 🔄 重置下级选择状态: liuyue
+plugin:bazi-obsidian:891 🔄 生成流日数据: undefined年 0
+plugin:bazi-obsidian:891 🎯 处理流月选择: 1987年 1
+plugin:bazi-obsidian:891 🎯 选择流月: 1月 (辛丑)
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuyue层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuyue (请求层级: liuyue)
+plugin:bazi-obsidian:305 🔍 流月强制更新检查: lastLiuYue={"month":0}, currentLiuYue={"year":1987,"month":1,"ganZhi":"辛丑","name":"正月","displayName":"辛丑月","startDate":"2.4"}, needsUpdate=true
+plugin:bazi-obsidian:305 🔄 强制更新liuyue层级内容
+plugin:bazi-obsidian:305 🧹 清除现有扩展，当前层级: liuyue
+plugin:bazi-obsidian:305 🧹 开始清除扩展列，当前扩展柱数量: 2
+plugin:bazi-obsidian:305 ✅ 扩展列清除完成
+plugin:bazi-obsidian:305 📋 需要扩展的层级列表: dayun → liunian → liuyue
+plugin:bazi-obsidian:305 🔄 正在处理层级: dayun
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: dayun
+plugin:bazi-obsidian:305 ✅ 获取大运柱信息: 壬午
+plugin:bazi-obsidian:305 ✅ 获取到dayun柱信息: 前运 壬午
+plugin:bazi-obsidian:305 🔄 添加扩展列: 前运 (壬午)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 前运
+plugin:bazi-obsidian:305 🔄 正在处理层级: liunian
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liunian
+plugin:bazi-obsidian:305 ✅ 获取流年柱信息: 1987年 丁卯
+plugin:bazi-obsidian:305 ✅ 获取到liunian柱信息: 流年 丁卯
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流年 (丁卯)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流年
+plugin:bazi-obsidian:305 🔄 正在处理层级: liuyue
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liuyue
+plugin:bazi-obsidian:305 ✅ 获取流月柱信息: 辛丑
+plugin:bazi-obsidian:305 ✅ 获取到liuyue柱信息: 流月 辛丑
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流月 (辛丑)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流月
+plugin:bazi-obsidian:305 ✅ 已扩展到liuyue层级，包含层级：dayun → liunian → liuyue
+plugin:bazi-obsidian:305 📝 更新流月状态跟踪: 大运=0, 流年=1987, 流月={"year":1987,"month":1,"ganZhi":"辛丑","name":"正月","displayName":"辛丑月","startDate":"2.4"}
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuyue层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuyue (请求层级: liuyue)
+plugin:bazi-obsidian:305 🔍 流月强制更新检查: lastLiuYue={"year":1987,"month":1,"ganZhi":"辛丑","name":"正月","displayName":"辛丑月","startDate":"2.4"}, currentLiuYue={"year":1987,"month":1,"ganZhi":"辛丑","name":"正月","displayName":"辛丑月","startDate":"2.4"}, needsUpdate=false
+plugin:bazi-obsidian:305 ⚠️ 已扩展到liuyue层级，跳过重复扩展
+plugin:bazi-obsidian:891 🔄 重置下级选择状态: liuyue
+plugin:bazi-obsidian:891 🔄 生成流日数据: 1987年 1
+plugin:bazi-obsidian:535 🎯 流月选择: 0
+plugin:bazi-obsidian:891 🎯 处理流月选择: undefined年 0
+plugin:bazi-obsidian:891 🎯 选择流月: 0月 (undefined)
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuyue层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuyue (请求层级: liuyue)
+plugin:bazi-obsidian:305 🔍 流月强制更新检查: lastLiuYue={"year":1987,"month":1,"ganZhi":"辛丑","name":"正月","displayName":"辛丑月","startDate":"2.4"}, currentLiuYue={"month":0}, needsUpdate=true
+plugin:bazi-obsidian:305 🔄 强制更新liuyue层级内容
+plugin:bazi-obsidian:305 🧹 清除现有扩展，当前层级: liuyue
+plugin:bazi-obsidian:305 🧹 开始清除扩展列，当前扩展柱数量: 3
+plugin:bazi-obsidian:305 ✅ 扩展列清除完成
+plugin:bazi-obsidian:305 📋 需要扩展的层级列表: dayun → liunian → liuyue
+plugin:bazi-obsidian:305 🔄 正在处理层级: dayun
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: dayun
+plugin:bazi-obsidian:305 ✅ 获取大运柱信息: 壬午
+plugin:bazi-obsidian:305 ✅ 获取到dayun柱信息: 前运 壬午
+plugin:bazi-obsidian:305 🔄 添加扩展列: 前运 (壬午)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 前运
+plugin:bazi-obsidian:305 🔄 正在处理层级: liunian
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liunian
+plugin:bazi-obsidian:305 ✅ 获取流年柱信息: 1987年 丁卯
+plugin:bazi-obsidian:305 ✅ 获取到liunian柱信息: 流年 丁卯
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流年 (丁卯)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流年
+plugin:bazi-obsidian:305 🔄 正在处理层级: liuyue
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liuyue
+plugin:bazi-obsidian:305 ✅ 获取流月柱信息: undefined
+plugin:bazi-obsidian:305 ❌ calculateLiuYuePillar: 流月干支无效 undefined
+plugin:bazi-obsidian:305 ❌ 无法获取liuyue柱信息
+plugin:bazi-obsidian:305 ✅ 已扩展到liuyue层级，包含层级：dayun → liunian → liuyue
+plugin:bazi-obsidian:305 📝 更新流月状态跟踪: 大运=0, 流年=1987, 流月={"month":0}
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuyue层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuyue (请求层级: liuyue)
+plugin:bazi-obsidian:305 🔍 流月强制更新检查: lastLiuYue={"month":0}, currentLiuYue={"month":0}, needsUpdate=false
+plugin:bazi-obsidian:305 ⚠️ 已扩展到liuyue层级，跳过重复扩展
+plugin:bazi-obsidian:891 🔄 重置下级选择状态: liuyue
+plugin:bazi-obsidian:891 🔄 生成流日数据: undefined年 0
+plugin:bazi-obsidian:891 🎯 处理流月选择: 1987年 1
+plugin:bazi-obsidian:891 🎯 选择流月: 1月 (辛丑)
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuyue层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuyue (请求层级: liuyue)
+plugin:bazi-obsidian:305 🔍 流月强制更新检查: lastLiuYue={"month":0}, currentLiuYue={"year":1987,"month":1,"ganZhi":"辛丑","name":"正月","displayName":"辛丑月","startDate":"2.4"}, needsUpdate=true
+plugin:bazi-obsidian:305 🔄 强制更新liuyue层级内容
+plugin:bazi-obsidian:305 🧹 清除现有扩展，当前层级: liuyue
+plugin:bazi-obsidian:305 🧹 开始清除扩展列，当前扩展柱数量: 2
+plugin:bazi-obsidian:305 ✅ 扩展列清除完成
+plugin:bazi-obsidian:305 📋 需要扩展的层级列表: dayun → liunian → liuyue
+plugin:bazi-obsidian:305 🔄 正在处理层级: dayun
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: dayun
+plugin:bazi-obsidian:305 ✅ 获取大运柱信息: 壬午
+plugin:bazi-obsidian:305 ✅ 获取到dayun柱信息: 前运 壬午
+plugin:bazi-obsidian:305 🔄 添加扩展列: 前运 (壬午)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 前运
+plugin:bazi-obsidian:305 🔄 正在处理层级: liunian
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liunian
+plugin:bazi-obsidian:305 ✅ 获取流年柱信息: 1987年 丁卯
+plugin:bazi-obsidian:305 ✅ 获取到liunian柱信息: 流年 丁卯
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流年 (丁卯)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流年
+plugin:bazi-obsidian:305 🔄 正在处理层级: liuyue
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liuyue
+plugin:bazi-obsidian:305 ✅ 获取流月柱信息: 辛丑
+plugin:bazi-obsidian:305 ✅ 获取到liuyue柱信息: 流月 辛丑
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流月 (辛丑)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流月
+plugin:bazi-obsidian:305 ✅ 已扩展到liuyue层级，包含层级：dayun → liunian → liuyue
+plugin:bazi-obsidian:305 📝 更新流月状态跟踪: 大运=0, 流年=1987, 流月={"year":1987,"month":1,"ganZhi":"辛丑","name":"正月","displayName":"辛丑月","startDate":"2.4"}
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuyue层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuyue (请求层级: liuyue)
+plugin:bazi-obsidian:305 🔍 流月强制更新检查: lastLiuYue={"year":1987,"month":1,"ganZhi":"辛丑","name":"正月","displayName":"辛丑月","startDate":"2.4"}, currentLiuYue={"year":1987,"month":1,"ganZhi":"辛丑","name":"正月","displayName":"辛丑月","startDate":"2.4"}, needsUpdate=false
+plugin:bazi-obsidian:305 ⚠️ 已扩展到liuyue层级，跳过重复扩展
+plugin:bazi-obsidian:891 🔄 重置下级选择状态: liuyue
+plugin:bazi-obsidian:891 🔄 生成流日数据: 1987年 1
+plugin:bazi-obsidian:535 🎯 流月选择: 0
+plugin:bazi-obsidian:891 🎯 处理流月选择: undefined年 0
+plugin:bazi-obsidian:891 🎯 选择流月: 0月 (undefined)
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuyue层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuyue (请求层级: liuyue)
+plugin:bazi-obsidian:305 🔍 流月强制更新检查: lastLiuYue={"year":1987,"month":1,"ganZhi":"辛丑","name":"正月","displayName":"辛丑月","startDate":"2.4"}, currentLiuYue={"month":0}, needsUpdate=true
+plugin:bazi-obsidian:305 🔄 强制更新liuyue层级内容
+plugin:bazi-obsidian:305 🧹 清除现有扩展，当前层级: liuyue
+plugin:bazi-obsidian:305 🧹 开始清除扩展列，当前扩展柱数量: 3
+plugin:bazi-obsidian:305 ✅ 扩展列清除完成
+plugin:bazi-obsidian:305 📋 需要扩展的层级列表: dayun → liunian → liuyue
+plugin:bazi-obsidian:305 🔄 正在处理层级: dayun
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: dayun
+plugin:bazi-obsidian:305 ✅ 获取大运柱信息: 壬午
+plugin:bazi-obsidian:305 ✅ 获取到dayun柱信息: 前运 壬午
+plugin:bazi-obsidian:305 🔄 添加扩展列: 前运 (壬午)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 前运
+plugin:bazi-obsidian:305 🔄 正在处理层级: liunian
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liunian
+plugin:bazi-obsidian:305 ✅ 获取流年柱信息: 1987年 丁卯
+plugin:bazi-obsidian:305 ✅ 获取到liunian柱信息: 流年 丁卯
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流年 (丁卯)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流年
+plugin:bazi-obsidian:305 🔄 正在处理层级: liuyue
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liuyue
+plugin:bazi-obsidian:305 ✅ 获取流月柱信息: undefined
+plugin:bazi-obsidian:305 ❌ calculateLiuYuePillar: 流月干支无效 undefined
+plugin:bazi-obsidian:305 ❌ 无法获取liuyue柱信息
+plugin:bazi-obsidian:305 ✅ 已扩展到liuyue层级，包含层级：dayun → liunian → liuyue
+plugin:bazi-obsidian:305 📝 更新流月状态跟踪: 大运=0, 流年=1987, 流月={"month":0}
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuyue层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuyue (请求层级: liuyue)
+plugin:bazi-obsidian:305 🔍 流月强制更新检查: lastLiuYue={"month":0}, currentLiuYue={"month":0}, needsUpdate=false
+plugin:bazi-obsidian:305 ⚠️ 已扩展到liuyue层级，跳过重复扩展
+plugin:bazi-obsidian:891 🔄 重置下级选择状态: liuyue
+plugin:bazi-obsidian:891 🔄 生成流日数据: undefined年 0
+plugin:bazi-obsidian:891 🎯 处理流月选择: 1987年 2
+plugin:bazi-obsidian:891 🎯 选择流月: 2月 (壬寅)
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuyue层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuyue (请求层级: liuyue)
+plugin:bazi-obsidian:305 🔍 流月强制更新检查: lastLiuYue={"month":0}, currentLiuYue={"year":1987,"month":2,"ganZhi":"壬寅","name":"二月","displayName":"壬寅月","startDate":"3.5"}, needsUpdate=true
+plugin:bazi-obsidian:305 🔄 强制更新liuyue层级内容
+plugin:bazi-obsidian:305 🧹 清除现有扩展，当前层级: liuyue
+plugin:bazi-obsidian:305 🧹 开始清除扩展列，当前扩展柱数量: 2
+plugin:bazi-obsidian:305 ✅ 扩展列清除完成
+plugin:bazi-obsidian:305 📋 需要扩展的层级列表: dayun → liunian → liuyue
+plugin:bazi-obsidian:305 🔄 正在处理层级: dayun
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: dayun
+plugin:bazi-obsidian:305 ✅ 获取大运柱信息: 壬午
+plugin:bazi-obsidian:305 ✅ 获取到dayun柱信息: 前运 壬午
+plugin:bazi-obsidian:305 🔄 添加扩展列: 前运 (壬午)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 前运
+plugin:bazi-obsidian:305 🔄 正在处理层级: liunian
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liunian
+plugin:bazi-obsidian:305 ✅ 获取流年柱信息: 1987年 丁卯
+plugin:bazi-obsidian:305 ✅ 获取到liunian柱信息: 流年 丁卯
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流年 (丁卯)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流年
+plugin:bazi-obsidian:305 🔄 正在处理层级: liuyue
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liuyue
+plugin:bazi-obsidian:305 ✅ 获取流月柱信息: 壬寅
+plugin:bazi-obsidian:305 ✅ 获取到liuyue柱信息: 流月 壬寅
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流月 (壬寅)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流月
+plugin:bazi-obsidian:305 ✅ 已扩展到liuyue层级，包含层级：dayun → liunian → liuyue
+plugin:bazi-obsidian:305 📝 更新流月状态跟踪: 大运=0, 流年=1987, 流月={"year":1987,"month":2,"ganZhi":"壬寅","name":"二月","displayName":"壬寅月","startDate":"3.5"}
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuyue层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuyue (请求层级: liuyue)
+plugin:bazi-obsidian:305 🔍 流月强制更新检查: lastLiuYue={"year":1987,"month":2,"ganZhi":"壬寅","name":"二月","displayName":"壬寅月","startDate":"3.5"}, currentLiuYue={"year":1987,"month":2,"ganZhi":"壬寅","name":"二月","displayName":"壬寅月","startDate":"3.5"}, needsUpdate=false
+plugin:bazi-obsidian:305 ⚠️ 已扩展到liuyue层级，跳过重复扩展
+plugin:bazi-obsidian:891 🔄 重置下级选择状态: liuyue
+plugin:bazi-obsidian:891 🔄 生成流日数据: 1987年 2
+plugin:bazi-obsidian:535 🎯 流月选择: 0
+plugin:bazi-obsidian:891 🎯 处理流月选择: undefined年 0
+plugin:bazi-obsidian:891 🎯 选择流月: 0月 (undefined)
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuyue层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuyue (请求层级: liuyue)
+plugin:bazi-obsidian:305 🔍 流月强制更新检查: lastLiuYue={"year":1987,"month":2,"ganZhi":"壬寅","name":"二月","displayName":"壬寅月","startDate":"3.5"}, currentLiuYue={"month":0}, needsUpdate=true
+plugin:bazi-obsidian:305 🔄 强制更新liuyue层级内容
+plugin:bazi-obsidian:305 🧹 清除现有扩展，当前层级: liuyue
+plugin:bazi-obsidian:305 🧹 开始清除扩展列，当前扩展柱数量: 3
+plugin:bazi-obsidian:305 ✅ 扩展列清除完成
+plugin:bazi-obsidian:305 📋 需要扩展的层级列表: dayun → liunian → liuyue
+plugin:bazi-obsidian:305 🔄 正在处理层级: dayun
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: dayun
+plugin:bazi-obsidian:305 ✅ 获取大运柱信息: 壬午
+plugin:bazi-obsidian:305 ✅ 获取到dayun柱信息: 前运 壬午
+plugin:bazi-obsidian:305 🔄 添加扩展列: 前运 (壬午)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 前运
+plugin:bazi-obsidian:305 🔄 正在处理层级: liunian
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liunian
+plugin:bazi-obsidian:305 ✅ 获取流年柱信息: 1987年 丁卯
+plugin:bazi-obsidian:305 ✅ 获取到liunian柱信息: 流年 丁卯
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流年 (丁卯)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流年
+plugin:bazi-obsidian:305 🔄 正在处理层级: liuyue
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liuyue
+plugin:bazi-obsidian:305 ✅ 获取流月柱信息: undefined
+plugin:bazi-obsidian:305 ❌ calculateLiuYuePillar: 流月干支无效 undefined
+plugin:bazi-obsidian:305 ❌ 无法获取liuyue柱信息
+plugin:bazi-obsidian:305 ✅ 已扩展到liuyue层级，包含层级：dayun → liunian → liuyue
+plugin:bazi-obsidian:305 📝 更新流月状态跟踪: 大运=0, 流年=1987, 流月={"month":0}
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuyue层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuyue (请求层级: liuyue)
+plugin:bazi-obsidian:305 🔍 流月强制更新检查: lastLiuYue={"month":0}, currentLiuYue={"month":0}, needsUpdate=false
+plugin:bazi-obsidian:305 ⚠️ 已扩展到liuyue层级，跳过重复扩展
+plugin:bazi-obsidian:891 🔄 重置下级选择状态: liuyue
+plugin:bazi-obsidian:891 🔄 生成流日数据: undefined年 0
+plugin:bazi-obsidian:891 🎯 处理流月选择: 1987年 5
+plugin:bazi-obsidian:891 🎯 选择流月: 5月 (乙巳)
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuyue层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuyue (请求层级: liuyue)
+plugin:bazi-obsidian:305 🔍 流月强制更新检查: lastLiuYue={"month":0}, currentLiuYue={"year":1987,"month":5,"ganZhi":"乙巳","name":"五月","displayName":"乙巳月","startDate":"6.6"}, needsUpdate=true
+plugin:bazi-obsidian:305 🔄 强制更新liuyue层级内容
+plugin:bazi-obsidian:305 🧹 清除现有扩展，当前层级: liuyue
+plugin:bazi-obsidian:305 🧹 开始清除扩展列，当前扩展柱数量: 2
+plugin:bazi-obsidian:305 ✅ 扩展列清除完成
+plugin:bazi-obsidian:305 📋 需要扩展的层级列表: dayun → liunian → liuyue
+plugin:bazi-obsidian:305 🔄 正在处理层级: dayun
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: dayun
+plugin:bazi-obsidian:305 ✅ 获取大运柱信息: 壬午
+plugin:bazi-obsidian:305 ✅ 获取到dayun柱信息: 前运 壬午
+plugin:bazi-obsidian:305 🔄 添加扩展列: 前运 (壬午)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 前运
+plugin:bazi-obsidian:305 🔄 正在处理层级: liunian
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liunian
+plugin:bazi-obsidian:305 ✅ 获取流年柱信息: 1987年 丁卯
+plugin:bazi-obsidian:305 ✅ 获取到liunian柱信息: 流年 丁卯
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流年 (丁卯)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流年
+plugin:bazi-obsidian:305 🔄 正在处理层级: liuyue
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liuyue
+plugin:bazi-obsidian:305 ✅ 获取流月柱信息: 乙巳
+plugin:bazi-obsidian:305 ✅ 获取到liuyue柱信息: 流月 乙巳
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流月 (乙巳)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流月
+plugin:bazi-obsidian:305 ✅ 已扩展到liuyue层级，包含层级：dayun → liunian → liuyue
+plugin:bazi-obsidian:305 📝 更新流月状态跟踪: 大运=0, 流年=1987, 流月={"year":1987,"month":5,"ganZhi":"乙巳","name":"五月","displayName":"乙巳月","startDate":"6.6"}
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuyue层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuyue (请求层级: liuyue)
+plugin:bazi-obsidian:305 🔍 流月强制更新检查: lastLiuYue={"year":1987,"month":5,"ganZhi":"乙巳","name":"五月","displayName":"乙巳月","startDate":"6.6"}, currentLiuYue={"year":1987,"month":5,"ganZhi":"乙巳","name":"五月","displayName":"乙巳月","startDate":"6.6"}, needsUpdate=false
+plugin:bazi-obsidian:305 ⚠️ 已扩展到liuyue层级，跳过重复扩展
+plugin:bazi-obsidian:891 🔄 重置下级选择状态: liuyue
+plugin:bazi-obsidian:891 🔄 生成流日数据: 1987年 5
+plugin:bazi-obsidian:535 🎯 流月选择: 0
+plugin:bazi-obsidian:891 🎯 处理流月选择: undefined年 0
+plugin:bazi-obsidian:891 🎯 选择流月: 0月 (undefined)
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuyue层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuyue (请求层级: liuyue)
+plugin:bazi-obsidian:305 🔍 流月强制更新检查: lastLiuYue={"year":1987,"month":5,"ganZhi":"乙巳","name":"五月","displayName":"乙巳月","startDate":"6.6"}, currentLiuYue={"month":0}, needsUpdate=true
+plugin:bazi-obsidian:305 🔄 强制更新liuyue层级内容
+plugin:bazi-obsidian:305 🧹 清除现有扩展，当前层级: liuyue
+plugin:bazi-obsidian:305 🧹 开始清除扩展列，当前扩展柱数量: 3
+plugin:bazi-obsidian:305 ✅ 扩展列清除完成
+plugin:bazi-obsidian:305 📋 需要扩展的层级列表: dayun → liunian → liuyue
+plugin:bazi-obsidian:305 🔄 正在处理层级: dayun
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: dayun
+plugin:bazi-obsidian:305 ✅ 获取大运柱信息: 壬午
+plugin:bazi-obsidian:305 ✅ 获取到dayun柱信息: 前运 壬午
+plugin:bazi-obsidian:305 🔄 添加扩展列: 前运 (壬午)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 前运
+plugin:bazi-obsidian:305 🔄 正在处理层级: liunian
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liunian
+plugin:bazi-obsidian:305 ✅ 获取流年柱信息: 1987年 丁卯
+plugin:bazi-obsidian:305 ✅ 获取到liunian柱信息: 流年 丁卯
+plugin:bazi-obsidian:305 🔄 添加扩展列: 流年 (丁卯)
+plugin:bazi-obsidian:305 ✅ 扩展列添加完成: 流年
+plugin:bazi-obsidian:305 🔄 正在处理层级: liuyue
+plugin:bazi-obsidian:305 🔍 getPillarInfoForLevel: liuyue
+plugin:bazi-obsidian:305 ✅ 获取流月柱信息: undefined
+plugin:bazi-obsidian:305 ❌ calculateLiuYuePillar: 流月干支无效 undefined
+plugin:bazi-obsidian:305 ❌ 无法获取liuyue柱信息
+plugin:bazi-obsidian:305 ✅ 已扩展到liuyue层级，包含层级：dayun → liunian → liuyue
+plugin:bazi-obsidian:305 📝 更新流月状态跟踪: 大运=0, 流年=1987, 流月={"month":0}
+plugin:bazi-obsidian:305 🚀 extendBaziTableToLevel: 开始扩展到liuyue层级
+plugin:bazi-obsidian:305 🎯 实际目标层级: liuyue (请求层级: liuyue)
+plugin:bazi-obsidian:305 🔍 流月强制更新检查: lastLiuYue={"month":0}, currentLiuYue={"month":0}, needsUpdate=false
+plugin:bazi-obsidian:305 ⚠️ 已扩展到liuyue层级，跳过重复扩展
+plugin:bazi-obsidian:891 🔄 重置下级选择状态: liuyue
+plugin:bazi-obsidian:891 🔄 生成流日数据: undefined年 0

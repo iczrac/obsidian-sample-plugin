@@ -10,13 +10,19 @@ export class ShiShenCalculator {
    * 计算十神
    * @param dayStem 日干
    * @param otherStem 其他天干
+   * @param isHiddenGan 是否为地支藏干
+   * @param isMainDayStem 是否为日柱天干（用于区分日主）
    * @returns 十神名称
    */
-  static getShiShen(dayStem: string, otherStem: string, isHiddenGan: boolean = false): string {
+  static getShiShen(dayStem: string, otherStem: string, isHiddenGan: boolean = false, isMainDayStem: boolean = false): string {
     // 如果是日干自己
     if (dayStem === otherStem) {
-      // 在地支藏干中返回比肩，在天干中返回日主
-      return isHiddenGan ? '比肩' : '日主';
+      // 只有日柱天干才显示为日主，其他位置的相同天干都显示为比肩
+      if (isMainDayStem && !isHiddenGan) {
+        return '日主';
+      } else {
+        return '比肩';
+      }
     }
 
     // 获取天干的五行

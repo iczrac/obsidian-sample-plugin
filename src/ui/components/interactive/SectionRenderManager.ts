@@ -2,6 +2,11 @@ import { BaziInfo } from '../../../types/BaziInfo';
 import { DataGenerationService } from '../../../services/bazi/DataGenerationService';
 import { StyleUtilsService } from '../../../services/bazi/StyleUtilsService';
 import { SpecialInfoManager } from './SpecialInfoManager';
+import { DaYunInfoManager } from './DaYunInfoManager';
+import { LiuNianInfoManager } from './LiuNianInfoManager';
+import { LiuYueInfoManager } from './LiuYueInfoManager';
+import { LiuRiInfoManager } from './LiuRiInfoManager';
+import { LiuShiInfoManager } from './LiuShiInfoManager';
 
 /**
  * 区域渲染管理器
@@ -12,6 +17,11 @@ export class SectionRenderManager {
   private baziInfo: BaziInfo;
   private plugin: any;
   private specialInfoManager: SpecialInfoManager | null = null;
+  private daYunInfoManager: DaYunInfoManager | null = null;
+  private liuNianInfoManager: LiuNianInfoManager | null = null;
+  private liuYueInfoManager: LiuYueInfoManager | null = null;
+  private liuRiInfoManager: LiuRiInfoManager | null = null;
+  private liuShiInfoManager: LiuShiInfoManager | null = null;
 
   constructor(container: HTMLElement, baziInfo: BaziInfo, plugin?: any) {
     this.container = container;
@@ -67,81 +77,80 @@ export class SectionRenderManager {
    * 创建大运信息区域
    */
   createDaYunInfo(): HTMLElement {
-    const daYunSection = this.container.createDiv({ cls: 'bazi-view-section bazi-dayun-section' });
-    daYunSection.createEl('h3', { text: '大运信息', cls: 'bazi-view-subtitle' });
+    // 创建大运信息管理器
+    this.daYunInfoManager = new DaYunInfoManager(
+      this.container,
+      this.baziInfo,
+      this.plugin,
+      (index: number) => this.handleDaYunSelect(index)
+    );
 
-    if (!this.baziInfo.daYun || this.baziInfo.daYun.length === 0) {
-      daYunSection.createEl('div', {
-        text: '暂无大运数据（需要指定性别和年份）',
-        cls: 'bazi-empty-message'
-      });
-      return daYunSection;
-    }
-
-    // 添加起运信息
-    this.addQiYunInfo(daYunSection);
-
-    // 创建大运表格容器（由DaYunTableManager处理具体表格）
-    const tableContainer = daYunSection.createDiv({ cls: 'bazi-dayun-container' });
-    tableContainer.setAttribute('data-section-type', 'dayun-table');
-
-    return daYunSection;
+    // 创建大运信息区域
+    return this.daYunInfoManager.createDaYunInfo();
   }
 
   /**
    * 创建流年信息区域
    */
   createLiuNianInfo(): HTMLElement {
-    const liuNianSection = this.container.createDiv({ cls: 'bazi-view-section bazi-liunian-section' });
-    liuNianSection.createEl('h3', { text: '流年信息', cls: 'bazi-view-subtitle' });
+    // 创建流年信息管理器
+    this.liuNianInfoManager = new LiuNianInfoManager(
+      this.container,
+      this.baziInfo,
+      this.plugin,
+      (year: number) => this.handleLiuNianSelect(year)
+    );
 
-    // 创建流年表格容器（由LiuNianTableManager处理具体表格）
-    const tableContainer = liuNianSection.createDiv({ cls: 'bazi-liunian-container' });
-    tableContainer.setAttribute('data-section-type', 'liunian-table');
-
-    return liuNianSection;
+    // 创建流年信息区域
+    return this.liuNianInfoManager.createLiuNianInfo();
   }
 
   /**
    * 创建流月信息区域
    */
   createLiuYueInfo(): HTMLElement {
-    const liuYueSection = this.container.createDiv({ cls: 'bazi-view-section bazi-liuyue-section' });
-    liuYueSection.createEl('h3', { text: '流月信息', cls: 'bazi-view-subtitle' });
+    // 创建流月信息管理器
+    this.liuYueInfoManager = new LiuYueInfoManager(
+      this.container,
+      this.baziInfo,
+      this.plugin,
+      (liuyue: any) => this.handleLiuYueSelect(liuyue)
+    );
 
-    // 创建流月表格容器（由LiuYueTableManager处理具体表格）
-    const tableContainer = liuYueSection.createDiv({ cls: 'bazi-liuyue-container' });
-    tableContainer.setAttribute('data-section-type', 'liuyue-table');
-
-    return liuYueSection;
+    // 创建流月信息区域
+    return this.liuYueInfoManager.createLiuYueInfo();
   }
 
   /**
    * 创建流日信息区域
    */
   createLiuRiInfo(): HTMLElement {
-    const liuRiSection = this.container.createDiv({ cls: 'bazi-view-section bazi-liuri-section' });
-    liuRiSection.createEl('h3', { text: '流日信息', cls: 'bazi-view-subtitle' });
+    // 创建流日信息管理器
+    this.liuRiInfoManager = new LiuRiInfoManager(
+      this.container,
+      this.baziInfo,
+      this.plugin,
+      (liuri: any) => this.handleLiuRiSelect(liuri)
+    );
 
-    // 创建流日表格容器
-    const tableContainer = liuRiSection.createDiv({ cls: 'bazi-liuri-container' });
-    tableContainer.setAttribute('data-section-type', 'liuri-table');
-
-    return liuRiSection;
+    // 创建流日信息区域
+    return this.liuRiInfoManager.createLiuRiInfo();
   }
 
   /**
    * 创建流时信息区域
    */
   createLiuShiInfo(): HTMLElement {
-    const liuShiSection = this.container.createDiv({ cls: 'bazi-view-section bazi-liushi-section' });
-    liuShiSection.createEl('h3', { text: '流时信息', cls: 'bazi-view-subtitle' });
+    // 创建流时信息管理器
+    this.liuShiInfoManager = new LiuShiInfoManager(
+      this.container,
+      this.baziInfo,
+      this.plugin,
+      (liushi: any) => this.handleLiuShiSelect(liushi)
+    );
 
-    // 创建流时表格容器
-    const tableContainer = liuShiSection.createDiv({ cls: 'bazi-liushi-container' });
-    tableContainer.setAttribute('data-section-type', 'liushi-table');
-
-    return liuShiSection;
+    // 创建流时信息区域
+    return this.liuShiInfoManager.createLiuShiInfo();
   }
 
   /**
@@ -193,6 +202,96 @@ export class SectionRenderManager {
   }
 
   /**
+   * 处理大运选择
+   */
+  private handleDaYunSelect(index: number) {
+    console.log(`🎯 SectionRenderManager: 大运选择 ${index}`);
+
+    // 更新流年信息管理器的大运索引
+    if (this.liuNianInfoManager) {
+      this.liuNianInfoManager.setSelectedDaYunIndex(index);
+    }
+
+    // 触发自定义事件，让父组件处理
+    const event = new CustomEvent('dayun-select', {
+      detail: { index },
+      bubbles: true
+    });
+    this.container.dispatchEvent(event);
+  }
+
+  /**
+   * 处理流年选择
+   */
+  private handleLiuNianSelect(year: number) {
+    console.log(`🎯 SectionRenderManager: 流年选择 ${year}`);
+
+    // 更新流月信息管理器的年份
+    if (this.liuYueInfoManager) {
+      this.liuYueInfoManager.setSelectedYear(year);
+    }
+
+    // 触发自定义事件，让父组件处理
+    const event = new CustomEvent('liunian-select', {
+      detail: { year },
+      bubbles: true
+    });
+    this.container.dispatchEvent(event);
+  }
+
+  /**
+   * 处理流月选择
+   */
+  private handleLiuYueSelect(liuyue: any) {
+    console.log(`🎯 SectionRenderManager: 流月选择 ${liuyue.month}月`);
+
+    // 更新流日信息管理器的年月
+    if (this.liuRiInfoManager) {
+      this.liuRiInfoManager.setSelectedYearMonth(liuyue.year, liuyue.month);
+    }
+
+    // 触发自定义事件，让父组件处理
+    const event = new CustomEvent('liuyue-select', {
+      detail: { liuyue },
+      bubbles: true
+    });
+    this.container.dispatchEvent(event);
+  }
+
+  /**
+   * 处理流日选择
+   */
+  private handleLiuRiSelect(liuri: any) {
+    console.log(`🎯 SectionRenderManager: 流日选择 ${liuri.day}日`);
+
+    // 更新流时信息管理器的年月日
+    if (this.liuShiInfoManager) {
+      this.liuShiInfoManager.setSelectedYearMonthDay(liuri.year, liuri.month, liuri.day);
+    }
+
+    // 触发自定义事件，让父组件处理
+    const event = new CustomEvent('liuri-select', {
+      detail: { liuri },
+      bubbles: true
+    });
+    this.container.dispatchEvent(event);
+  }
+
+  /**
+   * 处理流时选择
+   */
+  private handleLiuShiSelect(liushi: any) {
+    console.log(`🎯 SectionRenderManager: 流时选择 ${liushi.name}`);
+
+    // 触发自定义事件，让父组件处理
+    const event = new CustomEvent('liushi-select', {
+      detail: { liushi },
+      bubbles: true
+    });
+    this.container.dispatchEvent(event);
+  }
+
+  /**
    * 获取特殊信息管理器
    */
   getSpecialInfoManager(): SpecialInfoManager | null {
@@ -200,10 +299,33 @@ export class SectionRenderManager {
   }
 
   /**
+   * 获取大运信息管理器
+   */
+  getDaYunInfoManager(): DaYunInfoManager | null {
+    return this.daYunInfoManager;
+  }
+
+  /**
+   * 获取流年信息管理器
+   */
+  getLiuNianInfoManager(): LiuNianInfoManager | null {
+    return this.liuNianInfoManager;
+  }
+
+  /**
    * 获取指定类型的容器
    */
   getContainer(sectionType: string): HTMLElement | null {
     return this.container.querySelector(`[data-section-type="${sectionType}"]`);
+  }
+
+  /**
+   * 更新大运选择
+   */
+  updateDaYunSelection(index: number) {
+    if (this.liuNianInfoManager) {
+      this.liuNianInfoManager.setSelectedDaYunIndex(index);
+    }
   }
 
   /**
@@ -215,6 +337,31 @@ export class SectionRenderManager {
     // 更新特殊信息管理器的数据
     if (this.specialInfoManager) {
       this.specialInfoManager.updateBaziInfo(baziInfo);
+    }
+
+    // 更新大运信息管理器的数据
+    if (this.daYunInfoManager) {
+      this.daYunInfoManager.updateBaziInfo(baziInfo);
+    }
+
+    // 更新流年信息管理器的数据
+    if (this.liuNianInfoManager) {
+      this.liuNianInfoManager.updateBaziInfo(baziInfo);
+    }
+
+    // 更新流月信息管理器的数据
+    if (this.liuYueInfoManager) {
+      this.liuYueInfoManager.updateBaziInfo(baziInfo);
+    }
+
+    // 更新流日信息管理器的数据
+    if (this.liuRiInfoManager) {
+      this.liuRiInfoManager.updateBaziInfo(baziInfo);
+    }
+
+    // 更新流时信息管理器的数据
+    if (this.liuShiInfoManager) {
+      this.liuShiInfoManager.updateBaziInfo(baziInfo);
     }
   }
 }

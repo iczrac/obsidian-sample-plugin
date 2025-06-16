@@ -107,6 +107,10 @@ export class LiuYueTableManager {
       // 默认选中第一个
       if (index === 0) {
         row.classList.add('selected');
+        // 触发点击事件以确保正确选择
+        if (this.onLiuYueSelect) {
+          this.onLiuYueSelect(liuyue);
+        }
       }
     });
   }

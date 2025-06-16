@@ -153,10 +153,7 @@ export class HorizontalSelectorManager {
         onSelect(liuRi.year || year, liuRi.month || 1, liuRi.day);
       });
 
-      // 默认选中第一个
-      if (index === 0) {
-        dayItem.click();
-      }
+      // 不自动选择，让用户手动选择流日
     });
   }
 
@@ -318,10 +315,7 @@ export class HorizontalSelectorManager {
         onSelect(index, liuShi.ganZhi, timeInfo[index]?.name || `${index}时`);
       });
 
-      // 默认选中第一个
-      if (index === 0) {
-        timeItem.click();
-      }
+      // 不自动选择，让用户手动选择流时
     });
   }
 

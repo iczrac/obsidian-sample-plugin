@@ -108,6 +108,11 @@ export class LiuNianTableManager {
       // 默认选中第一个
       if (index === 0) {
         row.classList.add('selected');
+        // 触发点击事件以确保正确选择
+        if (this.onLiuNianSelect) {
+          console.log(`🎯 LiuNianTableManager自动选中第一个流年: ${liunian.year}`);
+          this.onLiuNianSelect(liunian);
+        }
       }
     });
   }

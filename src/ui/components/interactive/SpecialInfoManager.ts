@@ -1,4 +1,5 @@
 import { BaziInfo } from '../../../types/BaziInfo';
+import { ColorSchemeService } from '../../../services/bazi/ColorSchemeService';
 import { StyleUtilsService } from '../../../services/bazi/StyleUtilsService';
 import { ShenShaExplanationService } from '../../../services/ShenShaExplanationService';
 
@@ -32,14 +33,7 @@ export class SpecialInfoManager {
     ]
   };
 
-  // 五行颜色配置
-  private static readonly WU_XING_COLORS = {
-    '金': '#D4AF37', // 金色
-    '木': '#228B22', // 绿色
-    '水': '#4169E1', // 蓝色
-    '火': '#DC143C', // 红色
-    '土': '#DAA520'  // 土黄色
-  };
+
 
   constructor(container: HTMLElement, baziInfo: BaziInfo, plugin?: any) {
     this.container = container;
@@ -806,7 +800,7 @@ export class SpecialInfoManager {
    * 获取五行颜色
    */
   private getWuXingColor(wuXing: string): string {
-    return SpecialInfoManager.WU_XING_COLORS[wuXing] || 'var(--text-normal)';
+    return ColorSchemeService.getWuXingColor(wuXing);
   }
 
   /**

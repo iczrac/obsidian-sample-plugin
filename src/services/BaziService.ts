@@ -6,6 +6,7 @@ import { ShiShenCalculator } from './bazi/ShiShenCalculator';
 import { CombinationCalculator } from './bazi/CombinationCalculator';
 import { DaYunCalculator } from './bazi/DaYunCalculator';
 import { LiuNianCalculator } from './bazi/LiuNianCalculator';
+import { XiaoYunCalculator } from './bazi/XiaoYunCalculator';
 import { ComprehensiveShenShaCalculator } from './bazi/ComprehensiveShenShaCalculator';
 import { YearMatchCalculator } from './bazi/YearMatchCalculator';
 import { XunKongCalculator } from './bazi/XunKongCalculator';
@@ -394,6 +395,7 @@ export class BaziService {
     // 大运和流年信息（如果有性别且有完整八字信息）
     let daYun: DaYunInfo[] = [];
     let liuNian: LiuNianInfo[] = [];
+    let xiaoYun: any[] = [];
     let qiYunYear: number | undefined;
     let qiYunAge: number | undefined;
     let qiYunDate: string | undefined;
@@ -446,6 +448,11 @@ export class BaziService {
         console.log('🔥 计算流年信息...');
         liuNian = LiuNianCalculator.calculateLiuNian(eightChar, solar, gender, dayStem, undefined, 10);
         console.log('🔥 流年信息计算完成，数量:', liuNian.length);
+
+        // 计算小运信息
+        console.log('🔥 计算小运信息...');
+        xiaoYun = XiaoYunCalculator.calculateXiaoYun(eightChar, solar, gender, dayStem, yearNum, 10);
+        console.log('🔥 小运信息计算完成，数量:', xiaoYun.length);
 
         console.log('🔥 ✅ 大运流年计算全部完成');
       } catch (error) {
@@ -572,6 +579,9 @@ export class BaziService {
 
       // 流年信息
       liuNian,
+
+      // 小运信息
+      xiaoYun,
 
       // 十神信息（补充缺失的字段）
       yearShiShen: yearShiShenGan,
@@ -762,6 +772,7 @@ export class BaziService {
     // 大运和流年信息
     let daYun: DaYunInfo[] = [];
     let liuNian: LiuNianInfo[] = [];
+    let xiaoYun: any[] = [];
     let qiYunYear: number | undefined;
     let qiYunAge: number | undefined;
     let qiYunDate: string | undefined;
@@ -808,6 +819,9 @@ export class BaziService {
 
       // 计算流年信息
       liuNian = LiuNianCalculator.calculateLiuNian(eightChar, solar, gender, dayStem, undefined, 10);
+
+      // 计算小运信息
+      xiaoYun = XiaoYunCalculator.calculateXiaoYun(eightChar, solar, gender, dayStem, solar.getYear(), 10);
     }
 
 
@@ -936,7 +950,10 @@ export class BaziService {
       qiYunTime,
 
       // 流年信息
-      liuNian
+      liuNian,
+
+      // 小运信息
+      xiaoYun
     };
   }
 
