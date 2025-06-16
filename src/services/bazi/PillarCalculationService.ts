@@ -63,7 +63,7 @@ export class PillarCalculationService {
       naYin: BaziCalculator.getNaYin(ganZhi),
       xunKong: BaziCalculator.calculateXunKong(stem, branch),
       shengXiao: BaziUtils.getShengXiao(branch),
-      shenSha: daYun.shenSha || [],
+      shenSha: daYun.shenSha || UnifiedShenShaService.calculateDaYunShenSha(dayStem, ganZhi),
       wuXing: BaziUtils.getStemWuXing(stem)
     };
   }
@@ -97,7 +97,7 @@ export class PillarCalculationService {
       naYin: BaziCalculator.getNaYin(ganZhi),
       xunKong: BaziCalculator.calculateXunKong(stem, branch),
       shengXiao: BaziUtils.getShengXiao(branch),
-      shenSha: liuNian.shenSha || [],
+      shenSha: liuNian.shenSha || UnifiedShenShaService.calculateLiuNianShenSha(dayStem, ganZhi),
       wuXing: BaziUtils.getStemWuXing(stem)
     };
   }
