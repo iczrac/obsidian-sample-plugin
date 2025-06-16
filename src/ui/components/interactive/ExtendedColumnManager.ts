@@ -1,5 +1,6 @@
 import { BaziInfo, DaYunInfo } from '../../../types/BaziInfo';
 import { PillarCalculationService, ExtendedPillarInfo } from '../../../services/bazi/PillarCalculationService';
+import { ColorSchemeService } from '../../../services/bazi/ColorSchemeService';
 
 /**
  * 扩展列管理器
@@ -320,6 +321,55 @@ export class ExtendedColumnManager {
   getCurrentSelectedLiuShi(): any { return this.currentSelectedLiuShi; }
 
   /**
+   * 关闭指定层级及其后续层级
+   * @param level 要关闭的层级
+   */
+  closeExtendedLevel(level: 'dayun' | 'liunian' | 'liuyue' | 'liuri' | 'liushi') {
+    console.log(`🔒 关闭扩展层级: ${level}`);
+
+    const levelHierarchy = ['dayun', 'liunian', 'liuyue', 'liuri', 'liushi'];
+    const closeIndex = levelHierarchy.indexOf(level);
+
+    if (closeIndex === -1) {
+      console.warn(`❌ 未知层级: ${level}`);
+      return;
+    }
+
+    // 清除状态：关闭当前层级及其后续层级
+    if (closeIndex <= levelHierarchy.indexOf('liunian')) {
+      this.selectedLiuNianYear = 0;
+    }
+    if (closeIndex <= levelHierarchy.indexOf('liuyue')) {
+      this.currentSelectedLiuYue = null;
+    }
+    if (closeIndex <= levelHierarchy.indexOf('liuri')) {
+      this.currentSelectedLiuRi = null;
+    }
+    if (closeIndex <= levelHierarchy.indexOf('liushi')) {
+      this.currentSelectedLiuShi = null;
+    }
+
+    // 确定新的目标层级
+    let newTargetLevel: 'none' | 'dayun' | 'liunian' | 'liuyue' | 'liuri' | 'liushi' = 'none';
+    if (closeIndex > 0) {
+      newTargetLevel = levelHierarchy[closeIndex - 1] as any;
+    } else {
+      // 如果关闭大运，则完全关闭扩展
+      newTargetLevel = 'none';
+    }
+
+    // 重新扩展到新的目标层级
+    if (newTargetLevel === 'none') {
+      this.clearAllExtendedColumns();
+      this.currentExtendedLevel = 'none';
+    } else {
+      this.extendBaziTableToLevel(newTargetLevel);
+    }
+
+    console.log(`✅ 已关闭${level}层级，当前层级: ${this.currentExtendedLevel}`);
+  }
+
+  /**
    * 根据层级获取柱信息
    */
   private getPillarInfoForLevel(level: string): ExtendedPillarInfo | null {
@@ -507,7 +557,7 @@ export class ExtendedColumnManager {
   }
 
   /**
-   * 添加表头列
+   * 添加表头列（包含关闭按钮）
    */
   private addHeaderColumn(pillarInfo: ExtendedPillarInfo, columnIndex: number) {
     const thead = this.baziTable?.querySelector('thead');
@@ -517,18 +567,65 @@ export class ExtendedColumnManager {
     if (!headerRow) return;
 
     const th = headerRow.createEl('th', {
-      text: pillarInfo.name,
       cls: 'bazi-extended-header'
     });
 
+    // 创建标题容器
+    const titleContainer = th.createDiv({ cls: 'header-title-container' });
+    titleContainer.style.cssText = `
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    `;
+
+    // 添加标题文本
+    const titleSpan = titleContainer.createSpan({
+      text: pillarInfo.name,
+      cls: 'header-title'
+    });
+
+    // 添加关闭按钮
+    const closeButton = titleContainer.createSpan({
+      text: '×',
+      cls: 'header-close-btn'
+    });
+    closeButton.style.cssText = `
+      cursor: pointer;
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: bold;
+      padding: 0 2px;
+      border-radius: 2px;
+      transition: all 0.2s ease;
+    `;
+
+    // 关闭按钮悬停效果
+    closeButton.addEventListener('mouseenter', () => {
+      closeButton.style.color = 'var(--text-error)';
+      closeButton.style.backgroundColor = 'var(--background-modifier-hover)';
+    });
+    closeButton.addEventListener('mouseleave', () => {
+      closeButton.style.color = 'var(--text-muted)';
+      closeButton.style.backgroundColor = 'transparent';
+    });
+
+    // 关闭按钮点击事件
+    closeButton.addEventListener('click', (e) => {
+      e.stopPropagation();
+      this.closeExtendedLevel(pillarInfo.type);
+    });
+
+    // 设置表头样式（与四柱一致的字体大小）
     th.style.cssText = `
       padding: 8px 6px;
-      background: var(--background-modifier-border);
+      background: var(--background-modifier-border-hover);
       border: 1px solid var(--background-modifier-border);
       font-weight: bold;
       text-align: center;
-      font-size: 12px;
+      font-size: 13px;
       min-width: 60px;
+      position: relative;
     `;
   }
 
@@ -550,8 +647,9 @@ export class ExtendedColumnManager {
         padding: 6px 4px;
         border: 1px solid var(--background-modifier-border);
         text-align: center;
-        font-size: 11px;
+        font-size: 13px;
         min-width: 60px;
+        background: var(--background-primary-alt);
       `;
 
       // 根据行类型填充内容
@@ -597,8 +695,8 @@ export class ExtendedColumnManager {
    */
   private fillGanZhiCell(cell: HTMLElement, pillarInfo: ExtendedPillarInfo) {
     if (pillarInfo.ganZhi) {
-      // 这里应该使用ColorSchemeService来创建带颜色的干支显示
-      cell.textContent = pillarInfo.ganZhi;
+      // 使用ColorSchemeService创建带颜色的干支显示
+      ColorSchemeService.createColoredGanZhiElement(cell, pillarInfo.ganZhi);
     }
   }
 

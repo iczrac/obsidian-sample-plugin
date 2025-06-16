@@ -202,9 +202,8 @@ export class LiuYueInfoManager {
       min-width: 800px;
     `;
 
-    // 创建各行
+    // 创建各行（月份行已包含干支，不需要单独的干支行）
     this.createMonthRow(table, liuYueData);
-    this.createGanZhiRow(table, liuYueData);
     this.createShiShenRow(table, liuYueData);
     this.createDiShiRow(table, liuYueData);
     this.createXunKongRow(table, liuYueData);
@@ -247,11 +246,11 @@ export class LiuYueInfoManager {
   }
 
   /**
-   * 创建月份行
+   * 创建月份行（整合日期和干支显示）
    */
   private createMonthRow(table: HTMLElement, liuYueData: any[]) {
     const row = table.createEl('tr', { cls: 'bazi-liuyue-month-row' });
-    row.createEl('th', { text: '月份' }).style.cssText = this.getHeaderCellStyle();
+    row.createEl('th', { text: '流月' }).style.cssText = this.getHeaderCellStyle();
 
     liuYueData.forEach((ly) => {
       const cell = row.createEl('td', {
@@ -260,51 +259,35 @@ export class LiuYueInfoManager {
       });
       cell.style.cssText = this.getDataCellStyle();
 
-      // 创建月份和日期的组合显示
-      const monthDiv = cell.createDiv({ cls: 'month-name' });
-      monthDiv.textContent = ly.name;
-      monthDiv.style.cssText = `
-        font-weight: bold;
+      // 创建整合显示：日期换行干支（如：5.6换行乙卯）
+      const dateDiv = cell.createDiv({ cls: 'month-date' });
+      dateDiv.textContent = ly.startDate || `${ly.month}.1`;
+      dateDiv.style.cssText = `
+        font-size: 11px;
+        color: var(--text-muted);
+        line-height: 1.2;
         margin-bottom: 2px;
       `;
 
-      // 添加起始日期标注（如：2.4）
-      if (ly.startDate) {
-        const dateDiv = cell.createDiv({ cls: 'start-date' });
-        dateDiv.textContent = ly.startDate;
-        dateDiv.style.cssText = `
-          font-size: 10px;
-          color: var(--text-muted);
-          line-height: 1;
-        `;
-      }
-
-      // 添加点击事件
-      cell.addEventListener('click', () => this.selectLiuYue(ly));
-    });
-  }
-
-  /**
-   * 创建干支行
-   */
-  private createGanZhiRow(table: HTMLElement, liuYueData: any[]) {
-    const row = table.createEl('tr', { cls: 'bazi-liuyue-ganzhi-row' });
-    row.createEl('th', { text: '流月' }).style.cssText = this.getHeaderCellStyle();
-
-    liuYueData.forEach((ly) => {
-      const cell = row.createEl('td', { cls: 'bazi-liuyue-cell' });
-      cell.style.cssText = this.getDataCellStyle();
-      
+      // 添加干支显示
+      const ganZhiDiv = cell.createDiv({ cls: 'month-ganzhi' });
       if (ly.ganZhi) {
-        ColorSchemeService.createColoredGanZhiElement(cell, ly.ganZhi);
+        ColorSchemeService.createColoredGanZhiElement(ganZhiDiv, ly.ganZhi);
       } else {
-        cell.textContent = ly.ganZhi || '';
+        ganZhiDiv.textContent = ly.ganZhi || '';
       }
+      ganZhiDiv.style.cssText = `
+        font-size: 12px;
+        font-weight: bold;
+        line-height: 1.2;
+      `;
 
       // 添加点击事件
       cell.addEventListener('click', () => this.selectLiuYue(ly));
     });
   }
+
+
 
   /**
    * 创建十神行
