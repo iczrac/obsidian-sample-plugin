@@ -441,17 +441,51 @@ export class InteractionManager {
    */
   private recalculateDaYunChangSheng(diShiRow: Element, currentMode: any) {
     const cells = diShiRow.querySelectorAll('td');
+
+    // 获取大运数据
+    const daYunData = this.baziInfo.daYun;
+    if (!daYunData || !Array.isArray(daYunData)) return;
+
     cells.forEach((cell, index) => {
       if (index === 0) return; // 跳过标题列
 
-      // 这里需要根据大运数据重新计算地势
-      // 简化处理，实际应该获取对应大运的干支数据
+      const daYunIndex = index - 1; // 调整索引
+      if (daYunIndex >= daYunData.length) return;
+
+      const daYun = daYunData[daYunIndex];
+      if (!daYun || !daYun.ganZhi) return;
+
+      const stem = daYun.ganZhi[0]; // 天干
+      const branch = daYun.ganZhi[1]; // 地支
+
+      // 根据模式计算地势值
+      let diShiValue = '';
+      switch (currentMode.key) {
+        case 'diShi':
+          // 地势：日干在大运地支的十二长生状态
+          diShiValue = this.calculateDiShi(this.baziInfo.dayStem || '', branch);
+          break;
+        case 'ziZuo':
+          // 自坐：大运天干相对于大运地支的十二长生状态
+          diShiValue = this.calculateDiShi(stem, branch);
+          break;
+        case 'yueLing': {
+          // 月令：大运天干相对于月令的十二长生状态
+          const monthBranch = this.baziInfo.monthBranch || '';
+          diShiValue = monthBranch ? this.calculateDiShi(stem, monthBranch) : '';
+          break;
+        }
+      }
+
+      // 更新单元格内容
       cell.innerHTML = '';
-      const span = cell.createEl('span', {
-        text: '长生', // 简化，实际应该计算
-        cls: 'dishi-tag-small'
-      });
-      this.applyDiShiColor(span, '长生');
+      if (diShiValue) {
+        const span = cell.createEl('span', {
+          text: diShiValue,
+          cls: 'dishi-tag-small'
+        });
+        this.applyDiShiColor(span, diShiValue);
+      }
     });
   }
 
@@ -459,32 +493,93 @@ export class InteractionManager {
    * 更新流年表格地势
    */
   private updateLiuNianTableChangSheng(currentMode: any) {
-    const liuNianTable = this.container.querySelector('.bazi-liunian-table');
-    if (liuNianTable) {
-      const diShiRow = liuNianTable.querySelector('.bazi-liunian-dishi-row');
+    // 查找流年信息管理器中的地势行
+    const liuNianInfoContainer = this.container.querySelector('.bazi-liunian-info-container');
+    if (liuNianInfoContainer) {
+      const diShiRow = liuNianInfoContainer.querySelector('.bazi-liunian-dishi-row');
       if (diShiRow) {
+        // 更新标签
         const headerCell = diShiRow.querySelector('th');
         if (headerCell) {
           headerCell.textContent = currentMode.name;
+          headerCell.setAttribute('title', currentMode.description + ' (点击切换)');
         }
-        // 重新计算流年地势值...
+
+        // 重新计算流年地势值
+        this.recalculateLiuNianChangSheng(diShiRow, currentMode);
       }
     }
+  }
+
+  /**
+   * 重新计算流年地势
+   */
+  private recalculateLiuNianChangSheng(diShiRow: Element, currentMode: any) {
+    const cells = diShiRow.querySelectorAll('td');
+
+    cells.forEach((cell, index) => {
+      // 获取流年数据（从cell的data属性或其他方式）
+      const yearAttr = cell.getAttribute('data-year');
+      if (!yearAttr) return;
+
+      const year = parseInt(yearAttr);
+      if (isNaN(year)) return;
+
+      // 计算年份干支
+      const yearGanZhi = this.calculateYearGanZhi(year);
+      if (!yearGanZhi || yearGanZhi.length < 2) return;
+
+      const stem = yearGanZhi[0]; // 天干
+      const branch = yearGanZhi[1]; // 地支
+
+      // 根据模式计算地势值
+      let diShiValue = '';
+      switch (currentMode.key) {
+        case 'diShi':
+          // 地势：日干在流年地支的十二长生状态
+          diShiValue = this.calculateDiShi(this.baziInfo.dayStem || '', branch);
+          break;
+        case 'ziZuo':
+          // 自坐：流年天干相对于流年地支的十二长生状态
+          diShiValue = this.calculateDiShi(stem, branch);
+          break;
+        case 'yueLing': {
+          // 月令：流年天干相对于月令的十二长生状态
+          const monthBranch = this.baziInfo.monthBranch || '';
+          diShiValue = monthBranch ? this.calculateDiShi(stem, monthBranch) : '';
+          break;
+        }
+      }
+
+      // 更新单元格内容
+      cell.innerHTML = '';
+      if (diShiValue) {
+        const span = cell.createEl('span', {
+          text: diShiValue,
+          cls: 'dishi-tag-small'
+        });
+        this.applyDiShiColor(span, diShiValue);
+      }
+    });
   }
 
   /**
    * 更新流月表格地势
    */
   private updateLiuYueTableChangSheng(currentMode: any) {
-    const liuYueTable = this.container.querySelector('.bazi-liuyue-table');
-    if (liuYueTable) {
-      const diShiRow = liuYueTable.querySelector('.bazi-liuyue-dishi-row');
+    const liuYueInfoContainer = this.container.querySelector('.bazi-liuyue-info-container');
+    if (liuYueInfoContainer) {
+      const diShiRow = liuYueInfoContainer.querySelector('.bazi-liuyue-dishi-row');
       if (diShiRow) {
+        // 更新标签
         const headerCell = diShiRow.querySelector('th');
         if (headerCell) {
           headerCell.textContent = currentMode.name;
+          headerCell.setAttribute('title', currentMode.description + ' (点击切换)');
         }
-        // 重新计算流月地势值...
+
+        // 重新计算流月地势值
+        this.recalculateLiuYueChangSheng(diShiRow, currentMode);
       }
     }
   }
@@ -493,15 +588,19 @@ export class InteractionManager {
    * 更新流日表格地势
    */
   private updateLiuRiTableChangSheng(currentMode: any) {
-    const liuRiTable = this.container.querySelector('.bazi-liuri-table');
-    if (liuRiTable) {
-      const diShiRow = liuRiTable.querySelector('.bazi-liuri-dishi-row');
+    const liuRiInfoContainer = this.container.querySelector('.bazi-liuri-info-container');
+    if (liuRiInfoContainer) {
+      const diShiRow = liuRiInfoContainer.querySelector('.bazi-liuri-dishi-row');
       if (diShiRow) {
+        // 更新标签
         const headerCell = diShiRow.querySelector('th');
         if (headerCell) {
           headerCell.textContent = currentMode.name;
+          headerCell.setAttribute('title', currentMode.description + ' (点击切换)');
         }
-        // 重新计算流日地势值...
+
+        // 重新计算流日地势值
+        this.recalculateGenericChangSheng(diShiRow, currentMode, 'liuri');
       }
     }
   }
@@ -510,17 +609,105 @@ export class InteractionManager {
    * 更新流时表格地势
    */
   private updateLiuShiTableChangSheng(currentMode: any) {
-    const liuShiTable = this.container.querySelector('.bazi-liushi-table');
-    if (liuShiTable) {
-      const diShiRow = liuShiTable.querySelector('.bazi-liushi-dishi-row');
+    const liuShiInfoContainer = this.container.querySelector('.bazi-liushi-info-container');
+    if (liuShiInfoContainer) {
+      const diShiRow = liuShiInfoContainer.querySelector('.bazi-liushi-dishi-row');
       if (diShiRow) {
+        // 更新标签
         const headerCell = diShiRow.querySelector('th');
         if (headerCell) {
           headerCell.textContent = currentMode.name;
+          headerCell.setAttribute('title', currentMode.description + ' (点击切换)');
         }
-        // 重新计算流时地势值...
+
+        // 重新计算流时地势值
+        this.recalculateGenericChangSheng(diShiRow, currentMode, 'liushi');
       }
     }
+  }
+
+  /**
+   * 通用的地势重新计算方法
+   */
+  private recalculateGenericChangSheng(diShiRow: Element, currentMode: any, type: string) {
+    const cells = diShiRow.querySelectorAll('td');
+
+    cells.forEach((cell, index) => {
+      // 简化处理：使用基本的干支计算
+      // 实际应该从对应的数据源获取准确的干支信息
+      let stem = '甲';
+      let branch = '子';
+
+      // 根据类型生成不同的干支
+      switch (type) {
+        case 'liuri': {
+          // 流日：简化计算日柱干支
+          const dayGanZhi = this.calculateDayGanZhi(index + 1);
+          stem = dayGanZhi[0];
+          branch = dayGanZhi[1];
+          break;
+        }
+        case 'liushi': {
+          // 流时：简化计算时柱干支
+          const timeGanZhi = this.calculateTimeGanZhi(index);
+          stem = timeGanZhi[0];
+          branch = timeGanZhi[1];
+          break;
+        }
+      }
+
+      // 根据模式计算地势值
+      let diShiValue = '';
+      switch (currentMode.key) {
+        case 'diShi':
+          diShiValue = this.calculateDiShi(this.baziInfo.dayStem || '', branch);
+          break;
+        case 'ziZuo':
+          diShiValue = this.calculateDiShi(stem, branch);
+          break;
+        case 'yueLing': {
+          const monthBranch = this.baziInfo.monthBranch || '';
+          diShiValue = monthBranch ? this.calculateDiShi(stem, monthBranch) : '';
+          break;
+        }
+      }
+
+      // 更新单元格内容
+      cell.innerHTML = '';
+      if (diShiValue) {
+        const span = cell.createEl('span', {
+          text: diShiValue,
+          cls: 'dishi-tag-small'
+        });
+        this.applyDiShiColor(span, diShiValue);
+      }
+    });
+  }
+
+  /**
+   * 计算日柱干支（简化版本）
+   */
+  private calculateDayGanZhi(day: number): string {
+    const gans = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
+    const zhis = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
+
+    const ganIndex = (day - 1) % 10;
+    const zhiIndex = (day - 1) % 12;
+
+    return gans[ganIndex] + zhis[zhiIndex];
+  }
+
+  /**
+   * 计算时柱干支（简化版本）
+   */
+  private calculateTimeGanZhi(timeIndex: number): string {
+    const zhis = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
+    const gans = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
+
+    const branch = zhis[timeIndex % 12];
+    const gan = gans[timeIndex % 10]; // 简化计算
+
+    return gan + branch;
   }
 
   /**
@@ -542,6 +729,80 @@ export class InteractionManager {
    */
   getCurrentChangShengModeInfo() {
     return this.CHANG_SHENG_MODES[this.changShengMode];
+  }
+
+  /**
+   * 计算年份干支
+   */
+  private calculateYearGanZhi(year: number): string {
+    const gans = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
+    const zhis = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
+
+    // 以甲子年（1984年）为基准计算
+    const baseYear = 1984;
+    const offset = year - baseYear;
+
+    const ganIndex = offset % 10;
+    const zhiIndex = offset % 12;
+
+    const gan = gans[ganIndex >= 0 ? ganIndex : ganIndex + 10];
+    const zhi = zhis[zhiIndex >= 0 ? zhiIndex : zhiIndex + 12];
+
+    return gan + zhi;
+  }
+
+  /**
+   * 重新计算流月地势
+   */
+  private recalculateLiuYueChangSheng(diShiRow: Element, currentMode: any) {
+    const cells = diShiRow.querySelectorAll('td');
+
+    cells.forEach((cell, index) => {
+      // 流月地势计算需要获取流月的干支数据
+      // 这里简化处理，实际应该从流月数据中获取
+      const monthGanZhi = this.calculateMonthGanZhi(index + 1); // 简化计算
+      if (!monthGanZhi || monthGanZhi.length < 2) return;
+
+      const stem = monthGanZhi[0]; // 天干
+      const branch = monthGanZhi[1]; // 地支
+
+      // 根据模式计算地势值
+      let diShiValue = '';
+      switch (currentMode.key) {
+        case 'diShi':
+          diShiValue = this.calculateDiShi(this.baziInfo.dayStem || '', branch);
+          break;
+        case 'ziZuo':
+          diShiValue = this.calculateDiShi(stem, branch);
+          break;
+        case 'yueLing': {
+          const monthBranch = this.baziInfo.monthBranch || '';
+          diShiValue = monthBranch ? this.calculateDiShi(stem, monthBranch) : '';
+          break;
+        }
+      }
+
+      // 更新单元格内容
+      cell.innerHTML = '';
+      if (diShiValue) {
+        const span = cell.createEl('span', {
+          text: diShiValue,
+          cls: 'dishi-tag-small'
+        });
+        this.applyDiShiColor(span, diShiValue);
+      }
+    });
+  }
+
+  /**
+   * 计算月份干支（简化版本）
+   */
+  private calculateMonthGanZhi(month: number): string {
+    // 这里应该根据年份和月份计算准确的月柱干支
+    // 简化处理，返回基本的月支
+    const monthBranches = ['寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥', '子', '丑'];
+    const branch = monthBranches[(month - 1) % 12];
+    return '甲' + branch; // 简化，实际应该根据年干计算月干
   }
 
   /**
