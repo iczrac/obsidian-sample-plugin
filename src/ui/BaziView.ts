@@ -252,34 +252,55 @@ export class BaziView {
     const shiShenRow = tbody.createEl('tr');
     shiShenRow.createEl('td', { text: '十神', cls: 'bazi-table-label' });
 
+    // 调试：检查十神数据
+    console.log('🔍 十神数据检查:');
+    console.log('yearShiShen:', this.baziInfo.yearShiShen);
+    console.log('yearShiShenGan:', this.baziInfo.yearShiShenGan);
+    console.log('monthShiShen:', this.baziInfo.monthShiShen);
+    console.log('monthShiShenGan:', this.baziInfo.monthShiShenGan);
+    console.log('dayShiShen:', this.baziInfo.dayShiShen);
+    console.log('timeShiShen:', this.baziInfo.timeShiShen);
+    console.log('timeShiShenGan:', this.baziInfo.timeShiShenGan);
+
     // 十神单元格 - 应用十神颜色
     const yearShiShenCell = shiShenRow.createEl('td');
-    if (this.baziInfo.yearShiShen) {
-      const yearShiShenSpan = yearShiShenCell.createSpan({ text: this.baziInfo.yearShiShen, cls: 'shishen-tag' });
-      this.applyShiShenColor(yearShiShenSpan, this.baziInfo.yearShiShen);
+    const yearShiShen = this.baziInfo.yearShiShen || this.baziInfo.yearShiShenGan;
+    if (yearShiShen) {
+      const yearShiShenSpan = yearShiShenCell.createSpan({ text: yearShiShen, cls: 'shishen-tag' });
+      this.applyShiShenColor(yearShiShenSpan, yearShiShen);
     }
 
     const monthShiShenCell = shiShenRow.createEl('td');
-    if (this.baziInfo.monthShiShen) {
-      const monthShiShenSpan = monthShiShenCell.createSpan({ text: this.baziInfo.monthShiShen, cls: 'shishen-tag' });
-      this.applyShiShenColor(monthShiShenSpan, this.baziInfo.monthShiShen);
+    const monthShiShen = this.baziInfo.monthShiShen || this.baziInfo.monthShiShenGan;
+    if (monthShiShen) {
+      const monthShiShenSpan = monthShiShenCell.createSpan({ text: monthShiShen, cls: 'shishen-tag' });
+      this.applyShiShenColor(monthShiShenSpan, monthShiShen);
     }
 
     const dayShiShenCell = shiShenRow.createEl('td');
-    if (this.baziInfo.dayShiShen) {
-      const dayShiShenSpan = dayShiShenCell.createSpan({ text: this.baziInfo.dayShiShen, cls: 'shishen-tag' });
-      this.applyShiShenColor(dayShiShenSpan, this.baziInfo.dayShiShen);
+    const dayShiShen = this.baziInfo.dayShiShen || '日主';
+    if (dayShiShen) {
+      const dayShiShenSpan = dayShiShenCell.createSpan({ text: dayShiShen, cls: 'shishen-tag' });
+      this.applyShiShenColor(dayShiShenSpan, dayShiShen);
     }
 
     const timeShiShenCell = shiShenRow.createEl('td');
-    if (this.baziInfo.timeShiShen) {
-      const timeShiShenSpan = timeShiShenCell.createSpan({ text: this.baziInfo.timeShiShen, cls: 'shishen-tag' });
-      this.applyShiShenColor(timeShiShenSpan, this.baziInfo.timeShiShen);
+    const timeShiShen = this.baziInfo.timeShiShen || this.baziInfo.timeShiShenGan;
+    if (timeShiShen) {
+      const timeShiShenSpan = timeShiShenCell.createSpan({ text: timeShiShen, cls: 'shishen-tag' });
+      this.applyShiShenColor(timeShiShenSpan, timeShiShen);
     }
 
     // 地势行
     const diShiRow = tbody.createEl('tr');
     diShiRow.createEl('td', { text: '地势', cls: 'bazi-table-label' });
+
+    // 调试：检查地势数据
+    console.log('🔍 地势数据检查:');
+    console.log('yearDiShi:', this.baziInfo.yearDiShi);
+    console.log('monthDiShi:', this.baziInfo.monthDiShi);
+    console.log('dayDiShi:', this.baziInfo.dayDiShi);
+    console.log('timeDiShi:', this.baziInfo.timeDiShi);
 
     // 地势单元格 - 应用地势颜色
     const yearDiShiCell = diShiRow.createEl('td');

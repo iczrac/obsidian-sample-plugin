@@ -175,67 +175,84 @@ export class BaziTableManager {
     const yearShiShenCell = shiShenRow.createEl('td');
     // 天干十神
     if (this.baziInfo.yearShiShenGan) {
-      yearShiShenCell.createSpan({
+      const yearShiShenSpan = yearShiShenCell.createSpan({
         text: this.baziInfo.yearShiShenGan,
         cls: 'shishen-tag-small'
       });
+      this.applyShiShenColor(yearShiShenSpan, this.baziInfo.yearShiShenGan);
     }
     // 换行
     yearShiShenCell.createEl('br');
     // 地支藏干十神
     if (this.baziInfo.yearShiShenZhi && Array.isArray(this.baziInfo.yearShiShenZhi) && this.baziInfo.yearShiShenZhi.length > 0) {
-      yearShiShenCell.createSpan({
+      const yearShiShenZhiSpan = yearShiShenCell.createSpan({
         text: this.baziInfo.yearShiShenZhi.join(','),
         cls: 'shishen-tag-small shishen-tag-hide'
       });
+      // 为藏干十神也应用颜色（使用第一个十神的颜色）
+      if (this.baziInfo.yearShiShenZhi.length > 0) {
+        this.applyShiShenColor(yearShiShenZhiSpan, this.baziInfo.yearShiShenZhi[0]);
+      }
     }
 
     // 月柱十神
     const monthShiShenCell = shiShenRow.createEl('td');
     if (this.baziInfo.monthShiShenGan) {
-      monthShiShenCell.createSpan({
+      const monthShiShenSpan = monthShiShenCell.createSpan({
         text: this.baziInfo.monthShiShenGan,
         cls: 'shishen-tag-small'
       });
+      this.applyShiShenColor(monthShiShenSpan, this.baziInfo.monthShiShenGan);
     }
     monthShiShenCell.createEl('br');
     if (this.baziInfo.monthShiShenZhi && Array.isArray(this.baziInfo.monthShiShenZhi) && this.baziInfo.monthShiShenZhi.length > 0) {
-      monthShiShenCell.createSpan({
+      const monthShiShenZhiSpan = monthShiShenCell.createSpan({
         text: this.baziInfo.monthShiShenZhi.join(','),
         cls: 'shishen-tag-small shishen-tag-hide'
       });
+      if (this.baziInfo.monthShiShenZhi.length > 0) {
+        this.applyShiShenColor(monthShiShenZhiSpan, this.baziInfo.monthShiShenZhi[0]);
+      }
     }
 
     // 日柱十神
     const dayShiShenCell = shiShenRow.createEl('td');
     // 优先使用dayShiShen（应该是"日主"），如果没有则使用dayShiShenGan
     const dayShiShenText = this.baziInfo.dayShiShen || this.baziInfo.dayShiShenGan || '日主';
-    dayShiShenCell.createSpan({
+    const dayShiShenSpan = dayShiShenCell.createSpan({
       text: dayShiShenText,
       cls: 'shishen-tag-small'
     });
+    this.applyShiShenColor(dayShiShenSpan, dayShiShenText);
     dayShiShenCell.createEl('br');
     if (this.baziInfo.dayShiShenZhi && Array.isArray(this.baziInfo.dayShiShenZhi) && this.baziInfo.dayShiShenZhi.length > 0) {
-      dayShiShenCell.createSpan({
+      const dayShiShenZhiSpan = dayShiShenCell.createSpan({
         text: this.baziInfo.dayShiShenZhi.join(','),
         cls: 'shishen-tag-small shishen-tag-hide'
       });
+      if (this.baziInfo.dayShiShenZhi.length > 0) {
+        this.applyShiShenColor(dayShiShenZhiSpan, this.baziInfo.dayShiShenZhi[0]);
+      }
     }
 
     // 时柱十神
     const timeShiShenCell = shiShenRow.createEl('td');
     if (this.baziInfo.timeShiShenGan) {
-      timeShiShenCell.createSpan({
+      const timeShiShenSpan = timeShiShenCell.createSpan({
         text: this.baziInfo.timeShiShenGan,
         cls: 'shishen-tag-small'
       });
+      this.applyShiShenColor(timeShiShenSpan, this.baziInfo.timeShiShenGan);
     }
     timeShiShenCell.createEl('br');
     if (this.baziInfo.timeShiShenZhi && Array.isArray(this.baziInfo.timeShiShenZhi) && this.baziInfo.timeShiShenZhi.length > 0) {
-      timeShiShenCell.createSpan({
+      const timeShiShenZhiSpan = timeShiShenCell.createSpan({
         text: this.baziInfo.timeShiShenZhi.join(','),
         cls: 'shishen-tag-small shishen-tag-hide'
       });
+      if (this.baziInfo.timeShiShenZhi.length > 0) {
+        this.applyShiShenColor(timeShiShenZhiSpan, this.baziInfo.timeShiShenZhi[0]);
+      }
     }
   }
 
@@ -253,31 +270,43 @@ export class BaziTableManager {
 
     // 年柱地势
     const yearDiShiCell = diShiRow.createEl('td');
-    yearDiShiCell.createSpan({
-      text: this.baziInfo.yearDiShi || '',
-      cls: 'dishi-tag-small'
-    });
+    if (this.baziInfo.yearDiShi) {
+      const yearDiShiSpan = yearDiShiCell.createSpan({
+        text: this.baziInfo.yearDiShi,
+        cls: 'dishi-tag-small'
+      });
+      this.applyDiShiColor(yearDiShiSpan, this.baziInfo.yearDiShi);
+    }
 
     // 月柱地势
     const monthDiShiCell = diShiRow.createEl('td');
-    monthDiShiCell.createSpan({
-      text: this.baziInfo.monthDiShi || '',
-      cls: 'dishi-tag-small'
-    });
+    if (this.baziInfo.monthDiShi) {
+      const monthDiShiSpan = monthDiShiCell.createSpan({
+        text: this.baziInfo.monthDiShi,
+        cls: 'dishi-tag-small'
+      });
+      this.applyDiShiColor(monthDiShiSpan, this.baziInfo.monthDiShi);
+    }
 
     // 日柱地势
     const dayDiShiCell = diShiRow.createEl('td');
-    dayDiShiCell.createSpan({
-      text: this.baziInfo.dayDiShi || '',
-      cls: 'dishi-tag-small'
-    });
+    if (this.baziInfo.dayDiShi) {
+      const dayDiShiSpan = dayDiShiCell.createSpan({
+        text: this.baziInfo.dayDiShi,
+        cls: 'dishi-tag-small'
+      });
+      this.applyDiShiColor(dayDiShiSpan, this.baziInfo.dayDiShi);
+    }
 
     // 时柱地势
     const timeDiShiCell = diShiRow.createEl('td');
-    timeDiShiCell.createSpan({
-      text: this.baziInfo.timeDiShi || '',
-      cls: 'dishi-tag-small'
-    });
+    if (this.baziInfo.timeDiShi) {
+      const timeDiShiSpan = timeDiShiCell.createSpan({
+        text: this.baziInfo.timeDiShi,
+        cls: 'dishi-tag-small'
+      });
+      this.applyDiShiColor(timeDiShiSpan, this.baziInfo.timeDiShi);
+    }
   }
 
   /**
@@ -533,6 +562,57 @@ export class BaziTableManager {
     };
 
     const color = colorMap[wuXing];
+    if (color) {
+      element.style.color = color;
+      element.style.fontWeight = 'bold';
+    }
+  }
+
+  /**
+   * 应用十神颜色
+   */
+  private applyShiShenColor(element: HTMLElement, shiShen: string) {
+    const colorMap: { [key: string]: string } = {
+      '日主': '#8B4513', // 棕色
+      '比肩': '#228B22', // 绿色
+      '劫财': '#32CD32', // 浅绿色
+      '食神': '#FFD700', // 金色
+      '伤官': '#FFA500', // 橙色
+      '偏财': '#DC143C', // 红色
+      '正财': '#B22222', // 深红色
+      '七杀': '#8B0000', // 暗红色
+      '正官': '#4B0082', // 靛蓝色
+      '偏印': '#9370DB', // 紫色
+      '正印': '#4169E1'  // 蓝色
+    };
+
+    const color = colorMap[shiShen];
+    if (color) {
+      element.style.color = color;
+      element.style.fontWeight = 'bold';
+    }
+  }
+
+  /**
+   * 应用地势颜色
+   */
+  private applyDiShiColor(element: HTMLElement, diShi: string) {
+    const colorMap: { [key: string]: string } = {
+      '长生': '#32CD32', // 浅绿色
+      '沐浴': '#87CEEB', // 天蓝色
+      '冠带': '#FFD700', // 金色
+      '临官': '#FF6347', // 番茄红
+      '帝旺': '#DC143C', // 红色
+      '衰': '#DDA0DD',   // 梅花色
+      '病': '#D3D3D3',   // 浅灰色
+      '死': '#696969',   // 暗灰色
+      '墓': '#2F4F4F',   // 暗灰绿
+      '绝': '#000000',   // 黑色
+      '胎': '#F0E68C',   // 卡其色
+      '养': '#98FB98'    // 浅绿色
+    };
+
+    const color = colorMap[diShi];
     if (color) {
       element.style.color = color;
       element.style.fontWeight = 'bold';
