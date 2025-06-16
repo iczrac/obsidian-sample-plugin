@@ -16,11 +16,12 @@ export class LiuShiCalculator {
    * @param month 月份
    * @param day 日期
    * @param dayStem 日干（用于计算十神）
+   * @param sect 八字流派（1或2，影响子时处理）
    * @returns 流时信息数组（12个时辰）
    */
-  static calculateLiuShi(year: number, month: number, day: number, dayStem: string): LiuShiInfo[] {
+  static calculateLiuShi(year: number, month: number, day: number, dayStem: string, sect = 2): LiuShiInfo[] {
     console.log(`⏰ LiuShiCalculator.calculateLiuShi 开始`);
-    console.log(`⏰ 参数: year = ${year}, month = ${month}, day = ${day}, dayStem = ${dayStem}`);
+    console.log(`⏰ 参数: year = ${year}, month = ${month}, day = ${day}, dayStem = ${dayStem}, sect = ${sect}`);
 
     const liuShiData: LiuShiInfo[] = [];
 
@@ -58,6 +59,9 @@ export class LiuShiCalculator {
         const solar = Solar.fromYmdHms(year, month, day, timeTime, 0, 0);
         const lunar = solar.getLunar();
         const eightChar = lunar.getEightChar();
+
+        // 设置八字流派（影响子时处理）
+        eightChar.setSect(sect);
 
         // 获取时柱干支
         const stem = eightChar.getTimeGan();

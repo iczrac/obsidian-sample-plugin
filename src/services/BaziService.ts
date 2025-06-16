@@ -984,10 +984,11 @@ export class BaziService {
    * @param month 月份
    * @param day 日期
    * @param dayStem 日干
+   * @param sect 八字流派（1或2，影响子时处理）
    * @returns 流时信息数组
    */
-  static getLiuShi(year: number, month: number, day: number, dayStem: string): any[] {
-    return LiuShiCalculator.calculateLiuShi(year, month, day, dayStem);
+  static getLiuShi(year: number, month: number, day: number, dayStem: string, sect = 2): any[] {
+    return LiuShiCalculator.calculateLiuShi(year, month, day, dayStem, sect);
   }
 
 }

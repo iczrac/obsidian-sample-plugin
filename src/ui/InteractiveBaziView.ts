@@ -686,8 +686,8 @@ export class InteractiveBaziView {
     // 获取日干用于计算
     const dayStem = this.baziInfo.dayStem || '甲';
 
-    // 生成流时数据（使用后端算法）
-    const liuShiData = DataGenerationService.generateLiuShiForDay(year, month, day, dayStem);
+    // 生成流时数据（使用后端算法，传递baziInfo以获取流派设置）
+    const liuShiData = DataGenerationService.generateLiuShiForDay(year, month, day, dayStem, this.baziInfo);
 
     // 显示流时选择器
     this.horizontalSelectorManager.showLiuShiSelector(

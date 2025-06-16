@@ -210,8 +210,8 @@ export class LiuShiInfoManager {
       // 获取日干用于计算十神
       const dayStem = this.baziInfo.dayStem || '甲';
 
-      // 使用数据生成服务（统一后端算法）
-      const liuShiData = DataGenerationService.generateLiuShiForDay(year, month, day, dayStem);
+      // 使用数据生成服务（统一后端算法，传递baziInfo以获取流派设置）
+      const liuShiData = DataGenerationService.generateLiuShiForDay(year, month, day, dayStem, this.baziInfo);
       console.log(`🎯 生成${year}年${month}月${day}日流时数据:`, liuShiData);
       return liuShiData;
     } catch (error) {

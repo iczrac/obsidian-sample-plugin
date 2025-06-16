@@ -156,14 +156,19 @@ export class DataGenerationService {
    * @param month 月份
    * @param day 日期
    * @param dayStem 日干（用于计算十神）
+   * @param baziInfo 八字信息（用于获取流派设置）
    * @returns 流时数据数组
    */
-  static generateLiuShiForDay(year: number, month: number, day: number, dayStem: string = '甲'): any[] {
+  static generateLiuShiForDay(year: number, month: number, day: number, dayStem: string = '甲', baziInfo?: any): any[] {
     console.log(`🎯 DataGenerationService.generateLiuShiForDay: 使用后端算法生成${year}年${month}月${day}日流时数据`);
 
     try {
+      // 获取流派设置
+      const sect = baziInfo?.baziSect ? parseInt(baziInfo.baziSect) : 2;
+      console.log(`🎯 使用八字流派: ${sect} (${sect === 1 ? '晚子时日柱算明天' : '晚子时日柱算当天'})`);
+
       // 使用后端已有的LiuShiCalculator
-      const liuShiData = BaziService.getLiuShi(year, month, day, dayStem);
+      const liuShiData = BaziService.getLiuShi(year, month, day, dayStem, sect);
 
       // 转换为前端需要的格式
       return liuShiData.map((liuShi) => ({
