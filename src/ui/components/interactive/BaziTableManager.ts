@@ -208,12 +208,12 @@ export class BaziTableManager {
 
     // 日柱十神
     const dayShiShenCell = shiShenRow.createEl('td');
-    if (this.baziInfo.dayShiShenGan) {
-      dayShiShenCell.createSpan({
-        text: this.baziInfo.dayShiShenGan,
-        cls: 'shishen-tag-small'
-      });
-    }
+    // 优先使用dayShiShen（应该是"日主"），如果没有则使用dayShiShenGan
+    const dayShiShenText = this.baziInfo.dayShiShen || this.baziInfo.dayShiShenGan || '日主';
+    dayShiShenCell.createSpan({
+      text: dayShiShenText,
+      cls: 'shishen-tag-small'
+    });
     dayShiShenCell.createEl('br');
     if (this.baziInfo.dayShiShenZhi && Array.isArray(this.baziInfo.dayShiShenZhi) && this.baziInfo.dayShiShenZhi.length > 0) {
       dayShiShenCell.createSpan({

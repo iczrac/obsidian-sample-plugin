@@ -193,8 +193,7 @@ export class LiuRiInfoManager {
     `;
 
     // 创建各行
-    this.createDayRow(table, liuRiData);
-    this.createGanZhiRow(table, liuRiData);
+    this.createCombinedDateGanZhiRow(table, liuRiData);
     this.createShiShenRow(table, liuRiData);
     this.createDiShiRow(table, liuRiData);
     this.createXunKongRow(table, liuRiData);
@@ -234,11 +233,11 @@ export class LiuRiInfoManager {
   }
 
   /**
-   * 创建日期行
+   * 创建合并的日期干支行（类似流月的显示方式）
    */
-  private createDayRow(table: HTMLElement, liuRiData: any[]) {
-    const row = table.createEl('tr', { cls: 'bazi-liuri-day-row' });
-    row.createEl('th', { text: '日期' }).style.cssText = this.getHeaderCellStyle();
+  private createCombinedDateGanZhiRow(table: HTMLElement, liuRiData: any[]) {
+    const row = table.createEl('tr', { cls: 'bazi-liuri-combined-row' });
+    row.createEl('th', { text: '流日' }).style.cssText = this.getHeaderCellStyle();
 
     liuRiData.forEach((lr) => {
       const cell = row.createEl('td', {
@@ -247,51 +246,33 @@ export class LiuRiInfoManager {
       });
       cell.style.cssText = this.getDataCellStyle();
 
-      // 创建农历日期显示
-      const dayDiv = cell.createDiv({ cls: 'lunar-day' });
-      dayDiv.textContent = `${lr.day}日`;
-      dayDiv.style.cssText = `
-        font-weight: bold;
-        margin-bottom: 2px;
-      `;
-
-      // 添加公历日期标注（如：2.4）
+      // 第一行：公历日期（如：2.4）
       if (lr.solarDisplay) {
         const solarDiv = cell.createDiv({ cls: 'solar-date' });
         solarDiv.textContent = lr.solarDisplay;
         solarDiv.style.cssText = `
-          font-size: 10px;
+          font-size: 11px;
           color: var(--text-muted);
-          line-height: 1;
+          line-height: 1.2;
+          margin-bottom: 2px;
         `;
       }
 
-      // 添加点击事件
-      cell.addEventListener('click', () => this.selectLiuRi(lr));
-    });
-  }
-
-  /**
-   * 创建干支行
-   */
-  private createGanZhiRow(table: HTMLElement, liuRiData: any[]) {
-    const row = table.createEl('tr', { cls: 'bazi-liuri-ganzhi-row' });
-    row.createEl('th', { text: '流日' }).style.cssText = this.getHeaderCellStyle();
-
-    liuRiData.forEach((lr) => {
-      const cell = row.createEl('td', { cls: 'bazi-liuri-cell' });
-      cell.style.cssText = this.getDataCellStyle();
-      
+      // 第二行：干支（带五行颜色）
       if (lr.ganZhi) {
-        ColorSchemeService.createColoredGanZhiElement(cell, lr.ganZhi);
-      } else {
-        cell.textContent = lr.ganZhi || '';
+        const ganZhiDiv = cell.createDiv({ cls: 'ganzhi-display' });
+        ganZhiDiv.style.cssText = `
+          line-height: 1.2;
+        `;
+        ColorSchemeService.createColoredGanZhiElement(ganZhiDiv, lr.ganZhi);
       }
 
       // 添加点击事件
       cell.addEventListener('click', () => this.selectLiuRi(lr));
     });
   }
+
+
 
   /**
    * 创建十神行
