@@ -2,7 +2,7 @@ import { EightChar, Solar } from 'lunar-typescript';
 import { DaYunInfo } from '../../types/BaziInfo';
 import { BaziCalculator } from './BaziCalculator';
 import { ShiShenCalculator } from './ShiShenCalculator';
-import { UnifiedShenShaService } from './UnifiedShenShaService';
+import { UnifiedShenShaService } from './shensha/UnifiedShenShaService';
 
 /**
  * 大运计算器

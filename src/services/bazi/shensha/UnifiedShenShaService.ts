@@ -1,8 +1,8 @@
 import { EightChar, Solar } from 'lunar-typescript';
-import { ShenShaUnifiedAPI } from './shensha/ShenShaUnifiedAPI';
-import { ShenShaTimeService } from './shensha/ShenShaTimeService';
-import { ShenShaAnalysisService } from './shensha/ShenShaAnalysisService';
-import { ShenShaDataService } from './shensha/ShenShaDataService';
+import { ShenShaUnifiedAPI } from './ShenShaUnifiedAPI';
+import { ShenShaTimeService } from './ShenShaTimeService';
+import { ShenShaAnalysisService } from './ShenShaAnalysisService';
+import { ShenShaDataService } from './ShenShaDataService';
 
 /**
  * 统一神煞计算服务（兼容性代理）

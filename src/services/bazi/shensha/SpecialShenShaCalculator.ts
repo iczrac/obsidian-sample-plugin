@@ -1,5 +1,5 @@
 import { EightChar, Solar } from 'lunar-typescript';
-import { BaziUtils } from './BaziUtils';
+import { BaziUtils } from '../BaziUtils';
 
 /**
  * 特殊神煞计算器

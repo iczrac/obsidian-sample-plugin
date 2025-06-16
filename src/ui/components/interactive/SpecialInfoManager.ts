@@ -1,7 +1,9 @@
 import { BaziInfo } from '../../../types/BaziInfo';
 import { ColorSchemeService } from '../../../services/bazi/ColorSchemeService';
+import { ShenShaDataService } from '../../../services/bazi/shensha/ShenShaDataService';
+import { ShenShaAlgorithms } from '../../../services/bazi/shensha/ShenShaAlgorithms';
 import { StyleUtilsService } from '../../../services/bazi/StyleUtilsService';
-import { ShenShaExplanationService } from '../../../services/ShenShaExplanationService';
+import { ShenShaExplanationService } from '../../../services/bazi/shensha/ShenShaExplanationService';
 
 /**
  * 特殊信息管理器
@@ -16,22 +18,7 @@ export class SpecialInfoManager {
   private infoContainer: HTMLElement | null = null;
   private toggleButton: HTMLElement | null = null;
 
-  // 神煞分类配置
-  private static readonly SHEN_SHA_TYPES = {
-    good: [
-      '天德', '月德', '天德合', '月德合', '天乙贵人', '太极贵人', '福星贵人',
-      '文昌', '文曲', '学堂', '词馆', '国印', '将星', '金匮', '禄神', '建禄',
-      '羊刃', '魁罡', '华盖', '天医', '天厨', '福德', '天喜', '红鸾', '咸池'
-    ],
-    bad: [
-      '七杀', '劫煞', '灾煞', '天煞', '地煞', '年煞', '月煞', '日煞', '时煞',
-      '白虎', '丧门', '吊客', '病符', '死符', '官符', '五鬼', '六害', '破碎',
-      '大耗', '小耗', '暴败', '栏杆', '空亡', '孤辰', '寡宿', '元辰', '亡神'
-    ],
-    mixed: [
-      '桃花', '驿马', '华盖', '童子', '将军箭', '铁扫帚', '破月', '绝火'
-    ]
-  };
+
 
 
 
@@ -648,25 +635,24 @@ export class SpecialInfoManager {
 
     if (!this.baziInfo.shenSha) return result;
 
-    // 获取所有神煞（去除柱位前缀）
-    const allShenSha = this.baziInfo.shenSha.map(shenSha => {
-      // 去除柱位前缀
-      if (shenSha.includes(':')) {
-        return shenSha.split(':')[1];
-      }
-      return shenSha;
-    });
 
-    // 按类型分类
-    allShenSha.forEach(shenSha => {
-      if (SpecialInfoManager.SHEN_SHA_TYPES.good.includes(shenSha)) {
-        result.good.push(shenSha);
-      } else if (SpecialInfoManager.SHEN_SHA_TYPES.bad.includes(shenSha)) {
-        result.bad.push(shenSha);
-      } else if (SpecialInfoManager.SHEN_SHA_TYPES.mixed.includes(shenSha)) {
-        result.mixed.push(shenSha);
-      } else {
-        result.unknown.push(shenSha);
+
+    // 按类型分类（使用新的神煞架构）
+    this.baziInfo.shenSha.forEach(shenSha => {
+      const type = ShenShaAlgorithms.getShenShaType(shenSha);
+
+      switch (type) {
+        case '吉神':
+          result.good.push(shenSha);
+          break;
+        case '凶神':
+          result.bad.push(shenSha);
+          break;
+        case '吉凶神':
+          result.mixed.push(shenSha);
+          break;
+        default:
+          result.unknown.push(shenSha);
       }
     });
 

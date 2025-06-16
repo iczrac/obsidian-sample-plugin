@@ -1,5 +1,5 @@
 import { BaziInfo } from 'src/types/BaziInfo';
-import { ShenShaExplanationService } from 'src/services/ShenShaExplanationService';
+import { ShenShaExplanationService } from 'src/services/bazi/shensha/ShenShaExplanationService';
 import { LinkService } from 'src/services/LinkService';
 import { Notice, App } from 'obsidian';
 

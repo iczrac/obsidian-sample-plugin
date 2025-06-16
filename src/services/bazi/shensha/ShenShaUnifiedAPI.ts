@@ -2,7 +2,7 @@ import { EightChar, Solar } from 'lunar-typescript';
 import { ShenShaAnalysisService, FourPillarShenShaAnalysis, ShenShaStrength, CombinationAnalysis } from './ShenShaAnalysisService';
 import { ShenShaTimeService } from './ShenShaTimeService';
 import { ShenShaDataService, ShenShaDetail, ResolutionMethod, ImpactLevel } from './ShenShaDataService';
-import { SpecialShenShaCalculator } from '../SpecialShenShaCalculator';
+import { SpecialShenShaCalculator } from './SpecialShenShaCalculator';
 
 /**
  * 神煞统一对外接口

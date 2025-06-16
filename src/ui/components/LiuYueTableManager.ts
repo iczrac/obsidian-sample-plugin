@@ -1,5 +1,5 @@
 import { BaziInfo, LiuYueInfo } from '../../types/BaziInfo';
-import { ShenShaExplanationService } from '../../services/ShenShaExplanationService';
+import { ShenShaExplanationService } from '../../services/bazi/shensha/ShenShaExplanationService';
 import { StyleUtilsService } from '../../services/bazi/StyleUtilsService';
 
 /**

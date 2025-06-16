@@ -1,7 +1,7 @@
 import { Solar, Lunar } from 'lunar-typescript';
 import { BaziCalculator } from './BaziCalculator';
 import { ShiShenCalculator } from './ShiShenCalculator';
-import { UnifiedShenShaService } from './UnifiedShenShaService';
+import { UnifiedShenShaService } from './shensha/UnifiedShenShaService';
 import { XunKongCalculator } from './XunKongCalculator';
 import { LiuRiInfo } from '../../types/BaziInfo';
 

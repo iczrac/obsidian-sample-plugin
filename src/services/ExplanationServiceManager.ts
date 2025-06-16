@@ -1,4 +1,4 @@
-import { ShenShaExplanationService } from './ShenShaExplanationService';
+import { ShenShaExplanationService } from './bazi/shensha/ShenShaExplanationService';
 import { WuXingExplanationService } from './WuXingExplanationService';
 import { GeJuExplanationService } from './GeJuExplanationService';
 

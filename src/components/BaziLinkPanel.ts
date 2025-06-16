@@ -163,7 +163,7 @@ export class BaziLinkPanel extends Modal {
         }
 
         // 使用ShenShaService获取神煞组合分析
-        const { ShenShaExplanationService } = require('../services/ShenShaExplanationService');
+        const { ShenShaExplanationService } = require('../services/bazi/shensha/ShenShaExplanationService');
         const combinationAnalysis = ShenShaExplanationService.getShenShaCombinationAnalysis(allShenSha);
 
         // 转换为双链格式

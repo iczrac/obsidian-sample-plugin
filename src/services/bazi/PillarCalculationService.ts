@@ -1,7 +1,7 @@
 import { BaziInfo, DaYunInfo } from '../../types/BaziInfo';
 import { BaziCalculator } from './BaziCalculator';
 import { ShiShenCalculator } from './ShiShenCalculator';
-import { UnifiedShenShaService } from './UnifiedShenShaService';
+import { UnifiedShenShaService } from './shensha/UnifiedShenShaService';
 import { BaziUtils } from './BaziUtils';
 
 /**

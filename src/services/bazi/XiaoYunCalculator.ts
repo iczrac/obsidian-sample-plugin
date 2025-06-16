@@ -3,7 +3,7 @@ import { XiaoYunInfo } from '../../types/BaziInfo';
 import { ShiShenCalculator } from './ShiShenCalculator';
 import { XunKongCalculator } from './XunKongCalculator';
 import { ShiErChangShengCalculator } from './ShiErChangShengCalculator';
-import { UnifiedShenShaService } from './UnifiedShenShaService';
+import { UnifiedShenShaService } from './shensha/UnifiedShenShaService';
 
 /**
  * 小运计算器
