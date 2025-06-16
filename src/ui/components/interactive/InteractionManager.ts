@@ -283,14 +283,15 @@ export class InteractionManager {
   }
 
   /**
-   * 更新四柱表格的地势行标签
+   * 更新所有地势行标签
    */
   private updateBaziTableChangShengLabel(currentMode: any) {
-    const diShiLabel = this.container.querySelector('.bazi-changsheng-label');
-    if (diShiLabel) {
-      diShiLabel.textContent = currentMode.name;
-      diShiLabel.setAttribute('title', currentMode.description + ' (点击切换)');
-    }
+    // 更新所有地势标签，不仅仅是第一个
+    const diShiLabels = this.container.querySelectorAll('.bazi-changsheng-label');
+    diShiLabels.forEach(label => {
+      label.textContent = currentMode.name;
+      label.setAttribute('title', currentMode.description + ' (点击切换)');
+    });
   }
 
   /**

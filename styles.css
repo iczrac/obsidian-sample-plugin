@@ -1163,7 +1163,9 @@ td.wuxing-tu, span.wuxing-tu, .wuxing-tu {
 .bazi-dayun-cell:hover,
 .bazi-liunian-cell:hover,
 .bazi-xiaoyun-cell:hover,
-.bazi-liuyue-cell:hover {
+.bazi-liuyue-cell:hover,
+.bazi-liuri-cell:hover,
+.bazi-liushi-cell:hover {
   background-color: var(--background-modifier-hover);
   cursor: pointer;
 }
@@ -1172,7 +1174,9 @@ td.wuxing-tu, span.wuxing-tu, .wuxing-tu {
 .bazi-dayun-cell.selected,
 .bazi-liunian-cell.selected,
 .bazi-xiaoyun-cell.selected,
-.bazi-liuyue-cell.selected {
+.bazi-liuyue-cell.selected,
+.bazi-liuri-cell.selected,
+.bazi-liushi-cell.selected {
   background-color: var(--interactive-accent);
   color: var(--text-on-accent);
 }
@@ -1253,7 +1257,9 @@ td.wuxing-tu, span.wuxing-tu, .wuxing-tu {
 .interactive-bazi-view .bazi-dayun-cell,
 .interactive-bazi-view .bazi-liunian-cell,
 .interactive-bazi-view .bazi-xiaoyun-cell,
-.interactive-bazi-view .bazi-liuyue-cell {
+.interactive-bazi-view .bazi-liuyue-cell,
+.interactive-bazi-view .bazi-liuri-cell,
+.interactive-bazi-view .bazi-liushi-cell {
   position: relative;
   overflow: hidden;
 }
@@ -1261,7 +1267,9 @@ td.wuxing-tu, span.wuxing-tu, .wuxing-tu {
 .interactive-bazi-view .bazi-dayun-cell:before,
 .interactive-bazi-view .bazi-liunian-cell:before,
 .interactive-bazi-view .bazi-xiaoyun-cell:before,
-.interactive-bazi-view .bazi-liuyue-cell:before {
+.interactive-bazi-view .bazi-liuyue-cell:before,
+.interactive-bazi-view .bazi-liuri-cell:before,
+.interactive-bazi-view .bazi-liushi-cell:before {
   content: '';
   position: absolute;
   top: 0;
@@ -1277,14 +1285,18 @@ td.wuxing-tu, span.wuxing-tu, .wuxing-tu {
 .interactive-bazi-view .bazi-dayun-cell:hover:before,
 .interactive-bazi-view .bazi-liunian-cell:hover:before,
 .interactive-bazi-view .bazi-xiaoyun-cell:hover:before,
-.interactive-bazi-view .bazi-liuyue-cell:hover:before {
+.interactive-bazi-view .bazi-liuyue-cell:hover:before,
+.interactive-bazi-view .bazi-liuri-cell:hover:before,
+.interactive-bazi-view .bazi-liushi-cell:hover:before {
   opacity: 0.2;
 }
 
 .interactive-bazi-view .bazi-dayun-cell.selected:before,
 .interactive-bazi-view .bazi-liunian-cell.selected:before,
 .interactive-bazi-view .bazi-xiaoyun-cell.selected:before,
-.interactive-bazi-view .bazi-liuyue-cell.selected:before {
+.interactive-bazi-view .bazi-liuyue-cell.selected:before,
+.interactive-bazi-view .bazi-liuri-cell.selected:before,
+.interactive-bazi-view .bazi-liushi-cell.selected:before {
   opacity: 0.4;
 }
 
