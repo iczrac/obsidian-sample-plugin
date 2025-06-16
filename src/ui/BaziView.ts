@@ -181,6 +181,7 @@ export class BaziView {
     // 创建表头
     const thead = table.createEl('thead');
     const headerRow = thead.createEl('tr');
+    headerRow.createEl('th', { text: '信息', cls: 'bazi-table-label' });
 
     ['年柱', '月柱', '日柱', '时柱'].forEach(text => {
       headerRow.createEl('th', { text });
@@ -190,44 +191,165 @@ export class BaziView {
     const tbody = table.createEl('tbody');
 
     // 天干行
-    const stemRow = tbody.createEl('tr');
-    stemRow.createEl('td', {
-      text: this.baziInfo.yearStem,
-      cls: `wuxing-${this.getWuXingClass(this.baziInfo.yearWuXing || '')}`
-    });
-    stemRow.createEl('td', {
-      text: this.baziInfo.monthStem,
-      cls: `wuxing-${this.getWuXingClass(this.baziInfo.monthWuXing || '')}`
-    });
-    stemRow.createEl('td', {
-      text: this.baziInfo.dayStem,
-      cls: `wuxing-${this.getWuXingClass(this.baziInfo.dayWuXing || '')}`
-    });
-    stemRow.createEl('td', {
-      text: this.baziInfo.timeStem,
-      cls: `wuxing-${this.getWuXingClass(this.baziInfo.timeWuXing || '')}`
-    });
+    const stemRow = tbody.createEl('tr', { cls: 'bazi-stem-row' });
+    stemRow.createEl('td', { text: '天干', cls: 'bazi-table-label' });
+
+    // 天干单元格 - 应用五行颜色
+    const yearStemCell = stemRow.createEl('td');
+    const yearStemSpan = yearStemCell.createSpan({ text: this.baziInfo.yearStem });
+    this.applyWuXingColor(yearStemSpan, this.baziInfo.yearWuXing || '');
+
+    const monthStemCell = stemRow.createEl('td');
+    const monthStemSpan = monthStemCell.createSpan({ text: this.baziInfo.monthStem });
+    this.applyWuXingColor(monthStemSpan, this.baziInfo.monthWuXing || '');
+
+    const dayStemCell = stemRow.createEl('td');
+    const dayStemSpan = dayStemCell.createSpan({ text: this.baziInfo.dayStem });
+    this.applyWuXingColor(dayStemSpan, this.baziInfo.dayWuXing || '');
+
+    const timeStemCell = stemRow.createEl('td');
+    const timeStemSpan = timeStemCell.createSpan({ text: this.baziInfo.timeStem });
+    this.applyWuXingColor(timeStemSpan, this.baziInfo.timeWuXing || '');
 
     // 地支行
     const branchRow = tbody.createEl('tr');
-    branchRow.createEl('td', { text: this.baziInfo.yearBranch });
-    branchRow.createEl('td', { text: this.baziInfo.monthBranch });
-    branchRow.createEl('td', { text: this.baziInfo.dayBranch });
-    branchRow.createEl('td', { text: this.baziInfo.timeBranch });
+    branchRow.createEl('td', { text: '地支', cls: 'bazi-table-label' });
+
+    // 地支单元格 - 应用五行颜色
+    const yearBranchCell = branchRow.createEl('td');
+    const yearBranchSpan = yearBranchCell.createSpan({ text: this.baziInfo.yearBranch || '' });
+    if (this.baziInfo.yearBranch) {
+      this.applyBranchWuXingColor(yearBranchSpan, this.baziInfo.yearBranch);
+    }
+
+    const monthBranchCell = branchRow.createEl('td');
+    const monthBranchSpan = monthBranchCell.createSpan({ text: this.baziInfo.monthBranch || '' });
+    if (this.baziInfo.monthBranch) {
+      this.applyBranchWuXingColor(monthBranchSpan, this.baziInfo.monthBranch);
+    }
+
+    const dayBranchCell = branchRow.createEl('td');
+    const dayBranchSpan = dayBranchCell.createSpan({ text: this.baziInfo.dayBranch || '' });
+    if (this.baziInfo.dayBranch) {
+      this.applyBranchWuXingColor(dayBranchSpan, this.baziInfo.dayBranch);
+    }
+
+    const timeBranchCell = branchRow.createEl('td');
+    const timeBranchSpan = timeBranchCell.createSpan({ text: this.baziInfo.timeBranch || '' });
+    if (this.baziInfo.timeBranch) {
+      this.applyBranchWuXingColor(timeBranchSpan, this.baziInfo.timeBranch);
+    }
 
     // 藏干行
     const hideGanRow = tbody.createEl('tr');
+    hideGanRow.createEl('td', { text: '藏干', cls: 'bazi-table-label' });
     hideGanRow.createEl('td', { text: Array.isArray(this.baziInfo.yearHideGan) ? this.baziInfo.yearHideGan.join(', ') : this.baziInfo.yearHideGan || '' });
     hideGanRow.createEl('td', { text: Array.isArray(this.baziInfo.monthHideGan) ? this.baziInfo.monthHideGan.join(', ') : this.baziInfo.monthHideGan || '' });
     hideGanRow.createEl('td', { text: Array.isArray(this.baziInfo.dayHideGan) ? this.baziInfo.dayHideGan.join(', ') : this.baziInfo.dayHideGan || '' });
     hideGanRow.createEl('td', { text: Array.isArray(this.baziInfo.timeHideGan) ? this.baziInfo.timeHideGan.join(', ') : this.baziInfo.timeHideGan || '' });
 
+    // 十神行
+    const shiShenRow = tbody.createEl('tr');
+    shiShenRow.createEl('td', { text: '十神', cls: 'bazi-table-label' });
+
+    // 十神单元格 - 应用十神颜色
+    const yearShiShenCell = shiShenRow.createEl('td');
+    if (this.baziInfo.yearShiShen) {
+      const yearShiShenSpan = yearShiShenCell.createSpan({ text: this.baziInfo.yearShiShen, cls: 'shishen-tag' });
+      this.applyShiShenColor(yearShiShenSpan, this.baziInfo.yearShiShen);
+    }
+
+    const monthShiShenCell = shiShenRow.createEl('td');
+    if (this.baziInfo.monthShiShen) {
+      const monthShiShenSpan = monthShiShenCell.createSpan({ text: this.baziInfo.monthShiShen, cls: 'shishen-tag' });
+      this.applyShiShenColor(monthShiShenSpan, this.baziInfo.monthShiShen);
+    }
+
+    const dayShiShenCell = shiShenRow.createEl('td');
+    if (this.baziInfo.dayShiShen) {
+      const dayShiShenSpan = dayShiShenCell.createSpan({ text: this.baziInfo.dayShiShen, cls: 'shishen-tag' });
+      this.applyShiShenColor(dayShiShenSpan, this.baziInfo.dayShiShen);
+    }
+
+    const timeShiShenCell = shiShenRow.createEl('td');
+    if (this.baziInfo.timeShiShen) {
+      const timeShiShenSpan = timeShiShenCell.createSpan({ text: this.baziInfo.timeShiShen, cls: 'shishen-tag' });
+      this.applyShiShenColor(timeShiShenSpan, this.baziInfo.timeShiShen);
+    }
+
+    // 地势行
+    const diShiRow = tbody.createEl('tr');
+    diShiRow.createEl('td', { text: '地势', cls: 'bazi-table-label' });
+
+    // 地势单元格 - 应用地势颜色
+    const yearDiShiCell = diShiRow.createEl('td');
+    if (this.baziInfo.yearDiShi) {
+      const yearDiShiSpan = yearDiShiCell.createSpan({ text: this.baziInfo.yearDiShi, cls: 'dishi-tag' });
+      this.applyDiShiColor(yearDiShiSpan, this.baziInfo.yearDiShi);
+    }
+
+    const monthDiShiCell = diShiRow.createEl('td');
+    if (this.baziInfo.monthDiShi) {
+      const monthDiShiSpan = monthDiShiCell.createSpan({ text: this.baziInfo.monthDiShi, cls: 'dishi-tag' });
+      this.applyDiShiColor(monthDiShiSpan, this.baziInfo.monthDiShi);
+    }
+
+    const dayDiShiCell = diShiRow.createEl('td');
+    if (this.baziInfo.dayDiShi) {
+      const dayDiShiSpan = dayDiShiCell.createSpan({ text: this.baziInfo.dayDiShi, cls: 'dishi-tag' });
+      this.applyDiShiColor(dayDiShiSpan, this.baziInfo.dayDiShi);
+    }
+
+    const timeDiShiCell = diShiRow.createEl('td');
+    if (this.baziInfo.timeDiShi) {
+      const timeDiShiSpan = timeDiShiCell.createSpan({ text: this.baziInfo.timeDiShi, cls: 'dishi-tag' });
+      this.applyDiShiColor(timeDiShiSpan, this.baziInfo.timeDiShi);
+    }
+
     // 纳音行
     const naYinRow = tbody.createEl('tr');
-    naYinRow.createEl('td', { text: this.baziInfo.yearNaYin });
-    naYinRow.createEl('td', { text: this.baziInfo.monthNaYin });
-    naYinRow.createEl('td', { text: this.baziInfo.dayNaYin });
-    naYinRow.createEl('td', { text: this.baziInfo.timeNaYin });
+    naYinRow.createEl('td', { text: '纳音', cls: 'bazi-table-label' });
+    naYinRow.createEl('td', { text: this.baziInfo.yearNaYin || '', cls: 'bazi-nayin-cell' });
+    naYinRow.createEl('td', { text: this.baziInfo.monthNaYin || '', cls: 'bazi-nayin-cell' });
+    naYinRow.createEl('td', { text: this.baziInfo.dayNaYin || '', cls: 'bazi-nayin-cell' });
+    naYinRow.createEl('td', { text: this.baziInfo.timeNaYin || '', cls: 'bazi-nayin-cell' });
+
+    // 旬空行
+    const xunKongRow = tbody.createEl('tr');
+    xunKongRow.createEl('td', { text: '旬空', cls: 'bazi-table-label' });
+
+    // 旬空单元格 - 应用五行颜色
+    const yearXunKongCell = xunKongRow.createEl('td', { cls: 'bazi-xunkong-cell' });
+    if (this.baziInfo.yearXunKong) {
+      const xunKongSpan = yearXunKongCell.createSpan({ text: this.baziInfo.yearXunKong });
+      this.applyXunKongColor(xunKongSpan, this.baziInfo.yearXunKong);
+    }
+
+    const monthXunKongCell = xunKongRow.createEl('td', { cls: 'bazi-xunkong-cell' });
+    if (this.baziInfo.monthXunKong) {
+      const xunKongSpan = monthXunKongCell.createSpan({ text: this.baziInfo.monthXunKong });
+      this.applyXunKongColor(xunKongSpan, this.baziInfo.monthXunKong);
+    }
+
+    const dayXunKongCell = xunKongRow.createEl('td', { cls: 'bazi-xunkong-cell' });
+    if (this.baziInfo.dayXunKong) {
+      const xunKongSpan = dayXunKongCell.createSpan({ text: this.baziInfo.dayXunKong });
+      this.applyXunKongColor(xunKongSpan, this.baziInfo.dayXunKong);
+    }
+
+    const timeXunKongCell = xunKongRow.createEl('td', { cls: 'bazi-xunkong-cell' });
+    if (this.baziInfo.timeXunKong) {
+      const xunKongSpan = timeXunKongCell.createSpan({ text: this.baziInfo.timeXunKong });
+      this.applyXunKongColor(xunKongSpan, this.baziInfo.timeXunKong);
+    }
+
+    // 生肖行
+    const shengXiaoRow = tbody.createEl('tr');
+    shengXiaoRow.createEl('td', { text: '生肖', cls: 'bazi-table-label' });
+    shengXiaoRow.createEl('td', { text: this.baziInfo.yearShengXiao || '' });
+    shengXiaoRow.createEl('td', { text: this.baziInfo.monthShengXiao || '' });
+    shengXiaoRow.createEl('td', { text: this.baziInfo.dayShengXiao || '' });
+    shengXiaoRow.createEl('td', { text: this.baziInfo.timeShengXiao || '' });
 
     // 神煞行
     if (this.baziInfo.yearShenSha || this.baziInfo.monthShenSha ||
@@ -1836,4 +1958,123 @@ export class BaziView {
   getHTML(): string {
     return this.container.innerHTML;
   }
+
+  /**
+   * 应用五行颜色到元素
+   * @param element HTML元素
+   * @param wuXing 五行
+   */
+  private applyWuXingColor(element: HTMLElement, wuXing: string) {
+    const colorMap: { [key: string]: string } = {
+      '金': '#FFD700', // 金黄色
+      '木': '#228B22', // 绿色
+      '水': '#4169E1', // 蓝色
+      '火': '#DC143C', // 红色
+      '土': '#CD853F'  // 土黄色
+    };
+
+    const color = colorMap[wuXing];
+    if (color) {
+      element.style.color = color;
+      element.style.fontWeight = 'bold';
+      element.style.textShadow = '0 1px 2px rgba(0, 0, 0, 0.2)';
+    }
+  }
+
+  /**
+   * 应用地支五行颜色
+   * @param element HTML元素
+   * @param branch 地支
+   */
+  private applyBranchWuXingColor(element: HTMLElement, branch: string) {
+    const branchWuXingMap: { [key: string]: string } = {
+      '子': '水', '亥': '水',
+      '寅': '木', '卯': '木',
+      '巳': '火', '午': '火',
+      '申': '金', '酉': '金',
+      '辰': '土', '戌': '土', '丑': '土', '未': '土'
+    };
+
+    const wuXing = branchWuXingMap[branch];
+    if (wuXing) {
+      this.applyWuXingColor(element, wuXing);
+    }
+  }
+
+  /**
+   * 应用十神颜色
+   * @param element HTML元素
+   * @param shiShen 十神
+   */
+  private applyShiShenColor(element: HTMLElement, shiShen: string) {
+    const colorMap: { [key: string]: string } = {
+      '日主': '#8B4513', // 棕色
+      '比肩': '#228B22', // 绿色
+      '劫财': '#32CD32', // 浅绿色
+      '食神': '#FFD700', // 金色
+      '伤官': '#FFA500', // 橙色
+      '偏财': '#DC143C', // 红色
+      '正财': '#B22222', // 深红色
+      '七杀': '#8B0000', // 暗红色
+      '正官': '#4B0082', // 靛蓝色
+      '偏印': '#9370DB', // 紫色
+      '正印': '#4169E1'  // 蓝色
+    };
+
+    const color = colorMap[shiShen];
+    if (color) {
+      element.style.color = color;
+      element.style.fontWeight = 'bold';
+    }
+  }
+
+  /**
+   * 应用地势颜色
+   * @param element HTML元素
+   * @param diShi 地势
+   */
+  private applyDiShiColor(element: HTMLElement, diShi: string) {
+    const colorMap: { [key: string]: string } = {
+      '长生': '#32CD32', // 浅绿色
+      '沐浴': '#87CEEB', // 天蓝色
+      '冠带': '#FFD700', // 金色
+      '临官': '#FF6347', // 番茄红
+      '帝旺': '#DC143C', // 红色
+      '衰': '#DDA0DD',   // 梅花色
+      '病': '#D3D3D3',   // 浅灰色
+      '死': '#696969',   // 暗灰色
+      '墓': '#2F4F4F',   // 暗灰绿
+      '绝': '#000000',   // 黑色
+      '胎': '#F0E68C',   // 卡其色
+      '养': '#98FB98'    // 浅绿色
+    };
+
+    const color = colorMap[diShi];
+    if (color) {
+      element.style.color = color;
+      element.style.fontWeight = 'bold';
+    }
+  }
+
+  /**
+   * 应用旬空颜色
+   * @param element HTML元素
+   * @param xunKong 旬空
+   */
+  private applyXunKongColor(element: HTMLElement, xunKong: string) {
+    // 旬空包含两个地支，需要分别应用颜色
+    if (xunKong && xunKong.length >= 2) {
+      const branches = xunKong.split('');
+      element.innerHTML = ''; // 清空内容
+
+      branches.forEach((branch, index) => {
+        const span = element.createSpan({ text: branch });
+        this.applyBranchWuXingColor(span, branch);
+        if (index < branches.length - 1) {
+          element.createSpan({ text: '' }); // 不添加分隔符，直接连接
+        }
+      });
+    }
+  }
+
 }
