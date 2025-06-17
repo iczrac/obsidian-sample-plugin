@@ -14,6 +14,28 @@
 
 ## 🚀 快速开始
 
+### Git MCP 集成
+
+本项目集成了Git MCP (Model Context Protocol) 服务，支持自动化Git操作和里程碑备份管理。
+
+```bash
+# 一键配置Git MCP环境
+./scripts/quick_setup_mcp.sh
+
+# 查看项目状态
+python3 scripts/git_milestone_backup.py status
+
+# 创建里程碑备份
+python3 scripts/git_milestone_backup.py backup --milestone bug_fixes_phase1
+```
+
+**在AI助手中使用自然语言：**
+- "帮我检查当前Git状态"
+- "创建八字核心功能完成的里程碑备份"
+- "推送当前更改到远程仓库"
+
+📖 详细指南：[Git MCP 使用指南](docs/git-mcp-guide.md) | [使用示例](docs/mcp-usage-examples.md) | [脚本说明](scripts/README.md)
+
 ### 安装方法
 
 1. **手动安装**
