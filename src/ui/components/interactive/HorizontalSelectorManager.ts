@@ -165,7 +165,7 @@ export class HorizontalSelectorManager {
     month: number,
     day: number,
     liuShiData: any[],
-    onSelect: (timeIndex: number, ganZhi: string, name: string) => void
+    onSelect: (liuShi: any) => void
   ) {
     // 查找或创建流时选择器容器
     let liuShiContainer = this.container.querySelector('.bazi-liushi-selector-container') as HTMLElement;
@@ -311,8 +311,8 @@ export class HorizontalSelectorManager {
         timeItem.style.background = 'var(--interactive-accent)';
         timeItem.style.color = 'var(--text-on-accent)';
 
-        // 调用选择回调
-        onSelect(index, liuShi.ganZhi, timeInfo[index]?.name || `${index}时`);
+        // 调用选择回调（传递完整的流时对象）
+        onSelect(liuShi);
       });
 
       // 不自动选择，让用户手动选择流时

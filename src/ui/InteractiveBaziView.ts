@@ -511,16 +511,13 @@ export class InteractiveBaziView {
 
   /**
    * 选择流时
-   * @param year 年份
-   * @param month 月份
-   * @param day 日期
-   * @param time 时辰
+   * @param liuShi 流时数据对象
    */
-  private selectLiuShi(year: number, month: number, day: number, time: number) {
-    console.log(`🎯 选择流时: ${year}-${month}-${day} ${time}时`);
+  private selectLiuShi(liuShi: any) {
+    console.log(`🎯 选择流时: ${liuShi.year}-${liuShi.month}-${liuShi.day} ${liuShi.name} (${liuShi.ganZhi})`);
 
-    // 更新扩展列管理器的选中流时
-    this.extendedColumnManager.setCurrentSelectedLiuShi({ year, month, day, time });
+    // 更新扩展列管理器的选中流时（传递完整对象）
+    this.extendedColumnManager.setCurrentSelectedLiuShi(liuShi);
 
     // 扩展四柱表格到流时层级
     this.extendedColumnManager.extendBaziTableToLevel('liushi');
@@ -695,8 +692,8 @@ export class InteractiveBaziView {
       month,
       day,
       liuShiData,
-      (timeIndex, ganZhi, name) => {
-        this.handleLiuShiSelect({ year, month, day, timeIndex, ganZhi, name });
+      (liuShi) => {
+        this.handleLiuShiSelect(liuShi);
       }
     );
   }
@@ -742,8 +739,10 @@ export class InteractiveBaziView {
    * @param liuShi 流时数据
    */
   private handleLiuShiSelect(liuShi: any) {
-    console.log(`🎯 处理流时选择: ${liuShi.year}年 ${liuShi.month} ${liuShi.day}日 ${liuShi.name}`);
-    this.selectLiuShi(liuShi.year, liuShi.month, liuShi.day, liuShi.timeIndex);
+    console.log(`🎯 处理流时选择: ${liuShi.year}年 ${liuShi.month} ${liuShi.day}日 ${liuShi.name} (${liuShi.ganZhi})`);
+
+    // 传递完整的流时对象，而不是分解的字段
+    this.selectLiuShi(liuShi);
 
     // 扩展四柱表格到流时层级
     this.extendedColumnManager.extendBaziTableToLevel('liushi');
