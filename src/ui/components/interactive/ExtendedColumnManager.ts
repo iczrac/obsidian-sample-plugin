@@ -98,6 +98,9 @@ export class ExtendedColumnManager {
 
     console.log(`🕐 自动扩展到当前时间: ${currentYear}-${currentMonth}-${currentDay} ${currentHour}:00`);
 
+    // 设置对应的大运索引
+    this.setDaYunIndexForYear(currentYear);
+
     // 设置当前流年
     this.selectedLiuNianYear = currentYear;
 
@@ -125,6 +128,9 @@ export class ExtendedColumnManager {
 
     console.log(`📅 自动扩展到流日: ${currentYear}-${currentMonth}-${currentDay}`);
 
+    // 设置对应的大运索引
+    this.setDaYunIndexForYear(currentYear);
+
     // 设置当前流年
     this.selectedLiuNianYear = currentYear;
 
@@ -147,6 +153,9 @@ export class ExtendedColumnManager {
     const currentMonth = now.getMonth() + 1;
 
     console.log(`📅 自动扩展到流月: ${currentYear}-${currentMonth}`);
+
+    // 设置对应的大运索引
+    this.setDaYunIndexForYear(currentYear);
 
     // 设置当前流年
     this.selectedLiuNianYear = currentYear;
@@ -200,6 +209,9 @@ export class ExtendedColumnManager {
       const month = date.getMonth() + 1;
       const day = date.getDate();
       const hour = date.getHours();
+
+      // 设置对应的大运索引
+      this.setDaYunIndexForYear(year);
 
       // 设置目标流年
       this.selectedLiuNianYear = year;
@@ -1127,6 +1139,60 @@ export class ExtendedColumnManager {
    */
   setChangShengMode(mode: number) {
     this.changShengMode = mode;
+  }
+
+  /**
+   * 根据年份设置对应的大运索引
+   */
+  private setDaYunIndexForYear(year: number) {
+    if (!this.baziInfo.daYun || !Array.isArray(this.baziInfo.daYun)) {
+      console.warn('❌ 大运数据不可用，无法设置大运索引');
+      return;
+    }
+
+    console.log(`🔍 setDaYunIndexForYear: 查找${year}年对应的大运`);
+    console.log(`🔍 大运数据总数: ${this.baziInfo.daYun.length}`);
+
+    // 打印所有大运数据用于调试
+    this.baziInfo.daYun.forEach((daYun, index) => {
+      console.log(`🔍 大运[${index}]: ${daYun.ganZhi} (${daYun.startYear}-${daYun.endYear}) isQianYun=${daYun.isQianYun}`);
+    });
+
+    // 查找包含该年份的大运
+    for (let i = 0; i < this.baziInfo.daYun.length; i++) {
+      const daYun = this.baziInfo.daYun[i];
+      if (daYun.startYear && daYun.endYear) {
+        if (year >= daYun.startYear && year <= daYun.endYear) {
+          console.log(`✅ 找到对应大运: ${year}年 -> 大运索引${i} (${daYun.startYear}-${daYun.endYear}) 干支=${daYun.ganZhi} isQianYun=${daYun.isQianYun}`);
+          this.selectedDaYunIndex = i;
+
+          // 强制刷新大运显示
+          this.refreshDaYunDisplay();
+          return;
+        }
+      }
+    }
+
+    // 如果没有找到对应的大运，使用第一个大运
+    console.warn(`⚠️ 未找到${year}年对应的大运，使用第一个大运`);
+    this.selectedDaYunIndex = 0;
+    this.refreshDaYunDisplay();
+  }
+
+  /**
+   * 强制刷新大运显示
+   */
+  private refreshDaYunDisplay() {
+    // 如果当前扩展级别包含大运，重新添加大运列
+    if (this.currentExtendedLevel !== 'none') {
+      console.log(`🔄 refreshDaYunDisplay: 当前扩展级别=${this.currentExtendedLevel}，刷新大运显示`);
+
+      // 清除现有扩展列
+      this.clearAllExtendedColumns();
+
+      // 重新扩展到当前级别
+      this.extendBaziTableToLevel(this.currentExtendedLevel);
+    }
   }
 
   /**
