@@ -3,7 +3,7 @@ import { BaziCalculator } from './BaziCalculator';
 import { ShiShenCalculator } from './ShiShenCalculator';
 import { ShenShaTimeService } from './shensha/ShenShaTimeService';
 import { BaziUtils } from './BaziUtils';
-import { Lunar } from 'lunar-typescript';
+import { Lunar, Solar } from 'lunar-typescript';
 
 /**
  * 扩展柱信息接口
@@ -145,12 +145,14 @@ export class PillarCalculationService {
     // 生成带时间信息的标题
     let displayName = '流月';
     if (liuYue.year && liuYue.month) {
-      // 计算农历月份对应的公历时间范围
-      const solarStartDate = this.getSolarDateForLunarMonth(liuYue.year, liuYue.month);
-      if (solarStartDate) {
-        displayName = `流月\n${liuYue.year}.${liuYue.month}月\n(${solarStartDate})`;
+      // 计算农历月份对应的公历月份
+      const solarMonth = this.getSolarMonthForLunarMonth(liuYue.year, liuYue.month);
+      const lunarMonthName = this.getLunarMonthName(liuYue.month);
+
+      if (solarMonth && lunarMonthName) {
+        displayName = `流月\n${solarMonth}月\n${lunarMonthName}`;
       } else {
-        displayName = `流月\n${liuYue.year}.${liuYue.month}月\n(${ganZhi})`;
+        displayName = `流月\n${liuYue.month}月\n(${ganZhi})`;
       }
     }
 
@@ -191,9 +193,15 @@ export class PillarCalculationService {
     // 生成带日期信息的标题
     let displayName = '流日';
     if (dateInfo && dateInfo.year && dateInfo.month && dateInfo.day) {
-      // 格式化日期显示
+      // 格式化日期显示和农历日期
       const dateStr = `${dateInfo.year}.${dateInfo.month}.${dateInfo.day}`;
-      displayName = `流日\n${dateStr}\n(${ganZhi})`;
+      const lunarDate = this.getLunarDateString(dateInfo.year, dateInfo.month, dateInfo.day);
+
+      if (lunarDate) {
+        displayName = `流日\n${dateStr}\n${lunarDate}`;
+      } else {
+        displayName = `流日\n${dateStr}\n(${ganZhi})`;
+      }
     }
 
     return {
@@ -233,13 +241,14 @@ export class PillarCalculationService {
     // 生成带时间信息的标题
     let displayName = '流时';
     if (timeInfo) {
-      if (timeInfo.year && timeInfo.month && timeInfo.day && timeInfo.hour !== undefined) {
-        // 完整的时间信息
-        const timeStr = `${timeInfo.year}.${timeInfo.month}.${timeInfo.day} ${timeInfo.hour}:00`;
-        displayName = `流时\n${timeStr}\n(${ganZhi})`;
+      if (timeInfo.hour !== undefined) {
+        // 格式化时间显示（只显示小时）
+        const timeStr = `${timeInfo.hour}:00`;
+        displayName = `流时\n${timeStr}`;
       } else if (timeInfo.name) {
-        // 使用时辰名称
-        displayName = `流时\n${timeInfo.name}\n(${ganZhi})`;
+        // 使用时辰名称（提取时辰部分）
+        const timeName = timeInfo.name.includes('(') ? timeInfo.name.split('(')[0] : timeInfo.name;
+        displayName = `流时\n${timeName}`;
       }
     }
 
@@ -320,25 +329,69 @@ export class PillarCalculationService {
   }
 
   /**
-   * 获取农历月份对应的公历起始日期
+   * 获取农历月份对应的公历月份
    * @param year 年份
    * @param month 农历月份
-   * @returns 公历日期字符串
+   * @returns 公历月份
    */
-  private static getSolarDateForLunarMonth(year: number, month: number): string | null {
+  private static getSolarMonthForLunarMonth(year: number, month: number): number | null {
     try {
-      // 使用lunar-typescript计算农历月份的公历起始日期（使用月初第一天）
-      const lunar = Lunar.fromYmd(year, month, 1);
+      // 使用lunar-typescript计算农历月份的公历月份（使用月中旬）
+      const lunar = Lunar.fromYmd(year, month, 15);
       const solar = lunar.getSolar();
-
-      // 格式化为简洁的日期格式
-      const solarMonth = solar.getMonth();
-      const solarDay = solar.getDay();
-      return `${solarMonth}.${solarDay}`;
+      return solar.getMonth();
     } catch (error) {
-      console.error('计算农历月份公历日期失败:', error);
+      console.error('计算农历月份对应公历月份失败:', error);
       return null;
     }
+  }
+
+  /**
+   * 获取农历月份名称
+   * @param month 农历月份
+   * @returns 农历月份名称
+   */
+  private static getLunarMonthName(month: number): string {
+    const monthNames = ['', '正月', '二月', '三月', '四月', '五月', '六月',
+                       '七月', '八月', '九月', '十月', '冬月', '腊月'];
+    return monthNames[month] || `${month}月`;
+  }
+
+  /**
+   * 获取农历日期字符串
+   * @param year 公历年
+   * @param month 公历月
+   * @param day 公历日
+   * @returns 农历日期字符串
+   */
+  private static getLunarDateString(year: number, month: number, day: number): string | null {
+    try {
+      const solar = Solar.fromYmd(year, month, day);
+      const lunar = solar.getLunar();
+
+      const lunarMonth = lunar.getMonth();
+      const lunarDay = lunar.getDay();
+
+      const monthName = this.getLunarMonthName(lunarMonth);
+      const dayName = this.getLunarDayName(lunarDay);
+
+      return `${monthName}${dayName}`;
+    } catch (error) {
+      console.error('计算农历日期失败:', error);
+      return null;
+    }
+  }
+
+  /**
+   * 获取农历日期名称
+   * @param day 农历日
+   * @returns 农历日期名称
+   */
+  private static getLunarDayName(day: number): string {
+    const dayNames = ['', '初一', '初二', '初三', '初四', '初五', '初六', '初七', '初八', '初九', '初十',
+                     '十一', '十二', '十三', '十四', '十五', '十六', '十七', '十八', '十九', '二十',
+                     '廿一', '廿二', '廿三', '廿四', '廿五', '廿六', '廿七', '廿八', '廿九', '三十'];
+    return dayNames[day] || `${day}日`;
   }
 
 
