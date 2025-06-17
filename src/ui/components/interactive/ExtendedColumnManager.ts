@@ -834,7 +834,13 @@ export class ExtendedColumnManager {
     // 关闭按钮点击事件
     closeButton.addEventListener('click', (e) => {
       e.stopPropagation();
-      this.closeExtendedLevel(pillarInfo.type);
+      // 特殊宫位类型直接清除所有扩展列
+      if (pillarInfo.type === 'special') {
+        this.clearAllExtendedColumns();
+        this.currentExtendedLevel = 'none';
+      } else {
+        this.closeExtendedLevel(pillarInfo.type);
+      }
     });
 
     // 设置表头样式（与四柱一致的字体大小）
