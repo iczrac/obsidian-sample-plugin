@@ -162,10 +162,9 @@ export class InteractiveBaziView {
     // 设置事件监听器
     this.setupEventListeners();
 
-    // 默认选中第一个大运
-    if (this.baziInfo.daYun && this.baziInfo.daYun.length > 0) {
-      this.selectDaYun(0);
-    }
+    // 不再默认选中第一个大运，让扩展列功能来控制
+    // 只有在有扩展配置时才会选择大运
+    console.log('ℹ️ 跳过默认大运选择，由扩展列功能控制');
 
     console.log('✅ 视图初始化完成');
   }
