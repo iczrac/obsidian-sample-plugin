@@ -206,20 +206,36 @@ export class HorizontalSelectorManager {
       margin-top: 10px;
     `;
 
-    // 时辰名称和时间范围
+    // 获取流派设置
+    const sect = this.baziInfo?.baziSect ? parseInt(this.baziInfo.baziSect) : 2;
+
+    // 时辰名称和时间范围（根据流派调整）
+    const getTimeRangeForIndex = (index: number) => {
+      if (index === 0) {
+        // 子时根据流派调整
+        return sect === 1 ? '23:00-01:00*' : '23:00-01:00';
+      }
+      const standardTimes = [
+        '', '01:00-03:00', '03:00-05:00', '05:00-07:00',
+        '07:00-09:00', '09:00-11:00', '11:00-13:00', '13:00-15:00',
+        '15:00-17:00', '17:00-19:00', '19:00-21:00', '21:00-23:00'
+      ];
+      return standardTimes[index] || '';
+    };
+
     const timeInfo = [
-      { name: '子时', time: '23:00-01:00' },
-      { name: '丑时', time: '01:00-03:00' },
-      { name: '寅时', time: '03:00-05:00' },
-      { name: '卯时', time: '05:00-07:00' },
-      { name: '辰时', time: '07:00-09:00' },
-      { name: '巳时', time: '09:00-11:00' },
-      { name: '午时', time: '11:00-13:00' },
-      { name: '未时', time: '13:00-15:00' },
-      { name: '申时', time: '15:00-17:00' },
-      { name: '酉时', time: '17:00-19:00' },
-      { name: '戌时', time: '19:00-21:00' },
-      { name: '亥时', time: '21:00-23:00' }
+      { name: '子时', time: getTimeRangeForIndex(0) },
+      { name: '丑时', time: getTimeRangeForIndex(1) },
+      { name: '寅时', time: getTimeRangeForIndex(2) },
+      { name: '卯时', time: getTimeRangeForIndex(3) },
+      { name: '辰时', time: getTimeRangeForIndex(4) },
+      { name: '巳时', time: getTimeRangeForIndex(5) },
+      { name: '午时', time: getTimeRangeForIndex(6) },
+      { name: '未时', time: getTimeRangeForIndex(7) },
+      { name: '申时', time: getTimeRangeForIndex(8) },
+      { name: '酉时', time: getTimeRangeForIndex(9) },
+      { name: '戌时', time: getTimeRangeForIndex(10) },
+      { name: '亥时', time: getTimeRangeForIndex(11) }
     ];
 
     // 创建流时选择项
@@ -250,9 +266,9 @@ export class HorizontalSelectorManager {
         margin-bottom: 2px;
       `;
 
-      // 时间范围
+      // 时间范围（优先使用后端数据，备用使用计算的时间范围）
       const timeRangeEl = timeItem.createDiv({
-        text: timeInfo[index]?.time || '',
+        text: liuShi.range || timeInfo[index]?.time || '',
         cls: 'bazi-liushi-range'
       });
       timeRangeEl.style.cssText = `

@@ -300,9 +300,11 @@ export interface LiuShiInfo {
   day?: number;
   time: number;
   index?: number;
+  name?: string;        // 时辰名称（如：子时、丑时等）
+  range?: string;       // 时间范围（如：23:00-01:00，根据流派调整）
   ganZhi: string;
   naYin?: string;
-  xunKong?: string;
+  xunKong?: string | string[];
   shiShenGan?: string;
   shiShenZhi?: string | string[];
   diShi?: string;

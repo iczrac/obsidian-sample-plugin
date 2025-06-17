@@ -207,6 +207,24 @@ export class DataGenerationService {
 
       // 返回简化的备用数据（12个时辰）
       const timeNames = ['子时', '丑时', '寅时', '卯时', '辰时', '巳时', '午时', '未时', '申时', '酉时', '戌时', '亥时'];
+
+      // 获取流派设置
+      const sect = baziInfo?.baziSect ? parseInt(baziInfo.baziSect) : 2;
+
+      // 根据流派生成时间范围
+      const getBackupTimeRange = (index: number) => {
+        if (index === 0) {
+          // 子时根据流派调整
+          return sect === 1 ? '23:00-01:00*' : '23:00-01:00';
+        }
+        const standardRanges = [
+          '', '01:00-03:00', '03:00-05:00', '05:00-07:00',
+          '07:00-09:00', '09:00-11:00', '11:00-13:00', '13:00-15:00',
+          '15:00-17:00', '17:00-19:00', '19:00-21:00', '21:00-23:00'
+        ];
+        return standardRanges[index] || '';
+      };
+
       return timeNames.map((name, index) => ({
         year,
         month,
@@ -214,6 +232,7 @@ export class DataGenerationService {
         timeIndex: index,
         ganZhi: '甲子', // 简化
         name,
+        range: getBackupTimeRange(index), // 添加根据流派调整的时间范围
         time: `${index * 2 + 1}:00-${index * 2 + 3}:00`,
         displayName: '甲子',
         shiShen: '比肩',

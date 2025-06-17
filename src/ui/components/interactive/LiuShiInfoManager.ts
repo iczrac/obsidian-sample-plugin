@@ -260,9 +260,9 @@ export class LiuShiInfoManager {
         font-size: 11px;
       `;
 
-      // 创建时间范围（根据设置中的流派显示）
+      // 创建时间范围（使用后端返回的流派调整后的时间范围）
       const timeRangeDiv = cell.createDiv({ cls: 'time-range' });
-      const timeRange = this.getTimeRangeBySettings(ls.timeIndex);
+      const timeRange = ls.range || this.getTimeRangeBySettings(ls.timeIndex);
       timeRangeDiv.textContent = timeRange;
       timeRangeDiv.style.cssText = `
         font-size: 9px;
@@ -538,14 +538,22 @@ export class LiuShiInfoManager {
   }
 
   /**
-   * 根据设置获取时间范围
+   * 根据设置获取时间范围（支持流派）
    * @param timeIndex 时辰索引（0-11）
    * @returns 时间范围字符串
    */
   private getTimeRangeBySettings(timeIndex: number): string {
-    // 标准时间范围（参照原版方案）
+    // 获取流派设置
+    const sect = this.baziInfo?.baziSect ? parseInt(this.baziInfo.baziSect) : 2;
+
+    if (timeIndex === 0) {
+      // 子时根据流派调整
+      return sect === 1 ? '23:00-01:00*' : '23:00-01:00';
+    }
+
+    // 其他时辰标准时间范围
     const timeRanges = [
-      '23:00-01:00', '01:00-03:00', '03:00-05:00', '05:00-07:00',
+      '', '01:00-03:00', '03:00-05:00', '05:00-07:00',
       '07:00-09:00', '09:00-11:00', '11:00-13:00', '13:00-15:00',
       '15:00-17:00', '17:00-19:00', '19:00-21:00', '21:00-23:00'
     ];
