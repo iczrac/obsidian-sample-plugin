@@ -147,8 +147,9 @@ export class ShenShaCalculationEngine {
       
       case '十恶大败':
       case '孤鸾煞':
+      case '日德':
         return algorithm(stem, branch);
-      
+
       case '四废':
         // 需要季节
         if (season) {

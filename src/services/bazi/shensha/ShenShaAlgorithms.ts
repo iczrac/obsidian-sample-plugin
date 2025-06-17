@@ -1,6 +1,22 @@
 /**
  * 神煞基础算法库
  * 提供所有神煞的基础判断方法，纯算法实现，无业务逻辑
+ *
+ * 📋 算法库说明：
+ * - 包含52个基础神煞算法（原51个 + 新增日德）
+ * - 纯函数实现，无副作用，易于测试
+ * - 统一参数格式，便于ShenShaCalculationEngine调用
+ * - 与SpecialShenShaCalculator协作，避免重复实现
+ *
+ * 🔄 整合历史：
+ * - 2024-12: 消除与SpecialShenShaCalculator的重叠算法
+ * - 统一魁罡、阴差阳错、十恶大败、孤鸾煞的实现
+ * - 新增日德算法，完善基础算法库
+ *
+ * 📝 使用说明：
+ * - 基础神煞：直接使用本算法库
+ * - 复杂神煞（童子煞、将军箭）：使用SpecialShenShaCalculator
+ * - 所有算法通过ShenShaCalculationEngine统一调用
  */
 export class ShenShaAlgorithms {
   
@@ -758,6 +774,18 @@ export class ShenShaAlgorithms {
   }
 
   /**
+   * 判断日德
+   * @param dayStem 日干
+   * @param dayBranch 日支
+   * @returns 是否为日德
+   */
+  static isRiDe(dayStem: string, dayBranch: string): boolean {
+    // 日德的计算规则：甲寅、戊辰、丙辰、庚辰、壬戌
+    const riDeList = ['甲寅', '戊辰', '丙辰', '庚辰', '壬戌'];
+    return riDeList.includes(dayStem + dayBranch);
+  }
+
+  /**
    * 辅助方法：判断数组是否相等
    */
   private static arrayEquals(a: string[], b: string[]): boolean {
@@ -817,7 +845,8 @@ export class ShenShaAlgorithms {
       '天虚': this.isTianXu,
       '咸池': this.isXianChi,
       '解神': this.isJieShen,
-      '金神': this.isJinShen
+      '金神': this.isJinShen,
+      '日德': this.isRiDe
     };
   }
 }

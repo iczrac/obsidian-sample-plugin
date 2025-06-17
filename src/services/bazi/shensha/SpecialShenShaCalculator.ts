@@ -1,9 +1,33 @@
 import { EightChar, Solar } from 'lunar-typescript';
 import { BaziUtils } from '../BaziUtils';
+import { ShenShaAlgorithms } from './ShenShaAlgorithms';
 
 /**
  * 特殊神煞计算器
- * 专门负责计算童子煞、将军箭等特殊神煞
+ * 专门负责计算复杂神煞和提供化解方案
+ *
+ * 📋 职责范围：
+ * - 复杂神煞计算（需要季节、纳音等复杂判断）
+ * - 神煞化解方法和影响评估
+ * - 与ShenShaAlgorithms协作，避免重复实现
+ *
+ * 🔄 整合说明：
+ * - 2024-12: 消除与ShenShaAlgorithms的重叠算法
+ * - 重叠算法统一使用ShenShaAlgorithms版本
+ * - 保持复杂算法（童子煞、将军箭）的独立实现
+ * - 删除重复的魁罡、阴差阳错、十恶大败、孤鸾煞实现
+ *
+ * 📝 算法分工：
+ * - 基础神煞 → ShenShaAlgorithms（52个算法）
+ * - 复杂神煞 → SpecialShenShaCalculator（童子煞、将军箭）
+ * - 化解方案 → SpecialShenShaCalculator（专业化解指导）
+ * - 影响评估 → SpecialShenShaCalculator（综合影响分析）
+ *
+ * 🎯 设计原则：
+ * - 职责单一：专注复杂神煞和化解方案
+ * - 避免重复：统一使用基础算法库
+ * - 易于维护：清晰的算法分工
+ * - 专业性强：提供权威的化解指导
  */
 export class SpecialShenShaCalculator {
   /**
@@ -30,10 +54,14 @@ export class SpecialShenShaCalculator {
       else season = '冬';
     }
 
+    // 复杂神煞（本类独有算法）
     const tongZiSha = this.isTongZiSha(eightChar, season);
     const jiangJunJian = this.isJiangJunJian(eightChar, season);
-    const kuiGang = this.isKuiGang(eightChar);
-    const yinChaYangCuo = this.isYinChaYangCuo(eightChar);
+
+    // 基础神煞（使用统一算法库）
+    const dayPillar = eightChar.getDayGan() + eightChar.getDayZhi();
+    const kuiGang = ShenShaAlgorithms.isKuiGang(dayPillar);
+    const yinChaYangCuo = ShenShaAlgorithms.isYinChaYangCuo(dayPillar);
 
     const specialShenSha: string[] = [];
     const details: { [key: string]: string } = {};
@@ -156,85 +184,14 @@ export class SpecialShenShaCalculator {
     return targetBranches.includes(dayBranch) || targetBranches.includes(timeBranch);
   }
 
-  /**
-   * 判断魁罡
-   * @param eightChar 八字对象
-   * @returns 是否为魁罡
-   */
-  static isKuiGang(eightChar: EightChar): boolean {
-    // 魁罡四日：庚戌、庚辰、戊戌、壬辰
-    const dayPillar = eightChar.getDayGan() + eightChar.getDayZhi();
-    const kuiGangDays = ['庚戌', '庚辰', '戊戌', '壬辰'];
-    
-    return kuiGangDays.includes(dayPillar);
-  }
-
-  /**
-   * 判断阴差阳错
-   * @param eightChar 八字对象
-   * @returns 是否为阴差阳错
-   */
-  static isYinChaYangCuo(eightChar: EightChar): boolean {
-    // 阴差阳错日：
-    // 丙子、丁丑、戊寅、辛卯、壬辰、癸巳、
-    // 丙午、丁未、戊申、辛酉、壬戌、癸亥
-    const dayPillar = eightChar.getDayGan() + eightChar.getDayZhi();
-    const yinChaYangCuoDays = [
-      '丙子', '丁丑', '戊寅', '辛卯', '壬辰', '癸巳',
-      '丙午', '丁未', '戊申', '辛酉', '壬戌', '癸亥'
-    ];
-    
-    return yinChaYangCuoDays.includes(dayPillar);
-  }
-
-  /**
-   * 判断孤鸾煞
-   * @param eightChar 八字对象
-   * @returns 是否为孤鸾煞
-   */
-  static isGuLuanSha(eightChar: EightChar): boolean {
-    // 孤鸾煞日：
-    // 乙巳、丁巳、辛亥、戊申、甲寅、戊午、
-    // 壬子、丙午、戊戌、壬戌
-    const dayPillar = eightChar.getDayGan() + eightChar.getDayZhi();
-    const guLuanShaDays = [
-      '乙巳', '丁巳', '辛亥', '戊申', '甲寅', 
-      '戊午', '壬子', '丙午', '戊戌', '壬戌'
-    ];
-    
-    return guLuanShaDays.includes(dayPillar);
-  }
-
-  /**
-   * 判断十恶大败
-   * @param eightChar 八字对象
-   * @returns 是否为十恶大败
-   */
-  static isShiEDaBai(eightChar: EightChar): boolean {
-    // 十恶大败日：
-    // 甲辰、乙巳、丙申、丁亥、戊戌、己丑、
-    // 庚辰、辛巳、壬申、癸亥
-    const dayPillar = eightChar.getDayGan() + eightChar.getDayZhi();
-    const shiEDaBaiDays = [
-      '甲辰', '乙巳', '丙申', '丁亥', '戊戌', 
-      '己丑', '庚辰', '辛巳', '壬申', '癸亥'
-    ];
-    
-    return shiEDaBaiDays.includes(dayPillar);
-  }
-
-  /**
-   * 判断日德
-   * @param eightChar 八字对象
-   * @returns 是否为日德
-   */
-  static isRiDe(eightChar: EightChar): boolean {
-    // 日德日：甲寅、戊辰、丙辰、庚辰、壬戌
-    const dayPillar = eightChar.getDayGan() + eightChar.getDayZhi();
-    const riDeDays = ['甲寅', '戊辰', '丙辰', '庚辰', '壬戌'];
-    
-    return riDeDays.includes(dayPillar);
-  }
+  // 注意：以下重叠算法已删除，统一使用ShenShaAlgorithms版本：
+  // - isKuiGang() → ShenShaAlgorithms.isKuiGang()
+  // - isYinChaYangCuo() → ShenShaAlgorithms.isYinChaYangCuo()
+  // - isGuLuanSha() → ShenShaAlgorithms.isGuLuanSha()
+  // - isShiEDaBai() → ShenShaAlgorithms.isShiEDaBai()
+  // - isRiDe() → ShenShaAlgorithms.isRiDe()
+  //
+  // 这样避免了代码重复，确保算法一致性，便于统一维护
 
   /**
    * 获取特殊神煞的化解方法

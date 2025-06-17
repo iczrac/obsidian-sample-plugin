@@ -472,6 +472,16 @@ export class ShenShaDataService {
       calculation: '戌亥为天罗，辰巳为地网。凡纳音火命，见戌亥日为天罗；纳音水土命，见辰巳日为地网，纳音金木二命无之',
       category: '牢狱类',
       level: 8
+    },
+
+    '日德': {
+      name: '日德',
+      type: '吉神',
+      description: '仁慈德行之星，主心地善良',
+      effect: '日德主人心地善良，品德高尚，乐善好施，有慈悲心，多得贵人相助，晚年安康',
+      calculation: '甲寅、戊辰、丙辰、庚辰、壬戌日',
+      category: '德神类',
+      level: 7
     }
   };
 
@@ -548,6 +558,14 @@ export class ShenShaDataService {
       timing: '理财时',
       precautions: ['节约开支', '避免浪费', '谨慎投资'],
       effectiveness: 6
+    },
+
+    '日德': {
+      method: '继续行善积德，保持善心',
+      items: ['佛珠', '善书', '慈善证书'],
+      timing: '日常修持',
+      precautions: ['继续行善', '保持慈悲心', '多做好事'],
+      effectiveness: 8
     }
   };
 
