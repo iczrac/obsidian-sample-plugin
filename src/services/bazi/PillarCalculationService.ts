@@ -8,8 +8,8 @@ import { BaziUtils } from './BaziUtils';
  * 扩展柱信息接口
  */
 export interface ExtendedPillarInfo {
-  type: 'dayun' | 'liunian' | 'liuyue' | 'liuri' | 'liushi';
-  name: string; // 显示名称，如"大运"、"流年"等
+  type: 'dayun' | 'liunian' | 'liuyue' | 'liuri' | 'liushi' | 'special';
+  name: string; // 显示名称，如"大运"、"流年"、"胎元"等
   stem: string; // 天干
   branch: string; // 地支
   ganZhi: string; // 干支组合
@@ -198,6 +198,40 @@ export class PillarCalculationService {
       xunKong: BaziCalculator.calculateXunKong(stem, branch),
       shengXiao: BaziUtils.getShengXiao(branch),
       shenSha: ShenShaTimeService.calculateLiuShiShenSha(dayStem, stem + branch),
+      wuXing: BaziUtils.getStemWuXing(stem)
+    };
+  }
+
+  /**
+   * 计算特殊宫位柱信息（胎元、命宫、身宫）
+   * @param ganZhi 宫位干支
+   * @param palaceName 宫位名称
+   * @param dayStem 日干
+   * @returns 扩展柱信息
+   */
+  static calculateSpecialPalacePillar(ganZhi: string, palaceName: string, dayStem: string): ExtendedPillarInfo | null {
+    if (!ganZhi || ganZhi.length < 2) {
+      console.log(`❌ calculateSpecialPalacePillar: ${palaceName}干支无效`, ganZhi);
+      return null;
+    }
+
+    const stem = ganZhi[0];
+    const branch = ganZhi[1];
+
+    return {
+      type: 'special',
+      name: palaceName,
+      stem,
+      branch,
+      ganZhi,
+      hideGan: BaziCalculator.getHideGan(branch),
+      shiShenGan: ShiShenCalculator.getShiShen(dayStem, stem),
+      shiShenZhi: ShiShenCalculator.getHiddenShiShen(dayStem, branch),
+      diShi: this.calculateDiShiForPillar(dayStem, branch),
+      naYin: BaziCalculator.getNaYin(ganZhi),
+      xunKong: BaziCalculator.calculateXunKong(stem, branch),
+      shengXiao: BaziUtils.getShengXiao(branch),
+      shenSha: ShenShaTimeService.calculateSpecialPalaceShenSha(dayStem, ganZhi, palaceName),
       wuXing: BaziUtils.getStemWuXing(stem)
     };
   }

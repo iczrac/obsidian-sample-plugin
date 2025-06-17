@@ -1,4 +1,5 @@
 import { BaziInfo } from '../types/BaziInfo';
+import { ExtendedColumnType } from '../types/PluginTypes';
 import { BaziTableManager } from './components/interactive/BaziTableManager';
 import { ExtendedColumnManager } from './components/interactive/ExtendedColumnManager';
 import { HorizontalSelectorManager } from './components/interactive/HorizontalSelectorManager';
@@ -258,7 +259,28 @@ export class InteractiveBaziView {
     // 设置扩展列管理器的表格引用
     this.extendedColumnManager.setBaziTable(this.baziTable);
 
+    // 检查是否需要自动扩展
+    this.handleAutoExtension();
+
     console.log('✅ 八字表格创建完成');
+  }
+
+  /**
+   * 处理自动扩展功能
+   */
+  private handleAutoExtension() {
+    // 检查baziInfo中是否有扩展列配置
+    const extendType = (this.baziInfo as any).extendColumnType;
+    const extendTarget = (this.baziInfo as any).extendTarget;
+
+    if (extendType && extendType !== ExtendedColumnType.NONE) {
+      console.log(`🚀 检测到自动扩展配置: ${extendType}`);
+
+      // 延迟执行自动扩展，确保表格已完全渲染
+      setTimeout(() => {
+        this.extendedColumnManager.autoExtendByType(extendType, extendTarget);
+      }, 100);
+    }
   }
 
 

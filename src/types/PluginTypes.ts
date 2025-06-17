@@ -1,4 +1,16 @@
 /**
+ * 扩展列类型枚举
+ */
+export enum ExtendedColumnType {
+	NONE = 'none',                    // 不自动扩展
+	AUTO_CURRENT = 'auto_current',    // 自动扩展到当前流时（动态更新）
+	AUTO_DAY = 'auto_day',           // 自动扩展到流日
+	AUTO_MONTH = 'auto_month',       // 自动扩展到流月
+	SPECIAL_PALACES = 'special_palaces', // 扩展胎元命宫身宫3列
+	CUSTOM = 'custom'                // 自定义扩展（保留现有手动扩展功能）
+}
+
+/**
  * 八字代码块参数接口
  */
 export interface BaziParams {
@@ -18,6 +30,11 @@ export interface BaziParams {
 	showWuxing?: string;     // 是否显示五行
 	showSpecialInfo?: string; // 是否显示特殊信息
 	calculationMethod?: string; // 计算方法
+
+	// 扩展列控制
+	extend?: string;         // 扩展列类型：none|auto_current|auto_day|auto_month|special_palaces|custom
+	extendCount?: string;    // 扩展列数量（用于custom模式）
+	extendTarget?: string;   // 扩展目标时间（用于custom模式，格式：YYYY-MM-DD HH:mm）
 
 	// 神煞显示设置
 	showshensha_sizhu?: string;   // 是否显示四柱神煞

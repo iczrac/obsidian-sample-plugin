@@ -189,6 +189,11 @@ export interface BaziInfo {
 
   // 完整信息
   fullString?: string;
+
+  // 扩展列配置
+  extendColumnType?: any; // ExtendedColumnType，避免循环导入
+  extendCount?: number;
+  extendTarget?: string;
 }
 
 /**

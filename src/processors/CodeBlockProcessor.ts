@@ -1,5 +1,5 @@
 import { MarkdownView, Notice } from 'obsidian';
-import { BaziParams, BaziDisplayStyle } from '../types/PluginTypes';
+import { BaziParams, BaziDisplayStyle, ExtendedColumnType } from '../types/PluginTypes';
 import { BaziService } from '../services/BaziService';
 import { InteractiveBaziView } from '../ui/InteractiveBaziView';
 import { SimpleBaziView } from '../ui/SimpleBaziView';
@@ -640,6 +640,21 @@ export class CodeBlockProcessor {
 		// 将插件设置传递给baziInfo
 		baziInfo.showShenSha = this.plugin.settings.showShenSha;
 		console.log('🎨 传递神煞显示设置到baziInfo:', baziInfo.showShenSha);
+
+		// 处理扩展列参数
+		if (params.extend) {
+			baziInfo.extendColumnType = this.parseExtendColumnType(params.extend);
+			console.log('🎨 设置扩展列类型:', baziInfo.extendColumnType);
+
+			// 处理扩展列相关参数
+			if (params.extendCount) {
+				baziInfo.extendCount = parseInt(params.extendCount);
+			}
+			if (params.extendTarget) {
+				baziInfo.extendTarget = params.extendTarget;
+			}
+		}
+
 		console.log('🎨 baziInfo完整内容:', baziInfo);
 
 		// 确定显示样式
@@ -674,6 +689,52 @@ export class CodeBlockProcessor {
 		}
 
 		console.log('✅ 八字命盘渲染完成');
+	}
+
+	/**
+	 * 解析扩展列类型参数
+	 */
+	private parseExtendColumnType(extendParam: string): ExtendedColumnType {
+		const value = extendParam.toLowerCase().trim();
+
+		switch (value) {
+			case 'none':
+			case '无':
+			case '不扩展':
+				return ExtendedColumnType.NONE;
+
+			case 'auto_current':
+			case 'current':
+			case '当前':
+			case '自动当前':
+				return ExtendedColumnType.AUTO_CURRENT;
+
+			case 'auto_day':
+			case 'day':
+			case '流日':
+			case '自动流日':
+				return ExtendedColumnType.AUTO_DAY;
+
+			case 'auto_month':
+			case 'month':
+			case '流月':
+			case '自动流月':
+				return ExtendedColumnType.AUTO_MONTH;
+
+			case 'special_palaces':
+			case 'palaces':
+			case '宫位':
+			case '胎元命宫身宫':
+				return ExtendedColumnType.SPECIAL_PALACES;
+
+			case 'custom':
+			case '自定义':
+				return ExtendedColumnType.CUSTOM;
+
+			default:
+				console.warn(`❌ 未知扩展列类型: ${extendParam}，使用默认值 NONE`);
+				return ExtendedColumnType.NONE;
+		}
 	}
 
 	/**

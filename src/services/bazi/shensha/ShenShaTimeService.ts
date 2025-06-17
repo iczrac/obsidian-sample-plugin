@@ -278,6 +278,28 @@ export class ShenShaTimeService {
   }
 
   /**
+   * 计算特殊宫位神煞（胎元、命宫、身宫）
+   * @param dayStem 日干
+   * @param ganZhi 宫位干支
+   * @param palaceName 宫位名称
+   * @returns 特殊宫位神煞数组
+   */
+  static calculateSpecialPalaceShenSha(dayStem: string, ganZhi: string, palaceName: string): string[] {
+    if (ganZhi.length !== 2) return [];
+
+    const stem = ganZhi.charAt(0);
+    const branch = ganZhi.charAt(1);
+
+    // 使用通用柱神煞计算，但指定特殊的柱类型
+    return this.calculatePillarShenSha({
+      dayStem,
+      stem,
+      branch,
+      pillarType: palaceName // 使用宫位名称作为柱类型
+    });
+  }
+
+  /**
    * 验证时间层级参数
    * @param timeLayer 时间层级
    * @param ganZhi 干支

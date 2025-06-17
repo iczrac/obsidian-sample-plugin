@@ -1,4 +1,5 @@
 import { BaziInfo, DaYunInfo } from '../../../types/BaziInfo';
+import { ExtendedColumnType } from '../../../types/PluginTypes';
 import { PillarCalculationService, ExtendedPillarInfo } from '../../../services/bazi/PillarCalculationService';
 import { ColorSchemeService } from '../../../services/bazi/ColorSchemeService';
 import { BaziCalculator } from '../../../services/bazi/BaziCalculator';
@@ -40,6 +41,183 @@ export class ExtendedColumnManager {
    */
   setBaziTable(table: HTMLTableElement) {
     this.baziTable = table;
+  }
+
+  /**
+   * 根据扩展列类型自动扩展表格
+   * @param extendType 扩展类型
+   * @param customTarget 自定义目标时间（用于custom模式）
+   */
+  autoExtendByType(extendType: ExtendedColumnType, customTarget?: string) {
+    console.log(`🚀 autoExtendByType: 开始自动扩展，类型=${extendType}`);
+
+    switch (extendType) {
+      case ExtendedColumnType.NONE:
+        this.clearAllExtendedColumns();
+        this.currentExtendedLevel = 'none';
+        break;
+
+      case ExtendedColumnType.AUTO_CURRENT:
+        this.autoExtendToCurrent();
+        break;
+
+      case ExtendedColumnType.AUTO_DAY:
+        this.autoExtendToDay();
+        break;
+
+      case ExtendedColumnType.AUTO_MONTH:
+        this.autoExtendToMonth();
+        break;
+
+      case ExtendedColumnType.SPECIAL_PALACES:
+        this.extendSpecialPalaces();
+        break;
+
+      case ExtendedColumnType.CUSTOM:
+        if (customTarget) {
+          this.extendToCustomTarget(customTarget);
+        } else {
+          console.warn('❌ 自定义扩展需要提供目标时间');
+        }
+        break;
+
+      default:
+        console.warn(`❌ 未知扩展类型: ${extendType}`);
+    }
+  }
+
+  /**
+   * 自动扩展到当前流时（动态更新）
+   */
+  private autoExtendToCurrent() {
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth() + 1;
+    const currentDay = now.getDate();
+    const currentHour = now.getHours();
+
+    console.log(`🕐 自动扩展到当前时间: ${currentYear}-${currentMonth}-${currentDay} ${currentHour}:00`);
+
+    // 设置当前流年
+    this.selectedLiuNianYear = currentYear;
+
+    // 计算并设置当前流月
+    this.setCurrentLiuYue(currentYear, currentMonth);
+
+    // 计算并设置当前流日
+    this.setCurrentLiuRi(currentYear, currentMonth, currentDay);
+
+    // 计算并设置当前流时
+    this.setCurrentLiuShi(currentYear, currentMonth, currentDay, currentHour);
+
+    // 扩展到流时层级
+    this.extendBaziTableToLevel('liushi');
+  }
+
+  /**
+   * 自动扩展到流日
+   */
+  private autoExtendToDay() {
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth() + 1;
+    const currentDay = now.getDate();
+
+    console.log(`📅 自动扩展到流日: ${currentYear}-${currentMonth}-${currentDay}`);
+
+    // 设置当前流年
+    this.selectedLiuNianYear = currentYear;
+
+    // 计算并设置当前流月
+    this.setCurrentLiuYue(currentYear, currentMonth);
+
+    // 计算并设置当前流日
+    this.setCurrentLiuRi(currentYear, currentMonth, currentDay);
+
+    // 扩展到流日层级
+    this.extendBaziTableToLevel('liuri');
+  }
+
+  /**
+   * 自动扩展到流月
+   */
+  private autoExtendToMonth() {
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth() + 1;
+
+    console.log(`📅 自动扩展到流月: ${currentYear}-${currentMonth}`);
+
+    // 设置当前流年
+    this.selectedLiuNianYear = currentYear;
+
+    // 计算并设置当前流月
+    this.setCurrentLiuYue(currentYear, currentMonth);
+
+    // 扩展到流月层级
+    this.extendBaziTableToLevel('liuyue');
+  }
+
+  /**
+   * 扩展特殊宫位（胎元、命宫、身宫）
+   */
+  private extendSpecialPalaces() {
+    console.log(`🏛️ 扩展特殊宫位：胎元、命宫、身宫`);
+
+    // 清除现有扩展
+    this.clearAllExtendedColumns();
+
+    // 计算胎元
+    const taiYuan = this.calculateTaiYuan();
+    if (taiYuan) {
+      this.addExtendedColumn(taiYuan);
+    }
+
+    // 计算命宫
+    const mingGong = this.calculateMingGong();
+    if (mingGong) {
+      this.addExtendedColumn(mingGong);
+    }
+
+    // 计算身宫
+    const shenGong = this.calculateShenGong();
+    if (shenGong) {
+      this.addExtendedColumn(shenGong);
+    }
+
+    this.currentExtendedLevel = 'none'; // 特殊状态，不属于时间层级
+  }
+
+  /**
+   * 扩展到自定义目标时间
+   */
+  private extendToCustomTarget(targetTime: string) {
+    console.log(`🎯 扩展到自定义目标时间: ${targetTime}`);
+
+    try {
+      const date = new Date(targetTime);
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1;
+      const day = date.getDate();
+      const hour = date.getHours();
+
+      // 设置目标流年
+      this.selectedLiuNianYear = year;
+
+      // 计算并设置目标流月
+      this.setCurrentLiuYue(year, month);
+
+      // 计算并设置目标流日
+      this.setCurrentLiuRi(year, month, day);
+
+      // 计算并设置目标流时
+      this.setCurrentLiuShi(year, month, day, hour);
+
+      // 扩展到流时层级
+      this.extendBaziTableToLevel('liushi');
+    } catch (error) {
+      console.error('❌ 解析自定义目标时间失败:', error);
+    }
   }
 
   /**
@@ -936,5 +1114,199 @@ export class ExtendedColumnManager {
    */
   private calculateDiShiForPillar(stem: string, branch: string): string {
     return BaziCalculator.getDiShi(stem, branch);
+  }
+
+  /**
+   * 设置十二长生显示模式
+   */
+  setChangShengMode(mode: number) {
+    this.changShengMode = mode;
+  }
+
+  /**
+   * 设置当前流月
+   */
+  private setCurrentLiuYue(year: number, month: number) {
+    try {
+      // 使用lunar-typescript计算流月干支
+      const solar = Solar.fromYmd(year, month, 1);
+      const lunar = solar.getLunar();
+      const eightChar = lunar.getEightChar();
+
+      const monthGan = eightChar.getMonthGan();
+      const monthZhi = eightChar.getMonthZhi();
+      const ganZhi = monthGan + monthZhi;
+
+      this.currentSelectedLiuYue = {
+        year,
+        month,
+        ganZhi,
+        name: `${ganZhi}月`
+      };
+
+      console.log(`📅 设置流月: ${year}年${month}月 -> ${ganZhi}`);
+    } catch (error) {
+      console.error('❌ 计算流月失败:', error);
+    }
+  }
+
+  /**
+   * 设置当前流日
+   */
+  private setCurrentLiuRi(year: number, month: number, day: number) {
+    try {
+      // 使用lunar-typescript计算流日干支
+      const solar = Solar.fromYmd(year, month, day);
+      const lunar = solar.getLunar();
+      const eightChar = lunar.getEightChar();
+
+      const dayGan = eightChar.getDayGan();
+      const dayZhi = eightChar.getDayZhi();
+      const ganZhi = dayGan + dayZhi;
+
+      this.currentSelectedLiuRi = {
+        year,
+        month,
+        day,
+        ganZhi,
+        name: `${ganZhi}日`
+      };
+
+      console.log(`📅 设置流日: ${year}-${month}-${day} -> ${ganZhi}`);
+    } catch (error) {
+      console.error('❌ 计算流日失败:', error);
+    }
+  }
+
+  /**
+   * 设置当前流时
+   */
+  private setCurrentLiuShi(year: number, month: number, day: number, hour: number) {
+    try {
+      // 使用lunar-typescript计算流时干支
+      const solar = Solar.fromYmdHms(year, month, day, hour, 0, 0);
+      const lunar = solar.getLunar();
+      const eightChar = lunar.getEightChar();
+
+      // 设置八字流派（如果有的话）
+      if (this.baziInfo.baziSect) {
+        eightChar.setSect(parseInt(this.baziInfo.baziSect));
+      }
+
+      const timeGan = eightChar.getTimeGan();
+      const timeZhi = eightChar.getTimeZhi();
+      const ganZhi = timeGan + timeZhi;
+
+      // 计算时辰名称
+      const timeNames = ['子时', '丑时', '寅时', '卯时', '辰时', '巳时',
+                        '午时', '未时', '申时', '酉时', '戌时', '亥时'];
+      const timeIndex = Math.floor((hour + 1) / 2) % 12;
+      const timeName = timeNames[timeIndex];
+
+      this.currentSelectedLiuShi = {
+        year,
+        month,
+        day,
+        hour,
+        timeIndex,
+        ganZhi,
+        name: `${timeName}(${ganZhi})`
+      };
+
+      console.log(`🕐 设置流时: ${year}-${month}-${day} ${hour}:00 -> ${timeName}(${ganZhi})`);
+    } catch (error) {
+      console.error('❌ 计算流时失败:', error);
+    }
+  }
+
+  /**
+   * 计算胎元
+   */
+  private calculateTaiYuan(): ExtendedPillarInfo | null {
+    try {
+      if (!this.baziInfo.monthStem || !this.baziInfo.monthBranch) {
+        console.warn('❌ 月柱信息不完整，无法计算胎元');
+        return null;
+      }
+
+      const taiYuanGanZhi = BaziCalculator.calculateTaiYuan(
+        this.baziInfo.monthStem,
+        this.baziInfo.monthBranch
+      );
+
+      return PillarCalculationService.calculateSpecialPalacePillar(
+        taiYuanGanZhi,
+        '胎元',
+        this.baziInfo.dayStem || ''
+      );
+    } catch (error) {
+      console.error('❌ 计算胎元失败:', error);
+      return null;
+    }
+  }
+
+  /**
+   * 计算命宫
+   */
+  private calculateMingGong(): ExtendedPillarInfo | null {
+    try {
+      if (!this.baziInfo.timeStem || !this.baziInfo.timeBranch) {
+        console.warn('❌ 时柱信息不完整，无法计算命宫');
+        return null;
+      }
+
+      const mingGongGanZhi = BaziCalculator.calculateMingGong(
+        this.baziInfo.timeStem,
+        this.baziInfo.timeBranch
+      );
+
+      return PillarCalculationService.calculateSpecialPalacePillar(
+        mingGongGanZhi,
+        '命宫',
+        this.baziInfo.dayStem || ''
+      );
+    } catch (error) {
+      console.error('❌ 计算命宫失败:', error);
+      return null;
+    }
+  }
+
+  /**
+   * 计算身宫
+   */
+  private calculateShenGong(): ExtendedPillarInfo | null {
+    try {
+      // 身宫计算：月支+时支的数值相加，超过12则减12
+      if (!this.baziInfo.monthBranch || !this.baziInfo.timeBranch) {
+        console.warn('❌ 月支或时支信息不完整，无法计算身宫');
+        return null;
+      }
+
+      const branches = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
+      const monthIndex = branches.indexOf(this.baziInfo.monthBranch);
+      const timeIndex = branches.indexOf(this.baziInfo.timeBranch);
+
+      if (monthIndex === -1 || timeIndex === -1) {
+        console.warn('❌ 月支或时支无效，无法计算身宫');
+        return null;
+      }
+
+      const shenGongIndex = (monthIndex + timeIndex) % 12;
+      const shenGongBranch = branches[shenGongIndex];
+
+      // 身宫的天干需要根据身宫地支推算（简化处理，使用甲子起始）
+      const stems = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
+      const shenGongStem = stems[shenGongIndex % 10];
+      const shenGongGanZhi = shenGongStem + shenGongBranch;
+
+      return PillarCalculationService.calculateSpecialPalacePillar(
+        shenGongGanZhi,
+        '身宫',
+        this.baziInfo.dayStem || ''
+      );
+    } catch (error) {
+      console.error('❌ 计算身宫失败:', error);
+      return null;
+    }
   }
 }
