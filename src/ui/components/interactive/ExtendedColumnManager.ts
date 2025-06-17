@@ -481,15 +481,24 @@ export class ExtendedColumnManager {
       return null;
     }
 
-    // 计算流时干支
+    // 如果流时数据已经包含干支，直接使用
+    if (this.currentSelectedLiuShi.ganZhi) {
+      console.log(`✅ 获取流时柱信息: ${this.currentSelectedLiuShi.name} ${this.currentSelectedLiuShi.ganZhi} (使用后端数据)`);
+      return PillarCalculationService.calculateLiuShiPillar(this.currentSelectedLiuShi.ganZhi, this.baziInfo.dayStem || '');
+    }
+
+    // 否则计算流时干支（使用timeIndex转换为标准时间）
+    const timeIndex = this.currentSelectedLiuShi.timeIndex || 0;
+    const standardTime = timeIndex * 2; // 转换为标准时间（子时=0，丑时=2...）
+
     const ganZhi = this.calculateTimeGanZhi(
       this.currentSelectedLiuShi.year,
       this.currentSelectedLiuShi.month,
       this.currentSelectedLiuShi.day,
-      this.currentSelectedLiuShi.time
+      standardTime
     );
 
-    console.log(`✅ 获取流时柱信息: ${this.currentSelectedLiuShi.time}时 ${ganZhi}`);
+    console.log(`✅ 获取流时柱信息: ${this.currentSelectedLiuShi.name} ${ganZhi} (计算得出，timeIndex=${timeIndex}, standardTime=${standardTime})`);
 
     return PillarCalculationService.calculateLiuShiPillar(ganZhi, this.baziInfo.dayStem || '');
   }
@@ -535,19 +544,29 @@ export class ExtendedColumnManager {
   }
 
   /**
-   * 计算时辰干支（使用lunar-typescript）
+   * 计算时辰干支（使用lunar-typescript，考虑流派设置）
    */
   private calculateTimeGanZhi(year: number, month: number, day: number, time: number): string {
     try {
+      // 获取八字流派设置
+      const sect = this.baziInfo.baziSect ? parseInt(this.baziInfo.baziSect) : 2;
+      console.log(`🎯 ExtendedColumnManager: 使用八字流派 ${sect} 计算时柱干支`);
+
       // 使用lunar-typescript库来计算准确的时柱干支
       const solar = Solar.fromYmdHms(year, month, day, time, 0, 0);
       const lunar = solar.getLunar();
       const eightChar = lunar.getEightChar();
 
+      // 设置八字流派（影响子时处理）
+      eightChar.setSect(sect);
+
       const timeStem = eightChar.getTimeGan();
       const timeBranch = eightChar.getTimeZhi();
 
-      return timeStem + timeBranch;
+      const ganZhi = timeStem + timeBranch;
+      console.log(`🎯 ExtendedColumnManager: ${year}-${month}-${day} ${time}时 -> ${ganZhi} (流派${sect})`);
+
+      return ganZhi;
     } catch (error) {
       console.error('计算时辰干支失败:', error);
       return '甲子'; // 失败时返回默认值
