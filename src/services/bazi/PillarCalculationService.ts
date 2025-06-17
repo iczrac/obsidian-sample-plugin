@@ -3,6 +3,7 @@ import { BaziCalculator } from './BaziCalculator';
 import { ShiShenCalculator } from './ShiShenCalculator';
 import { ShenShaTimeService } from './shensha/ShenShaTimeService';
 import { BaziUtils } from './BaziUtils';
+import { Lunar } from 'lunar-typescript';
 
 /**
  * 扩展柱信息接口
@@ -48,7 +49,26 @@ export class PillarCalculationService {
 
     // 检查是否为前运（通过isQianYun标记）
     const isQianYun = (daYun as any).isQianYun === true;
-    const displayName = isQianYun ? '前运' : '大运';
+
+    // 生成带时间信息的标题
+    let displayName: string;
+    if (isQianYun) {
+      displayName = '前运';
+    } else {
+      // 格式化大运时间范围
+      const startYear = daYun.startYear || '';
+      const endYear = daYun.endYear || '';
+      const startAge = daYun.startAge || '';
+      const endAge = daYun.endAge || '';
+
+      if (startYear && endYear) {
+        displayName = `大运\n${startYear}-${endYear}\n(${startAge}-${endAge}岁)`;
+      } else if (startAge && endAge) {
+        displayName = `大运\n(${startAge}-${endAge}岁)`;
+      } else {
+        displayName = '大运';
+      }
+    }
 
     return {
       type: 'dayun',
@@ -84,9 +104,13 @@ export class PillarCalculationService {
     const stem = ganZhi[0];
     const branch = ganZhi[1];
 
+    // 生成带年份信息的标题
+    const year = liuNian.year;
+    const displayName = year ? `流年\n${year}年\n(${ganZhi})` : '流年';
+
     return {
       type: 'liunian',
-      name: '流年',
+      name: displayName,
       stem,
       branch,
       ganZhi,
@@ -118,9 +142,21 @@ export class PillarCalculationService {
     const stem = ganZhi[0];
     const branch = ganZhi[1];
 
+    // 生成带时间信息的标题
+    let displayName = '流月';
+    if (liuYue.year && liuYue.month) {
+      // 计算农历月份对应的公历时间范围
+      const solarStartDate = this.getSolarDateForLunarMonth(liuYue.year, liuYue.month);
+      if (solarStartDate) {
+        displayName = `流月\n${liuYue.year}.${liuYue.month}月\n(${solarStartDate})`;
+      } else {
+        displayName = `流月\n${liuYue.year}.${liuYue.month}月\n(${ganZhi})`;
+      }
+    }
+
     return {
       type: 'liuyue',
-      name: '流月',
+      name: displayName,
       stem,
       branch,
       ganZhi,
@@ -140,9 +176,10 @@ export class PillarCalculationService {
    * 计算流日柱信息
    * @param ganZhi 流日干支
    * @param dayStem 日干
+   * @param dateInfo 日期信息（可选）
    * @returns 扩展柱信息
    */
-  static calculateLiuRiPillar(ganZhi: string, dayStem: string): ExtendedPillarInfo | null {
+  static calculateLiuRiPillar(ganZhi: string, dayStem: string, dateInfo?: any): ExtendedPillarInfo | null {
     if (!ganZhi || ganZhi.length < 2) {
       console.log(`❌ calculateLiuRiPillar: 流日干支无效`, ganZhi);
       return null;
@@ -151,9 +188,17 @@ export class PillarCalculationService {
     const stem = ganZhi[0];
     const branch = ganZhi[1];
 
+    // 生成带日期信息的标题
+    let displayName = '流日';
+    if (dateInfo && dateInfo.year && dateInfo.month && dateInfo.day) {
+      // 格式化日期显示
+      const dateStr = `${dateInfo.year}.${dateInfo.month}.${dateInfo.day}`;
+      displayName = `流日\n${dateStr}\n(${ganZhi})`;
+    }
+
     return {
       type: 'liuri',
-      name: '流日',
+      name: displayName,
       stem,
       branch,
       ganZhi,
@@ -173,9 +218,10 @@ export class PillarCalculationService {
    * 计算流时柱信息
    * @param ganZhi 流时干支
    * @param dayStem 日干
+   * @param timeInfo 时间信息（可选）
    * @returns 扩展柱信息
    */
-  static calculateLiuShiPillar(ganZhi: string, dayStem: string): ExtendedPillarInfo | null {
+  static calculateLiuShiPillar(ganZhi: string, dayStem: string, timeInfo?: any): ExtendedPillarInfo | null {
     if (!ganZhi || ganZhi.length < 2) {
       console.log(`❌ calculateLiuShiPillar: 流时干支无效`, ganZhi);
       return null;
@@ -184,9 +230,22 @@ export class PillarCalculationService {
     const stem = ganZhi[0];
     const branch = ganZhi[1];
 
+    // 生成带时间信息的标题
+    let displayName = '流时';
+    if (timeInfo) {
+      if (timeInfo.year && timeInfo.month && timeInfo.day && timeInfo.hour !== undefined) {
+        // 完整的时间信息
+        const timeStr = `${timeInfo.year}.${timeInfo.month}.${timeInfo.day} ${timeInfo.hour}:00`;
+        displayName = `流时\n${timeStr}\n(${ganZhi})`;
+      } else if (timeInfo.name) {
+        // 使用时辰名称
+        displayName = `流时\n${timeInfo.name}\n(${ganZhi})`;
+      }
+    }
+
     return {
       type: 'liushi',
-      name: '流时',
+      name: displayName,
       stem,
       branch,
       ganZhi,
@@ -258,6 +317,28 @@ export class PillarCalculationService {
     };
 
     return shiErChangSheng[dayStem]?.[branch] || '';
+  }
+
+  /**
+   * 获取农历月份对应的公历起始日期
+   * @param year 年份
+   * @param month 农历月份
+   * @returns 公历日期字符串
+   */
+  private static getSolarDateForLunarMonth(year: number, month: number): string | null {
+    try {
+      // 使用lunar-typescript计算农历月份的公历起始日期（使用月初第一天）
+      const lunar = Lunar.fromYmd(year, month, 1);
+      const solar = lunar.getSolar();
+
+      // 格式化为简洁的日期格式
+      const solarMonth = solar.getMonth();
+      const solarDay = solar.getDay();
+      return `${solarMonth}.${solarDay}`;
+    } catch (error) {
+      console.error('计算农历月份公历日期失败:', error);
+      return null;
+    }
   }
 
 

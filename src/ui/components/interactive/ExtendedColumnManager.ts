@@ -700,7 +700,14 @@ export class ExtendedColumnManager {
 
     console.log(`✅ 获取流日柱信息: ${this.currentSelectedLiuRi.year}-${this.currentSelectedLiuRi.month}-${this.currentSelectedLiuRi.day} ${ganZhi}`);
 
-    return PillarCalculationService.calculateLiuRiPillar(ganZhi, this.baziInfo.dayStem || '');
+    // 传递日期信息用于标题显示
+    const dateInfo = {
+      year: this.currentSelectedLiuRi.year,
+      month: this.currentSelectedLiuRi.month,
+      day: this.currentSelectedLiuRi.day
+    };
+
+    return PillarCalculationService.calculateLiuRiPillar(ganZhi, this.baziInfo.dayStem || '', dateInfo);
   }
 
   /**
@@ -715,7 +722,17 @@ export class ExtendedColumnManager {
     // 如果流时数据已经包含干支，直接使用
     if (this.currentSelectedLiuShi.ganZhi) {
       console.log(`✅ 获取流时柱信息: ${this.currentSelectedLiuShi.name} ${this.currentSelectedLiuShi.ganZhi} (使用后端数据)`);
-      return PillarCalculationService.calculateLiuShiPillar(this.currentSelectedLiuShi.ganZhi, this.baziInfo.dayStem || '');
+
+      // 传递时间信息用于标题显示
+      const timeInfo = {
+        name: this.currentSelectedLiuShi.name,
+        year: this.currentSelectedLiuRi?.year,
+        month: this.currentSelectedLiuRi?.month,
+        day: this.currentSelectedLiuRi?.day,
+        hour: this.currentSelectedLiuShi.timeIndex ? this.currentSelectedLiuShi.timeIndex * 2 : undefined
+      };
+
+      return PillarCalculationService.calculateLiuShiPillar(this.currentSelectedLiuShi.ganZhi, this.baziInfo.dayStem || '', timeInfo);
     }
 
     // 否则计算流时干支（使用timeIndex转换为标准时间）
@@ -731,7 +748,16 @@ export class ExtendedColumnManager {
 
     console.log(`✅ 获取流时柱信息: ${this.currentSelectedLiuShi.name} ${ganZhi} (计算得出，timeIndex=${timeIndex}, standardTime=${standardTime})`);
 
-    return PillarCalculationService.calculateLiuShiPillar(ganZhi, this.baziInfo.dayStem || '');
+    // 传递时间信息用于标题显示
+    const timeInfo = {
+      name: this.currentSelectedLiuShi.name,
+      year: this.currentSelectedLiuRi?.year,
+      month: this.currentSelectedLiuRi?.month,
+      day: this.currentSelectedLiuRi?.day,
+      hour: standardTime
+    };
+
+    return PillarCalculationService.calculateLiuShiPillar(ganZhi, this.baziInfo.dayStem || '', timeInfo);
   }
 
   /**
@@ -896,16 +922,21 @@ export class ExtendedColumnManager {
       }
     });
 
-    // 设置表头样式（与四柱一致的字体大小）
+    // 设置表头样式（支持多行文本显示）
     th.style.cssText = `
       padding: 8px 6px;
       background: var(--background-modifier-border-hover);
       border: 1px solid var(--background-modifier-border);
       font-weight: bold;
       text-align: center;
-      font-size: 14px;
-      min-width: 60px;
+      font-size: 12px;
+      min-width: 80px;
+      min-height: 60px;
       position: relative;
+      white-space: pre-line;
+      line-height: 1.3;
+      vertical-align: middle;
+      word-wrap: break-word;
     `;
   }
 
