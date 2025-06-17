@@ -53,10 +53,8 @@ export class ExtendedColumnManager {
 
     switch (extendType) {
       case ExtendedColumnType.NONE:
-        this.clearAllExtendedColumns();
+        this.clearAllExtendedColumns(true); // 重置大运索引
         this.currentExtendedLevel = 'none';
-        // 重置大运索引，不选择任何大运
-        this.selectedDaYunIndex = -1;
         break;
 
       case ExtendedColumnType.AUTO_CURRENT:
@@ -249,6 +247,14 @@ export class ExtendedColumnManager {
     const actualTargetLevel = this.getActualTargetLevel(targetLevel);
     console.log(`🎯 实际目标层级: ${actualTargetLevel} (请求层级: ${targetLevel})`);
 
+    // 如果实际目标层级是none，直接清除所有扩展
+    if (actualTargetLevel === 'none') {
+      console.log(`⚠️ 无可用数据，清除所有扩展`);
+      this.clearAllExtendedColumns(false); // 不重置大运索引，保持当前状态
+      this.currentExtendedLevel = 'none';
+      return;
+    }
+
     // 检查是否需要强制更新（例如大运切换时）
     const needsForceUpdate = this.needsForceUpdate(actualTargetLevel);
 
@@ -380,7 +386,10 @@ export class ExtendedColumnManager {
   /**
    * 获取实际可达的目标层级
    */
-  private getActualTargetLevel(requestedLevel: string): 'dayun' | 'liunian' | 'liuyue' | 'liuri' | 'liushi' {
+  private getActualTargetLevel(requestedLevel: string): 'dayun' | 'liunian' | 'liuyue' | 'liuri' | 'liushi' | 'none' {
+    // 检查大运是否可用
+    const isDaYunAvailable = this.selectedDaYunIndex >= 0;
+
     // 检查各层级的可用性
     if (requestedLevel === 'liushi') {
       // 流时需要选择流时
@@ -392,8 +401,10 @@ export class ExtendedColumnManager {
         return 'liuyue';
       } else if (this.selectedLiuNianYear && this.selectedLiuNianYear !== 0) {
         return 'liunian';
-      } else {
+      } else if (isDaYunAvailable) {
         return 'dayun';
+      } else {
+        return 'none';
       }
     } else if (requestedLevel === 'liuri') {
       // 流日需要选择流日
@@ -403,8 +414,10 @@ export class ExtendedColumnManager {
         return 'liuyue';
       } else if (this.selectedLiuNianYear && this.selectedLiuNianYear !== 0) {
         return 'liunian';
-      } else {
+      } else if (isDaYunAvailable) {
         return 'dayun';
+      } else {
+        return 'none';
       }
     } else if (requestedLevel === 'liuyue') {
       // 流月需要选择流月
@@ -412,19 +425,27 @@ export class ExtendedColumnManager {
         return 'liuyue';
       } else if (this.selectedLiuNianYear && this.selectedLiuNianYear !== 0) {
         return 'liunian';
-      } else {
+      } else if (isDaYunAvailable) {
         return 'dayun';
+      } else {
+        return 'none';
       }
     } else if (requestedLevel === 'liunian') {
       // 流年需要选择流年
       if (this.selectedLiuNianYear && this.selectedLiuNianYear !== 0) {
         return 'liunian';
-      } else {
+      } else if (isDaYunAvailable) {
         return 'dayun';
+      } else {
+        return 'none';
       }
     } else {
-      // 大运总是可用
-      return 'dayun';
+      // 大运层级
+      if (isDaYunAvailable) {
+        return 'dayun';
+      } else {
+        return 'none';
+      }
     }
   }
 
@@ -444,7 +465,8 @@ export class ExtendedColumnManager {
     // 过滤掉无法获取数据的层级
     return levels.filter(level => {
       if (level === 'dayun') {
-        return true; // 大运总是可用
+        // 大运需要有效的索引
+        return this.selectedDaYunIndex >= 0;
       } else if (level === 'liunian') {
         return this.selectedLiuNianYear && this.selectedLiuNianYear !== 0; // 需要选择流年
       } else if (level === 'liuyue') {
@@ -461,8 +483,9 @@ export class ExtendedColumnManager {
 
   /**
    * 清除所有扩展列
+   * @param resetDaYunIndex 是否重置大运索引，默认false
    */
-  clearAllExtendedColumns() {
+  clearAllExtendedColumns(resetDaYunIndex: boolean = false) {
     if (!this.baziTable) {
       return;
     }
@@ -497,9 +520,14 @@ export class ExtendedColumnManager {
 
     // 清空扩展柱数组
     this.extendedPillars = [];
-    // 重置大运索引，不选择任何大运
-    this.selectedDaYunIndex = -1;
-    console.log(`✅ 扩展列清除完成，大运索引已重置`);
+
+    // 根据参数决定是否重置大运索引
+    if (resetDaYunIndex) {
+      this.selectedDaYunIndex = -1;
+      console.log(`✅ 扩展列清除完成，大运索引已重置`);
+    } else {
+      console.log(`✅ 扩展列清除完成`);
+    }
   }
 
   // 状态管理方法
@@ -559,7 +587,7 @@ export class ExtendedColumnManager {
 
     // 重新扩展到新的目标层级
     if (newTargetLevel === 'none') {
-      this.clearAllExtendedColumns();
+      this.clearAllExtendedColumns(true); // 关闭时重置大运索引
       this.currentExtendedLevel = 'none';
     } else {
       this.extendBaziTableToLevel(newTargetLevel);
@@ -861,7 +889,7 @@ export class ExtendedColumnManager {
       e.stopPropagation();
       // 特殊宫位类型直接清除所有扩展列
       if (pillarInfo.type === 'special') {
-        this.clearAllExtendedColumns();
+        this.clearAllExtendedColumns(false); // 不重置大运索引
         this.currentExtendedLevel = 'none';
       } else {
         this.closeExtendedLevel(pillarInfo.type);
