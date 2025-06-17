@@ -870,13 +870,16 @@ export class ExtendedColumnManager {
       cls: 'bazi-extended-header'
     });
 
-    // 创建标题容器
+    // 创建标题容器（相对定位，用于包含绝对定位的关闭按钮）
     const titleContainer = th.createDiv({ cls: 'header-title-container' });
     titleContainer.style.cssText = `
+      position: relative;
+      width: 100%;
+      height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 4px;
+      padding: 4px;
     `;
 
     // 添加标题文本
@@ -884,30 +887,50 @@ export class ExtendedColumnManager {
       text: pillarInfo.name,
       cls: 'header-title'
     });
+    titleSpan.style.cssText = `
+      text-align: center;
+      line-height: 1.3;
+      white-space: pre-line;
+    `;
 
-    // 添加关闭按钮
+    // 添加关闭按钮（绝对定位到右上角）
     const closeButton = titleContainer.createSpan({
       text: '×',
       cls: 'header-close-btn'
     });
     closeButton.style.cssText = `
+      position: absolute;
+      top: 2px;
+      right: 2px;
       cursor: pointer;
       color: var(--text-muted);
-      font-size: 14px;
+      font-size: 16px;
       font-weight: bold;
-      padding: 0 2px;
-      border-radius: 2px;
+      padding: 2px 4px;
+      border-radius: 3px;
       transition: all 0.2s ease;
+      background-color: transparent;
+      z-index: 10;
+      line-height: 1;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     `;
 
     // 关闭按钮悬停效果
     closeButton.addEventListener('mouseenter', () => {
       closeButton.style.color = 'var(--text-error)';
-      closeButton.style.backgroundColor = 'var(--background-modifier-hover)';
+      closeButton.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+      closeButton.style.transform = 'scale(1.1)';
+      closeButton.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.2)';
     });
     closeButton.addEventListener('mouseleave', () => {
       closeButton.style.color = 'var(--text-muted)';
       closeButton.style.backgroundColor = 'transparent';
+      closeButton.style.transform = 'scale(1)';
+      closeButton.style.boxShadow = 'none';
     });
 
     // 关闭按钮点击事件
@@ -922,9 +945,9 @@ export class ExtendedColumnManager {
       }
     });
 
-    // 设置表头样式（支持多行文本显示）
+    // 设置表头样式（支持多行文本显示和绝对定位的关闭按钮）
     th.style.cssText = `
-      padding: 8px 6px;
+      padding: 4px;
       background: var(--background-modifier-border-hover);
       border: 1px solid var(--background-modifier-border);
       font-weight: bold;
@@ -937,6 +960,7 @@ export class ExtendedColumnManager {
       line-height: 1.3;
       vertical-align: middle;
       word-wrap: break-word;
+      overflow: visible;
     `;
   }
 
