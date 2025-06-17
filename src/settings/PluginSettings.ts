@@ -786,6 +786,16 @@ export class BaziSettingTab extends PluginSettingTab {
 				name: 'style',
 				values: ['1 / simple / 简洁', '2 / standard / 标准', '3 / complete / 完整'],
 				desc: ['简洁样式（仅八字和基本信息）', '标准样式（含大运流年流月）', '完整样式（专业分析功能）']
+			},
+			{
+				name: 'extend / ex / e',
+				values: ['none / no / 0 / 无', 'auto_current / cur / 1 / 当前', 'auto_day / day / 2 / 流日', 'auto_month / month / 3 / 流月', 'special_palaces / palace / 4 / 宫位', 'custom / 5 / 自定义'],
+				desc: ['不扩展，只显示四柱', '扩展到当前时间的流时层级', '扩展到当前日期的流日层级', '扩展到当前月份的流月层级', '显示胎元、命宫、身宫', '扩展到自定义时间（需配合t参数）']
+			},
+			{
+				name: 'extendTarget / to / t',
+				values: ['时间格式 (如: 2025-01-01 12:00)'],
+				desc: ['自定义扩展的目标时间（仅用于extend: custom）']
 			}
 		];
 
@@ -849,6 +859,130 @@ export class BaziSettingTab extends PluginSettingTab {
 			this.createCodeBlockWithCopy(exampleContainer, '```bazi\n' + example.code + '\n```');
 		});
 
+		// 扩展列功能说明
+		instructionsContainer.createEl('h4', {text: '🚀 扩展列功能（样式3专用）'});
+
+		const extendDescription = instructionsContainer.createDiv({
+			attr: { style: 'margin-bottom: 15px; padding: 12px; background-color: var(--background-primary); border-radius: 5px; border-left: 4px solid var(--interactive-accent);' }
+		});
+
+		extendDescription.createEl('p', {
+			text: '扩展列功能允许在八字表格中自动添加大运、流年、流月、流日、流时等时间层级的分析列，支持多种扩展模式和简洁参数。',
+			attr: { style: 'margin-bottom: 10px; color: var(--text-normal);' }
+		});
+
+		// 扩展类型表格
+		const extendTypesTable = instructionsContainer.createEl('table', {
+			attr: { style: 'width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 0.85em;' }
+		});
+
+		// 表头
+		const thead = extendTypesTable.createEl('thead');
+		const headerRow = thead.createEl('tr');
+		['扩展模式', '完整参数', '简洁参数', '数字参数', '中文参数', '说明'].forEach(header => {
+			headerRow.createEl('th', {
+				text: header,
+				attr: { style: 'border: 1px solid var(--background-modifier-border); padding: 8px; background-color: var(--background-secondary); text-align: left;' }
+			});
+		});
+
+		// 表格数据
+		const extendTypes = [
+			{
+				mode: '不扩展',
+				full: 'extend: none',
+				short: 'ex: no',
+				number: 'e: 0',
+				chinese: 'extend: 无',
+				desc: '只显示四柱，不显示任何扩展列'
+			},
+			{
+				mode: '当前时间',
+				full: 'extend: auto_current',
+				short: 'ex: cur',
+				number: 'e: 1',
+				chinese: 'extend: 当前',
+				desc: '自动扩展到当前时间的流时层级'
+			},
+			{
+				mode: '流日',
+				full: 'extend: auto_day',
+				short: 'ex: day',
+				number: 'e: 2',
+				chinese: 'extend: 流日',
+				desc: '扩展到当前日期的流日层级'
+			},
+			{
+				mode: '流月',
+				full: 'extend: auto_month',
+				short: 'ex: month',
+				number: 'e: 3',
+				chinese: 'extend: 流月',
+				desc: '扩展到当前月份的流月层级'
+			},
+			{
+				mode: '特殊宫位',
+				full: 'extend: special_palaces',
+				short: 'ex: palace',
+				number: 'e: 4',
+				chinese: 'extend: 宫位',
+				desc: '显示胎元、命宫、身宫三个特殊宫位'
+			},
+			{
+				mode: '自定义时间',
+				full: 'extend: custom',
+				short: 'ex: custom',
+				number: 'e: 5',
+				chinese: 'extend: 自定义',
+				desc: '扩展到指定的目标时间'
+			}
+		];
+
+		const tbody = extendTypesTable.createEl('tbody');
+		extendTypes.forEach(type => {
+			const row = tbody.createEl('tr');
+			[type.mode, type.full, type.short, type.number, type.chinese, type.desc].forEach(cell => {
+				row.createEl('td', {
+					text: cell,
+					attr: { style: 'border: 1px solid var(--background-modifier-border); padding: 6px; font-family: var(--font-monospace);' }
+				});
+			});
+		});
+
+		// 扩展列使用示例
+		instructionsContainer.createEl('h5', {text: '📝 扩展列使用示例'});
+
+		const extendExamples = [
+			{
+				title: '查看当前运势（最常用）',
+				code: 'date: 1990-01-01 08:00\ngender: 男\ne: 1'
+			},
+			{
+				title: '分析特殊宫位',
+				code: 'bazi: 庚午 戊子 甲子 乙亥\ngender: 女\ne: 4'
+			},
+			{
+				title: '查看特定时间运势',
+				code: 'lunar: 1990-01-01 08:00\ngender: 男\ne: 5\nt: 2025-01-01 12:00'
+			},
+			{
+				title: '只显示四柱（不扩展）',
+				code: 'date: 1990-01-01 08:00\ngender: 男\ne: 0'
+			}
+		];
+
+		extendExamples.forEach(example => {
+			const exampleContainer = instructionsContainer.createDiv({
+				attr: { style: 'margin-bottom: 12px;' }
+			});
+
+			exampleContainer.createEl('strong', {text: example.title + ':'});
+			exampleContainer.createEl('br');
+
+			// 创建代码块容器，包含复制按钮
+			this.createCodeBlockWithCopy(exampleContainer, '```bazi\n' + example.code + '\n```');
+		});
+
 		// 功能特点
 		instructionsContainer.createEl('h4', {text: '✨ 功能特点'});
 
@@ -860,7 +994,9 @@ export class BaziSettingTab extends PluginSettingTab {
 			'🎭 交互式界面：支持点击展开详细信息（完整样式）',
 			'🌟 神煞分析：支持四柱、大运、流年、小运、流月神煞',
 			'⚡ 实时观察：支持当前时间八字的实时显示',
-			'🔧 灵活配置：支持全局默认样式和单独指定样式'
+			'🔧 灵活配置：支持全局默认样式和单独指定样式',
+			'🚀 扩展列功能：支持自动扩展到不同时间层级（样式3专用）',
+			'📊 多种参数格式：支持完整参数、简洁参数、数字参数、中文参数'
 		];
 
 		const featuresList = instructionsContainer.createEl('ul', {
@@ -889,7 +1025,10 @@ export class BaziSettingTab extends PluginSettingTab {
 			'🎯 样式选择：使用 style: 1/2/3 快速设置样式，或使用 simple/standard/complete',
 			'👤 性别设置：使用 gender: no 可以跳过性别选择，仅观察八字信息',
 			'📅 年份选择：纯八字类型会自动显示可选年份，也可以直接指定 year 参数',
-			'🔧 全局设置：可在插件设置中配置默认样式，代码块参数会覆盖全局设置'
+			'🔧 全局设置：可在插件设置中配置默认样式，代码块参数会覆盖全局设置',
+			'🚀 扩展列快捷：使用 e: 1 查看当前运势，e: 4 查看宫位，e: 0 不扩展',
+			'⏰ 自定义时间：使用 e: 5 配合 t: 2025-01-01 12:00 查看特定时间运势',
+			'📊 参数优先级：完整参数 > 简洁参数 > 数字参数，可混合使用'
 		];
 
 		tips.forEach(tip => {
