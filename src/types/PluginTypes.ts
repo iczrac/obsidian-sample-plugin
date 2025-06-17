@@ -31,10 +31,20 @@ export interface BaziParams {
 	showSpecialInfo?: string; // 是否显示特殊信息
 	calculationMethod?: string; // 计算方法
 
-	// 扩展列控制
+	// 扩展列控制（完整参数）
 	extend?: string;         // 扩展列类型：none|auto_current|auto_day|auto_month|special_palaces|custom
 	extendCount?: string;    // 扩展列数量（用于custom模式）
 	extendTarget?: string;   // 扩展目标时间（用于custom模式，格式：YYYY-MM-DD HH:mm）
+
+	// 扩展列控制（简洁参数）
+	ex?: string;             // extend 的简洁版本
+	to?: string;             // extendTarget 的简洁版本
+	count?: string;          // extendCount 的简洁版本
+
+	// 更简洁的单字母参数
+	e?: string;              // extend 的单字母版本
+	t?: string;              // extendTarget 的单字母版本
+	c?: string;              // extendCount 的单字母版本
 
 	// 神煞显示设置
 	showshensha_sizhu?: string;   // 是否显示四柱神煞

@@ -641,17 +641,21 @@ export class CodeBlockProcessor {
 		baziInfo.showShenSha = this.plugin.settings.showShenSha;
 		console.log('🎨 传递神煞显示设置到baziInfo:', baziInfo.showShenSha);
 
-		// 处理扩展列参数
-		if (params.extend) {
-			baziInfo.extendColumnType = this.parseExtendColumnType(params.extend);
+		// 处理扩展列参数（支持多种参数名）
+		const extendParam = this.getExtendParam(params);
+		if (extendParam) {
+			baziInfo.extendColumnType = this.parseExtendColumnType(extendParam);
 			console.log('🎨 设置扩展列类型:', baziInfo.extendColumnType);
 
 			// 处理扩展列相关参数
-			if (params.extendCount) {
-				baziInfo.extendCount = parseInt(params.extendCount);
+			const extendCount = this.getExtendCountParam(params);
+			if (extendCount) {
+				baziInfo.extendCount = parseInt(extendCount);
 			}
-			if (params.extendTarget) {
-				baziInfo.extendTarget = params.extendTarget;
+
+			const extendTarget = this.getExtendTargetParam(params);
+			if (extendTarget) {
+				baziInfo.extendTarget = extendTarget;
 			}
 		}
 
@@ -692,43 +696,90 @@ export class CodeBlockProcessor {
 	}
 
 	/**
+	 * 获取扩展参数（支持多种参数名）
+	 */
+	private getExtendParam(params: BaziParams): string | undefined {
+		// 按优先级检查参数：完整参数 > 简洁参数 > 单字母参数
+		return params.extend || params.ex || params.e;
+	}
+
+	/**
+	 * 获取扩展目标参数（支持多种参数名）
+	 */
+	private getExtendTargetParam(params: BaziParams): string | undefined {
+		return params.extendTarget || params.to || params.t;
+	}
+
+	/**
+	 * 获取扩展数量参数（支持多种参数名）
+	 */
+	private getExtendCountParam(params: BaziParams): string | undefined {
+		return params.extendCount || params.count || params.c;
+	}
+
+	/**
 	 * 解析扩展列类型参数
 	 */
 	private parseExtendColumnType(extendParam: string): ExtendedColumnType {
 		const value = extendParam.toLowerCase().trim();
 
 		switch (value) {
+			// 不扩展
 			case 'none':
+			case 'no':
+			case 'n':
 			case '无':
 			case '不扩展':
+			case '0':
 				return ExtendedColumnType.NONE;
 
+			// 自动当前
 			case 'auto_current':
 			case 'current':
+			case 'now':
+			case 'cur':
 			case '当前':
 			case '自动当前':
+			case '现在':
+			case '1':
 				return ExtendedColumnType.AUTO_CURRENT;
 
+			// 自动流日
 			case 'auto_day':
 			case 'day':
+			case 'd':
 			case '流日':
 			case '自动流日':
+			case '日':
+			case '2':
 				return ExtendedColumnType.AUTO_DAY;
 
+			// 自动流月
 			case 'auto_month':
 			case 'month':
+			case 'm':
 			case '流月':
 			case '自动流月':
+			case '月':
+			case '3':
 				return ExtendedColumnType.AUTO_MONTH;
 
+			// 特殊宫位
 			case 'special_palaces':
 			case 'palaces':
+			case 'palace':
+			case 'p':
 			case '宫位':
 			case '胎元命宫身宫':
+			case '宫':
+			case '4':
 				return ExtendedColumnType.SPECIAL_PALACES;
 
+			// 自定义
 			case 'custom':
+			case 'c':
 			case '自定义':
+			case '5':
 				return ExtendedColumnType.CUSTOM;
 
 			default:
