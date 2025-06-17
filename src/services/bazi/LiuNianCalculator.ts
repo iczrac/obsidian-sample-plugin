@@ -2,7 +2,7 @@ import { EightChar, Solar } from 'lunar-typescript';
 import { LiuNianInfo } from '../../types/BaziInfo';
 import { BaziCalculator } from './BaziCalculator';
 import { ShiShenCalculator } from './ShiShenCalculator';
-import { UnifiedShenShaService } from './shensha/UnifiedShenShaService';
+import { ShenShaTimeService } from './shensha/ShenShaTimeService';
 
 /**
  * 流年计算器
@@ -52,7 +52,7 @@ export class LiuNianCalculator {
         const shiShenZhi = ShiShenCalculator.getHiddenShiShen(dayStem, ganZhi.charAt(1));
 
         // 计算流年神煞
-        const shenSha = UnifiedShenShaService.calculateLiuNianShenSha(dayStem, ganZhi);
+        const shenSha = ShenShaTimeService.calculateLiuNianShenSha(dayStem, ganZhi);
 
         // 计算地势
         const diShi = this.calculateDiShi(ganZhi.charAt(0), ganZhi.charAt(1));
@@ -110,7 +110,7 @@ export class LiuNianCalculator {
       const shiShenZhi = ShiShenCalculator.getHiddenShiShen(dayStem, ganZhi.charAt(1));
 
       // 计算流年神煞
-      const shenSha = UnifiedShenShaService.calculateLiuNianShenSha(dayStem, ganZhi);
+      const shenSha = ShenShaTimeService.calculateLiuNianShenSha(dayStem, ganZhi);
 
       // 计算地势
       const diShi = this.calculateDiShi(ganZhi.charAt(0), ganZhi.charAt(1));

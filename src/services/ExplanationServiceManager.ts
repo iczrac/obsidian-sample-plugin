@@ -1,4 +1,4 @@
-import { ShenShaExplanationService } from './bazi/shensha/ShenShaExplanationService';
+import { ShenShaDataService } from './bazi/shensha/ShenShaDataService';
 import { WuXingExplanationService } from './WuXingExplanationService';
 import { GeJuExplanationService } from './GeJuExplanationService';
 
@@ -21,7 +21,7 @@ export class ExplanationServiceManager {
     const cleanShenSha = shenSha.includes(':') ? shenSha.split(':')[1] : shenSha;
     
     // 获取神煞信息
-    const shenShaInfo = ShenShaExplanationService.getShenShaInfo(cleanShenSha);
+    const shenShaInfo = ShenShaDataService.getShenShaDetail(cleanShenSha);
     
     if (!shenShaInfo) {
       console.warn(`未找到神煞信息: ${cleanShenSha}`);
@@ -72,10 +72,24 @@ export class ExplanationServiceManager {
         'background: var(--background-secondary); color: var(--text-normal);'}
     `;
 
+    // 检查神煞信息是否存在
+    if (shenShaInfo.type === '未知') {
+      const noInfo = modal.createEl('p', {
+        text: '暂无该神煞的详细信息',
+        cls: 'shensha-no-info'
+      });
+      noInfo.style.cssText = `
+        margin: 0;
+        color: var(--text-muted);
+        font-style: italic;
+      `;
+      return;
+    }
+
     // 描述
-    if (shenShaInfo.explanation) {
+    if (shenShaInfo.description) {
       const desc = modal.createEl('p', {
-        text: shenShaInfo.explanation,
+        text: shenShaInfo.description,
         cls: 'shensha-description'
       });
       desc.style.cssText = `
@@ -85,9 +99,9 @@ export class ExplanationServiceManager {
     }
 
     // 影响
-    if (shenShaInfo.influence) {
+    if (shenShaInfo.effect) {
       const influence = modal.createEl('p', { cls: 'shensha-influence' });
-      influence.innerHTML = `<strong>影响：</strong>${shenShaInfo.influence}`;
+      influence.innerHTML = `<strong>影响：</strong>${shenShaInfo.effect}`;
       influence.style.cssText = `
         margin: 0;
         color: var(--text-normal);

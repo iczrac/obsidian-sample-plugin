@@ -1,7 +1,7 @@
 import { Solar, Lunar } from 'lunar-typescript';
 import { BaziCalculator } from './BaziCalculator';
 import { ShiShenCalculator } from './ShiShenCalculator';
-import { UnifiedShenShaService } from './shensha/UnifiedShenShaService';
+import { ShenShaTimeService } from './shensha/ShenShaTimeService';
 import { XunKongCalculator } from './XunKongCalculator';
 import { LiuRiInfo } from '../../types/BaziInfo';
 
@@ -69,7 +69,7 @@ export class LiuRiCalculator {
           const diShi = BaziCalculator.getDiShi(dayStem, branch);
 
           // 计算神煞信息
-          const shenSha = UnifiedShenShaService.calculateLiuRiShenSha(dayStem, ganZhi);
+          const shenSha = ShenShaTimeService.calculateLiuRiShenSha(dayStem, ganZhi);
 
           liuRiData.push({
             year: currentYear,

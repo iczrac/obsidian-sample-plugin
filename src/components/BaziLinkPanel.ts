@@ -162,18 +162,20 @@ export class BaziLinkPanel extends Modal {
             return combos;
         }
 
-        // 使用ShenShaService获取神煞组合分析
-        const { ShenShaExplanationService } = require('../services/bazi/shensha/ShenShaExplanationService');
-        const combinationAnalysis = ShenShaExplanationService.getShenShaCombinationAnalysis(allShenSha);
+        // 使用ShenShaAnalysisService获取神煞组合分析
+        const { ShenShaAnalysisService } = require('../services/bazi/shensha/ShenShaAnalysisService');
+        const combinationAnalysis = ShenShaAnalysisService.analyzeShenShaCombination(allShenSha);
 
         // 转换为双链格式
-        combinationAnalysis.forEach((analysis: any) => {
-            combos.push({
-                label: analysis.combination,
-                link: `[[${analysis.combination}]]`,
-                description: analysis.analysis.substring(0, 50) + '...' // 截取前50个字符作为描述
+        if (combinationAnalysis.keyPoints && combinationAnalysis.keyPoints.length > 0) {
+            combinationAnalysis.keyPoints.forEach((point: string) => {
+                combos.push({
+                    label: point,
+                    link: `[[${point}]]`,
+                    description: point.substring(0, 50) + '...' // 截取前50个字符作为描述
+                });
             });
-        });
+        }
 
         return combos;
     }

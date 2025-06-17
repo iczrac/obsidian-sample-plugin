@@ -264,14 +264,16 @@ export class LinkService {
         }
 
         try {
-            // 使用ShenShaExplanationService获取神煞组合分析
-            const { ShenShaExplanationService } = require('./ShenShaExplanationService');
-            const combinationAnalysis = ShenShaExplanationService.getShenShaCombinationAnalysis(shenShaList);
+            // 使用ShenShaAnalysisService获取神煞组合分析
+            const { ShenShaAnalysisService } = require('./bazi/shensha/ShenShaAnalysisService');
+            const combinationAnalysis = ShenShaAnalysisService.analyzeShenShaCombination(shenShaList);
 
             // 提取组合名称作为双链
-            combinationAnalysis.forEach((analysis: any) => {
-                combinations.push(analysis.combination);
-            });
+            if (combinationAnalysis.keyPoints && combinationAnalysis.keyPoints.length > 0) {
+                combinationAnalysis.keyPoints.forEach((point: string) => {
+                    combinations.push(point);
+                });
+            }
         } catch (error) {
             console.error('生成神煞组合双链失败:', error);
 

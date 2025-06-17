@@ -7,11 +7,11 @@ import { CombinationCalculator } from './bazi/CombinationCalculator';
 import { DaYunCalculator } from './bazi/DaYunCalculator';
 import { LiuNianCalculator } from './bazi/LiuNianCalculator';
 import { XiaoYunCalculator } from './bazi/XiaoYunCalculator';
-import { UnifiedShenShaService } from './bazi/shensha/UnifiedShenShaService';
+import { ShenShaAnalysisService } from './bazi/shensha/ShenShaAnalysisService';
 import { YearMatchCalculator } from './bazi/YearMatchCalculator';
 import { XunKongCalculator } from './bazi/XunKongCalculator';
 import { GeJuExplanationService } from './GeJuExplanationService';
-import { ShenShaExplanationService } from './bazi/shensha/ShenShaExplanationService';
+import { ShenShaDataService } from './bazi/shensha/ShenShaDataService';
 import { WuXingExplanationService } from './WuXingExplanationService';
 import { GeJuCalculator } from './bazi/GeJuCalculator';
 import { WuXingStrengthCalculator } from './bazi/WuXingStrengthCalculator';
@@ -360,7 +360,7 @@ export class BaziService {
     // 计算神煞（即使没有完整日期信息也可以计算基本神煞）
     let shenSha: string[] = [];
     if (eightChar) {
-      const shenShaResult = UnifiedShenShaService.calculateCompleteFourPillarShenSha(eightChar);
+      const shenShaResult = ShenShaAnalysisService.analyzeFourPillarShenSha(eightChar);
       shenSha = shenShaResult.allShenSha;
     }
 
@@ -698,7 +698,7 @@ export class BaziService {
     const sanHuiJu = CombinationCalculator.checkSanHuiJu(branches);
 
     // 计算神煞
-    const shenShaResult = UnifiedShenShaService.calculateCompleteFourPillarShenSha(eightChar);
+    const shenShaResult = ShenShaAnalysisService.analyzeFourPillarShenSha(eightChar);
     const shenSha = shenShaResult.allShenSha;
 
     // 计算身宫

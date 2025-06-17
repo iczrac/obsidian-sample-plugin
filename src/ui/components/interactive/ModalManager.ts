@@ -1,5 +1,5 @@
 import { BaziInfo } from '../../../types/BaziInfo';
-import { ShenShaExplanationService } from '../../../services/bazi/shensha/ShenShaExplanationService';
+import { ShenShaDataService } from '../../../services/bazi/shensha/ShenShaDataService';
 import { WuXingExplanationService } from '../../../services/WuXingExplanationService';
 import { GeJuExplanationService } from '../../../services/GeJuExplanationService';
 
@@ -27,8 +27,8 @@ export class ModalManager {
       return;
     }
 
-    const shenShaInfo = ShenShaExplanationService.getShenShaInfo(shenSha);
-    if (!shenShaInfo) {
+    const shenShaInfo = ShenShaDataService.getShenShaDetail(shenSha);
+    if (shenShaInfo.type === '未知') {
       console.log(`未找到神煞 ${shenSha} 的解释`);
       // 尝试从新的神煞数据服务获取信息
       const explanation = this.createFallbackShenShaContent(shenSha);
@@ -69,7 +69,7 @@ export class ModalManager {
               <span class="section-icon">📖</span>
               概述
             </h4>
-            <p class="section-content">${shenShaInfo.explanation}</p>
+            <p class="section-content">${shenShaInfo.description}</p>
           </div>
 
           <div class="shensha-section">
@@ -77,7 +77,7 @@ export class ModalManager {
               <span class="section-icon">🎯</span>
               主要影响
             </h4>
-            <p class="section-content">${shenShaInfo.influence}</p>
+            <p class="section-content">${shenShaInfo.effect}</p>
           </div>
 
           <div class="shensha-section">
@@ -85,7 +85,7 @@ export class ModalManager {
               <span class="section-icon">💡</span>
               化解建议
             </h4>
-            <p class="section-content">${shenShaInfo.advice}</p>
+            <p class="section-content">${this.getAdviceFromType(shenShaInfo.type)}</p>
           </div>
 
           <div class="shensha-section calculation-section">
@@ -457,6 +457,22 @@ export class ModalManager {
       const title = modal.querySelector('.bazi-modal-title');
       return title && title.textContent === key;
     });
+  }
+
+  /**
+   * 根据神煞类型生成建议
+   */
+  private getAdviceFromType(type: string): string {
+    switch (type) {
+      case '吉神':
+        return '要充分发挥吉神的正面作用，积极进取，把握机遇。';
+      case '凶神':
+        return '要注意化解凶神的不利影响，谨慎行事，多行善事。';
+      case '吉凶神':
+        return '要发挥其有利的一面，同时注意避免不利的影响。';
+      default:
+        return '建议根据具体情况进行分析。';
+    }
   }
 
   /**

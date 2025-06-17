@@ -3,7 +3,7 @@ import { XiaoYunInfo } from '../../types/BaziInfo';
 import { ShiShenCalculator } from './ShiShenCalculator';
 import { XunKongCalculator } from './XunKongCalculator';
 import { ShiErChangShengCalculator } from './ShiErChangShengCalculator';
-import { UnifiedShenShaService } from './shensha/UnifiedShenShaService';
+import { ShenShaTimeService } from './shensha/ShenShaTimeService';
 
 /**
  * 小运计算器
@@ -94,7 +94,7 @@ export class XiaoYunCalculator {
         const diShi = this.calculateDiShiForXiaoYun(dayStem, xiaoYunGanZhi[1]);
 
         // 计算神煞（简化版本，只计算基本神煞）
-        const shenSha = UnifiedShenShaService.calculateXiaoYunShenSha(dayStem, xiaoYunGanZhi);
+        const shenSha = ShenShaTimeService.calculateXiaoYunShenSha(dayStem, xiaoYunGanZhi);
 
         const xiaoYunInfo: XiaoYunInfo = {
           year,

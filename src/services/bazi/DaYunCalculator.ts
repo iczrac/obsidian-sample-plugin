@@ -2,7 +2,7 @@ import { EightChar, Solar } from 'lunar-typescript';
 import { DaYunInfo } from '../../types/BaziInfo';
 import { BaziCalculator } from './BaziCalculator';
 import { ShiShenCalculator } from './ShiShenCalculator';
-import { UnifiedShenShaService } from './shensha/UnifiedShenShaService';
+import { ShenShaTimeService } from './shensha/ShenShaTimeService';
 
 /**
  * 大运计算器
@@ -94,7 +94,7 @@ export class DaYunCalculator {
         const shiShenZhi = ShiShenCalculator.getHiddenShiShen(dayStem, ganZhi.charAt(1));
 
         // 计算大运神煞
-        const shenSha = UnifiedShenShaService.calculateDaYunShenSha(dayStem, ganZhi);
+        const shenSha = ShenShaTimeService.calculateDaYunShenSha(dayStem, ganZhi);
 
         // 计算地势
         const diShi = this.calculateDiShi(ganZhi.charAt(0), ganZhi.charAt(1));
@@ -212,7 +212,7 @@ export class DaYunCalculator {
     const shiShenZhi = ShiShenCalculator.getHiddenShiShen(dayStem, qianYunGanZhi.charAt(1));
     const diShi = this.calculateDiShi(qianYunGanZhi.charAt(0), qianYunGanZhi.charAt(1));
     const xunKong = this.calculateXunKongSafe(qianYunGanZhi);
-    const shenSha = UnifiedShenShaService.calculateDaYunShenSha(dayStem, qianYunGanZhi);
+    const shenSha = ShenShaTimeService.calculateDaYunShenSha(dayStem, qianYunGanZhi);
 
     return {
       ganZhi: qianYunGanZhi,

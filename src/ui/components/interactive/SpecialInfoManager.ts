@@ -2,8 +2,7 @@ import { BaziInfo } from '../../../types/BaziInfo';
 import { ColorSchemeService } from '../../../services/bazi/ColorSchemeService';
 import { ShenShaDataService } from '../../../services/bazi/shensha/ShenShaDataService';
 import { ShenShaAlgorithms } from '../../../services/bazi/shensha/ShenShaAlgorithms';
-import { StyleUtilsService } from '../../../services/bazi/StyleUtilsService';
-import { ShenShaExplanationService } from '../../../services/bazi/shensha/ShenShaExplanationService';
+import { ShenShaAnalysisService } from '../../../services/bazi/shensha/ShenShaAnalysisService';
 
 /**
  * 特殊信息管理器
@@ -827,121 +826,72 @@ export class SpecialInfoManager {
     if ((!this.baziInfo.shenSha || this.baziInfo.shenSha.length === 0) || !this.infoContainer) return;
 
     // 获取神煞组合分析
-    const combinationAnalysis = ShenShaExplanationService.getShenShaCombinationAnalysis(this.baziInfo.shenSha);
+    const combinationAnalysis = ShenShaAnalysisService.analyzeShenShaCombination(this.baziInfo.shenSha);
 
-    if (combinationAnalysis.length === 0) return;
+    const hasContent = combinationAnalysis.synergies.length > 0 ||
+                      combinationAnalysis.conflicts.length > 0 ||
+                      combinationAnalysis.recommendations.length > 0;
+
+    if (!hasContent) return;
 
     const combinationCard = this.createInfoCard('神煞组合论断');
 
-    combinationAnalysis.forEach(combo => {
-      const comboContainer = combinationCard.createDiv({ cls: 'shensha-combination-item' });
-      comboContainer.style.cssText = `
-        margin-bottom: 12px;
-        padding: 8px;
-        border-radius: 6px;
-        background: ${this.getCombinationBackground(combo.type)};
-        border-left: 3px solid ${this.getCombinationBorderColor(combo.type)};
-      `;
-
-      // 组合标题
-      const titleEl = comboContainer.createDiv({ cls: 'combination-title' });
-      titleEl.textContent = combo.combination;
-      titleEl.style.cssText = `
-        font-weight: bold;
-        font-size: 13px;
-        color: ${this.getCombinationTitleColor(combo.type)};
-        margin-bottom: 4px;
-      `;
-
-      // 组合描述
-      const descEl = comboContainer.createDiv({ cls: 'combination-description' });
-      descEl.textContent = combo.description;
-      descEl.style.cssText = `
-        font-size: 12px;
-        color: var(--text-muted);
-        margin-bottom: 6px;
-        line-height: 1.4;
-      `;
-
-      // 详细分析（可折叠）
-      const detailsEl = comboContainer.createDiv({ cls: 'combination-details' });
-      detailsEl.style.cssText = `
-        font-size: 11px;
-        color: var(--text-faint);
-        line-height: 1.3;
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.3s ease;
-      `;
-      detailsEl.innerHTML = `
-        <p><strong>分析：</strong>${combo.analysis}</p>
-        ${combo.source ? `<p><strong>出处：</strong>${combo.source}</p>` : ''}
-        ${combo.influence ? `<p><strong>影响：</strong>${combo.influence}</p>` : ''}
-      `;
-
-      // 点击展开/收起
-      comboContainer.style.cursor = 'pointer';
-      let isExpanded = false;
-
-      comboContainer.addEventListener('click', () => {
-        if (isExpanded) {
-          detailsEl.style.maxHeight = '0';
-          titleEl.style.opacity = '1';
-        } else {
-          detailsEl.style.maxHeight = '200px';
-          titleEl.style.opacity = '0.8';
-        }
-        isExpanded = !isExpanded;
+    // 显示相互增强的组合
+    if (combinationAnalysis.synergies.length > 0) {
+      const synergySection = combinationCard.createDiv({ cls: 'synergy-section' });
+      synergySection.createEl('h4', { text: '✨ 相互增强', cls: 'section-title' });
+      combinationAnalysis.synergies.forEach(combo => {
+        const comboEl = synergySection.createDiv({ cls: 'combo-item' });
+        comboEl.textContent = combo;
+        comboEl.style.cssText = `
+          margin: 4px 0;
+          padding: 6px;
+          background: rgba(34, 139, 34, 0.1);
+          border-radius: 4px;
+          font-size: 12px;
+          color: var(--text-normal);
+        `;
       });
+    }
 
-      // 悬停效果
-      comboContainer.addEventListener('mouseenter', () => {
-        comboContainer.style.transform = 'translateX(2px)';
-        comboContainer.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+    // 显示相互冲突的组合
+    if (combinationAnalysis.conflicts.length > 0) {
+      const conflictSection = combinationCard.createDiv({ cls: 'conflict-section' });
+      conflictSection.createEl('h4', { text: '⚠️ 相互冲突', cls: 'section-title' });
+      combinationAnalysis.conflicts.forEach(combo => {
+        const comboEl = conflictSection.createDiv({ cls: 'combo-item' });
+        comboEl.textContent = combo;
+        comboEl.style.cssText = `
+          margin: 4px 0;
+          padding: 6px;
+          background: rgba(220, 20, 60, 0.1);
+          border-radius: 4px;
+          font-size: 12px;
+          color: var(--text-normal);
+        `;
       });
+    }
 
-      comboContainer.addEventListener('mouseleave', () => {
-        comboContainer.style.transform = 'translateX(0)';
-        comboContainer.style.boxShadow = 'none';
+    // 显示建议
+    if (combinationAnalysis.recommendations.length > 0) {
+      const recommendSection = combinationCard.createDiv({ cls: 'recommend-section' });
+      recommendSection.createEl('h4', { text: '💡 建议', cls: 'section-title' });
+      combinationAnalysis.recommendations.forEach(recommendation => {
+        const recommendEl = recommendSection.createDiv({ cls: 'recommend-item' });
+        recommendEl.textContent = recommendation;
+        recommendEl.style.cssText = `
+          margin: 4px 0;
+          padding: 6px;
+          background: rgba(0, 123, 255, 0.1);
+          border-radius: 4px;
+          font-size: 12px;
+          color: var(--text-normal);
+        `;
       });
-    });
-  }
-
-  /**
-   * 获取组合背景色
-   */
-  private getCombinationBackground(type: string): string {
-    switch (type) {
-      case 'good': return 'rgba(34, 139, 34, 0.05)';
-      case 'bad': return 'rgba(220, 20, 60, 0.05)';
-      case 'mixed': return 'rgba(255, 165, 0, 0.05)';
-      default: return 'var(--background-secondary)';
     }
   }
 
-  /**
-   * 获取组合边框色
-   */
-  private getCombinationBorderColor(type: string): string {
-    switch (type) {
-      case 'good': return 'var(--color-green)';
-      case 'bad': return 'var(--color-red)';
-      case 'mixed': return 'var(--color-orange)';
-      default: return 'var(--background-modifier-border)';
-    }
-  }
 
-  /**
-   * 获取组合标题色
-   */
-  private getCombinationTitleColor(type: string): string {
-    switch (type) {
-      case 'good': return 'var(--color-green)';
-      case 'bad': return 'var(--color-red)';
-      case 'mixed': return 'var(--color-orange)';
-      default: return 'var(--text-normal)';
-    }
-  }
 
   /**
    * 处理神煞点击事件
