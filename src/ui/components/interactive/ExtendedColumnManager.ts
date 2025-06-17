@@ -16,7 +16,7 @@ export class ExtendedColumnManager {
   private currentExtendedLevel: 'none' | 'dayun' | 'liunian' | 'liuyue' | 'liuri' | 'liushi' = 'none';
 
   // 状态管理
-  private selectedDaYunIndex = 0;
+  private selectedDaYunIndex = -1; // 默认不选择任何大运
   private selectedLiuNianYear = 0;
   private currentSelectedLiuYue: any = null;
   private currentSelectedLiuRi: any = null;
@@ -55,6 +55,8 @@ export class ExtendedColumnManager {
       case ExtendedColumnType.NONE:
         this.clearAllExtendedColumns();
         this.currentExtendedLevel = 'none';
+        // 重置大运索引，不选择任何大运
+        this.selectedDaYunIndex = -1;
         break;
 
       case ExtendedColumnType.AUTO_CURRENT:
@@ -495,7 +497,9 @@ export class ExtendedColumnManager {
 
     // 清空扩展柱数组
     this.extendedPillars = [];
-    console.log(`✅ 扩展列清除完成`);
+    // 重置大运索引，不选择任何大运
+    this.selectedDaYunIndex = -1;
+    console.log(`✅ 扩展列清除完成，大运索引已重置`);
   }
 
   // 状态管理方法
@@ -528,6 +532,9 @@ export class ExtendedColumnManager {
     }
 
     // 清除状态：关闭当前层级及其后续层级
+    if (closeIndex <= levelHierarchy.indexOf('dayun')) {
+      this.selectedDaYunIndex = -1;
+    }
     if (closeIndex <= levelHierarchy.indexOf('liunian')) {
       this.selectedLiuNianYear = 0;
     }
@@ -593,13 +600,19 @@ export class ExtendedColumnManager {
    * 获取大运柱信息
    */
   private getDaYunPillarInfo(): ExtendedPillarInfo | null {
+    // 检查大运索引是否有效
+    if (this.selectedDaYunIndex < 0) {
+      console.log('ℹ️ 未选择大运，跳过大运柱信息获取');
+      return null;
+    }
+
     if (!this.baziInfo.daYun || !Array.isArray(this.baziInfo.daYun) || this.selectedDaYunIndex >= this.baziInfo.daYun.length) {
-      console.warn('❌ 大运数据不可用');
+      console.warn('❌ 大运数据不可用或索引超出范围');
       return null;
     }
 
     const daYun = this.baziInfo.daYun[this.selectedDaYunIndex];
-    console.log(`✅ 获取大运柱信息: ${daYun.ganZhi}`);
+    console.log(`✅ 获取大运柱信息: ${daYun.ganZhi} (索引: ${this.selectedDaYunIndex})`);
 
     // 使用现有的PillarCalculationService方法
     return PillarCalculationService.calculateDaYunPillar(daYun, this.baziInfo.dayStem || '');
@@ -1173,10 +1186,9 @@ export class ExtendedColumnManager {
       }
     }
 
-    // 如果没有找到对应的大运，使用第一个大运
-    console.warn(`⚠️ 未找到${year}年对应的大运，使用第一个大运`);
-    this.selectedDaYunIndex = 0;
-    this.refreshDaYunDisplay();
+    // 如果没有找到对应的大运，不选择任何大运
+    console.warn(`⚠️ 未找到${year}年对应的大运，不选择任何大运`);
+    this.selectedDaYunIndex = -1;
   }
 
   /**
