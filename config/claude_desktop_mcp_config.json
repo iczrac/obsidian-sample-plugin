@@ -1,0 +1,58 @@
+{
+  "mcpServers": {
+    "git-mcp-server": {
+      "command": "npx",
+      "args": ["@cyanheads/git-mcp-server"],
+      "env": {
+        "MCP_TRANSPORT_TYPE": "stdio",
+        "MCP_LOG_LEVEL": "info",
+        "GIT_SIGN_COMMITS": "false"
+      },
+      "disabled": false,
+      "autoApprove": [
+        "git_status",
+        "git_log",
+        "git_diff",
+        "git_branch",
+        "git_show"
+      ]
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-filesystem", "/Users/rac/Documents/AIWorkRoom/bazi-Obsidian"],
+      "disabled": false,
+      "autoApprove": [
+        "read_file",
+        "list_directory",
+        "get_file_info"
+      ]
+    },
+    "memory": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-memory"],
+      "disabled": false,
+      "autoApprove": [
+        "read_graph",
+        "search_nodes"
+      ]
+    },
+    "fetch": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-fetch"],
+      "disabled": false,
+      "autoApprove": [
+        "fetch"
+      ]
+    },
+    "time": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-time"],
+      "disabled": false,
+      "autoApprove": [
+        "get_current_time",
+        "get_timezone"
+      ]
+    }
+  },
+  "globalShortcut": "Cmd+Shift+M"
+}

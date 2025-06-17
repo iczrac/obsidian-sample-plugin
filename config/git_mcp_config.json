@@ -1,0 +1,106 @@
+{
+  "projectInfo": {
+    "name": "obsidian-bazi-plugin",
+    "description": "基于lunar-typescript的八字命盘插件",
+    "version": "1.0.0",
+    "repository": "https://github.com/iczrac/obsidian-sample-plugin.git",
+    "mainBranch": "master"
+  },
+  "gitAutomation": {
+    "autoBackup": {
+      "enabled": true,
+      "remoteBackup": true,
+      "backupBranch": "backup-{timestamp}",
+      "cleanupOldBackups": {
+        "enabled": true,
+        "keepLast": 5
+      }
+    },
+    "milestones": {
+      "bazi_core_complete": {
+        "description": "八字核心功能完成",
+        "branch": "feature/bazi-core",
+        "commitMessage": "🎯 里程碑：八字核心功能完成\n\n- 完成基础八字计算\n- 实现四柱显示\n- 集成lunar-typescript库",
+        "tags": ["v1.0.0-core"]
+      },
+      "ui_components_complete": {
+        "description": "UI组件系统完成",
+        "branch": "feature/ui-components",
+        "commitMessage": "🎯 里程碑：UI组件系统完成\n\n- 完成交互式八字视图\n- 实现流年流月流日流时显示\n- 优化用户界面体验",
+        "tags": ["v1.0.0-ui"]
+      },
+      "calculation_services_complete": {
+        "description": "计算服务系统完成",
+        "branch": "feature/calculation-services",
+        "commitMessage": "🎯 里程碑：计算服务系统完成\n\n- 完成十神计算服务\n- 实现地势分析\n- 集成神煞计算\n- 优化旬空计算",
+        "tags": ["v1.0.0-calc"]
+      },
+      "extended_features_complete": {
+        "description": "扩展功能完成",
+        "branch": "feature/extended-features",
+        "commitMessage": "🎯 里程碑：扩展功能完成\n\n- 完成大运小运计算\n- 实现流派支持\n- 添加颜色主题系统\n- 优化性能",
+        "tags": ["v1.0.0-extended"]
+      },
+      "bug_fixes_phase1": {
+        "description": "第一阶段Bug修复完成",
+        "branch": "bugfix/phase1",
+        "commitMessage": "🐛 里程碑：第一阶段Bug修复完成\n\n- 修复十神计算问题\n- 解决流时扩展信息显示\n- 优化流派处理逻辑\n- 统一时间范围显示",
+        "tags": ["v1.0.1-bugfix1"]
+      },
+      "performance_optimization": {
+        "description": "性能优化完成",
+        "branch": "feature/performance",
+        "commitMessage": "⚡ 里程碑：性能优化完成\n\n- 优化计算算法\n- 减少重复计算\n- 改进内存使用\n- 提升响应速度",
+        "tags": ["v1.0.2-perf"]
+      },
+      "testing_complete": {
+        "description": "测试系统完成",
+        "branch": "feature/testing",
+        "commitMessage": "🧪 里程碑：测试系统完成\n\n- 添加单元测试\n- 实现集成测试\n- 完成端到端测试\n- 建立CI/CD流程",
+        "tags": ["v1.0.3-test"]
+      },
+      "documentation_complete": {
+        "description": "文档系统完成",
+        "branch": "feature/documentation",
+        "commitMessage": "📚 里程碑：文档系统完成\n\n- 完善API文档\n- 添加用户指南\n- 编写开发文档\n- 创建示例教程",
+        "tags": ["v1.0.4-docs"]
+      },
+      "release_candidate": {
+        "description": "发布候选版本",
+        "branch": "release/v1.0",
+        "commitMessage": "🚀 里程碑：发布候选版本\n\n- 集成所有功能\n- 完成全面测试\n- 准备正式发布\n- 版本稳定性验证",
+        "tags": ["v1.0.0-rc1"]
+      },
+      "production_release": {
+        "description": "正式版本发布",
+        "branch": "master",
+        "commitMessage": "🎉 里程碑：正式版本发布\n\n- 八字插件正式版本\n- 所有功能完整可用\n- 通过全面测试\n- 准备生产环境部署",
+        "tags": ["v1.0.0"]
+      }
+    }
+  },
+  "mcpSettings": {
+    "gitMcpServer": {
+      "enabled": true,
+      "autoApprove": [
+        "git_status",
+        "git_log",
+        "git_diff",
+        "git_branch",
+        "git_show"
+      ],
+      "requireConfirmation": [
+        "git_commit",
+        "git_push",
+        "git_merge",
+        "git_rebase"
+      ]
+    },
+    "backupTriggers": {
+      "onMajorFeature": true,
+      "onBugFix": true,
+      "onRefactor": true,
+      "onRelease": true
+    }
+  }
+}
