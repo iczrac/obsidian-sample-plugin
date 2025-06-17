@@ -538,22 +538,14 @@ export class LiuShiInfoManager {
   }
 
   /**
-   * 根据设置获取时间范围（支持流派）
+   * 根据设置获取时间范围（标准时间范围）
    * @param timeIndex 时辰索引（0-11）
    * @returns 时间范围字符串
    */
   private getTimeRangeBySettings(timeIndex: number): string {
-    // 获取流派设置
-    const sect = this.baziInfo?.baziSect ? parseInt(this.baziInfo.baziSect) : 2;
-
-    if (timeIndex === 0) {
-      // 子时根据流派调整
-      return sect === 1 ? '23:00-01:00*' : '23:00-01:00';
-    }
-
-    // 其他时辰标准时间范围
+    // 标准时间范围（流派只影响干支计算，不影响时间显示）
     const timeRanges = [
-      '', '01:00-03:00', '03:00-05:00', '05:00-07:00',
+      '23:00-01:00', '01:00-03:00', '03:00-05:00', '05:00-07:00',
       '07:00-09:00', '09:00-11:00', '11:00-13:00', '13:00-15:00',
       '15:00-17:00', '17:00-19:00', '19:00-21:00', '21:00-23:00'
     ];

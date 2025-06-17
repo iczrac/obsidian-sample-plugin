@@ -33,33 +33,20 @@ export class LiuShiCalculator {
 
     console.log(`⏰ ${year}-${month}-${day} 日干: ${dayGan}`);
 
-    // 12个时辰（根据流派调整时间范围显示）
-    const getTimeRangeForSect = (index: number) => {
-      if (index === 0) {
-        // 子时根据流派调整显示
-        return sect === 1 ? '23:00-01:00*' : '23:00-01:00';
-      }
-      const standardRanges = [
-        '', '01:00-03:00', '03:00-05:00', '05:00-07:00',
-        '07:00-09:00', '09:00-11:00', '11:00-13:00', '13:00-15:00',
-        '15:00-17:00', '17:00-19:00', '19:00-21:00', '21:00-23:00'
-      ];
-      return standardRanges[index] || '';
-    };
-
+    // 12个时辰（时间范围统一，流派只影响干支计算）
     const timeRanges = [
-      { time: 23, name: '子时', range: getTimeRangeForSect(0) },
-      { time: 1, name: '丑时', range: getTimeRangeForSect(1) },
-      { time: 3, name: '寅时', range: getTimeRangeForSect(2) },
-      { time: 5, name: '卯时', range: getTimeRangeForSect(3) },
-      { time: 7, name: '辰时', range: getTimeRangeForSect(4) },
-      { time: 9, name: '巳时', range: getTimeRangeForSect(5) },
-      { time: 11, name: '午时', range: getTimeRangeForSect(6) },
-      { time: 13, name: '未时', range: getTimeRangeForSect(7) },
-      { time: 15, name: '申时', range: getTimeRangeForSect(8) },
-      { time: 17, name: '酉时', range: getTimeRangeForSect(9) },
-      { time: 19, name: '戌时', range: getTimeRangeForSect(10) },
-      { time: 21, name: '亥时', range: getTimeRangeForSect(11) }
+      { time: 23, name: '子时', range: '23:00-01:00' },
+      { time: 1, name: '丑时', range: '01:00-03:00' },
+      { time: 3, name: '寅时', range: '03:00-05:00' },
+      { time: 5, name: '卯时', range: '05:00-07:00' },
+      { time: 7, name: '辰时', range: '07:00-09:00' },
+      { time: 9, name: '巳时', range: '09:00-11:00' },
+      { time: 11, name: '午时', range: '11:00-13:00' },
+      { time: 13, name: '未时', range: '13:00-15:00' },
+      { time: 15, name: '申时', range: '15:00-17:00' },
+      { time: 17, name: '酉时', range: '17:00-19:00' },
+      { time: 19, name: '戌时', range: '19:00-21:00' },
+      { time: 21, name: '亥时', range: '21:00-23:00' }
     ];
 
     for (let i = 0; i < timeRanges.length; i++) {
@@ -137,26 +124,13 @@ export class LiuShiCalculator {
   }
 
   /**
-   * 获取时辰时间范围（根据流派调整）
+   * 获取时辰时间范围（标准时间范围，不受流派影响）
    * @param timeIndex 时辰索引（0-11）
-   * @param sect 八字流派（1或2）
    * @returns 时间范围字符串
    */
-  static getTimeRange(timeIndex: number, sect: number = 2): string {
-    if (timeIndex === 0) {
-      // 子时根据流派调整
-      if (sect === 1) {
-        // 流派1：晚子时日柱算明天，子时分为早子时和晚子时
-        return '23:00-01:00*';
-      } else {
-        // 流派2：晚子时日柱算当天，子时统一处理
-        return '23:00-01:00';
-      }
-    }
-
-    // 其他时辰不受流派影响
+  static getTimeRange(timeIndex: number): string {
     const timeRanges = [
-      '', '01:00-03:00', '03:00-05:00', '05:00-07:00',
+      '23:00-01:00', '01:00-03:00', '03:00-05:00', '05:00-07:00',
       '07:00-09:00', '09:00-11:00', '11:00-13:00', '13:00-15:00',
       '15:00-17:00', '17:00-19:00', '19:00-21:00', '21:00-23:00'
     ];
@@ -164,22 +138,15 @@ export class LiuShiCalculator {
   }
 
   /**
-   * 获取详细的时辰时间范围说明（根据流派）
-   * @param timeIndex 时辰索引（0-11）
+   * 获取流派说明（用于tooltip或详细说明）
    * @param sect 八字流派（1或2）
-   * @returns 详细时间范围说明
+   * @returns 流派说明
    */
-  static getDetailedTimeRange(timeIndex: number, sect: number = 2): string {
-    if (timeIndex === 0) {
-      // 子时根据流派提供详细说明
-      if (sect === 1) {
-        return '23:00-01:00 (早子时23:00-24:00算前日，晚子时00:00-01:00算当日)';
-      } else {
-        return '23:00-01:00 (整个子时算当日)';
-      }
+  static getSectDescription(sect: number): string {
+    if (sect === 1) {
+      return '流派1：晚子时日柱算明天（影响日柱计算，不影响时间显示）';
+    } else {
+      return '流派2：晚子时日柱算当天（影响日柱计算，不影响时间显示）';
     }
-
-    // 其他时辰使用标准时间
-    return this.getTimeRange(timeIndex, sect);
   }
 }
