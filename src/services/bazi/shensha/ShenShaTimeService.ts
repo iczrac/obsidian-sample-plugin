@@ -1,3 +1,4 @@
+import { ShenShaCalculationEngine, ShenShaCalculationParams } from './ShenShaCalculationEngine';
 import { ShenShaAlgorithms } from './ShenShaAlgorithms';
 
 /**
@@ -22,61 +23,25 @@ export class ShenShaTimeService {
    */
   static calculatePillarShenSha(params: PillarShenShaParams): string[] {
     const { dayStem, stem, branch, pillarType } = params;
-    const shenShaList: string[] = [];
 
-    // 使用算法层计算基础神煞
-    const algorithms = ShenShaAlgorithms.getAllAlgorithms();
-    Object.entries(algorithms).forEach(([shenShaName, algorithm]) => {
-      try {
-        // 根据不同算法的参数需求调用
-        let result = false;
-        if (shenShaName === '空亡') {
-          result = algorithm(dayStem, branch);
-        } else if (['太极贵人', '金舆', '福星贵人'].includes(shenShaName)) {
-          result = algorithm(dayStem, branch);
-        } else if (shenShaName === '国印贵人') {
-          result = algorithm(stem, branch);
-        } else if (shenShaName === '三奇贵人') {
-          result = algorithm([stem]); // 简化处理
-        } else if (['文曲', '天喜', '红鸾', '红艳', '天姚'].includes(shenShaName)) {
-          // 这些需要年支，暂时跳过或使用默认逻辑
-          result = false;
-        } else if (shenShaName === '学堂词馆') {
-          result = algorithm(dayStem, branch);
-        } else if (shenShaName === '德秀贵人') {
-          // 需要月支，暂时跳过
-          result = false;
-        } else if (shenShaName === '十恶大败' || shenShaName === '孤鸾煞') {
-          result = algorithm(stem, branch);
-        } else if (shenShaName === '四废') {
-          // 需要季节，暂时跳过
-          result = false;
-        } else if (shenShaName === '天罗地网') {
-          // 需要纳音，暂时跳过
-          result = false;
-        } else if (['亡神', '披麻', '吊客', '丧门', '元辰'].includes(shenShaName)) {
-          // 这些需要年支，暂时跳过
-          result = false;
-        } else {
-          // 默认使用日干和地支
-          result = algorithm(dayStem, branch);
-        }
+    // 使用统一计算引擎计算基础神煞
+    const calculationParams: ShenShaCalculationParams = {
+      dayStem,
+      stem,
+      branch,
+      pillarType
+    };
 
-        if (result) {
-          shenShaList.push(shenShaName);
-        }
-      } catch (error) {
-        // 忽略算法调用错误
-      }
-    });
+    const baseShenSha = ShenShaCalculationEngine.calculateShenSha(calculationParams);
 
     // 特定柱位的特殊神煞
     const pillarSpecificShenSha = this.calculatePillarSpecificShenSha(
       dayStem, stem, branch, pillarType
     );
-    shenShaList.push(...pillarSpecificShenSha);
 
-    return [...new Set(shenShaList)]; // 去重
+    // 合并并去重
+    const allShenSha = [...baseShenSha, ...pillarSpecificShenSha];
+    return [...new Set(allShenSha)];
   }
 
 
