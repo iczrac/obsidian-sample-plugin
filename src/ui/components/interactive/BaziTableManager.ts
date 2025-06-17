@@ -26,31 +26,7 @@ export class BaziTableManager {
   createBaziTable(): HTMLTableElement {
     const tableSection = this.container.createDiv({ cls: 'bazi-view-section' });
 
-    // 添加基本信息（公历、农历、性别）
-    const basicInfoDiv = tableSection.createDiv({ cls: 'bazi-basic-info' });
-
-    if (this.baziInfo.solarDate) {
-      basicInfoDiv.createSpan({
-        text: `公历: ${this.baziInfo.solarDate} ${this.baziInfo.solarTime || ''}`,
-        cls: 'bazi-basic-info-item'
-      });
-    }
-
-    if (this.baziInfo.lunarDate) {
-      basicInfoDiv.createSpan({
-        text: `农历: ${this.baziInfo.lunarDate}`,
-        cls: 'bazi-basic-info-item'
-      });
-    }
-
-    if (this.baziInfo.gender) {
-      basicInfoDiv.createSpan({
-        text: `性别: ${this.baziInfo.gender === '1' ? '男' : '女'}`,
-        cls: 'bazi-basic-info-item'
-      });
-    }
-
-    // 创建表格
+    // 创建表格（移除重复的基本信息部分，因为InteractiveBaziView已经创建了）
     const table = tableSection.createEl('table', { cls: 'bazi-view-table' });
     this.baziTable = table;
 

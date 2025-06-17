@@ -62,16 +62,16 @@ export class SpecialShenShaIntegrationTest {
     
     // 通过SpecialShenShaCalculator计算
     const specialResult = SpecialShenShaCalculator.calculateSpecialShenSha(eightChar);
-    
+
     console.log('\nSpecialShenShaCalculator结果:');
-    console.log(`特殊神煞: [${specialResult.join(', ')}]`);
-    
+    console.log(`特殊神煞: [${specialResult.specialShenSha.join(', ')}]`);
+
     // 验证一致性
-    const hasKuiGang = specialResult.includes('魁罡');
-    const hasYinChaYangCuo = specialResult.includes('阴差阳错');
-    const hasShiEDaBai = specialResult.includes('十恶大败');
-    const hasGuLuanSha = specialResult.includes('孤鸾煞');
-    const hasRiDe = specialResult.includes('日德');
+    const hasKuiGang = specialResult.specialShenSha.includes('魁罡');
+    const hasYinChaYangCuo = specialResult.specialShenSha.includes('阴差阳错');
+    const hasShiEDaBai = specialResult.specialShenSha.includes('十恶大败');
+    const hasGuLuanSha = specialResult.specialShenSha.includes('孤鸾煞');
+    const hasRiDe = specialResult.specialShenSha.includes('日德');
     
     console.log('\n一致性验证:');
     console.log(`魁罡一致性: ${kuiGangDirect === hasKuiGang ? '✅' : '❌'}`);
