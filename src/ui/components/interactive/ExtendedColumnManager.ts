@@ -729,7 +729,7 @@ export class ExtendedColumnManager {
         year: this.currentSelectedLiuRi?.year,
         month: this.currentSelectedLiuRi?.month,
         day: this.currentSelectedLiuRi?.day,
-        hour: this.currentSelectedLiuShi.timeIndex ? this.currentSelectedLiuShi.timeIndex * 2 : undefined
+        hour: this.currentSelectedLiuShi.timeIndex !== undefined ? this.currentSelectedLiuShi.timeIndex * 2 : undefined
       };
 
       return PillarCalculationService.calculateLiuShiPillar(this.currentSelectedLiuShi.ganZhi, this.baziInfo.dayStem || '', timeInfo);
@@ -1296,7 +1296,8 @@ export class ExtendedColumnManager {
   private setCurrentLiuYue(year: number, month: number) {
     try {
       // 使用lunar-typescript计算流月干支
-      const solar = Solar.fromYmd(year, month, 1);
+      // 注意：这里的month是公历月份，需要转换为对应的农历月份来计算流月干支
+      const solar = Solar.fromYmd(year, month, 15); // 使用月中旬作为参考
       const lunar = solar.getLunar();
       const eightChar = lunar.getEightChar();
 
@@ -1304,14 +1305,20 @@ export class ExtendedColumnManager {
       const monthZhi = eightChar.getMonthZhi();
       const ganZhi = monthGan + monthZhi;
 
+      // 获取农历月份信息用于标题显示
+      const lunarYear = lunar.getYear();
+      const lunarMonth = lunar.getMonth();
+
       this.currentSelectedLiuYue = {
-        year,
-        month,
+        year: lunarYear,        // 使用农历年份
+        month: lunarMonth,      // 使用农历月份
+        solarYear: year,        // 保存公历年份
+        solarMonth: month,      // 保存公历月份
         ganZhi,
         name: `${ganZhi}月`
       };
 
-      console.log(`📅 设置流月: ${year}年${month}月 -> ${ganZhi}`);
+      console.log(`📅 设置流月: 公历${year}年${month}月 -> 农历${lunarYear}年${lunarMonth}月 -> ${ganZhi}`);
     } catch (error) {
       console.error('❌ 计算流月失败:', error);
     }
