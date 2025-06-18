@@ -627,11 +627,24 @@ export class LiuNianInfoManager {
    */
   private getXiaoYunForLiuNian(liuNianData: LiuNianInfo[]): any[] {
     if (!this.baziInfo.xiaoYun || !Array.isArray(this.baziInfo.xiaoYun)) {
+      console.log('🔍 小运数据不存在或不是数组');
       return [];
     }
 
+    console.log('🔍 小运匹配开始');
+    console.log('🔍 小运数据总数:', this.baziInfo.xiaoYun.length);
+    console.log('🔍 流年数据总数:', liuNianData.length);
+
+    if (this.baziInfo.xiaoYun.length > 0) {
+      console.log('🔍 前5个小运:', this.baziInfo.xiaoYun.slice(0, 5).map(xy => `${xy.age}岁(${xy.year}年): ${xy.ganZhi}`));
+    }
+
+    if (liuNianData.length > 0) {
+      console.log('🔍 前5个流年:', liuNianData.slice(0, 5).map(ln => `${ln.age}岁(${ln.year}年): ${ln.ganZhi}`));
+    }
+
     // 根据流年年龄匹配小运（优先使用年龄匹配，因为更准确）
-    return liuNianData.map(ln => {
+    const result = liuNianData.map((ln, index) => {
       // 首先尝试按年龄匹配
       let xiaoYun = this.baziInfo.xiaoYun?.find(xy => xy.age === ln.age);
 
@@ -640,8 +653,19 @@ export class LiuNianInfoManager {
         xiaoYun = this.baziInfo.xiaoYun?.find(xy => xy.year === ln.year);
       }
 
+      if (xiaoYun) {
+        console.log(`🎯 流年${index}: ${ln.year}年(${ln.age}岁) → 小运: ${xiaoYun.ganZhi}(${xiaoYun.age}岁)`);
+      } else {
+        console.log(`❌ 流年${index}: ${ln.year}年(${ln.age}岁) → 未找到对应小运`);
+      }
+
       return xiaoYun || null;
     });
+
+    const matchedCount = result.filter(r => r !== null).length;
+    console.log(`✅ 小运匹配完成: ${matchedCount}/${liuNianData.length} 匹配成功`);
+
+    return result;
   }
 
   /**

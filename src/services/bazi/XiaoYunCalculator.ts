@@ -75,10 +75,10 @@ export class XiaoYunCalculator {
       // 计算每年的小运
       for (let i = 0; i < count; i++) {
         const year = birthYear + i;
-        const age = i + 1; // 小运从1岁开始
+        const age = year - birthYear; // 与流年年龄计算保持一致
         
-        // 计算小运干支
-        const xiaoYunGanZhi = this.calculateXiaoYunGanZhi(timeGan, timeZhi, age, isShunXing);
+        // 计算小运干支（使用i+1作为推算步数，保持传统算法）
+        const xiaoYunGanZhi = this.calculateXiaoYunGanZhi(timeGan, timeZhi, i + 1, isShunXing);
         
         // 计算纳音
         const naYin = this.calculateNaYin(xiaoYunGanZhi);
