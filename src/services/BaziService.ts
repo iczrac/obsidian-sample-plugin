@@ -817,8 +817,8 @@ export class BaziService {
       daYun = DaYunCalculator.calculateDaYun(eightChar, solar, gender, dayStem, 10);
       daYunStartAge = DaYunCalculator.getDaYunStartAge(eightChar, gender);
 
-      // 计算流年信息
-      liuNian = LiuNianCalculator.calculateLiuNian(eightChar, solar, gender, dayStem, undefined, 10);
+      // 计算流年信息 - 生成所有大运期间的流年数据
+      liuNian = this.calculateAllLiuNian(eightChar, solar, gender, dayStem, daYun);
 
       // 计算小运信息
       xiaoYun = XiaoYunCalculator.calculateXiaoYun(eightChar, solar, gender, dayStem, solar.getYear(), 10);

@@ -204,13 +204,18 @@ export class LiuNianInfoManager {
 
     if (!this.baziInfo.daYun || !Array.isArray(this.baziInfo.daYun)) {
       console.log('❌ 没有大运数据，返回空数组');
+      console.log('🔍 baziInfo.daYun:', this.baziInfo.daYun);
       return [];
     }
+
+    console.log(`🔍 大运数据总数: ${this.baziInfo.daYun.length}`);
+    console.log(`🔍 前3个大运:`, this.baziInfo.daYun.slice(0, 3).map(dy => `${dy.ganZhi}(${dy.startYear}-${dy.endYear})`));
 
     // 获取当前选中的大运
     const selectedDaYun = this.baziInfo.daYun[this.selectedDaYunIndex];
     if (!selectedDaYun) {
-      console.log('❌ 没有找到选中的大运，返回空数组');
+      console.log(`❌ 没有找到选中的大运，索引${this.selectedDaYunIndex}超出范围，返回空数组`);
+      console.log(`🔍 大运数组长度: ${this.baziInfo.daYun.length}`);
       return [];
     }
 
@@ -255,11 +260,18 @@ export class LiuNianInfoManager {
   private createCombinedTable() {
     if (!this.infoContainer) return;
 
+    console.log('🔍 createCombinedTable: 开始创建流年表格');
+    console.log('🔍 当前选中大运索引:', this.selectedDaYunIndex);
+
     // 直接使用baziInfo.liuNian，根据选中的大运进行过滤
     const liuNianData = this.getFilteredLiuNianData();
     const xiaoYunData = this.getXiaoYunForLiuNian(liuNianData);
 
+    console.log('🔍 过滤后的流年数据长度:', liuNianData.length);
+    console.log('🔍 小运数据长度:', xiaoYunData.length);
+
     if (liuNianData.length === 0) {
+      console.log('❌ 流年数据为空，显示空消息');
       this.infoContainer.createEl('div', {
         text: '当前大运暂无流年数据',
         cls: 'bazi-empty-message'
@@ -904,6 +916,23 @@ export class LiuNianInfoManager {
   setSelectedDaYunIndex(index: number) {
     console.log(`🎯 LiuNianInfoManager: 设置大运索引 ${index}`);
     this.selectedDaYunIndex = index;
+
+    // 添加详细的调试信息
+    console.log('🔍 当前八字信息状态:');
+    console.log('🔍 baziInfo存在:', !!this.baziInfo);
+    console.log('🔍 baziInfo.daYun存在:', !!this.baziInfo?.daYun);
+    console.log('🔍 baziInfo.liuNian存在:', !!this.baziInfo?.liuNian);
+    console.log('🔍 baziInfo.liuNian长度:', this.baziInfo?.liuNian?.length || 0);
+
+    if (this.baziInfo?.daYun && Array.isArray(this.baziInfo.daYun)) {
+      console.log('🔍 大运数据长度:', this.baziInfo.daYun.length);
+      if (this.baziInfo.daYun[index]) {
+        const selectedDaYun = this.baziInfo.daYun[index];
+        console.log(`🔍 选中的大运: ${selectedDaYun.ganZhi}, 年份: ${selectedDaYun.startYear}-${selectedDaYun.endYear}`);
+      } else {
+        console.log(`❌ 索引${index}超出大运数组范围`);
+      }
+    }
 
     // 清空容器并重新创建流年表格
     if (this.infoContainer) {
