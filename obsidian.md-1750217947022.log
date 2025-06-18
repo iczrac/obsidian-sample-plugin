@@ -1,0 +1,1453 @@
+plugin:bazi-obsidian:2000 🎯 bazi代码块被触发!
+plugin:bazi-obsidian:2000 🔍 处理八字代码块开始
+plugin:bazi-obsidian:2000 📝 源代码内容: bazi: 乙丑 壬午 丙午 癸巳
+
+year: 1985
+gender: 男
+style: 3
+extend: 1
+plugin:bazi-obsidian:2000 ⚙️ 解析后的参数: {bazi: '乙丑 壬午 丙午 癸巳', year: '1985', gender: '男', style: '3', extend: '1'}
+plugin:bazi-obsidian:2001 🔥🔥🔥🔥🔥 调用 BaziService.parseBaziString
+plugin:bazi-obsidian:2001 🔥 参数 bazi: 乙丑 壬午 丙午 癸巳
+plugin:bazi-obsidian:2001 🔥 参数 year: 1985
+plugin:bazi-obsidian:2001 🔥 参数 gender: 1
+plugin:bazi-obsidian:2001 🔥 参数 qiYunSect: 2
+plugin:bazi-obsidian:21 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 BaziService.parseBaziString 开始 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+plugin:bazi-obsidian:21 🔥 ========== BaziService.parseBaziString 开始 ==========
+plugin:bazi-obsidian:21 🔥 输入参数:
+plugin:bazi-obsidian:21   - baziStr: 乙丑 壬午 丙午 癸巳
+plugin:bazi-obsidian:21   - specifiedYear: 1985
+plugin:bazi-obsidian:21   - gender: 1
+plugin:bazi-obsidian:21   - sect: 2
+plugin:bazi-obsidian:21 🔥 八字分割结果: (4) ['乙丑', '壬午', '丙午', '癸巳']
+plugin:bazi-obsidian:21 🔍 年份匹配计算参数: {yearStem: '乙', yearBranch: '丑', monthStem: '壬', monthBranch: '午', dayStem: '丙', …}
+plugin:bazi-obsidian:20 🔍 使用完整八字反推年份: {yearPillar: '乙丑', monthPillar: '壬午', dayPillar: '丙午', timePillar: '癸巳', sect: 2, …}
+plugin:bazi-obsidian:20 ✅ 使用lunar-typescript库获取匹配年份: (19) [5, 65, 125, 245, 305, 365, 545, 605, 785, 845, 1025, 1085, 1265, 1325, 1505, 1565, 1745, 1805, 1985]
+plugin:bazi-obsidian:21 🔥 尝试日期反推，年份: 1985
+plugin:bazi-obsidian:21 🔥 匹配年份列表: (19) [5, 65, 125, 245, 305, 365, 545, 605, 785, 845, 1025, 1085, 1265, 1325, 1505, 1565, 1745, 1805, 1985]
+plugin:bazi-obsidian:21 🔥 年份是否在匹配列表中: true
+plugin:bazi-obsidian:21 🔥 fromBaZi返回的日期数量: 19
+plugin:bazi-obsidian:21 🔥 检查日期: 5 7 8
+plugin:bazi-obsidian:21 🔥 检查日期: 65 6 23
+plugin:bazi-obsidian:21 🔥 检查日期: 125 6 8
+plugin:bazi-obsidian:21 🔥 检查日期: 245 7 8
+plugin:bazi-obsidian:21 🔥 检查日期: 305 6 23
+plugin:bazi-obsidian:21 🔥 检查日期: 365 6 8
+plugin:bazi-obsidian:21 🔥 检查日期: 545 6 23
+plugin:bazi-obsidian:21 🔥 检查日期: 605 6 8
+plugin:bazi-obsidian:21 🔥 检查日期: 785 6 23
+plugin:bazi-obsidian:21 🔥 检查日期: 845 6 8
+plugin:bazi-obsidian:21 🔥 检查日期: 1025 6 23
+plugin:bazi-obsidian:21 🔥 检查日期: 1085 6 8
+plugin:bazi-obsidian:21 🔥 检查日期: 1265 6 23
+plugin:bazi-obsidian:21 🔥 检查日期: 1325 6 8
+plugin:bazi-obsidian:21 🔥 检查日期: 1505 6 23
+plugin:bazi-obsidian:21 🔥 检查日期: 1565 6 8
+plugin:bazi-obsidian:21 🔥 检查日期: 1745 7 4
+plugin:bazi-obsidian:21 🔥 检查日期: 1805 6 20
+plugin:bazi-obsidian:21 🔥 检查日期: 1985 7 6
+plugin:bazi-obsidian:21 🔥 ✅ 日期反推成功 - 指定年份: 1985
+plugin:bazi-obsidian:21 🔥 ✅ 日期反推结果 - 阳历日期: 1985-07-06
+plugin:bazi-obsidian:21 🔥 ✅ 日期反推结果 - 农历日期: 一九八五年五月十九
+plugin:bazi-obsidian:21 🔥 formatBaziInfo路径：传递用户输入八字信息
+plugin:bazi-obsidian:21 🎯 身宫计算结果: 戊子
+plugin:bazi-obsidian:21 🎯 格局计算结果: {geJu: '七杀格', geJuType: '正格', detail: '月令七杀，需制化', geJuStrength: 7, isSpecialGeJu: false, …}
+plugin:bazi-obsidian:21 🚀🚀🚀 formatBaziInfo: 开始独立五行强度计算
+plugin:bazi-obsidian:21 🔍 formatBaziInfo使用用户输入八字进行独立计算
+plugin:bazi-obsidian:21 🔍 formatBaziInfo当前八字: {year: '乙丑', month: '壬午', day: '丙午', time: '癸巳'}
+plugin:bazi-obsidian:21 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 WuXingStrengthCalculator.calculateWuXingStrengthFromBazi 开始 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
+plugin:bazi-obsidian:21 🔍 独立计算八字: 乙丑 壬午 丙午 癸巳
+plugin:bazi-obsidian:21 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀 WuXingStrengthCalculator.calculateWuXingStrength 开始 🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀
+plugin:bazi-obsidian:21 🚀 开始计算五行强度 - WuXingStrengthCalculator.calculateWuXingStrengthWithDetails
+plugin:bazi-obsidian:21 🔍 调用者: at qe.calculateWuXingStrengthFromBazi (plugin:bazi-obsidian:21:11723)
+plugin:bazi-obsidian:21 🔍 调用时间: 2025-06-18T03:38:03.988Z
+plugin:bazi-obsidian:21 🔍 八字: 乙丑 壬午 丙午 癸巳
+plugin:bazi-obsidian:21 🔍 天干: 年干乙(木)=2
+plugin:bazi-obsidian:21 🔍 天干: 月干壬(水)=4
+plugin:bazi-obsidian:21 🔍 地支丑藏干: 己,癸,辛, 权重分配: 0.6,0.3,0.1
+plugin:bazi-obsidian:21 🔍   己(土) 本气: 2 × 0.6 = 1.20
+plugin:bazi-obsidian:21 🔍   癸(水) 中气: 2 × 0.3 = 0.60
+plugin:bazi-obsidian:21 🔍   辛(金) 余气: 2 × 0.1 = 0.20
+plugin:bazi-obsidian:21 🔍 地支午藏干: 丁,己, 权重分配: 0.7,0.3
+plugin:bazi-obsidian:21 🔍   丁(火) 本气: 8 × 0.7 = 5.60
+plugin:bazi-obsidian:21 🔍   己(土) 中气: 8 × 0.3 = 2.40
+plugin:bazi-obsidian:21 🔍 地支午藏干: 丁,己, 权重分配: 0.7,0.3
+plugin:bazi-obsidian:21 🔍   丁(火) 本气: 5 × 0.7 = 3.50
+plugin:bazi-obsidian:21 🔍   己(土) 中气: 5 × 0.3 = 1.50
+plugin:bazi-obsidian:21 🔍 地支巳藏干: 丙,庚,戊, 权重分配: 0.6,0.3,0.1
+plugin:bazi-obsidian:21 🔍   丙(火) 本气: 5 × 0.6 = 3.00
+plugin:bazi-obsidian:21 🔍   庚(金) 中气: 5 × 0.3 = 1.50
+plugin:bazi-obsidian:21 🔍   戊(土) 余气: 5 × 0.1 = 0.50
+plugin:bazi-obsidian:21 🔍 季节调整: 月支=午, 季节=夏
+plugin:bazi-obsidian:21 🔍 基础强度: 金=2.7, 木=4, 水=14.6, 火=54.1, 土=9.6
+plugin:bazi-obsidian:21 🔍 火季节调整: 基础=54.10, 系数=1.5, 调整后=81.15, 调整量=27.05
+plugin:bazi-obsidian:21 🔍 土季节调整: 基础=9.60, 系数=1.2, 调整后=11.52, 调整量=1.92
+plugin:bazi-obsidian:21 🔍 木季节调整: 基础=4.00, 系数=1, 调整后=4.00, 调整量=0.00
+plugin:bazi-obsidian:21 🔍 水季节调整: 基础=14.60, 系数=0.8, 调整后=11.68, 调整量=-2.92
+plugin:bazi-obsidian:21 🔍 金季节调整: 基础=2.70, 系数=0.6, 调整后=1.62, 调整量=-1.08
+plugin:bazi-obsidian:21 🎯🎯🎯🎯🎯 WuXingStrengthCalculator.calculateWuXingStrength 返回结果:
+plugin:bazi-obsidian:21 🎯 金: 1.62
+plugin:bazi-obsidian:21 🎯 木: 4
+plugin:bazi-obsidian:21 🎯 水: 11.68
+plugin:bazi-obsidian:21 🎯 火: 81.15
+plugin:bazi-obsidian:21 🎯 土: 11.52
+plugin:bazi-obsidian:21 🎯 是否有详细信息: true
+plugin:bazi-obsidian:21 🎯 详细信息: {jin: {…}, mu: {…}, shui: {…}, huo: {…}, tu: {…}, …}
+plugin:bazi-obsidian:21 🎯🎯🎯 formatBaziInfo: 五行强度计算结果: {jin: 1.62, mu: 4, shui: 11.68, huo: 81.15, tu: 11.52, …}
+plugin:bazi-obsidian:21 🔍🔍🔍 formatBaziInfo: 土五行强度 = 11.52
+plugin:bazi-obsidian:21 🔍🔍🔍 formatBaziInfo: 是否有详细信息 = true
+plugin:bazi-obsidian:21 🔍 calculateRiZhuStrength: 使用已提供的五行强度，避免重复计算
+plugin:bazi-obsidian:21 🎯 日主旺衰计算结果: {result: '身旺', details: {…}}
+plugin:bazi-obsidian:21 🔍 QiYunCalculator.calculateQiYun: 开始计算起运，性别=1, 流派=2
+plugin:bazi-obsidian:21 ✅ QiYunCalculator.calculateQiYun: 计算完成 {startYear: 10, startMonth: 1, startDay: 10, startHour: 2, startSolar: '1995-08-16', …}
+plugin:bazi-obsidian:21 ✅ QiYunCalculator: 起运信息计算完成 {startYear: 10, startMonth: 1, startDay: 10, startHour: 2, startDate: '1995-08-16', …}
+plugin:bazi-obsidian:6 🔍 DaYunCalculator.calculateDaYun 开始
+plugin:bazi-obsidian:6 🔍 参数: gender = 1 , dayStem = 丙 , count = 10
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 获取运势对象...
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 运势对象获取成功: On {_gender: 1, _lunar: H, _forward: false, _startYear: 10, _startMonth: 1, …}
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 获取大运列表...
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 大运列表获取成功，数量: 10
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 发现前运期间，索引: 0（还未排上大运）
+plugin:bazi-obsidian:6 🔍 DaYunCalculator.calculateQianYun: 开始计算前运，当前索引=0
+plugin:bazi-obsidian:6 🔍 calculateQianYun: 找到第一个有效大运[1]: 辛巳
+plugin:bazi-obsidian:6 🔍 calculateQianYun: 年干=乙丑, 阳年=false, 性别=男, 顺行=false
+plugin:bazi-obsidian:6 🔍 calculateGanZhiStepsBack: 辛巳 逆行 前推1步 → 壬午
+plugin:bazi-obsidian:6 ✅ calculateQianYun: 前运干支=壬午
+plugin:bazi-obsidian:6 ✅ DaYunCalculator: 前运计算成功: 壬午
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 辛巳
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy对象: Wn {_startYear: 1995, _endYear: 2004, _startAge: 11, _endAge: 20, _index: 1, …}
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy.getXunKong方法存在: true
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 申酉
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 庚辰
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy对象: Wn {_startYear: 2005, _endYear: 2014, _startAge: 21, _endAge: 30, _index: 2, …}
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy.getXunKong方法存在: true
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 申酉
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 己卯
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy对象: Wn {_startYear: 2015, _endYear: 2024, _startAge: 31, _endAge: 40, _index: 3, …}
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy.getXunKong方法存在: true
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 申酉
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 戊寅
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy对象: Wn {_startYear: 2025, _endYear: 2034, _startAge: 41, _endAge: 50, _index: 4, …}
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy.getXunKong方法存在: true
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 申酉
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 丁丑
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy对象: Wn {_startYear: 2035, _endYear: 2044, _startAge: 51, _endAge: 60, _index: 5, …}
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy.getXunKong方法存在: true
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 申酉
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 丙子
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy对象: Wn {_startYear: 2045, _endYear: 2054, _startAge: 61, _endAge: 70, _index: 6, …}
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy.getXunKong方法存在: true
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 申酉
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 乙亥
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy对象: Wn {_startYear: 2055, _endYear: 2064, _startAge: 71, _endAge: 80, _index: 7, …}
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy.getXunKong方法存在: true
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 申酉
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 甲戌
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy对象: Wn {_startYear: 2065, _endYear: 2074, _startAge: 81, _endAge: 90, _index: 8, …}
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy.getXunKong方法存在: true
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 申酉
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 癸酉
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy对象: Wn {_startYear: 2075, _endYear: 2084, _startAge: 91, _endAge: 100, _index: 9, …}
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: dy.getXunKong方法存在: true
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 戌亥
+plugin:bazi-obsidian:21 🔥 出生年份: 1985
+plugin:bazi-obsidian:21 🔥 检查大运0: {ganZhi: '壬午', startYear: 1985, endYear: 1994, startAge: 1, endAge: 10, …}
+plugin:bazi-obsidian:21 🔥 为大运0 (壬午) 生成流年数据: 1985-1994
+plugin:bazi-obsidian:21 🔥 大运0生成流年数据10年
+plugin:bazi-obsidian:21 🔥 大运0流年范围: 1985-1994
+plugin:bazi-obsidian:21 🔥 检查大运1: {ganZhi: '辛巳', startYear: 1995, endYear: 2004, startAge: 11, endAge: 20, …}
+plugin:bazi-obsidian:21 🔥 为大运1 (辛巳) 生成流年数据: 1995-2004
+plugin:bazi-obsidian:21 🔥 大运1生成流年数据10年
+plugin:bazi-obsidian:21 🔥 大运1流年范围: 1995-2004
+plugin:bazi-obsidian:21 🔥 检查大运2: {ganZhi: '庚辰', startYear: 2005, endYear: 2014, startAge: 21, endAge: 30, …}
+plugin:bazi-obsidian:21 🔥 为大运2 (庚辰) 生成流年数据: 2005-2014
+plugin:bazi-obsidian:21 🔥 大运2生成流年数据10年
+plugin:bazi-obsidian:21 🔥 大运2流年范围: 2005-2014
+plugin:bazi-obsidian:21 🔥 检查大运3: {ganZhi: '己卯', startYear: 2015, endYear: 2024, startAge: 31, endAge: 40, …}
+plugin:bazi-obsidian:21 🔥 为大运3 (己卯) 生成流年数据: 2015-2024
+plugin:bazi-obsidian:21 🔥 大运3生成流年数据10年
+plugin:bazi-obsidian:21 🔥 大运3流年范围: 2015-2024
+plugin:bazi-obsidian:21 🔥 检查大运4: {ganZhi: '戊寅', startYear: 2025, endYear: 2034, startAge: 41, endAge: 50, …}
+plugin:bazi-obsidian:21 🔥 为大运4 (戊寅) 生成流年数据: 2025-2034
+plugin:bazi-obsidian:21 🔥 大运4生成流年数据10年
+plugin:bazi-obsidian:21 🔥 大运4流年范围: 2025-2034
+plugin:bazi-obsidian:21 🔥 检查大运5: {ganZhi: '丁丑', startYear: 2035, endYear: 2044, startAge: 51, endAge: 60, …}
+plugin:bazi-obsidian:21 🔥 为大运5 (丁丑) 生成流年数据: 2035-2044
+plugin:bazi-obsidian:21 🔥 大运5生成流年数据10年
+plugin:bazi-obsidian:21 🔥 大运5流年范围: 2035-2044
+plugin:bazi-obsidian:21 🔥 检查大运6: {ganZhi: '丙子', startYear: 2045, endYear: 2054, startAge: 61, endAge: 70, …}
+plugin:bazi-obsidian:21 🔥 为大运6 (丙子) 生成流年数据: 2045-2054
+plugin:bazi-obsidian:21 🔥 大运6生成流年数据10年
+plugin:bazi-obsidian:21 🔥 大运6流年范围: 2045-2054
+plugin:bazi-obsidian:21 🔥 检查大运7: {ganZhi: '乙亥', startYear: 2055, endYear: 2064, startAge: 71, endAge: 80, …}
+plugin:bazi-obsidian:21 🔥 为大运7 (乙亥) 生成流年数据: 2055-2064
+plugin:bazi-obsidian:21 🔥 大运7生成流年数据10年
+plugin:bazi-obsidian:21 🔥 大运7流年范围: 2055-2064
+plugin:bazi-obsidian:21 🔥 检查大运8: {ganZhi: '甲戌', startYear: 2065, endYear: 2074, startAge: 81, endAge: 90, …}
+plugin:bazi-obsidian:21 🔥 为大运8 (甲戌) 生成流年数据: 2065-2074
+plugin:bazi-obsidian:21 🔥 大运8生成流年数据10年
+plugin:bazi-obsidian:21 🔥 大运8流年范围: 2065-2074
+plugin:bazi-obsidian:21 🔥 检查大运9: {ganZhi: '癸酉', startYear: 2075, endYear: 2084, startAge: 91, endAge: 100, …}
+plugin:bazi-obsidian:21 🔥 为大运9 (癸酉) 生成流年数据: 2075-2084
+plugin:bazi-obsidian:21 🔥 大运9生成流年数据10年
+plugin:bazi-obsidian:21 🔥 大运9流年范围: 2075-2084
+plugin:bazi-obsidian:21 🔥 所有大运流年数据生成完成，总计100年
+plugin:bazi-obsidian:21 🔥 流年数据范围: 1985-2084
+plugin:bazi-obsidian:21 🔥 前5年流年: (5) ['1985年(0岁): 乙丑', '1986年(1岁): 丙寅', '1987年(2岁): 丁卯', '1988年(3岁): 戊辰', '1989年(4岁): 己巳']
+plugin:bazi-obsidian:21 🔥 计算小运数量: 大运范围1985-2084, 小运数量119
+plugin:bazi-obsidian:21 🔥 formatBaziInfo计算的小运数量: 119
+plugin:bazi-obsidian:6 🎯 XiaoYunCalculator.calculateXiaoYun: 开始计算 {gender: '1', dayStem: '丙', startYear: 1985, count: 119}
+plugin:bazi-obsidian:6 🎯 小运推算参数: {timeGan: '癸', timeZhi: '巳', yearGan: '乙', isYangYear: false, isShunXing: '逆行'}
+plugin:bazi-obsidian:6 🎯 小运 0岁 (1985年): 壬辰
+plugin:bazi-obsidian:6 🎯 小运 1岁 (1986年): 辛卯
+plugin:bazi-obsidian:6 🎯 小运 2岁 (1987年): 庚寅
+plugin:bazi-obsidian:6 🎯 小运 3岁 (1988年): 己丑
+plugin:bazi-obsidian:6 🎯 小运 4岁 (1989年): 戊子
+plugin:bazi-obsidian:6 🎯 小运 5岁 (1990年): 丁亥
+plugin:bazi-obsidian:6 🎯 小运 6岁 (1991年): 丙戌
+plugin:bazi-obsidian:6 🎯 小运 7岁 (1992年): 乙酉
+plugin:bazi-obsidian:6 🎯 小运 8岁 (1993年): 甲申
+plugin:bazi-obsidian:6 🎯 小运 9岁 (1994年): 癸未
+plugin:bazi-obsidian:6 🎯 小运 10岁 (1995年): 壬午
+plugin:bazi-obsidian:6 🎯 小运 11岁 (1996年): 辛巳
+plugin:bazi-obsidian:6 🎯 小运 12岁 (1997年): 庚辰
+plugin:bazi-obsidian:6 🎯 小运 13岁 (1998年): 己卯
+plugin:bazi-obsidian:6 🎯 小运 14岁 (1999年): 戊寅
+plugin:bazi-obsidian:6 🎯 小运 15岁 (2000年): 丁丑
+plugin:bazi-obsidian:6 🎯 小运 16岁 (2001年): 丙子
+plugin:bazi-obsidian:6 🎯 小运 17岁 (2002年): 乙undefined
+plugin:bazi-obsidian:6 🎯 小运 18岁 (2003年): 甲undefined
+plugin:bazi-obsidian:6 🎯 小运 19岁 (2004年): NaN
+plugin:bazi-obsidian:6 🎯 小运 20岁 (2005年): NaN
+plugin:bazi-obsidian:6 🎯 小运 21岁 (2006年): NaN
+plugin:bazi-obsidian:6 🎯 小运 22岁 (2007年): NaN
+plugin:bazi-obsidian:6 🎯 小运 23岁 (2008年): NaN
+plugin:bazi-obsidian:6 🎯 小运 24岁 (2009年): NaN
+plugin:bazi-obsidian:6 🎯 小运 25岁 (2010年): NaN
+plugin:bazi-obsidian:6 🎯 小运 26岁 (2011年): NaN
+plugin:bazi-obsidian:6 🎯 小运 27岁 (2012年): NaN
+plugin:bazi-obsidian:6 🎯 小运 28岁 (2013年): 甲子
+plugin:bazi-obsidian:6 🎯 小运 29岁 (2014年): NaN
+plugin:bazi-obsidian:6 🎯 小运 30岁 (2015年): NaN
+plugin:bazi-obsidian:6 🎯 小运 31岁 (2016年): NaN
+plugin:bazi-obsidian:6 🎯 小运 32岁 (2017年): NaN
+plugin:bazi-obsidian:6 🎯 小运 33岁 (2018年): NaN
+plugin:bazi-obsidian:6 🎯 小运 34岁 (2019年): NaN
+plugin:bazi-obsidian:6 🎯 小运 35岁 (2020年): NaN
+plugin:bazi-obsidian:6 🎯 小运 36岁 (2021年): NaN
+plugin:bazi-obsidian:6 🎯 小运 37岁 (2022年): NaN
+plugin:bazi-obsidian:6 🎯 小运 38岁 (2023年): 甲undefined
+plugin:bazi-obsidian:6 🎯 小运 39岁 (2024年): NaN
+plugin:bazi-obsidian:6 🎯 小运 40岁 (2025年): undefined子
+plugin:bazi-obsidian:6 🎯 小运 41岁 (2026年): NaN
+plugin:bazi-obsidian:6 🎯 小运 42岁 (2027年): NaN
+plugin:bazi-obsidian:6 🎯 小运 43岁 (2028年): NaN
+plugin:bazi-obsidian:6 🎯 小运 44岁 (2029年): NaN
+plugin:bazi-obsidian:6 🎯 小运 45岁 (2030年): NaN
+plugin:bazi-obsidian:6 🎯 小运 46岁 (2031年): NaN
+plugin:bazi-obsidian:6 🎯 小运 47岁 (2032年): NaN
+plugin:bazi-obsidian:6 🎯 小运 48岁 (2033年): 甲undefined
+plugin:bazi-obsidian:6 🎯 小运 49岁 (2034年): NaN
+plugin:bazi-obsidian:6 🎯 小运 50岁 (2035年): NaN
+plugin:bazi-obsidian:6 🎯 小运 51岁 (2036年): NaN
+plugin:bazi-obsidian:6 🎯 小运 52岁 (2037年): undefined子
+plugin:bazi-obsidian:6 🎯 小运 53岁 (2038年): NaN
+plugin:bazi-obsidian:6 🎯 小运 54岁 (2039年): NaN
+plugin:bazi-obsidian:6 🎯 小运 55岁 (2040年): NaN
+plugin:bazi-obsidian:6 🎯 小运 56岁 (2041年): NaN
+plugin:bazi-obsidian:6 🎯 小运 57岁 (2042年): NaN
+plugin:bazi-obsidian:6 🎯 小运 58岁 (2043年): 甲undefined
+plugin:bazi-obsidian:6 🎯 小运 59岁 (2044年): NaN
+plugin:bazi-obsidian:6 🎯 小运 60岁 (2045年): NaN
+plugin:bazi-obsidian:6 🎯 小运 61岁 (2046年): NaN
+plugin:bazi-obsidian:6 🎯 小运 62岁 (2047年): NaN
+plugin:bazi-obsidian:6 🎯 小运 63岁 (2048年): NaN
+plugin:bazi-obsidian:6 🎯 小运 64岁 (2049年): undefined子
+plugin:bazi-obsidian:6 🎯 小运 65岁 (2050年): NaN
+plugin:bazi-obsidian:6 🎯 小运 66岁 (2051年): NaN
+plugin:bazi-obsidian:6 🎯 小运 67岁 (2052年): NaN
+plugin:bazi-obsidian:6 🎯 小运 68岁 (2053年): 甲undefined
+plugin:bazi-obsidian:6 🎯 小运 69岁 (2054年): NaN
+plugin:bazi-obsidian:6 🎯 小运 70岁 (2055年): NaN
+plugin:bazi-obsidian:6 🎯 小运 71岁 (2056年): NaN
+plugin:bazi-obsidian:6 🎯 小运 72岁 (2057年): NaN
+plugin:bazi-obsidian:6 🎯 小运 73岁 (2058年): NaN
+plugin:bazi-obsidian:6 🎯 小运 74岁 (2059年): NaN
+plugin:bazi-obsidian:6 🎯 小运 75岁 (2060年): NaN
+plugin:bazi-obsidian:6 🎯 小运 76岁 (2061年): undefined子
+plugin:bazi-obsidian:6 🎯 小运 77岁 (2062年): NaN
+plugin:bazi-obsidian:6 🎯 小运 78岁 (2063年): 甲undefined
+plugin:bazi-obsidian:6 🎯 小运 79岁 (2064年): NaN
+plugin:bazi-obsidian:6 🎯 小运 80岁 (2065年): NaN
+plugin:bazi-obsidian:6 🎯 小运 81岁 (2066年): NaN
+plugin:bazi-obsidian:6 🎯 小运 82岁 (2067年): NaN
+plugin:bazi-obsidian:6 🎯 小运 83岁 (2068年): NaN
+plugin:bazi-obsidian:6 🎯 小运 84岁 (2069年): NaN
+plugin:bazi-obsidian:6 🎯 小运 85岁 (2070年): NaN
+plugin:bazi-obsidian:6 🎯 小运 86岁 (2071年): NaN
+plugin:bazi-obsidian:6 🎯 小运 87岁 (2072年): NaN
+plugin:bazi-obsidian:6 🎯 小运 88岁 (2073年): 甲子
+plugin:bazi-obsidian:6 🎯 小运 89岁 (2074年): NaN
+plugin:bazi-obsidian:6 🎯 小运 90岁 (2075年): NaN
+plugin:bazi-obsidian:6 🎯 小运 91岁 (2076年): NaN
+plugin:bazi-obsidian:6 🎯 小运 92岁 (2077年): NaN
+plugin:bazi-obsidian:6 🎯 小运 93岁 (2078年): NaN
+plugin:bazi-obsidian:6 🎯 小运 94岁 (2079年): NaN
+plugin:bazi-obsidian:6 🎯 小运 95岁 (2080年): NaN
+plugin:bazi-obsidian:6 🎯 小运 96岁 (2081年): NaN
+plugin:bazi-obsidian:6 🎯 小运 97岁 (2082年): NaN
+plugin:bazi-obsidian:6 🎯 小运 98岁 (2083年): 甲undefined
+plugin:bazi-obsidian:6 🎯 小运 99岁 (2084年): NaN
+plugin:bazi-obsidian:6 🎯 小运 100岁 (2085年): undefined子
+plugin:bazi-obsidian:6 🎯 小运 101岁 (2086年): NaN
+plugin:bazi-obsidian:6 🎯 小运 102岁 (2087年): NaN
+plugin:bazi-obsidian:6 🎯 小运 103岁 (2088年): NaN
+plugin:bazi-obsidian:6 🎯 小运 104岁 (2089年): NaN
+plugin:bazi-obsidian:6 🎯 小运 105岁 (2090年): NaN
+plugin:bazi-obsidian:6 🎯 小运 106岁 (2091年): NaN
+plugin:bazi-obsidian:6 🎯 小运 107岁 (2092年): NaN
+plugin:bazi-obsidian:6 🎯 小运 108岁 (2093年): 甲undefined
+plugin:bazi-obsidian:6 🎯 小运 109岁 (2094年): NaN
+plugin:bazi-obsidian:6 🎯 小运 110岁 (2095年): NaN
+plugin:bazi-obsidian:6 🎯 小运 111岁 (2096年): NaN
+plugin:bazi-obsidian:6 🎯 小运 112岁 (2097年): undefined子
+plugin:bazi-obsidian:6 🎯 小运 113岁 (2098年): NaN
+plugin:bazi-obsidian:6 🎯 小运 114岁 (2099年): NaN
+plugin:bazi-obsidian:6 🎯 小运 115岁 (2100年): NaN
+plugin:bazi-obsidian:6 🎯 小运 116岁 (2101年): NaN
+plugin:bazi-obsidian:6 🎯 小运 117岁 (2102年): NaN
+plugin:bazi-obsidian:6 🎯 小运 118岁 (2103年): 甲undefined
+plugin:bazi-obsidian:6 ✅ XiaoYunCalculator.calculateXiaoYun: 计算完成，共119个小运
+plugin:bazi-obsidian:21 🔥 formatBaziInfo小运信息计算完成，数量: 119
+plugin:bazi-obsidian:21 🔥 formatBaziInfo小运范围: 1985年(0岁) - 2103年(118岁)
+plugin:bazi-obsidian:21 🔥 formatBaziInfo前10个小运: (10) ['0岁(1985年): 壬辰', '1岁(1986年): 辛卯', '2岁(1987年): 庚寅', '3岁(1988年): 己丑', '4岁(1989年): 戊子', '5岁(1990年): 丁亥', '6岁(1991年): 丙戌', '7岁(1992年): 乙酉', '8岁(1993年): 甲申', '9岁(1994年): 癸未']
+plugin:bazi-obsidian:21 🔥 ✅ formatBaziInfo已使用虚拟八字对象，计算完成
+plugin:bazi-obsidian:2001 🔥🔥🔥🔥🔥 BaziService.parseBaziString 返回结果: {solarDate: '1985-07-06', lunarDate: '一九八五年五月十九', solarTime: '10:00', yearPillar: '乙丑', yearStem: '乙', …}
+plugin:bazi-obsidian:2001 🔥 返回结果中的 wuXingStrength: {jin: 1.62, mu: 4, shui: 11.68, huo: 81.15, tu: 11.52, …}
+plugin:bazi-obsidian:2001 🎨 开始渲染八字命盘
+plugin:bazi-obsidian:2013 🎨 插件完整设置: {defaultDisplayStyle: 'complete', debugMode: false, autoUpdateCodeBlock: true, codeBlockUpdateDelay: 500, baziSect: '2', …}
+plugin:bazi-obsidian:2013 🎨 插件神煞设置: {siZhu: true, daYun: true, liuNian: true, xiaoYun: true, liuYue: true}
+plugin:bazi-obsidian:2013 🎨 传递神煞显示设置到baziInfo: {siZhu: true, daYun: true, liuNian: true, xiaoYun: true, liuYue: true}
+plugin:bazi-obsidian:2013 🎨 设置扩展列类型: auto_current
+plugin:bazi-obsidian:2013 🎨 baziInfo完整内容: {solarDate: '1985-07-06', lunarDate: '一九八五年五月十九', solarTime: '10:00', yearPillar: '乙丑', yearStem: '乙', …}
+plugin:bazi-obsidian:2013 🎨 使用显示样式: complete
+plugin:bazi-obsidian:1473 🎯 InteractiveBaziView构造函数开始
+plugin:bazi-obsidian:1473 🎯 接收到的baziInfo.showShenSha: {siZhu: true, daYun: true, liuNian: true, xiaoYun: true, liuYue: true}
+plugin:bazi-obsidian:1473 🎯 使用传递的神煞显示设置: {siZhu: true, daYun: true, liuNian: true, xiaoYun: true, liuYue: true}
+plugin:bazi-obsidian:1473 ✅ 所有功能组件初始化完成
+plugin:bazi-obsidian:456 🔍🔍🔍 BaziTableManager 十神数据检查开始 🔍🔍🔍
+plugin:bazi-obsidian:456 yearShiShenGan: 正印
+plugin:bazi-obsidian:456 monthShiShenGan: 七杀
+plugin:bazi-obsidian:456 dayShiShen: 日主
+plugin:bazi-obsidian:456 dayShiShenGan: undefined
+plugin:bazi-obsidian:456 timeShiShenGan: 正官
+plugin:bazi-obsidian:456 🔍🔍🔍 BaziTableManager 十神数据检查结束 🔍🔍🔍
+plugin:bazi-obsidian:456 🎨 应用十神颜色: 正印 -> #4169E1
+plugin:bazi-obsidian:456 🎨 应用十神颜色: 伤官 -> #FFA500
+plugin:bazi-obsidian:456 🎨 应用十神颜色: 七杀 -> #8B0000
+plugin:bazi-obsidian:456 🎨 应用十神颜色: 劫财 -> #32CD32
+plugin:bazi-obsidian:456 🎨 应用十神颜色: 日主 -> #8B4513
+plugin:bazi-obsidian:456 🎨 应用十神颜色: 劫财 -> #32CD32
+plugin:bazi-obsidian:456 🎨 应用十神颜色: 正官 -> #4B0082
+plugin:bazi-obsidian:456 🎨 应用十神颜色: 比肩 -> #228B22
+plugin:bazi-obsidian:456 🔍 BaziTableManager 地势数据检查:
+plugin:bazi-obsidian:456 yearDiShi: 养
+plugin:bazi-obsidian:456 monthDiShi: 帝旺
+plugin:bazi-obsidian:456 dayDiShi: 帝旺
+plugin:bazi-obsidian:456 timeDiShi: 临官
+plugin:bazi-obsidian:456 🎨 应用地势颜色: 养 -> #98FB98
+plugin:bazi-obsidian:456 🎨 应用地势颜色: 帝旺 -> #DC143C
+plugin:bazi-obsidian:456 🎨 应用地势颜色: 帝旺 -> #DC143C
+plugin:bazi-obsidian:456 🎨 应用地势颜色: 临官 -> #FF6347
+plugin:bazi-obsidian:1473 🚀 检测到自动扩展配置: auto_current
+plugin:bazi-obsidian:1473 ✅ 八字表格创建完成
+plugin:bazi-obsidian:1202 ✅ 流年信息管理器创建完成
+plugin:bazi-obsidian:1473 ✅ 大运信息创建完成
+plugin:bazi-obsidian:1085 🔍 createCombinedTable: 开始创建流年表格
+plugin:bazi-obsidian:1085 🔍 当前选中大运索引: 0
+plugin:bazi-obsidian:1085 🎯 ========== 执行流程检查: 大运0 ==========
+plugin:bazi-obsidian:1085 🔍 步骤1: 检查基础数据
+plugin:bazi-obsidian:1085 🔍 baziInfo.liuNian 存在: true
+plugin:bazi-obsidian:1085 🔍 baziInfo.liuNian 长度: 100
+plugin:bazi-obsidian:1085 🔍 baziInfo.xiaoYun 存在: true
+plugin:bazi-obsidian:1085 🔍 baziInfo.xiaoYun 长度: 119
+plugin:bazi-obsidian:1085 🔍 流年数据范围: 1985 - 2084
+plugin:bazi-obsidian:1085 🔍 前5年流年: (5) ['1985年(0岁): 乙丑', '1986年(1岁): 丙寅', '1987年(2岁): 丁卯', '1988年(3岁): 戊辰', '1989年(4岁): 己巳']
+plugin:bazi-obsidian:1085 🔍 小运数据范围: 1985年(0岁) - 2103年(118岁)
+plugin:bazi-obsidian:1085 🔍 前5个小运: (5) ['1985年(0岁): 壬辰', '1986年(1岁): 辛卯', '1987年(2岁): 庚寅', '1988年(3岁): 己丑', '1989年(4岁): 戊子']
+plugin:bazi-obsidian:1085 🔍 步骤2: 检查大运选择
+plugin:bazi-obsidian:1085 🔍 选中大运索引: 0
+plugin:bazi-obsidian:1085 🔍 大运数据总数: 10
+plugin:bazi-obsidian:1085 🔍 所有大运: (10) ['0: 壬午(1985-1994)', '1: 辛巳(1995-2004)', '2: 庚辰(2005-2014)', '3: 己卯(2015-2024)', '4: 戊寅(2025-2034)', '5: 丁丑(2035-2044)', '6: 丙子(2045-2054)', '7: 乙亥(2055-2064)', '8: 甲戌(2065-2074)', '9: 癸酉(2075-2084)']
+plugin:bazi-obsidian:1085 🔍 步骤3: 获取选中的大运
+plugin:bazi-obsidian:1085 🎯 选中大运详情: {index: 0, ganZhi: '壬午', startYear: 1985, endYear: 1994, startAge: 1, …}
+plugin:bazi-obsidian:1085 🔍 步骤4: 过滤流年数据
+plugin:bazi-obsidian:1085 🔍 过滤条件: 1985 <= year <= 1994
+plugin:bazi-obsidian:1085 🔍 过滤后数据长度: 10
+plugin:bazi-obsidian:1085 🔍 过滤后流年: (10) ['1985年(0岁): 乙丑', '1986年(1岁): 丙寅', '1987年(2岁): 丁卯', '1988年(3岁): 戊辰', '1989年(4岁): 己巳', '1990年(5岁): 庚午', '1991年(6岁): 辛未', '1992年(7岁): 壬申', '1993年(8岁): 癸酉', '1994年(9岁): 甲戌']
+plugin:bazi-obsidian:1085 🔍 步骤5: 排序和限制
+plugin:bazi-obsidian:1085 ✅ 最终流年数据: 10年
+plugin:bazi-obsidian:1085 🔍 最终流年详情: (10) ['1985年(0岁): 乙丑', '1986年(1岁): 丙寅', '1987年(2岁): 丁卯', '1988年(3岁): 戊辰', '1989年(4岁): 己巳', '1990年(5岁): 庚午', '1991年(6岁): 辛未', '1992年(7岁): 壬申', '1993年(8岁): 癸酉', '1994年(9岁): 甲戌']
+plugin:bazi-obsidian:1115 🎯 ========== 小运匹配执行流程检查 ==========
+plugin:bazi-obsidian:1115 🔍 步骤1: 检查小运数据
+plugin:bazi-obsidian:1115 🔍 小运数据总数: 119
+plugin:bazi-obsidian:1115 🔍 流年数据总数: 10
+plugin:bazi-obsidian:1115 🔍 步骤2: 检查数据范围
+plugin:bazi-obsidian:1115 🔍 小运范围: 1985年(0岁) - 2103年(118岁)
+plugin:bazi-obsidian:1115 🔍 前10个小运: (10) ['0岁(1985年): 壬辰', '1岁(1986年): 辛卯', '2岁(1987年): 庚寅', '3岁(1988年): 己丑', '4岁(1989年): 戊子', '5岁(1990年): 丁亥', '6岁(1991年): 丙戌', '7岁(1992年): 乙酉', '8岁(1993年): 甲申', '9岁(1994年): 癸未']
+plugin:bazi-obsidian:1115 🔍 流年范围: 1985年(0岁) - 1994年(9岁)
+plugin:bazi-obsidian:1115 🔍 所有流年: (10) ['0岁(1985年): 乙丑', '1岁(1986年): 丙寅', '2岁(1987年): 丁卯', '3岁(1988年): 戊辰', '4岁(1989年): 己巳', '5岁(1990年): 庚午', '6岁(1991年): 辛未', '7岁(1992年): 壬申', '8岁(1993年): 癸酉', '9岁(1994年): 甲戌']
+plugin:bazi-obsidian:1115 🔍 步骤3: 逐个匹配流年和小运
+plugin:bazi-obsidian:1115 🔍 匹配流年0: 1985年(0岁) 乙丑
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 0岁 → 小运: 壬辰(1985年)
+plugin:bazi-obsidian:1115 🔍 匹配流年1: 1986年(1岁) 丙寅
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 1岁 → 小运: 辛卯(1986年)
+plugin:bazi-obsidian:1115 🔍 匹配流年2: 1987年(2岁) 丁卯
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 2岁 → 小运: 庚寅(1987年)
+plugin:bazi-obsidian:1115 🔍 匹配流年3: 1988年(3岁) 戊辰
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 3岁 → 小运: 己丑(1988年)
+plugin:bazi-obsidian:1115 🔍 匹配流年4: 1989年(4岁) 己巳
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 4岁 → 小运: 戊子(1989年)
+plugin:bazi-obsidian:1115 🔍 匹配流年5: 1990年(5岁) 庚午
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 5岁 → 小运: 丁亥(1990年)
+plugin:bazi-obsidian:1115 🔍 匹配流年6: 1991年(6岁) 辛未
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 6岁 → 小运: 丙戌(1991年)
+plugin:bazi-obsidian:1115 🔍 匹配流年7: 1992年(7岁) 壬申
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 7岁 → 小运: 乙酉(1992年)
+plugin:bazi-obsidian:1115 🔍 匹配流年8: 1993年(8岁) 癸酉
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 8岁 → 小运: 甲申(1993年)
+plugin:bazi-obsidian:1115 🔍 匹配流年9: 1994年(9岁) 甲戌
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 9岁 → 小运: 癸未(1994年)
+plugin:bazi-obsidian:1115 🔍 步骤4: 统计匹配结果
+plugin:bazi-obsidian:1115 ✅ 小运匹配完成: 10/10 匹配成功, 0 匹配失败
+plugin:bazi-obsidian:1085 🔍 过滤后的流年数据长度: 10
+plugin:bazi-obsidian:1085 🔍 小运数据长度: 10
+plugin:bazi-obsidian:1473 ✅ 流年信息创建完成
+plugin:bazi-obsidian:1473 ✅ 流月信息创建完成
+plugin:bazi-obsidian:1473 ✅ 流日信息创建完成
+plugin:bazi-obsidian:1473 ✅ 流时信息创建完成
+plugin:bazi-obsidian:893 ✅ 点击交互设置完成
+plugin:bazi-obsidian:893 ✅ 悬停交互设置完成
+plugin:bazi-obsidian:893 ✅ 键盘交互设置完成
+plugin:bazi-obsidian:893 ✅ 自定义事件设置完成
+plugin:bazi-obsidian:893 ✅ InteractionManager 初始化完成
+plugin:bazi-obsidian:1473 ✅ 事件监听器设置完成
+plugin:bazi-obsidian:1473 ℹ️ 跳过默认大运选择，由扩展列功能控制
+plugin:bazi-obsidian:1473 ✅ 视图初始化完成
+plugin:bazi-obsidian:2013 ✅ 八字命盘渲染完成
+plugin:bazi-obsidian:2001 ✅ 已有年份参数: 1985
+plugin:bazi-obsidian:2001 ✅ 不需要显示性别选择界面，参数: 男
+plugin:bazi-obsidian:471 🚀 autoExtendByType: 开始自动扩展，类型=auto_current
+plugin:bazi-obsidian:471 🕐 自动扩展到当前时间: 2025-6-18 11:00
+plugin:bazi-obsidian:524 🔍 setDaYunIndexForYear: 查找2025年对应的大运
+plugin:bazi-obsidian:524 🔍 大运数据总数: 10
+plugin:bazi-obsidian:524 🔍 大运[0]: 壬午 (1985-1994) isQianYun=true
+plugin:bazi-obsidian:524 🔍 大运[1]: 辛巳 (1995-2004) isQianYun=undefined
+plugin:bazi-obsidian:524 🔍 大运[2]: 庚辰 (2005-2014) isQianYun=undefined
+plugin:bazi-obsidian:524 🔍 大运[3]: 己卯 (2015-2024) isQianYun=undefined
+plugin:bazi-obsidian:524 🔍 大运[4]: 戊寅 (2025-2034) isQianYun=undefined
+plugin:bazi-obsidian:524 🔍 大运[5]: 丁丑 (2035-2044) isQianYun=undefined
+plugin:bazi-obsidian:524 🔍 大运[6]: 丙子 (2045-2054) isQianYun=undefined
+plugin:bazi-obsidian:524 🔍 大运[7]: 乙亥 (2055-2064) isQianYun=undefined
+plugin:bazi-obsidian:524 🔍 大运[8]: 甲戌 (2065-2074) isQianYun=undefined
+plugin:bazi-obsidian:524 🔍 大运[9]: 癸酉 (2075-2084) isQianYun=undefined
+plugin:bazi-obsidian:524 ✅ 找到对应大运: 2025年 -> 大运索引4 (2025-2034) 干支=戊寅 isQianYun=undefined
+plugin:bazi-obsidian:524 📅 设置流月: 公历2025年6月 -> 农历2025年5月 -> 壬午
+plugin:bazi-obsidian:524 📅 设置流日: 2025-6-18 -> 戊午
+plugin:bazi-obsidian:524 🕐 设置流时: 2025-6-18 11:00 -> 午时(戊午)
+plugin:bazi-obsidian:471 🚀 extendBaziTableToLevel: 开始扩展到liushi层级
+plugin:bazi-obsidian:471 🎯 实际目标层级: liushi (请求层级: liushi)
+plugin:bazi-obsidian:471 🔍 流时强制更新检查: lastLiuShi=null, currentLiuShi={"year":2025,"month":6,"day":18,"hour":11,"timeIndex":6,"ganZhi":"戊午","name":"午时(戊午)"}, needsUpdate=true
+plugin:bazi-obsidian:471 🔄 强制更新liushi层级内容
+plugin:bazi-obsidian:471 🧹 清除现有扩展，当前层级: none
+plugin:bazi-obsidian:471 🧹 开始清除扩展列，当前扩展柱数量: 0
+plugin:bazi-obsidian:471 ✅ 扩展列清除完成
+plugin:bazi-obsidian:471 📋 需要扩展的层级列表: dayun → liunian → liuyue → liuri → liushi
+plugin:bazi-obsidian:471 🔄 正在处理层级: dayun
+plugin:bazi-obsidian:471 🔍 getPillarInfoForLevel: dayun
+plugin:bazi-obsidian:471 ✅ 获取大运柱信息: 戊寅 (索引: 4)
+plugin:bazi-obsidian:471 ✅ 获取到dayun柱信息: 大运
+2025-2034
+(41-50岁) 戊寅
+plugin:bazi-obsidian:471 🔄 添加扩展列: 大运
+2025-2034
+(41-50岁) (戊寅)
+plugin:bazi-obsidian:471 ✅ 扩展列添加完成: 大运
+2025-2034
+(41-50岁)
+plugin:bazi-obsidian:471 🔄 正在处理层级: liunian
+plugin:bazi-obsidian:471 🔍 getPillarInfoForLevel: liunian
+plugin:bazi-obsidian:471 ✅ 获取流年柱信息: 2025年 乙巳
+plugin:bazi-obsidian:471 ✅ 获取到liunian柱信息: 流年
+2025年
+(乙巳) 乙巳
+plugin:bazi-obsidian:471 🔄 添加扩展列: 流年
+2025年
+(乙巳) (乙巳)
+plugin:bazi-obsidian:471 ✅ 扩展列添加完成: 流年
+2025年
+(乙巳)
+plugin:bazi-obsidian:471 🔄 正在处理层级: liuyue
+plugin:bazi-obsidian:471 🔍 getPillarInfoForLevel: liuyue
+plugin:bazi-obsidian:471 ✅ 获取流月柱信息: 壬午
+plugin:bazi-obsidian:471 ✅ 获取到liuyue柱信息: 流月
+6月
+五月 壬午
+plugin:bazi-obsidian:471 🔄 添加扩展列: 流月
+6月
+五月 (壬午)
+plugin:bazi-obsidian:471 ✅ 扩展列添加完成: 流月
+6月
+五月
+plugin:bazi-obsidian:471 🔄 正在处理层级: liuri
+plugin:bazi-obsidian:471 🔍 getPillarInfoForLevel: liuri
+plugin:bazi-obsidian:471 ✅ 获取流日柱信息: 2025-6-18 戊午
+plugin:bazi-obsidian:471 ✅ 获取到liuri柱信息: 流日
+2025.6.18
+五月廿三 戊午
+plugin:bazi-obsidian:471 🔄 添加扩展列: 流日
+2025.6.18
+五月廿三 (戊午)
+plugin:bazi-obsidian:471 ✅ 扩展列添加完成: 流日
+2025.6.18
+五月廿三
+plugin:bazi-obsidian:471 🔄 正在处理层级: liushi
+plugin:bazi-obsidian:471 🔍 getPillarInfoForLevel: liushi
+plugin:bazi-obsidian:471 ✅ 获取流时柱信息: 午时(戊午) 戊午 (使用后端数据)
+plugin:bazi-obsidian:471 ✅ 获取到liushi柱信息: 流时
+12:00 戊午
+plugin:bazi-obsidian:471 🔄 添加扩展列: 流时
+12:00 (戊午)
+plugin:bazi-obsidian:471 ✅ 扩展列添加完成: 流时
+12:00
+plugin:bazi-obsidian:471 ✅ 已扩展到liushi层级，包含层级：dayun → liunian → liuyue → liuri → liushi
+plugin:bazi-obsidian:471 📝 更新流时状态跟踪: 大运=4, 流年=2025, 流月={"year":2025,"month":5,"solarYear":2025,"solarMonth":6,"ganZhi":"壬午","name":"壬午月"}, 流日={"year":2025,"month":6,"day":18,"ganZhi":"戊午","name":"戊午日"}, 流时={"year":2025,"month":6,"day":18,"hour":11,"timeIndex":6,"ganZhi":"戊午","name":"午时(戊午)"}
+plugin:bazi-obsidian:1075 🎯 流年信息栏展开
+plugin:bazi-obsidian:1085 🔍 createCombinedTable: 开始创建流年表格
+plugin:bazi-obsidian:1085 🔍 当前选中大运索引: 0
+plugin:bazi-obsidian:1085 🎯 ========== 执行流程检查: 大运0 ==========
+plugin:bazi-obsidian:1085 🔍 步骤1: 检查基础数据
+plugin:bazi-obsidian:1085 🔍 baziInfo.liuNian 存在: true
+plugin:bazi-obsidian:1085 🔍 baziInfo.liuNian 长度: 100
+plugin:bazi-obsidian:1085 🔍 baziInfo.xiaoYun 存在: true
+plugin:bazi-obsidian:1085 🔍 baziInfo.xiaoYun 长度: 119
+plugin:bazi-obsidian:1085 🔍 流年数据范围: 1985 - 2084
+plugin:bazi-obsidian:1085 🔍 前5年流年: (5) ['1985年(0岁): 乙丑', '1986年(1岁): 丙寅', '1987年(2岁): 丁卯', '1988年(3岁): 戊辰', '1989年(4岁): 己巳']
+plugin:bazi-obsidian:1085 🔍 小运数据范围: 1985年(0岁) - 2103年(118岁)
+plugin:bazi-obsidian:1085 🔍 前5个小运: (5) ['1985年(0岁): 壬辰', '1986年(1岁): 辛卯', '1987年(2岁): 庚寅', '1988年(3岁): 己丑', '1989年(4岁): 戊子']
+plugin:bazi-obsidian:1085 🔍 步骤2: 检查大运选择
+plugin:bazi-obsidian:1085 🔍 选中大运索引: 0
+plugin:bazi-obsidian:1085 🔍 大运数据总数: 10
+plugin:bazi-obsidian:1085 🔍 所有大运: (10) ['0: 壬午(1985-1994)', '1: 辛巳(1995-2004)', '2: 庚辰(2005-2014)', '3: 己卯(2015-2024)', '4: 戊寅(2025-2034)', '5: 丁丑(2035-2044)', '6: 丙子(2045-2054)', '7: 乙亥(2055-2064)', '8: 甲戌(2065-2074)', '9: 癸酉(2075-2084)']
+plugin:bazi-obsidian:1085 🔍 步骤3: 获取选中的大运
+plugin:bazi-obsidian:1085 🎯 选中大运详情: {index: 0, ganZhi: '壬午', startYear: 1985, endYear: 1994, startAge: 1, …}
+plugin:bazi-obsidian:1085 🔍 步骤4: 过滤流年数据
+plugin:bazi-obsidian:1085 🔍 过滤条件: 1985 <= year <= 1994
+plugin:bazi-obsidian:1085 🔍 过滤后数据长度: 10
+plugin:bazi-obsidian:1085 🔍 过滤后流年: (10) ['1985年(0岁): 乙丑', '1986年(1岁): 丙寅', '1987年(2岁): 丁卯', '1988年(3岁): 戊辰', '1989年(4岁): 己巳', '1990年(5岁): 庚午', '1991年(6岁): 辛未', '1992年(7岁): 壬申', '1993年(8岁): 癸酉', '1994年(9岁): 甲戌']
+plugin:bazi-obsidian:1085 🔍 步骤5: 排序和限制
+plugin:bazi-obsidian:1085 ✅ 最终流年数据: 10年
+plugin:bazi-obsidian:1085 🔍 最终流年详情: (10) ['1985年(0岁): 乙丑', '1986年(1岁): 丙寅', '1987年(2岁): 丁卯', '1988年(3岁): 戊辰', '1989年(4岁): 己巳', '1990年(5岁): 庚午', '1991年(6岁): 辛未', '1992年(7岁): 壬申', '1993年(8岁): 癸酉', '1994年(9岁): 甲戌']
+plugin:bazi-obsidian:1115 🎯 ========== 小运匹配执行流程检查 ==========
+plugin:bazi-obsidian:1115 🔍 步骤1: 检查小运数据
+plugin:bazi-obsidian:1115 🔍 小运数据总数: 119
+plugin:bazi-obsidian:1115 🔍 流年数据总数: 10
+plugin:bazi-obsidian:1115 🔍 步骤2: 检查数据范围
+plugin:bazi-obsidian:1115 🔍 小运范围: 1985年(0岁) - 2103年(118岁)
+plugin:bazi-obsidian:1115 🔍 前10个小运: (10) ['0岁(1985年): 壬辰', '1岁(1986年): 辛卯', '2岁(1987年): 庚寅', '3岁(1988年): 己丑', '4岁(1989年): 戊子', '5岁(1990年): 丁亥', '6岁(1991年): 丙戌', '7岁(1992年): 乙酉', '8岁(1993年): 甲申', '9岁(1994年): 癸未']
+plugin:bazi-obsidian:1115 🔍 流年范围: 1985年(0岁) - 1994年(9岁)
+plugin:bazi-obsidian:1115 🔍 所有流年: (10) ['0岁(1985年): 乙丑', '1岁(1986年): 丙寅', '2岁(1987年): 丁卯', '3岁(1988年): 戊辰', '4岁(1989年): 己巳', '5岁(1990年): 庚午', '6岁(1991年): 辛未', '7岁(1992年): 壬申', '8岁(1993年): 癸酉', '9岁(1994年): 甲戌']
+plugin:bazi-obsidian:1115 🔍 步骤3: 逐个匹配流年和小运
+plugin:bazi-obsidian:1115 🔍 匹配流年0: 1985年(0岁) 乙丑
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 0岁 → 小运: 壬辰(1985年)
+plugin:bazi-obsidian:1115 🔍 匹配流年1: 1986年(1岁) 丙寅
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 1岁 → 小运: 辛卯(1986年)
+plugin:bazi-obsidian:1115 🔍 匹配流年2: 1987年(2岁) 丁卯
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 2岁 → 小运: 庚寅(1987年)
+plugin:bazi-obsidian:1115 🔍 匹配流年3: 1988年(3岁) 戊辰
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 3岁 → 小运: 己丑(1988年)
+plugin:bazi-obsidian:1115 🔍 匹配流年4: 1989年(4岁) 己巳
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 4岁 → 小运: 戊子(1989年)
+plugin:bazi-obsidian:1115 🔍 匹配流年5: 1990年(5岁) 庚午
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 5岁 → 小运: 丁亥(1990年)
+plugin:bazi-obsidian:1115 🔍 匹配流年6: 1991年(6岁) 辛未
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 6岁 → 小运: 丙戌(1991年)
+plugin:bazi-obsidian:1115 🔍 匹配流年7: 1992年(7岁) 壬申
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 7岁 → 小运: 乙酉(1992年)
+plugin:bazi-obsidian:1115 🔍 匹配流年8: 1993年(8岁) 癸酉
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 8岁 → 小运: 甲申(1993年)
+plugin:bazi-obsidian:1115 🔍 匹配流年9: 1994年(9岁) 甲戌
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 9岁 → 小运: 癸未(1994年)
+plugin:bazi-obsidian:1115 🔍 步骤4: 统计匹配结果
+plugin:bazi-obsidian:1115 ✅ 小运匹配完成: 10/10 匹配成功, 0 匹配失败
+plugin:bazi-obsidian:1085 🔍 过滤后的流年数据长度: 10
+plugin:bazi-obsidian:1085 🔍 小运数据长度: 10
+plugin:bazi-obsidian:1202 🎯 大运选择: 索引 0
+plugin:bazi-obsidian:1149 🎯 LiuNianInfoManager: 设置大运索引 0
+plugin:bazi-obsidian:1149 🔍 当前八字信息状态:
+plugin:bazi-obsidian:1149 🔍 baziInfo存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.daYun存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.liuNian存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.liuNian长度: 100
+plugin:bazi-obsidian:1149 🔍 大运数据长度: 10
+plugin:bazi-obsidian:1149 🔍 选中的大运: 壬午, 年份: 1985-1994
+plugin:bazi-obsidian:1473 🎯 SectionRenderManager: 大运选择 0
+plugin:bazi-obsidian:1149 🎯 LiuNianInfoManager: 设置大运索引 0
+plugin:bazi-obsidian:1149 🔍 当前八字信息状态:
+plugin:bazi-obsidian:1149 🔍 baziInfo存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.daYun存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.liuNian存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.liuNian长度: 100
+plugin:bazi-obsidian:1149 🔍 大运数据长度: 10
+plugin:bazi-obsidian:1149 🔍 选中的大运: 壬午, 年份: 1985-1994
+plugin:bazi-obsidian:1085 🔍 createCombinedTable: 开始创建流年表格
+plugin:bazi-obsidian:1085 🔍 当前选中大运索引: 0
+plugin:bazi-obsidian:1085 🎯 ========== 执行流程检查: 大运0 ==========
+plugin:bazi-obsidian:1085 🔍 步骤1: 检查基础数据
+plugin:bazi-obsidian:1085 🔍 baziInfo.liuNian 存在: true
+plugin:bazi-obsidian:1085 🔍 baziInfo.liuNian 长度: 100
+plugin:bazi-obsidian:1085 🔍 baziInfo.xiaoYun 存在: true
+plugin:bazi-obsidian:1085 🔍 baziInfo.xiaoYun 长度: 119
+plugin:bazi-obsidian:1085 🔍 流年数据范围: 1985 - 2084
+plugin:bazi-obsidian:1085 🔍 前5年流年: (5) ['1985年(0岁): 乙丑', '1986年(1岁): 丙寅', '1987年(2岁): 丁卯', '1988年(3岁): 戊辰', '1989年(4岁): 己巳']
+plugin:bazi-obsidian:1085 🔍 小运数据范围: 1985年(0岁) - 2103年(118岁)
+plugin:bazi-obsidian:1085 🔍 前5个小运: (5) ['1985年(0岁): 壬辰', '1986年(1岁): 辛卯', '1987年(2岁): 庚寅', '1988年(3岁): 己丑', '1989年(4岁): 戊子']
+plugin:bazi-obsidian:1085 🔍 步骤2: 检查大运选择
+plugin:bazi-obsidian:1085 🔍 选中大运索引: 0
+plugin:bazi-obsidian:1085 🔍 大运数据总数: 10
+plugin:bazi-obsidian:1085 🔍 所有大运: (10) ['0: 壬午(1985-1994)', '1: 辛巳(1995-2004)', '2: 庚辰(2005-2014)', '3: 己卯(2015-2024)', '4: 戊寅(2025-2034)', '5: 丁丑(2035-2044)', '6: 丙子(2045-2054)', '7: 乙亥(2055-2064)', '8: 甲戌(2065-2074)', '9: 癸酉(2075-2084)']
+plugin:bazi-obsidian:1085 🔍 步骤3: 获取选中的大运
+plugin:bazi-obsidian:1085 🎯 选中大运详情: {index: 0, ganZhi: '壬午', startYear: 1985, endYear: 1994, startAge: 1, …}
+plugin:bazi-obsidian:1085 🔍 步骤4: 过滤流年数据
+plugin:bazi-obsidian:1085 🔍 过滤条件: 1985 <= year <= 1994
+plugin:bazi-obsidian:1085 🔍 过滤后数据长度: 10
+plugin:bazi-obsidian:1085 🔍 过滤后流年: (10) ['1985年(0岁): 乙丑', '1986年(1岁): 丙寅', '1987年(2岁): 丁卯', '1988年(3岁): 戊辰', '1989年(4岁): 己巳', '1990年(5岁): 庚午', '1991年(6岁): 辛未', '1992年(7岁): 壬申', '1993年(8岁): 癸酉', '1994年(9岁): 甲戌']
+plugin:bazi-obsidian:1085 🔍 步骤5: 排序和限制
+plugin:bazi-obsidian:1085 ✅ 最终流年数据: 10年
+plugin:bazi-obsidian:1085 🔍 最终流年详情: (10) ['1985年(0岁): 乙丑', '1986年(1岁): 丙寅', '1987年(2岁): 丁卯', '1988年(3岁): 戊辰', '1989年(4岁): 己巳', '1990年(5岁): 庚午', '1991年(6岁): 辛未', '1992年(7岁): 壬申', '1993年(8岁): 癸酉', '1994年(9岁): 甲戌']
+plugin:bazi-obsidian:1115 🎯 ========== 小运匹配执行流程检查 ==========
+plugin:bazi-obsidian:1115 🔍 步骤1: 检查小运数据
+plugin:bazi-obsidian:1115 🔍 小运数据总数: 119
+plugin:bazi-obsidian:1115 🔍 流年数据总数: 10
+plugin:bazi-obsidian:1115 🔍 步骤2: 检查数据范围
+plugin:bazi-obsidian:1115 🔍 小运范围: 1985年(0岁) - 2103年(118岁)
+plugin:bazi-obsidian:1115 🔍 前10个小运: (10) ['0岁(1985年): 壬辰', '1岁(1986年): 辛卯', '2岁(1987年): 庚寅', '3岁(1988年): 己丑', '4岁(1989年): 戊子', '5岁(1990年): 丁亥', '6岁(1991年): 丙戌', '7岁(1992年): 乙酉', '8岁(1993年): 甲申', '9岁(1994年): 癸未']
+plugin:bazi-obsidian:1115 🔍 流年范围: 1985年(0岁) - 1994年(9岁)
+plugin:bazi-obsidian:1115 🔍 所有流年: (10) ['0岁(1985年): 乙丑', '1岁(1986年): 丙寅', '2岁(1987年): 丁卯', '3岁(1988年): 戊辰', '4岁(1989年): 己巳', '5岁(1990年): 庚午', '6岁(1991年): 辛未', '7岁(1992年): 壬申', '8岁(1993年): 癸酉', '9岁(1994年): 甲戌']
+plugin:bazi-obsidian:1115 🔍 步骤3: 逐个匹配流年和小运
+plugin:bazi-obsidian:1115 🔍 匹配流年0: 1985年(0岁) 乙丑
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 0岁 → 小运: 壬辰(1985年)
+plugin:bazi-obsidian:1115 🔍 匹配流年1: 1986年(1岁) 丙寅
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 1岁 → 小运: 辛卯(1986年)
+plugin:bazi-obsidian:1115 🔍 匹配流年2: 1987年(2岁) 丁卯
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 2岁 → 小运: 庚寅(1987年)
+plugin:bazi-obsidian:1115 🔍 匹配流年3: 1988年(3岁) 戊辰
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 3岁 → 小运: 己丑(1988年)
+plugin:bazi-obsidian:1115 🔍 匹配流年4: 1989年(4岁) 己巳
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 4岁 → 小运: 戊子(1989年)
+plugin:bazi-obsidian:1115 🔍 匹配流年5: 1990年(5岁) 庚午
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 5岁 → 小运: 丁亥(1990年)
+plugin:bazi-obsidian:1115 🔍 匹配流年6: 1991年(6岁) 辛未
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 6岁 → 小运: 丙戌(1991年)
+plugin:bazi-obsidian:1115 🔍 匹配流年7: 1992年(7岁) 壬申
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 7岁 → 小运: 乙酉(1992年)
+plugin:bazi-obsidian:1115 🔍 匹配流年8: 1993年(8岁) 癸酉
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 8岁 → 小运: 甲申(1993年)
+plugin:bazi-obsidian:1115 🔍 匹配流年9: 1994年(9岁) 甲戌
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 9岁 → 小运: 癸未(1994年)
+plugin:bazi-obsidian:1115 🔍 步骤4: 统计匹配结果
+plugin:bazi-obsidian:1115 ✅ 小运匹配完成: 10/10 匹配成功, 0 匹配失败
+plugin:bazi-obsidian:1085 🔍 过滤后的流年数据长度: 10
+plugin:bazi-obsidian:1085 🔍 小运数据长度: 10
+plugin:bazi-obsidian:893 🎯 大运选择: 0
+plugin:bazi-obsidian:1473 🎯 处理大运选择: 索引 0
+plugin:bazi-obsidian:1473 🎯 选择大运: 0
+plugin:bazi-obsidian:471 🚀 extendBaziTableToLevel: 开始扩展到dayun层级
+plugin:bazi-obsidian:471 🎯 实际目标层级: dayun (请求层级: dayun)
+plugin:bazi-obsidian:471 🔍 大运强制更新检查: lastIndex=4, currentIndex=0, needsUpdate=true
+plugin:bazi-obsidian:471 🔄 强制更新dayun层级内容
+plugin:bazi-obsidian:471 🧹 清除现有扩展，当前层级: liushi
+plugin:bazi-obsidian:471 🧹 开始清除扩展列，当前扩展柱数量: 5
+plugin:bazi-obsidian:471 ✅ 扩展列清除完成
+plugin:bazi-obsidian:471 📋 需要扩展的层级列表: dayun
+plugin:bazi-obsidian:471 🔄 正在处理层级: dayun
+plugin:bazi-obsidian:471 🔍 getPillarInfoForLevel: dayun
+plugin:bazi-obsidian:471 ✅ 获取大运柱信息: 壬午 (索引: 0)
+plugin:bazi-obsidian:471 ✅ 获取到dayun柱信息: 前运 壬午
+plugin:bazi-obsidian:471 🔄 添加扩展列: 前运 (壬午)
+plugin:bazi-obsidian:471 ✅ 扩展列添加完成: 前运
+plugin:bazi-obsidian:471 ✅ 已扩展到dayun层级，包含层级：dayun
+plugin:bazi-obsidian:471 📝 更新大运状态跟踪: 0
+plugin:bazi-obsidian:1149 🎯 LiuNianInfoManager: 设置大运索引 0
+plugin:bazi-obsidian:1149 🔍 当前八字信息状态:
+plugin:bazi-obsidian:1149 🔍 baziInfo存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.daYun存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.liuNian存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.liuNian长度: 100
+plugin:bazi-obsidian:1149 🔍 大运数据长度: 10
+plugin:bazi-obsidian:1149 🔍 选中的大运: 壬午, 年份: 1985-1994
+plugin:bazi-obsidian:1085 🔍 createCombinedTable: 开始创建流年表格
+plugin:bazi-obsidian:1085 🔍 当前选中大运索引: 0
+plugin:bazi-obsidian:1085 🎯 ========== 执行流程检查: 大运0 ==========
+plugin:bazi-obsidian:1085 🔍 步骤1: 检查基础数据
+plugin:bazi-obsidian:1085 🔍 baziInfo.liuNian 存在: true
+plugin:bazi-obsidian:1085 🔍 baziInfo.liuNian 长度: 100
+plugin:bazi-obsidian:1085 🔍 baziInfo.xiaoYun 存在: true
+plugin:bazi-obsidian:1085 🔍 baziInfo.xiaoYun 长度: 119
+plugin:bazi-obsidian:1085 🔍 流年数据范围: 1985 - 2084
+plugin:bazi-obsidian:1085 🔍 前5年流年: (5) ['1985年(0岁): 乙丑', '1986年(1岁): 丙寅', '1987年(2岁): 丁卯', '1988年(3岁): 戊辰', '1989年(4岁): 己巳']
+plugin:bazi-obsidian:1085 🔍 小运数据范围: 1985年(0岁) - 2103年(118岁)
+plugin:bazi-obsidian:1085 🔍 前5个小运: (5) ['1985年(0岁): 壬辰', '1986年(1岁): 辛卯', '1987年(2岁): 庚寅', '1988年(3岁): 己丑', '1989年(4岁): 戊子']
+plugin:bazi-obsidian:1085 🔍 步骤2: 检查大运选择
+plugin:bazi-obsidian:1085 🔍 选中大运索引: 0
+plugin:bazi-obsidian:1085 🔍 大运数据总数: 10
+plugin:bazi-obsidian:1085 🔍 所有大运: (10) ['0: 壬午(1985-1994)', '1: 辛巳(1995-2004)', '2: 庚辰(2005-2014)', '3: 己卯(2015-2024)', '4: 戊寅(2025-2034)', '5: 丁丑(2035-2044)', '6: 丙子(2045-2054)', '7: 乙亥(2055-2064)', '8: 甲戌(2065-2074)', '9: 癸酉(2075-2084)']
+plugin:bazi-obsidian:1085 🔍 步骤3: 获取选中的大运
+plugin:bazi-obsidian:1085 🎯 选中大运详情: {index: 0, ganZhi: '壬午', startYear: 1985, endYear: 1994, startAge: 1, …}
+plugin:bazi-obsidian:1085 🔍 步骤4: 过滤流年数据
+plugin:bazi-obsidian:1085 🔍 过滤条件: 1985 <= year <= 1994
+plugin:bazi-obsidian:1085 🔍 过滤后数据长度: 10
+plugin:bazi-obsidian:1085 🔍 过滤后流年: (10) ['1985年(0岁): 乙丑', '1986年(1岁): 丙寅', '1987年(2岁): 丁卯', '1988年(3岁): 戊辰', '1989年(4岁): 己巳', '1990年(5岁): 庚午', '1991年(6岁): 辛未', '1992年(7岁): 壬申', '1993年(8岁): 癸酉', '1994年(9岁): 甲戌']
+plugin:bazi-obsidian:1085 🔍 步骤5: 排序和限制
+plugin:bazi-obsidian:1085 ✅ 最终流年数据: 10年
+plugin:bazi-obsidian:1085 🔍 最终流年详情: (10) ['1985年(0岁): 乙丑', '1986年(1岁): 丙寅', '1987年(2岁): 丁卯', '1988年(3岁): 戊辰', '1989年(4岁): 己巳', '1990年(5岁): 庚午', '1991年(6岁): 辛未', '1992年(7岁): 壬申', '1993年(8岁): 癸酉', '1994年(9岁): 甲戌']
+plugin:bazi-obsidian:1115 🎯 ========== 小运匹配执行流程检查 ==========
+plugin:bazi-obsidian:1115 🔍 步骤1: 检查小运数据
+plugin:bazi-obsidian:1115 🔍 小运数据总数: 119
+plugin:bazi-obsidian:1115 🔍 流年数据总数: 10
+plugin:bazi-obsidian:1115 🔍 步骤2: 检查数据范围
+plugin:bazi-obsidian:1115 🔍 小运范围: 1985年(0岁) - 2103年(118岁)
+plugin:bazi-obsidian:1115 🔍 前10个小运: (10) ['0岁(1985年): 壬辰', '1岁(1986年): 辛卯', '2岁(1987年): 庚寅', '3岁(1988年): 己丑', '4岁(1989年): 戊子', '5岁(1990年): 丁亥', '6岁(1991年): 丙戌', '7岁(1992年): 乙酉', '8岁(1993年): 甲申', '9岁(1994年): 癸未']
+plugin:bazi-obsidian:1115 🔍 流年范围: 1985年(0岁) - 1994年(9岁)
+plugin:bazi-obsidian:1115 🔍 所有流年: (10) ['0岁(1985年): 乙丑', '1岁(1986年): 丙寅', '2岁(1987年): 丁卯', '3岁(1988年): 戊辰', '4岁(1989年): 己巳', '5岁(1990年): 庚午', '6岁(1991年): 辛未', '7岁(1992年): 壬申', '8岁(1993年): 癸酉', '9岁(1994年): 甲戌']
+plugin:bazi-obsidian:1115 🔍 步骤3: 逐个匹配流年和小运
+plugin:bazi-obsidian:1115 🔍 匹配流年0: 1985年(0岁) 乙丑
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 0岁 → 小运: 壬辰(1985年)
+plugin:bazi-obsidian:1115 🔍 匹配流年1: 1986年(1岁) 丙寅
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 1岁 → 小运: 辛卯(1986年)
+plugin:bazi-obsidian:1115 🔍 匹配流年2: 1987年(2岁) 丁卯
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 2岁 → 小运: 庚寅(1987年)
+plugin:bazi-obsidian:1115 🔍 匹配流年3: 1988年(3岁) 戊辰
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 3岁 → 小运: 己丑(1988年)
+plugin:bazi-obsidian:1115 🔍 匹配流年4: 1989年(4岁) 己巳
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 4岁 → 小运: 戊子(1989年)
+plugin:bazi-obsidian:1115 🔍 匹配流年5: 1990年(5岁) 庚午
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 5岁 → 小运: 丁亥(1990年)
+plugin:bazi-obsidian:1115 🔍 匹配流年6: 1991年(6岁) 辛未
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 6岁 → 小运: 丙戌(1991年)
+plugin:bazi-obsidian:1115 🔍 匹配流年7: 1992年(7岁) 壬申
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 7岁 → 小运: 乙酉(1992年)
+plugin:bazi-obsidian:1115 🔍 匹配流年8: 1993年(8岁) 癸酉
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 8岁 → 小运: 甲申(1993年)
+plugin:bazi-obsidian:1115 🔍 匹配流年9: 1994年(9岁) 甲戌
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 9岁 → 小运: 癸未(1994年)
+plugin:bazi-obsidian:1115 🔍 步骤4: 统计匹配结果
+plugin:bazi-obsidian:1115 ✅ 小运匹配完成: 10/10 匹配成功, 0 匹配失败
+plugin:bazi-obsidian:1085 🔍 过滤后的流年数据长度: 10
+plugin:bazi-obsidian:1085 🔍 小运数据长度: 10
+plugin:bazi-obsidian:471 🚀 extendBaziTableToLevel: 开始扩展到dayun层级
+plugin:bazi-obsidian:471 🎯 实际目标层级: dayun (请求层级: dayun)
+plugin:bazi-obsidian:471 🔍 大运强制更新检查: lastIndex=0, currentIndex=0, needsUpdate=false
+plugin:bazi-obsidian:471 ⚠️ 已扩展到dayun层级，跳过重复扩展
+plugin:bazi-obsidian:1487 🔄 重置下级选择状态: dayun
+plugin:bazi-obsidian:1473 🔄 隐藏下级选择元素: dayun
+plugin:bazi-obsidian:1202 🎯 大运选择: 索引 1
+plugin:bazi-obsidian:1149 🎯 LiuNianInfoManager: 设置大运索引 1
+plugin:bazi-obsidian:1149 🔍 当前八字信息状态:
+plugin:bazi-obsidian:1149 🔍 baziInfo存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.daYun存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.liuNian存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.liuNian长度: 100
+plugin:bazi-obsidian:1149 🔍 大运数据长度: 10
+plugin:bazi-obsidian:1149 🔍 选中的大运: 辛巳, 年份: 1995-2004
+plugin:bazi-obsidian:1473 🎯 SectionRenderManager: 大运选择 1
+plugin:bazi-obsidian:1149 🎯 LiuNianInfoManager: 设置大运索引 1
+plugin:bazi-obsidian:1149 🔍 当前八字信息状态:
+plugin:bazi-obsidian:1149 🔍 baziInfo存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.daYun存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.liuNian存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.liuNian长度: 100
+plugin:bazi-obsidian:1149 🔍 大运数据长度: 10
+plugin:bazi-obsidian:1149 🔍 选中的大运: 辛巳, 年份: 1995-2004
+plugin:bazi-obsidian:1085 🔍 createCombinedTable: 开始创建流年表格
+plugin:bazi-obsidian:1085 🔍 当前选中大运索引: 1
+plugin:bazi-obsidian:1085 🎯 ========== 执行流程检查: 大运1 ==========
+plugin:bazi-obsidian:1085 🔍 步骤1: 检查基础数据
+plugin:bazi-obsidian:1085 🔍 baziInfo.liuNian 存在: true
+plugin:bazi-obsidian:1085 🔍 baziInfo.liuNian 长度: 100
+plugin:bazi-obsidian:1085 🔍 baziInfo.xiaoYun 存在: true
+plugin:bazi-obsidian:1085 🔍 baziInfo.xiaoYun 长度: 119
+plugin:bazi-obsidian:1085 🔍 流年数据范围: 1985 - 2084
+plugin:bazi-obsidian:1085 🔍 前5年流年: (5) ['1985年(0岁): 乙丑', '1986年(1岁): 丙寅', '1987年(2岁): 丁卯', '1988年(3岁): 戊辰', '1989年(4岁): 己巳']
+plugin:bazi-obsidian:1085 🔍 小运数据范围: 1985年(0岁) - 2103年(118岁)
+plugin:bazi-obsidian:1085 🔍 前5个小运: (5) ['1985年(0岁): 壬辰', '1986年(1岁): 辛卯', '1987年(2岁): 庚寅', '1988年(3岁): 己丑', '1989年(4岁): 戊子']
+plugin:bazi-obsidian:1085 🔍 步骤2: 检查大运选择
+plugin:bazi-obsidian:1085 🔍 选中大运索引: 1
+plugin:bazi-obsidian:1085 🔍 大运数据总数: 10
+plugin:bazi-obsidian:1085 🔍 所有大运: (10) ['0: 壬午(1985-1994)', '1: 辛巳(1995-2004)', '2: 庚辰(2005-2014)', '3: 己卯(2015-2024)', '4: 戊寅(2025-2034)', '5: 丁丑(2035-2044)', '6: 丙子(2045-2054)', '7: 乙亥(2055-2064)', '8: 甲戌(2065-2074)', '9: 癸酉(2075-2084)']
+plugin:bazi-obsidian:1085 🔍 步骤3: 获取选中的大运
+plugin:bazi-obsidian:1085 🎯 选中大运详情: {index: 1, ganZhi: '辛巳', startYear: 1995, endYear: 2004, startAge: 11, …}
+plugin:bazi-obsidian:1085 🔍 步骤4: 过滤流年数据
+plugin:bazi-obsidian:1085 🔍 过滤条件: 1995 <= year <= 2004
+plugin:bazi-obsidian:1085 🔍 过滤后数据长度: 10
+plugin:bazi-obsidian:1085 🔍 过滤后流年: (10) ['1995年(10岁): 乙亥', '1996年(11岁): 丙子', '1997年(12岁): 丁丑', '1998年(13岁): 戊寅', '1999年(14岁): 己卯', '2000年(15岁): 庚辰', '2001年(16岁): 辛巳', '2002年(17岁): 壬午', '2003年(18岁): 癸未', '2004年(19岁): 甲申']
+plugin:bazi-obsidian:1085 🔍 步骤5: 排序和限制
+plugin:bazi-obsidian:1085 ✅ 最终流年数据: 10年
+plugin:bazi-obsidian:1085 🔍 最终流年详情: (10) ['1995年(10岁): 乙亥', '1996年(11岁): 丙子', '1997年(12岁): 丁丑', '1998年(13岁): 戊寅', '1999年(14岁): 己卯', '2000年(15岁): 庚辰', '2001年(16岁): 辛巳', '2002年(17岁): 壬午', '2003年(18岁): 癸未', '2004年(19岁): 甲申']
+plugin:bazi-obsidian:1115 🎯 ========== 小运匹配执行流程检查 ==========
+plugin:bazi-obsidian:1115 🔍 步骤1: 检查小运数据
+plugin:bazi-obsidian:1115 🔍 小运数据总数: 119
+plugin:bazi-obsidian:1115 🔍 流年数据总数: 10
+plugin:bazi-obsidian:1115 🔍 步骤2: 检查数据范围
+plugin:bazi-obsidian:1115 🔍 小运范围: 1985年(0岁) - 2103年(118岁)
+plugin:bazi-obsidian:1115 🔍 前10个小运: (10) ['0岁(1985年): 壬辰', '1岁(1986年): 辛卯', '2岁(1987年): 庚寅', '3岁(1988年): 己丑', '4岁(1989年): 戊子', '5岁(1990年): 丁亥', '6岁(1991年): 丙戌', '7岁(1992年): 乙酉', '8岁(1993年): 甲申', '9岁(1994年): 癸未']
+plugin:bazi-obsidian:1115 🔍 流年范围: 1995年(10岁) - 2004年(19岁)
+plugin:bazi-obsidian:1115 🔍 所有流年: (10) ['10岁(1995年): 乙亥', '11岁(1996年): 丙子', '12岁(1997年): 丁丑', '13岁(1998年): 戊寅', '14岁(1999年): 己卯', '15岁(2000年): 庚辰', '16岁(2001年): 辛巳', '17岁(2002年): 壬午', '18岁(2003年): 癸未', '19岁(2004年): 甲申']
+plugin:bazi-obsidian:1115 🔍 步骤3: 逐个匹配流年和小运
+plugin:bazi-obsidian:1115 🔍 匹配流年0: 1995年(10岁) 乙亥
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 10岁 → 小运: 壬午(1995年)
+plugin:bazi-obsidian:1115 🔍 匹配流年1: 1996年(11岁) 丙子
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 11岁 → 小运: 辛巳(1996年)
+plugin:bazi-obsidian:1115 🔍 匹配流年2: 1997年(12岁) 丁丑
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 12岁 → 小运: 庚辰(1997年)
+plugin:bazi-obsidian:1115 🔍 匹配流年3: 1998年(13岁) 戊寅
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 13岁 → 小运: 己卯(1998年)
+plugin:bazi-obsidian:1115 🔍 匹配流年4: 1999年(14岁) 己卯
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 14岁 → 小运: 戊寅(1999年)
+plugin:bazi-obsidian:1115 🔍 匹配流年5: 2000年(15岁) 庚辰
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 15岁 → 小运: 丁丑(2000年)
+plugin:bazi-obsidian:1115 🔍 匹配流年6: 2001年(16岁) 辛巳
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 16岁 → 小运: 丙子(2001年)
+plugin:bazi-obsidian:1115 🔍 匹配流年7: 2002年(17岁) 壬午
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 17岁 → 小运: 乙undefined(2002年)
+plugin:bazi-obsidian:1115 🔍 匹配流年8: 2003年(18岁) 癸未
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 18岁 → 小运: 甲undefined(2003年)
+plugin:bazi-obsidian:1115 🔍 匹配流年9: 2004年(19岁) 甲申
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 19岁 → 小运: NaN(2004年)
+plugin:bazi-obsidian:1115 🔍 步骤4: 统计匹配结果
+plugin:bazi-obsidian:1115 ✅ 小运匹配完成: 10/10 匹配成功, 0 匹配失败
+plugin:bazi-obsidian:1085 🔍 过滤后的流年数据长度: 10
+plugin:bazi-obsidian:1085 🔍 小运数据长度: 10
+plugin:bazi-obsidian:893 🎯 大运选择: 1
+plugin:bazi-obsidian:1473 🎯 处理大运选择: 索引 1
+plugin:bazi-obsidian:1473 🎯 选择大运: 1
+plugin:bazi-obsidian:471 🚀 extendBaziTableToLevel: 开始扩展到dayun层级
+plugin:bazi-obsidian:471 🎯 实际目标层级: dayun (请求层级: dayun)
+plugin:bazi-obsidian:471 🔍 大运强制更新检查: lastIndex=0, currentIndex=1, needsUpdate=true
+plugin:bazi-obsidian:471 🔄 强制更新dayun层级内容
+plugin:bazi-obsidian:471 🧹 清除现有扩展，当前层级: dayun
+plugin:bazi-obsidian:471 🧹 开始清除扩展列，当前扩展柱数量: 1
+plugin:bazi-obsidian:471 ✅ 扩展列清除完成
+plugin:bazi-obsidian:471 📋 需要扩展的层级列表: dayun
+plugin:bazi-obsidian:471 🔄 正在处理层级: dayun
+plugin:bazi-obsidian:471 🔍 getPillarInfoForLevel: dayun
+plugin:bazi-obsidian:471 ✅ 获取大运柱信息: 辛巳 (索引: 1)
+plugin:bazi-obsidian:471 ✅ 获取到dayun柱信息: 大运
+1995-2004
+(11-20岁) 辛巳
+plugin:bazi-obsidian:471 🔄 添加扩展列: 大运
+1995-2004
+(11-20岁) (辛巳)
+plugin:bazi-obsidian:471 ✅ 扩展列添加完成: 大运
+1995-2004
+(11-20岁)
+plugin:bazi-obsidian:471 ✅ 已扩展到dayun层级，包含层级：dayun
+plugin:bazi-obsidian:471 📝 更新大运状态跟踪: 1
+plugin:bazi-obsidian:1149 🎯 LiuNianInfoManager: 设置大运索引 1
+plugin:bazi-obsidian:1149 🔍 当前八字信息状态:
+plugin:bazi-obsidian:1149 🔍 baziInfo存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.daYun存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.liuNian存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.liuNian长度: 100
+plugin:bazi-obsidian:1149 🔍 大运数据长度: 10
+plugin:bazi-obsidian:1149 🔍 选中的大运: 辛巳, 年份: 1995-2004
+plugin:bazi-obsidian:1085 🔍 createCombinedTable: 开始创建流年表格
+plugin:bazi-obsidian:1085 🔍 当前选中大运索引: 1
+plugin:bazi-obsidian:1085 🎯 ========== 执行流程检查: 大运1 ==========
+plugin:bazi-obsidian:1085 🔍 步骤1: 检查基础数据
+plugin:bazi-obsidian:1085 🔍 baziInfo.liuNian 存在: true
+plugin:bazi-obsidian:1085 🔍 baziInfo.liuNian 长度: 100
+plugin:bazi-obsidian:1085 🔍 baziInfo.xiaoYun 存在: true
+plugin:bazi-obsidian:1085 🔍 baziInfo.xiaoYun 长度: 119
+plugin:bazi-obsidian:1085 🔍 流年数据范围: 1985 - 2084
+plugin:bazi-obsidian:1085 🔍 前5年流年: (5) ['1985年(0岁): 乙丑', '1986年(1岁): 丙寅', '1987年(2岁): 丁卯', '1988年(3岁): 戊辰', '1989年(4岁): 己巳']
+plugin:bazi-obsidian:1085 🔍 小运数据范围: 1985年(0岁) - 2103年(118岁)
+plugin:bazi-obsidian:1085 🔍 前5个小运: (5) ['1985年(0岁): 壬辰', '1986年(1岁): 辛卯', '1987年(2岁): 庚寅', '1988年(3岁): 己丑', '1989年(4岁): 戊子']
+plugin:bazi-obsidian:1085 🔍 步骤2: 检查大运选择
+plugin:bazi-obsidian:1085 🔍 选中大运索引: 1
+plugin:bazi-obsidian:1085 🔍 大运数据总数: 10
+plugin:bazi-obsidian:1085 🔍 所有大运: (10) ['0: 壬午(1985-1994)', '1: 辛巳(1995-2004)', '2: 庚辰(2005-2014)', '3: 己卯(2015-2024)', '4: 戊寅(2025-2034)', '5: 丁丑(2035-2044)', '6: 丙子(2045-2054)', '7: 乙亥(2055-2064)', '8: 甲戌(2065-2074)', '9: 癸酉(2075-2084)']
+plugin:bazi-obsidian:1085 🔍 步骤3: 获取选中的大运
+plugin:bazi-obsidian:1085 🎯 选中大运详情: {index: 1, ganZhi: '辛巳', startYear: 1995, endYear: 2004, startAge: 11, …}
+plugin:bazi-obsidian:1085 🔍 步骤4: 过滤流年数据
+plugin:bazi-obsidian:1085 🔍 过滤条件: 1995 <= year <= 2004
+plugin:bazi-obsidian:1085 🔍 过滤后数据长度: 10
+plugin:bazi-obsidian:1085 🔍 过滤后流年: (10) ['1995年(10岁): 乙亥', '1996年(11岁): 丙子', '1997年(12岁): 丁丑', '1998年(13岁): 戊寅', '1999年(14岁): 己卯', '2000年(15岁): 庚辰', '2001年(16岁): 辛巳', '2002年(17岁): 壬午', '2003年(18岁): 癸未', '2004年(19岁): 甲申']
+plugin:bazi-obsidian:1085 🔍 步骤5: 排序和限制
+plugin:bazi-obsidian:1085 ✅ 最终流年数据: 10年
+plugin:bazi-obsidian:1085 🔍 最终流年详情: (10) ['1995年(10岁): 乙亥', '1996年(11岁): 丙子', '1997年(12岁): 丁丑', '1998年(13岁): 戊寅', '1999年(14岁): 己卯', '2000年(15岁): 庚辰', '2001年(16岁): 辛巳', '2002年(17岁): 壬午', '2003年(18岁): 癸未', '2004年(19岁): 甲申']
+plugin:bazi-obsidian:1115 🎯 ========== 小运匹配执行流程检查 ==========
+plugin:bazi-obsidian:1115 🔍 步骤1: 检查小运数据
+plugin:bazi-obsidian:1115 🔍 小运数据总数: 119
+plugin:bazi-obsidian:1115 🔍 流年数据总数: 10
+plugin:bazi-obsidian:1115 🔍 步骤2: 检查数据范围
+plugin:bazi-obsidian:1115 🔍 小运范围: 1985年(0岁) - 2103年(118岁)
+plugin:bazi-obsidian:1115 🔍 前10个小运: (10) ['0岁(1985年): 壬辰', '1岁(1986年): 辛卯', '2岁(1987年): 庚寅', '3岁(1988年): 己丑', '4岁(1989年): 戊子', '5岁(1990年): 丁亥', '6岁(1991年): 丙戌', '7岁(1992年): 乙酉', '8岁(1993年): 甲申', '9岁(1994年): 癸未']
+plugin:bazi-obsidian:1115 🔍 流年范围: 1995年(10岁) - 2004年(19岁)
+plugin:bazi-obsidian:1115 🔍 所有流年: (10) ['10岁(1995年): 乙亥', '11岁(1996年): 丙子', '12岁(1997年): 丁丑', '13岁(1998年): 戊寅', '14岁(1999年): 己卯', '15岁(2000年): 庚辰', '16岁(2001年): 辛巳', '17岁(2002年): 壬午', '18岁(2003年): 癸未', '19岁(2004年): 甲申']
+plugin:bazi-obsidian:1115 🔍 步骤3: 逐个匹配流年和小运
+plugin:bazi-obsidian:1115 🔍 匹配流年0: 1995年(10岁) 乙亥
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 10岁 → 小运: 壬午(1995年)
+plugin:bazi-obsidian:1115 🔍 匹配流年1: 1996年(11岁) 丙子
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 11岁 → 小运: 辛巳(1996年)
+plugin:bazi-obsidian:1115 🔍 匹配流年2: 1997年(12岁) 丁丑
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 12岁 → 小运: 庚辰(1997年)
+plugin:bazi-obsidian:1115 🔍 匹配流年3: 1998年(13岁) 戊寅
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 13岁 → 小运: 己卯(1998年)
+plugin:bazi-obsidian:1115 🔍 匹配流年4: 1999年(14岁) 己卯
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 14岁 → 小运: 戊寅(1999年)
+plugin:bazi-obsidian:1115 🔍 匹配流年5: 2000年(15岁) 庚辰
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 15岁 → 小运: 丁丑(2000年)
+plugin:bazi-obsidian:1115 🔍 匹配流年6: 2001年(16岁) 辛巳
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 16岁 → 小运: 丙子(2001年)
+plugin:bazi-obsidian:1115 🔍 匹配流年7: 2002年(17岁) 壬午
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 17岁 → 小运: 乙undefined(2002年)
+plugin:bazi-obsidian:1115 🔍 匹配流年8: 2003年(18岁) 癸未
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 18岁 → 小运: 甲undefined(2003年)
+plugin:bazi-obsidian:1115 🔍 匹配流年9: 2004年(19岁) 甲申
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 19岁 → 小运: NaN(2004年)
+plugin:bazi-obsidian:1115 🔍 步骤4: 统计匹配结果
+plugin:bazi-obsidian:1115 ✅ 小运匹配完成: 10/10 匹配成功, 0 匹配失败
+plugin:bazi-obsidian:1085 🔍 过滤后的流年数据长度: 10
+plugin:bazi-obsidian:1085 🔍 小运数据长度: 10
+plugin:bazi-obsidian:471 🚀 extendBaziTableToLevel: 开始扩展到dayun层级
+plugin:bazi-obsidian:471 🎯 实际目标层级: dayun (请求层级: dayun)
+plugin:bazi-obsidian:471 🔍 大运强制更新检查: lastIndex=1, currentIndex=1, needsUpdate=false
+plugin:bazi-obsidian:471 ⚠️ 已扩展到dayun层级，跳过重复扩展
+plugin:bazi-obsidian:1487 🔄 重置下级选择状态: dayun
+plugin:bazi-obsidian:1473 🔄 隐藏下级选择元素: dayun
+plugin:bazi-obsidian:1202 🎯 大运选择: 索引 2
+plugin:bazi-obsidian:1149 🎯 LiuNianInfoManager: 设置大运索引 2
+plugin:bazi-obsidian:1149 🔍 当前八字信息状态:
+plugin:bazi-obsidian:1149 🔍 baziInfo存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.daYun存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.liuNian存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.liuNian长度: 100
+plugin:bazi-obsidian:1149 🔍 大运数据长度: 10
+plugin:bazi-obsidian:1149 🔍 选中的大运: 庚辰, 年份: 2005-2014
+plugin:bazi-obsidian:1473 🎯 SectionRenderManager: 大运选择 2
+plugin:bazi-obsidian:1149 🎯 LiuNianInfoManager: 设置大运索引 2
+plugin:bazi-obsidian:1149 🔍 当前八字信息状态:
+plugin:bazi-obsidian:1149 🔍 baziInfo存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.daYun存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.liuNian存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.liuNian长度: 100
+plugin:bazi-obsidian:1149 🔍 大运数据长度: 10
+plugin:bazi-obsidian:1149 🔍 选中的大运: 庚辰, 年份: 2005-2014
+plugin:bazi-obsidian:1085 🔍 createCombinedTable: 开始创建流年表格
+plugin:bazi-obsidian:1085 🔍 当前选中大运索引: 2
+plugin:bazi-obsidian:1085 🎯 ========== 执行流程检查: 大运2 ==========
+plugin:bazi-obsidian:1085 🔍 步骤1: 检查基础数据
+plugin:bazi-obsidian:1085 🔍 baziInfo.liuNian 存在: true
+plugin:bazi-obsidian:1085 🔍 baziInfo.liuNian 长度: 100
+plugin:bazi-obsidian:1085 🔍 baziInfo.xiaoYun 存在: true
+plugin:bazi-obsidian:1085 🔍 baziInfo.xiaoYun 长度: 119
+plugin:bazi-obsidian:1085 🔍 流年数据范围: 1985 - 2084
+plugin:bazi-obsidian:1085 🔍 前5年流年: (5) ['1985年(0岁): 乙丑', '1986年(1岁): 丙寅', '1987年(2岁): 丁卯', '1988年(3岁): 戊辰', '1989年(4岁): 己巳']
+plugin:bazi-obsidian:1085 🔍 小运数据范围: 1985年(0岁) - 2103年(118岁)
+plugin:bazi-obsidian:1085 🔍 前5个小运: (5) ['1985年(0岁): 壬辰', '1986年(1岁): 辛卯', '1987年(2岁): 庚寅', '1988年(3岁): 己丑', '1989年(4岁): 戊子']
+plugin:bazi-obsidian:1085 🔍 步骤2: 检查大运选择
+plugin:bazi-obsidian:1085 🔍 选中大运索引: 2
+plugin:bazi-obsidian:1085 🔍 大运数据总数: 10
+plugin:bazi-obsidian:1085 🔍 所有大运: (10) ['0: 壬午(1985-1994)', '1: 辛巳(1995-2004)', '2: 庚辰(2005-2014)', '3: 己卯(2015-2024)', '4: 戊寅(2025-2034)', '5: 丁丑(2035-2044)', '6: 丙子(2045-2054)', '7: 乙亥(2055-2064)', '8: 甲戌(2065-2074)', '9: 癸酉(2075-2084)']
+plugin:bazi-obsidian:1085 🔍 步骤3: 获取选中的大运
+plugin:bazi-obsidian:1085 🎯 选中大运详情: {index: 2, ganZhi: '庚辰', startYear: 2005, endYear: 2014, startAge: 21, …}
+plugin:bazi-obsidian:1085 🔍 步骤4: 过滤流年数据
+plugin:bazi-obsidian:1085 🔍 过滤条件: 2005 <= year <= 2014
+plugin:bazi-obsidian:1085 🔍 过滤后数据长度: 10
+plugin:bazi-obsidian:1085 🔍 过滤后流年: (10) ['2005年(20岁): 乙酉', '2006年(21岁): 丙戌', '2007年(22岁): 丁亥', '2008年(23岁): 戊子', '2009年(24岁): 己丑', '2010年(25岁): 庚寅', '2011年(26岁): 辛卯', '2012年(27岁): 壬辰', '2013年(28岁): 癸巳', '2014年(29岁): 甲午']
+plugin:bazi-obsidian:1085 🔍 步骤5: 排序和限制
+plugin:bazi-obsidian:1085 ✅ 最终流年数据: 10年
+plugin:bazi-obsidian:1085 🔍 最终流年详情: (10) ['2005年(20岁): 乙酉', '2006年(21岁): 丙戌', '2007年(22岁): 丁亥', '2008年(23岁): 戊子', '2009年(24岁): 己丑', '2010年(25岁): 庚寅', '2011年(26岁): 辛卯', '2012年(27岁): 壬辰', '2013年(28岁): 癸巳', '2014年(29岁): 甲午']
+plugin:bazi-obsidian:1115 🎯 ========== 小运匹配执行流程检查 ==========
+plugin:bazi-obsidian:1115 🔍 步骤1: 检查小运数据
+plugin:bazi-obsidian:1115 🔍 小运数据总数: 119
+plugin:bazi-obsidian:1115 🔍 流年数据总数: 10
+plugin:bazi-obsidian:1115 🔍 步骤2: 检查数据范围
+plugin:bazi-obsidian:1115 🔍 小运范围: 1985年(0岁) - 2103年(118岁)
+plugin:bazi-obsidian:1115 🔍 前10个小运: (10) ['0岁(1985年): 壬辰', '1岁(1986年): 辛卯', '2岁(1987年): 庚寅', '3岁(1988年): 己丑', '4岁(1989年): 戊子', '5岁(1990年): 丁亥', '6岁(1991年): 丙戌', '7岁(1992年): 乙酉', '8岁(1993年): 甲申', '9岁(1994年): 癸未']
+plugin:bazi-obsidian:1115 🔍 流年范围: 2005年(20岁) - 2014年(29岁)
+plugin:bazi-obsidian:1115 🔍 所有流年: (10) ['20岁(2005年): 乙酉', '21岁(2006年): 丙戌', '22岁(2007年): 丁亥', '23岁(2008年): 戊子', '24岁(2009年): 己丑', '25岁(2010年): 庚寅', '26岁(2011年): 辛卯', '27岁(2012年): 壬辰', '28岁(2013年): 癸巳', '29岁(2014年): 甲午']
+plugin:bazi-obsidian:1115 🔍 步骤3: 逐个匹配流年和小运
+plugin:bazi-obsidian:1115 🔍 匹配流年0: 2005年(20岁) 乙酉
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 20岁 → 小运: NaN(2005年)
+plugin:bazi-obsidian:1115 🔍 匹配流年1: 2006年(21岁) 丙戌
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 21岁 → 小运: NaN(2006年)
+plugin:bazi-obsidian:1115 🔍 匹配流年2: 2007年(22岁) 丁亥
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 22岁 → 小运: NaN(2007年)
+plugin:bazi-obsidian:1115 🔍 匹配流年3: 2008年(23岁) 戊子
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 23岁 → 小运: NaN(2008年)
+plugin:bazi-obsidian:1115 🔍 匹配流年4: 2009年(24岁) 己丑
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 24岁 → 小运: NaN(2009年)
+plugin:bazi-obsidian:1115 🔍 匹配流年5: 2010年(25岁) 庚寅
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 25岁 → 小运: NaN(2010年)
+plugin:bazi-obsidian:1115 🔍 匹配流年6: 2011年(26岁) 辛卯
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 26岁 → 小运: NaN(2011年)
+plugin:bazi-obsidian:1115 🔍 匹配流年7: 2012年(27岁) 壬辰
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 27岁 → 小运: NaN(2012年)
+plugin:bazi-obsidian:1115 🔍 匹配流年8: 2013年(28岁) 癸巳
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 28岁 → 小运: 甲子(2013年)
+plugin:bazi-obsidian:1115 🔍 匹配流年9: 2014年(29岁) 甲午
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 29岁 → 小运: NaN(2014年)
+plugin:bazi-obsidian:1115 🔍 步骤4: 统计匹配结果
+plugin:bazi-obsidian:1115 ✅ 小运匹配完成: 10/10 匹配成功, 0 匹配失败
+plugin:bazi-obsidian:1085 🔍 过滤后的流年数据长度: 10
+plugin:bazi-obsidian:1085 🔍 小运数据长度: 10
+plugin:bazi-obsidian:893 🎯 大运选择: 2
+plugin:bazi-obsidian:1473 🎯 处理大运选择: 索引 2
+plugin:bazi-obsidian:1473 🎯 选择大运: 2
+plugin:bazi-obsidian:471 🚀 extendBaziTableToLevel: 开始扩展到dayun层级
+plugin:bazi-obsidian:471 🎯 实际目标层级: dayun (请求层级: dayun)
+plugin:bazi-obsidian:471 🔍 大运强制更新检查: lastIndex=1, currentIndex=2, needsUpdate=true
+plugin:bazi-obsidian:471 🔄 强制更新dayun层级内容
+plugin:bazi-obsidian:471 🧹 清除现有扩展，当前层级: dayun
+plugin:bazi-obsidian:471 🧹 开始清除扩展列，当前扩展柱数量: 1
+plugin:bazi-obsidian:471 ✅ 扩展列清除完成
+plugin:bazi-obsidian:471 📋 需要扩展的层级列表: dayun
+plugin:bazi-obsidian:471 🔄 正在处理层级: dayun
+plugin:bazi-obsidian:471 🔍 getPillarInfoForLevel: dayun
+plugin:bazi-obsidian:471 ✅ 获取大运柱信息: 庚辰 (索引: 2)
+plugin:bazi-obsidian:471 ✅ 获取到dayun柱信息: 大运
+2005-2014
+(21-30岁) 庚辰
+plugin:bazi-obsidian:471 🔄 添加扩展列: 大运
+2005-2014
+(21-30岁) (庚辰)
+plugin:bazi-obsidian:471 ✅ 扩展列添加完成: 大运
+2005-2014
+(21-30岁)
+plugin:bazi-obsidian:471 ✅ 已扩展到dayun层级，包含层级：dayun
+plugin:bazi-obsidian:471 📝 更新大运状态跟踪: 2
+plugin:bazi-obsidian:1149 🎯 LiuNianInfoManager: 设置大运索引 2
+plugin:bazi-obsidian:1149 🔍 当前八字信息状态:
+plugin:bazi-obsidian:1149 🔍 baziInfo存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.daYun存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.liuNian存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.liuNian长度: 100
+plugin:bazi-obsidian:1149 🔍 大运数据长度: 10
+plugin:bazi-obsidian:1149 🔍 选中的大运: 庚辰, 年份: 2005-2014
+plugin:bazi-obsidian:1085 🔍 createCombinedTable: 开始创建流年表格
+plugin:bazi-obsidian:1085 🔍 当前选中大运索引: 2
+plugin:bazi-obsidian:1085 🎯 ========== 执行流程检查: 大运2 ==========
+plugin:bazi-obsidian:1085 🔍 步骤1: 检查基础数据
+plugin:bazi-obsidian:1085 🔍 baziInfo.liuNian 存在: true
+plugin:bazi-obsidian:1085 🔍 baziInfo.liuNian 长度: 100
+plugin:bazi-obsidian:1085 🔍 baziInfo.xiaoYun 存在: true
+plugin:bazi-obsidian:1085 🔍 baziInfo.xiaoYun 长度: 119
+plugin:bazi-obsidian:1085 🔍 流年数据范围: 1985 - 2084
+plugin:bazi-obsidian:1085 🔍 前5年流年: (5) ['1985年(0岁): 乙丑', '1986年(1岁): 丙寅', '1987年(2岁): 丁卯', '1988年(3岁): 戊辰', '1989年(4岁): 己巳']
+plugin:bazi-obsidian:1085 🔍 小运数据范围: 1985年(0岁) - 2103年(118岁)
+plugin:bazi-obsidian:1085 🔍 前5个小运: (5) ['1985年(0岁): 壬辰', '1986年(1岁): 辛卯', '1987年(2岁): 庚寅', '1988年(3岁): 己丑', '1989年(4岁): 戊子']
+plugin:bazi-obsidian:1085 🔍 步骤2: 检查大运选择
+plugin:bazi-obsidian:1085 🔍 选中大运索引: 2
+plugin:bazi-obsidian:1085 🔍 大运数据总数: 10
+plugin:bazi-obsidian:1085 🔍 所有大运: (10) ['0: 壬午(1985-1994)', '1: 辛巳(1995-2004)', '2: 庚辰(2005-2014)', '3: 己卯(2015-2024)', '4: 戊寅(2025-2034)', '5: 丁丑(2035-2044)', '6: 丙子(2045-2054)', '7: 乙亥(2055-2064)', '8: 甲戌(2065-2074)', '9: 癸酉(2075-2084)']
+plugin:bazi-obsidian:1085 🔍 步骤3: 获取选中的大运
+plugin:bazi-obsidian:1085 🎯 选中大运详情: {index: 2, ganZhi: '庚辰', startYear: 2005, endYear: 2014, startAge: 21, …}
+plugin:bazi-obsidian:1085 🔍 步骤4: 过滤流年数据
+plugin:bazi-obsidian:1085 🔍 过滤条件: 2005 <= year <= 2014
+plugin:bazi-obsidian:1085 🔍 过滤后数据长度: 10
+plugin:bazi-obsidian:1085 🔍 过滤后流年: (10) ['2005年(20岁): 乙酉', '2006年(21岁): 丙戌', '2007年(22岁): 丁亥', '2008年(23岁): 戊子', '2009年(24岁): 己丑', '2010年(25岁): 庚寅', '2011年(26岁): 辛卯', '2012年(27岁): 壬辰', '2013年(28岁): 癸巳', '2014年(29岁): 甲午']
+plugin:bazi-obsidian:1085 🔍 步骤5: 排序和限制
+plugin:bazi-obsidian:1085 ✅ 最终流年数据: 10年
+plugin:bazi-obsidian:1085 🔍 最终流年详情: (10) ['2005年(20岁): 乙酉', '2006年(21岁): 丙戌', '2007年(22岁): 丁亥', '2008年(23岁): 戊子', '2009年(24岁): 己丑', '2010年(25岁): 庚寅', '2011年(26岁): 辛卯', '2012年(27岁): 壬辰', '2013年(28岁): 癸巳', '2014年(29岁): 甲午']
+plugin:bazi-obsidian:1115 🎯 ========== 小运匹配执行流程检查 ==========
+plugin:bazi-obsidian:1115 🔍 步骤1: 检查小运数据
+plugin:bazi-obsidian:1115 🔍 小运数据总数: 119
+plugin:bazi-obsidian:1115 🔍 流年数据总数: 10
+plugin:bazi-obsidian:1115 🔍 步骤2: 检查数据范围
+plugin:bazi-obsidian:1115 🔍 小运范围: 1985年(0岁) - 2103年(118岁)
+plugin:bazi-obsidian:1115 🔍 前10个小运: (10) ['0岁(1985年): 壬辰', '1岁(1986年): 辛卯', '2岁(1987年): 庚寅', '3岁(1988年): 己丑', '4岁(1989年): 戊子', '5岁(1990年): 丁亥', '6岁(1991年): 丙戌', '7岁(1992年): 乙酉', '8岁(1993年): 甲申', '9岁(1994年): 癸未']
+plugin:bazi-obsidian:1115 🔍 流年范围: 2005年(20岁) - 2014年(29岁)
+plugin:bazi-obsidian:1115 🔍 所有流年: (10) ['20岁(2005年): 乙酉', '21岁(2006年): 丙戌', '22岁(2007年): 丁亥', '23岁(2008年): 戊子', '24岁(2009年): 己丑', '25岁(2010年): 庚寅', '26岁(2011年): 辛卯', '27岁(2012年): 壬辰', '28岁(2013年): 癸巳', '29岁(2014年): 甲午']
+plugin:bazi-obsidian:1115 🔍 步骤3: 逐个匹配流年和小运
+plugin:bazi-obsidian:1115 🔍 匹配流年0: 2005年(20岁) 乙酉
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 20岁 → 小运: NaN(2005年)
+plugin:bazi-obsidian:1115 🔍 匹配流年1: 2006年(21岁) 丙戌
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 21岁 → 小运: NaN(2006年)
+plugin:bazi-obsidian:1115 🔍 匹配流年2: 2007年(22岁) 丁亥
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 22岁 → 小运: NaN(2007年)
+plugin:bazi-obsidian:1115 🔍 匹配流年3: 2008年(23岁) 戊子
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 23岁 → 小运: NaN(2008年)
+plugin:bazi-obsidian:1115 🔍 匹配流年4: 2009年(24岁) 己丑
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 24岁 → 小运: NaN(2009年)
+plugin:bazi-obsidian:1115 🔍 匹配流年5: 2010年(25岁) 庚寅
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 25岁 → 小运: NaN(2010年)
+plugin:bazi-obsidian:1115 🔍 匹配流年6: 2011年(26岁) 辛卯
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 26岁 → 小运: NaN(2011年)
+plugin:bazi-obsidian:1115 🔍 匹配流年7: 2012年(27岁) 壬辰
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 27岁 → 小运: NaN(2012年)
+plugin:bazi-obsidian:1115 🔍 匹配流年8: 2013年(28岁) 癸巳
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 28岁 → 小运: 甲子(2013年)
+plugin:bazi-obsidian:1115 🔍 匹配流年9: 2014年(29岁) 甲午
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 29岁 → 小运: NaN(2014年)
+plugin:bazi-obsidian:1115 🔍 步骤4: 统计匹配结果
+plugin:bazi-obsidian:1115 ✅ 小运匹配完成: 10/10 匹配成功, 0 匹配失败
+plugin:bazi-obsidian:1085 🔍 过滤后的流年数据长度: 10
+plugin:bazi-obsidian:1085 🔍 小运数据长度: 10
+plugin:bazi-obsidian:471 🚀 extendBaziTableToLevel: 开始扩展到dayun层级
+plugin:bazi-obsidian:471 🎯 实际目标层级: dayun (请求层级: dayun)
+plugin:bazi-obsidian:471 🔍 大运强制更新检查: lastIndex=2, currentIndex=2, needsUpdate=false
+plugin:bazi-obsidian:471 ⚠️ 已扩展到dayun层级，跳过重复扩展
+plugin:bazi-obsidian:1487 🔄 重置下级选择状态: dayun
+plugin:bazi-obsidian:1473 🔄 隐藏下级选择元素: dayun
+plugin:bazi-obsidian:1202 🎯 大运选择: 索引 3
+plugin:bazi-obsidian:1149 🎯 LiuNianInfoManager: 设置大运索引 3
+plugin:bazi-obsidian:1149 🔍 当前八字信息状态:
+plugin:bazi-obsidian:1149 🔍 baziInfo存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.daYun存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.liuNian存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.liuNian长度: 100
+plugin:bazi-obsidian:1149 🔍 大运数据长度: 10
+plugin:bazi-obsidian:1149 🔍 选中的大运: 己卯, 年份: 2015-2024
+plugin:bazi-obsidian:1473 🎯 SectionRenderManager: 大运选择 3
+plugin:bazi-obsidian:1149 🎯 LiuNianInfoManager: 设置大运索引 3
+plugin:bazi-obsidian:1149 🔍 当前八字信息状态:
+plugin:bazi-obsidian:1149 🔍 baziInfo存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.daYun存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.liuNian存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.liuNian长度: 100
+plugin:bazi-obsidian:1149 🔍 大运数据长度: 10
+plugin:bazi-obsidian:1149 🔍 选中的大运: 己卯, 年份: 2015-2024
+plugin:bazi-obsidian:1085 🔍 createCombinedTable: 开始创建流年表格
+plugin:bazi-obsidian:1085 🔍 当前选中大运索引: 3
+plugin:bazi-obsidian:1085 🎯 ========== 执行流程检查: 大运3 ==========
+plugin:bazi-obsidian:1085 🔍 步骤1: 检查基础数据
+plugin:bazi-obsidian:1085 🔍 baziInfo.liuNian 存在: true
+plugin:bazi-obsidian:1085 🔍 baziInfo.liuNian 长度: 100
+plugin:bazi-obsidian:1085 🔍 baziInfo.xiaoYun 存在: true
+plugin:bazi-obsidian:1085 🔍 baziInfo.xiaoYun 长度: 119
+plugin:bazi-obsidian:1085 🔍 流年数据范围: 1985 - 2084
+plugin:bazi-obsidian:1085 🔍 前5年流年: (5) ['1985年(0岁): 乙丑', '1986年(1岁): 丙寅', '1987年(2岁): 丁卯', '1988年(3岁): 戊辰', '1989年(4岁): 己巳']
+plugin:bazi-obsidian:1085 🔍 小运数据范围: 1985年(0岁) - 2103年(118岁)
+plugin:bazi-obsidian:1085 🔍 前5个小运: (5) ['1985年(0岁): 壬辰', '1986年(1岁): 辛卯', '1987年(2岁): 庚寅', '1988年(3岁): 己丑', '1989年(4岁): 戊子']
+plugin:bazi-obsidian:1085 🔍 步骤2: 检查大运选择
+plugin:bazi-obsidian:1085 🔍 选中大运索引: 3
+plugin:bazi-obsidian:1085 🔍 大运数据总数: 10
+plugin:bazi-obsidian:1085 🔍 所有大运: (10) ['0: 壬午(1985-1994)', '1: 辛巳(1995-2004)', '2: 庚辰(2005-2014)', '3: 己卯(2015-2024)', '4: 戊寅(2025-2034)', '5: 丁丑(2035-2044)', '6: 丙子(2045-2054)', '7: 乙亥(2055-2064)', '8: 甲戌(2065-2074)', '9: 癸酉(2075-2084)']
+plugin:bazi-obsidian:1085 🔍 步骤3: 获取选中的大运
+plugin:bazi-obsidian:1085 🎯 选中大运详情: {index: 3, ganZhi: '己卯', startYear: 2015, endYear: 2024, startAge: 31, …}
+plugin:bazi-obsidian:1085 🔍 步骤4: 过滤流年数据
+plugin:bazi-obsidian:1085 🔍 过滤条件: 2015 <= year <= 2024
+plugin:bazi-obsidian:1085 🔍 过滤后数据长度: 10
+plugin:bazi-obsidian:1085 🔍 过滤后流年: (10) ['2015年(30岁): 乙未', '2016年(31岁): 丙申', '2017年(32岁): 丁酉', '2018年(33岁): 戊戌', '2019年(34岁): 己亥', '2020年(35岁): 庚子', '2021年(36岁): 辛丑', '2022年(37岁): 壬寅', '2023年(38岁): 癸卯', '2024年(39岁): 甲辰']
+plugin:bazi-obsidian:1085 🔍 步骤5: 排序和限制
+plugin:bazi-obsidian:1085 ✅ 最终流年数据: 10年
+plugin:bazi-obsidian:1085 🔍 最终流年详情: (10) ['2015年(30岁): 乙未', '2016年(31岁): 丙申', '2017年(32岁): 丁酉', '2018年(33岁): 戊戌', '2019年(34岁): 己亥', '2020年(35岁): 庚子', '2021年(36岁): 辛丑', '2022年(37岁): 壬寅', '2023年(38岁): 癸卯', '2024年(39岁): 甲辰']
+plugin:bazi-obsidian:1115 🎯 ========== 小运匹配执行流程检查 ==========
+plugin:bazi-obsidian:1115 🔍 步骤1: 检查小运数据
+plugin:bazi-obsidian:1115 🔍 小运数据总数: 119
+plugin:bazi-obsidian:1115 🔍 流年数据总数: 10
+plugin:bazi-obsidian:1115 🔍 步骤2: 检查数据范围
+plugin:bazi-obsidian:1115 🔍 小运范围: 1985年(0岁) - 2103年(118岁)
+plugin:bazi-obsidian:1115 🔍 前10个小运: (10) ['0岁(1985年): 壬辰', '1岁(1986年): 辛卯', '2岁(1987年): 庚寅', '3岁(1988年): 己丑', '4岁(1989年): 戊子', '5岁(1990年): 丁亥', '6岁(1991年): 丙戌', '7岁(1992年): 乙酉', '8岁(1993年): 甲申', '9岁(1994年): 癸未']
+plugin:bazi-obsidian:1115 🔍 流年范围: 2015年(30岁) - 2024年(39岁)
+plugin:bazi-obsidian:1115 🔍 所有流年: (10) ['30岁(2015年): 乙未', '31岁(2016年): 丙申', '32岁(2017年): 丁酉', '33岁(2018年): 戊戌', '34岁(2019年): 己亥', '35岁(2020年): 庚子', '36岁(2021年): 辛丑', '37岁(2022年): 壬寅', '38岁(2023年): 癸卯', '39岁(2024年): 甲辰']
+plugin:bazi-obsidian:1115 🔍 步骤3: 逐个匹配流年和小运
+plugin:bazi-obsidian:1115 🔍 匹配流年0: 2015年(30岁) 乙未
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 30岁 → 小运: NaN(2015年)
+plugin:bazi-obsidian:1115 🔍 匹配流年1: 2016年(31岁) 丙申
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 31岁 → 小运: NaN(2016年)
+plugin:bazi-obsidian:1115 🔍 匹配流年2: 2017年(32岁) 丁酉
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 32岁 → 小运: NaN(2017年)
+plugin:bazi-obsidian:1115 🔍 匹配流年3: 2018年(33岁) 戊戌
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 33岁 → 小运: NaN(2018年)
+plugin:bazi-obsidian:1115 🔍 匹配流年4: 2019年(34岁) 己亥
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 34岁 → 小运: NaN(2019年)
+plugin:bazi-obsidian:1115 🔍 匹配流年5: 2020年(35岁) 庚子
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 35岁 → 小运: NaN(2020年)
+plugin:bazi-obsidian:1115 🔍 匹配流年6: 2021年(36岁) 辛丑
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 36岁 → 小运: NaN(2021年)
+plugin:bazi-obsidian:1115 🔍 匹配流年7: 2022年(37岁) 壬寅
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 37岁 → 小运: NaN(2022年)
+plugin:bazi-obsidian:1115 🔍 匹配流年8: 2023年(38岁) 癸卯
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 38岁 → 小运: 甲undefined(2023年)
+plugin:bazi-obsidian:1115 🔍 匹配流年9: 2024年(39岁) 甲辰
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 39岁 → 小运: NaN(2024年)
+plugin:bazi-obsidian:1115 🔍 步骤4: 统计匹配结果
+plugin:bazi-obsidian:1115 ✅ 小运匹配完成: 10/10 匹配成功, 0 匹配失败
+plugin:bazi-obsidian:1085 🔍 过滤后的流年数据长度: 10
+plugin:bazi-obsidian:1085 🔍 小运数据长度: 10
+plugin:bazi-obsidian:893 🎯 大运选择: 3
+plugin:bazi-obsidian:1473 🎯 处理大运选择: 索引 3
+plugin:bazi-obsidian:1473 🎯 选择大运: 3
+plugin:bazi-obsidian:471 🚀 extendBaziTableToLevel: 开始扩展到dayun层级
+plugin:bazi-obsidian:471 🎯 实际目标层级: dayun (请求层级: dayun)
+plugin:bazi-obsidian:471 🔍 大运强制更新检查: lastIndex=2, currentIndex=3, needsUpdate=true
+plugin:bazi-obsidian:471 🔄 强制更新dayun层级内容
+plugin:bazi-obsidian:471 🧹 清除现有扩展，当前层级: dayun
+plugin:bazi-obsidian:471 🧹 开始清除扩展列，当前扩展柱数量: 1
+plugin:bazi-obsidian:471 ✅ 扩展列清除完成
+plugin:bazi-obsidian:471 📋 需要扩展的层级列表: dayun
+plugin:bazi-obsidian:471 🔄 正在处理层级: dayun
+plugin:bazi-obsidian:471 🔍 getPillarInfoForLevel: dayun
+plugin:bazi-obsidian:471 ✅ 获取大运柱信息: 己卯 (索引: 3)
+plugin:bazi-obsidian:471 ✅ 获取到dayun柱信息: 大运
+2015-2024
+(31-40岁) 己卯
+plugin:bazi-obsidian:471 🔄 添加扩展列: 大运
+2015-2024
+(31-40岁) (己卯)
+plugin:bazi-obsidian:471 ✅ 扩展列添加完成: 大运
+2015-2024
+(31-40岁)
+plugin:bazi-obsidian:471 ✅ 已扩展到dayun层级，包含层级：dayun
+plugin:bazi-obsidian:471 📝 更新大运状态跟踪: 3
+plugin:bazi-obsidian:1149 🎯 LiuNianInfoManager: 设置大运索引 3
+plugin:bazi-obsidian:1149 🔍 当前八字信息状态:
+plugin:bazi-obsidian:1149 🔍 baziInfo存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.daYun存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.liuNian存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.liuNian长度: 100
+plugin:bazi-obsidian:1149 🔍 大运数据长度: 10
+plugin:bazi-obsidian:1149 🔍 选中的大运: 己卯, 年份: 2015-2024
+plugin:bazi-obsidian:1085 🔍 createCombinedTable: 开始创建流年表格
+plugin:bazi-obsidian:1085 🔍 当前选中大运索引: 3
+plugin:bazi-obsidian:1085 🎯 ========== 执行流程检查: 大运3 ==========
+plugin:bazi-obsidian:1085 🔍 步骤1: 检查基础数据
+plugin:bazi-obsidian:1085 🔍 baziInfo.liuNian 存在: true
+plugin:bazi-obsidian:1085 🔍 baziInfo.liuNian 长度: 100
+plugin:bazi-obsidian:1085 🔍 baziInfo.xiaoYun 存在: true
+plugin:bazi-obsidian:1085 🔍 baziInfo.xiaoYun 长度: 119
+plugin:bazi-obsidian:1085 🔍 流年数据范围: 1985 - 2084
+plugin:bazi-obsidian:1085 🔍 前5年流年: (5) ['1985年(0岁): 乙丑', '1986年(1岁): 丙寅', '1987年(2岁): 丁卯', '1988年(3岁): 戊辰', '1989年(4岁): 己巳']
+plugin:bazi-obsidian:1085 🔍 小运数据范围: 1985年(0岁) - 2103年(118岁)
+plugin:bazi-obsidian:1085 🔍 前5个小运: (5) ['1985年(0岁): 壬辰', '1986年(1岁): 辛卯', '1987年(2岁): 庚寅', '1988年(3岁): 己丑', '1989年(4岁): 戊子']
+plugin:bazi-obsidian:1085 🔍 步骤2: 检查大运选择
+plugin:bazi-obsidian:1085 🔍 选中大运索引: 3
+plugin:bazi-obsidian:1085 🔍 大运数据总数: 10
+plugin:bazi-obsidian:1085 🔍 所有大运: (10) ['0: 壬午(1985-1994)', '1: 辛巳(1995-2004)', '2: 庚辰(2005-2014)', '3: 己卯(2015-2024)', '4: 戊寅(2025-2034)', '5: 丁丑(2035-2044)', '6: 丙子(2045-2054)', '7: 乙亥(2055-2064)', '8: 甲戌(2065-2074)', '9: 癸酉(2075-2084)']
+plugin:bazi-obsidian:1085 🔍 步骤3: 获取选中的大运
+plugin:bazi-obsidian:1085 🎯 选中大运详情: {index: 3, ganZhi: '己卯', startYear: 2015, endYear: 2024, startAge: 31, …}
+plugin:bazi-obsidian:1085 🔍 步骤4: 过滤流年数据
+plugin:bazi-obsidian:1085 🔍 过滤条件: 2015 <= year <= 2024
+plugin:bazi-obsidian:1085 🔍 过滤后数据长度: 10
+plugin:bazi-obsidian:1085 🔍 过滤后流年: (10) ['2015年(30岁): 乙未', '2016年(31岁): 丙申', '2017年(32岁): 丁酉', '2018年(33岁): 戊戌', '2019年(34岁): 己亥', '2020年(35岁): 庚子', '2021年(36岁): 辛丑', '2022年(37岁): 壬寅', '2023年(38岁): 癸卯', '2024年(39岁): 甲辰']
+plugin:bazi-obsidian:1085 🔍 步骤5: 排序和限制
+plugin:bazi-obsidian:1085 ✅ 最终流年数据: 10年
+plugin:bazi-obsidian:1085 🔍 最终流年详情: (10) ['2015年(30岁): 乙未', '2016年(31岁): 丙申', '2017年(32岁): 丁酉', '2018年(33岁): 戊戌', '2019年(34岁): 己亥', '2020年(35岁): 庚子', '2021年(36岁): 辛丑', '2022年(37岁): 壬寅', '2023年(38岁): 癸卯', '2024年(39岁): 甲辰']
+plugin:bazi-obsidian:1115 🎯 ========== 小运匹配执行流程检查 ==========
+plugin:bazi-obsidian:1115 🔍 步骤1: 检查小运数据
+plugin:bazi-obsidian:1115 🔍 小运数据总数: 119
+plugin:bazi-obsidian:1115 🔍 流年数据总数: 10
+plugin:bazi-obsidian:1115 🔍 步骤2: 检查数据范围
+plugin:bazi-obsidian:1115 🔍 小运范围: 1985年(0岁) - 2103年(118岁)
+plugin:bazi-obsidian:1115 🔍 前10个小运: (10) ['0岁(1985年): 壬辰', '1岁(1986年): 辛卯', '2岁(1987年): 庚寅', '3岁(1988年): 己丑', '4岁(1989年): 戊子', '5岁(1990年): 丁亥', '6岁(1991年): 丙戌', '7岁(1992年): 乙酉', '8岁(1993年): 甲申', '9岁(1994年): 癸未']
+plugin:bazi-obsidian:1115 🔍 流年范围: 2015年(30岁) - 2024年(39岁)
+plugin:bazi-obsidian:1115 🔍 所有流年: (10) ['30岁(2015年): 乙未', '31岁(2016年): 丙申', '32岁(2017年): 丁酉', '33岁(2018年): 戊戌', '34岁(2019年): 己亥', '35岁(2020年): 庚子', '36岁(2021年): 辛丑', '37岁(2022年): 壬寅', '38岁(2023年): 癸卯', '39岁(2024年): 甲辰']
+plugin:bazi-obsidian:1115 🔍 步骤3: 逐个匹配流年和小运
+plugin:bazi-obsidian:1115 🔍 匹配流年0: 2015年(30岁) 乙未
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 30岁 → 小运: NaN(2015年)
+plugin:bazi-obsidian:1115 🔍 匹配流年1: 2016年(31岁) 丙申
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 31岁 → 小运: NaN(2016年)
+plugin:bazi-obsidian:1115 🔍 匹配流年2: 2017年(32岁) 丁酉
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 32岁 → 小运: NaN(2017年)
+plugin:bazi-obsidian:1115 🔍 匹配流年3: 2018年(33岁) 戊戌
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 33岁 → 小运: NaN(2018年)
+plugin:bazi-obsidian:1115 🔍 匹配流年4: 2019年(34岁) 己亥
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 34岁 → 小运: NaN(2019年)
+plugin:bazi-obsidian:1115 🔍 匹配流年5: 2020年(35岁) 庚子
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 35岁 → 小运: NaN(2020年)
+plugin:bazi-obsidian:1115 🔍 匹配流年6: 2021年(36岁) 辛丑
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 36岁 → 小运: NaN(2021年)
+plugin:bazi-obsidian:1115 🔍 匹配流年7: 2022年(37岁) 壬寅
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 37岁 → 小运: NaN(2022年)
+plugin:bazi-obsidian:1115 🔍 匹配流年8: 2023年(38岁) 癸卯
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 38岁 → 小运: 甲undefined(2023年)
+plugin:bazi-obsidian:1115 🔍 匹配流年9: 2024年(39岁) 甲辰
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 39岁 → 小运: NaN(2024年)
+plugin:bazi-obsidian:1115 🔍 步骤4: 统计匹配结果
+plugin:bazi-obsidian:1115 ✅ 小运匹配完成: 10/10 匹配成功, 0 匹配失败
+plugin:bazi-obsidian:1085 🔍 过滤后的流年数据长度: 10
+plugin:bazi-obsidian:1085 🔍 小运数据长度: 10
+plugin:bazi-obsidian:471 🚀 extendBaziTableToLevel: 开始扩展到dayun层级
+plugin:bazi-obsidian:471 🎯 实际目标层级: dayun (请求层级: dayun)
+plugin:bazi-obsidian:471 🔍 大运强制更新检查: lastIndex=3, currentIndex=3, needsUpdate=false
+plugin:bazi-obsidian:471 ⚠️ 已扩展到dayun层级，跳过重复扩展
+plugin:bazi-obsidian:1487 🔄 重置下级选择状态: dayun
+plugin:bazi-obsidian:1473 🔄 隐藏下级选择元素: dayun
+plugin:bazi-obsidian:1202 🎯 大运选择: 索引 4
+plugin:bazi-obsidian:1149 🎯 LiuNianInfoManager: 设置大运索引 4
+plugin:bazi-obsidian:1149 🔍 当前八字信息状态:
+plugin:bazi-obsidian:1149 🔍 baziInfo存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.daYun存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.liuNian存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.liuNian长度: 100
+plugin:bazi-obsidian:1149 🔍 大运数据长度: 10
+plugin:bazi-obsidian:1149 🔍 选中的大运: 戊寅, 年份: 2025-2034
+plugin:bazi-obsidian:1473 🎯 SectionRenderManager: 大运选择 4
+plugin:bazi-obsidian:1149 🎯 LiuNianInfoManager: 设置大运索引 4
+plugin:bazi-obsidian:1149 🔍 当前八字信息状态:
+plugin:bazi-obsidian:1149 🔍 baziInfo存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.daYun存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.liuNian存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.liuNian长度: 100
+plugin:bazi-obsidian:1149 🔍 大运数据长度: 10
+plugin:bazi-obsidian:1149 🔍 选中的大运: 戊寅, 年份: 2025-2034
+plugin:bazi-obsidian:1085 🔍 createCombinedTable: 开始创建流年表格
+plugin:bazi-obsidian:1085 🔍 当前选中大运索引: 4
+plugin:bazi-obsidian:1085 🎯 ========== 执行流程检查: 大运4 ==========
+plugin:bazi-obsidian:1085 🔍 步骤1: 检查基础数据
+plugin:bazi-obsidian:1085 🔍 baziInfo.liuNian 存在: true
+plugin:bazi-obsidian:1085 🔍 baziInfo.liuNian 长度: 100
+plugin:bazi-obsidian:1085 🔍 baziInfo.xiaoYun 存在: true
+plugin:bazi-obsidian:1085 🔍 baziInfo.xiaoYun 长度: 119
+plugin:bazi-obsidian:1085 🔍 流年数据范围: 1985 - 2084
+plugin:bazi-obsidian:1085 🔍 前5年流年: (5) ['1985年(0岁): 乙丑', '1986年(1岁): 丙寅', '1987年(2岁): 丁卯', '1988年(3岁): 戊辰', '1989年(4岁): 己巳']
+plugin:bazi-obsidian:1085 🔍 小运数据范围: 1985年(0岁) - 2103年(118岁)
+plugin:bazi-obsidian:1085 🔍 前5个小运: (5) ['1985年(0岁): 壬辰', '1986年(1岁): 辛卯', '1987年(2岁): 庚寅', '1988年(3岁): 己丑', '1989年(4岁): 戊子']
+plugin:bazi-obsidian:1085 🔍 步骤2: 检查大运选择
+plugin:bazi-obsidian:1085 🔍 选中大运索引: 4
+plugin:bazi-obsidian:1085 🔍 大运数据总数: 10
+plugin:bazi-obsidian:1085 🔍 所有大运: (10) ['0: 壬午(1985-1994)', '1: 辛巳(1995-2004)', '2: 庚辰(2005-2014)', '3: 己卯(2015-2024)', '4: 戊寅(2025-2034)', '5: 丁丑(2035-2044)', '6: 丙子(2045-2054)', '7: 乙亥(2055-2064)', '8: 甲戌(2065-2074)', '9: 癸酉(2075-2084)']
+plugin:bazi-obsidian:1085 🔍 步骤3: 获取选中的大运
+plugin:bazi-obsidian:1085 🎯 选中大运详情: {index: 4, ganZhi: '戊寅', startYear: 2025, endYear: 2034, startAge: 41, …}
+plugin:bazi-obsidian:1085 🔍 步骤4: 过滤流年数据
+plugin:bazi-obsidian:1085 🔍 过滤条件: 2025 <= year <= 2034
+plugin:bazi-obsidian:1085 🔍 过滤后数据长度: 10
+plugin:bazi-obsidian:1085 🔍 过滤后流年: (10) ['2025年(40岁): 乙巳', '2026年(41岁): 丙午', '2027年(42岁): 丁未', '2028年(43岁): 戊申', '2029年(44岁): 己酉', '2030年(45岁): 庚戌', '2031年(46岁): 辛亥', '2032年(47岁): 壬子', '2033年(48岁): 癸丑', '2034年(49岁): 甲寅']
+plugin:bazi-obsidian:1085 🔍 步骤5: 排序和限制
+plugin:bazi-obsidian:1085 ✅ 最终流年数据: 10年
+plugin:bazi-obsidian:1085 🔍 最终流年详情: (10) ['2025年(40岁): 乙巳', '2026年(41岁): 丙午', '2027年(42岁): 丁未', '2028年(43岁): 戊申', '2029年(44岁): 己酉', '2030年(45岁): 庚戌', '2031年(46岁): 辛亥', '2032年(47岁): 壬子', '2033年(48岁): 癸丑', '2034年(49岁): 甲寅']
+plugin:bazi-obsidian:1115 🎯 ========== 小运匹配执行流程检查 ==========
+plugin:bazi-obsidian:1115 🔍 步骤1: 检查小运数据
+plugin:bazi-obsidian:1115 🔍 小运数据总数: 119
+plugin:bazi-obsidian:1115 🔍 流年数据总数: 10
+plugin:bazi-obsidian:1115 🔍 步骤2: 检查数据范围
+plugin:bazi-obsidian:1115 🔍 小运范围: 1985年(0岁) - 2103年(118岁)
+plugin:bazi-obsidian:1115 🔍 前10个小运: (10) ['0岁(1985年): 壬辰', '1岁(1986年): 辛卯', '2岁(1987年): 庚寅', '3岁(1988年): 己丑', '4岁(1989年): 戊子', '5岁(1990年): 丁亥', '6岁(1991年): 丙戌', '7岁(1992年): 乙酉', '8岁(1993年): 甲申', '9岁(1994年): 癸未']
+plugin:bazi-obsidian:1115 🔍 流年范围: 2025年(40岁) - 2034年(49岁)
+plugin:bazi-obsidian:1115 🔍 所有流年: (10) ['40岁(2025年): 乙巳', '41岁(2026年): 丙午', '42岁(2027年): 丁未', '43岁(2028年): 戊申', '44岁(2029年): 己酉', '45岁(2030年): 庚戌', '46岁(2031年): 辛亥', '47岁(2032年): 壬子', '48岁(2033年): 癸丑', '49岁(2034年): 甲寅']
+plugin:bazi-obsidian:1115 🔍 步骤3: 逐个匹配流年和小运
+plugin:bazi-obsidian:1115 🔍 匹配流年0: 2025年(40岁) 乙巳
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 40岁 → 小运: undefined子(2025年)
+plugin:bazi-obsidian:1115 🔍 匹配流年1: 2026年(41岁) 丙午
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 41岁 → 小运: NaN(2026年)
+plugin:bazi-obsidian:1115 🔍 匹配流年2: 2027年(42岁) 丁未
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 42岁 → 小运: NaN(2027年)
+plugin:bazi-obsidian:1115 🔍 匹配流年3: 2028年(43岁) 戊申
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 43岁 → 小运: NaN(2028年)
+plugin:bazi-obsidian:1115 🔍 匹配流年4: 2029年(44岁) 己酉
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 44岁 → 小运: NaN(2029年)
+plugin:bazi-obsidian:1115 🔍 匹配流年5: 2030年(45岁) 庚戌
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 45岁 → 小运: NaN(2030年)
+plugin:bazi-obsidian:1115 🔍 匹配流年6: 2031年(46岁) 辛亥
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 46岁 → 小运: NaN(2031年)
+plugin:bazi-obsidian:1115 🔍 匹配流年7: 2032年(47岁) 壬子
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 47岁 → 小运: NaN(2032年)
+plugin:bazi-obsidian:1115 🔍 匹配流年8: 2033年(48岁) 癸丑
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 48岁 → 小运: 甲undefined(2033年)
+plugin:bazi-obsidian:1115 🔍 匹配流年9: 2034年(49岁) 甲寅
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 49岁 → 小运: NaN(2034年)
+plugin:bazi-obsidian:1115 🔍 步骤4: 统计匹配结果
+plugin:bazi-obsidian:1115 ✅ 小运匹配完成: 10/10 匹配成功, 0 匹配失败
+plugin:bazi-obsidian:1085 🔍 过滤后的流年数据长度: 10
+plugin:bazi-obsidian:1085 🔍 小运数据长度: 10
+plugin:bazi-obsidian:893 🎯 大运选择: 4
+plugin:bazi-obsidian:1473 🎯 处理大运选择: 索引 4
+plugin:bazi-obsidian:1473 🎯 选择大运: 4
+plugin:bazi-obsidian:471 🚀 extendBaziTableToLevel: 开始扩展到dayun层级
+plugin:bazi-obsidian:471 🎯 实际目标层级: dayun (请求层级: dayun)
+plugin:bazi-obsidian:471 🔍 大运强制更新检查: lastIndex=3, currentIndex=4, needsUpdate=true
+plugin:bazi-obsidian:471 🔄 强制更新dayun层级内容
+plugin:bazi-obsidian:471 🧹 清除现有扩展，当前层级: dayun
+plugin:bazi-obsidian:471 🧹 开始清除扩展列，当前扩展柱数量: 1
+plugin:bazi-obsidian:471 ✅ 扩展列清除完成
+plugin:bazi-obsidian:471 📋 需要扩展的层级列表: dayun
+plugin:bazi-obsidian:471 🔄 正在处理层级: dayun
+plugin:bazi-obsidian:471 🔍 getPillarInfoForLevel: dayun
+plugin:bazi-obsidian:471 ✅ 获取大运柱信息: 戊寅 (索引: 4)
+plugin:bazi-obsidian:471 ✅ 获取到dayun柱信息: 大运
+2025-2034
+(41-50岁) 戊寅
+plugin:bazi-obsidian:471 🔄 添加扩展列: 大运
+2025-2034
+(41-50岁) (戊寅)
+plugin:bazi-obsidian:471 ✅ 扩展列添加完成: 大运
+2025-2034
+(41-50岁)
+plugin:bazi-obsidian:471 ✅ 已扩展到dayun层级，包含层级：dayun
+plugin:bazi-obsidian:471 📝 更新大运状态跟踪: 4
+plugin:bazi-obsidian:1149 🎯 LiuNianInfoManager: 设置大运索引 4
+plugin:bazi-obsidian:1149 🔍 当前八字信息状态:
+plugin:bazi-obsidian:1149 🔍 baziInfo存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.daYun存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.liuNian存在: true
+plugin:bazi-obsidian:1149 🔍 baziInfo.liuNian长度: 100
+plugin:bazi-obsidian:1149 🔍 大运数据长度: 10
+plugin:bazi-obsidian:1149 🔍 选中的大运: 戊寅, 年份: 2025-2034
+plugin:bazi-obsidian:1085 🔍 createCombinedTable: 开始创建流年表格
+plugin:bazi-obsidian:1085 🔍 当前选中大运索引: 4
+plugin:bazi-obsidian:1085 🎯 ========== 执行流程检查: 大运4 ==========
+plugin:bazi-obsidian:1085 🔍 步骤1: 检查基础数据
+plugin:bazi-obsidian:1085 🔍 baziInfo.liuNian 存在: true
+plugin:bazi-obsidian:1085 🔍 baziInfo.liuNian 长度: 100
+plugin:bazi-obsidian:1085 🔍 baziInfo.xiaoYun 存在: true
+plugin:bazi-obsidian:1085 🔍 baziInfo.xiaoYun 长度: 119
+plugin:bazi-obsidian:1085 🔍 流年数据范围: 1985 - 2084
+plugin:bazi-obsidian:1085 🔍 前5年流年: (5) ['1985年(0岁): 乙丑', '1986年(1岁): 丙寅', '1987年(2岁): 丁卯', '1988年(3岁): 戊辰', '1989年(4岁): 己巳']
+plugin:bazi-obsidian:1085 🔍 小运数据范围: 1985年(0岁) - 2103年(118岁)
+plugin:bazi-obsidian:1085 🔍 前5个小运: (5) ['1985年(0岁): 壬辰', '1986年(1岁): 辛卯', '1987年(2岁): 庚寅', '1988年(3岁): 己丑', '1989年(4岁): 戊子']
+plugin:bazi-obsidian:1085 🔍 步骤2: 检查大运选择
+plugin:bazi-obsidian:1085 🔍 选中大运索引: 4
+plugin:bazi-obsidian:1085 🔍 大运数据总数: 10
+plugin:bazi-obsidian:1085 🔍 所有大运: (10) ['0: 壬午(1985-1994)', '1: 辛巳(1995-2004)', '2: 庚辰(2005-2014)', '3: 己卯(2015-2024)', '4: 戊寅(2025-2034)', '5: 丁丑(2035-2044)', '6: 丙子(2045-2054)', '7: 乙亥(2055-2064)', '8: 甲戌(2065-2074)', '9: 癸酉(2075-2084)']
+plugin:bazi-obsidian:1085 🔍 步骤3: 获取选中的大运
+plugin:bazi-obsidian:1085 🎯 选中大运详情: {index: 4, ganZhi: '戊寅', startYear: 2025, endYear: 2034, startAge: 41, …}
+plugin:bazi-obsidian:1085 🔍 步骤4: 过滤流年数据
+plugin:bazi-obsidian:1085 🔍 过滤条件: 2025 <= year <= 2034
+plugin:bazi-obsidian:1085 🔍 过滤后数据长度: 10
+plugin:bazi-obsidian:1085 🔍 过滤后流年: (10) ['2025年(40岁): 乙巳', '2026年(41岁): 丙午', '2027年(42岁): 丁未', '2028年(43岁): 戊申', '2029年(44岁): 己酉', '2030年(45岁): 庚戌', '2031年(46岁): 辛亥', '2032年(47岁): 壬子', '2033年(48岁): 癸丑', '2034年(49岁): 甲寅']
+plugin:bazi-obsidian:1085 🔍 步骤5: 排序和限制
+plugin:bazi-obsidian:1085 ✅ 最终流年数据: 10年
+plugin:bazi-obsidian:1085 🔍 最终流年详情: (10) ['2025年(40岁): 乙巳', '2026年(41岁): 丙午', '2027年(42岁): 丁未', '2028年(43岁): 戊申', '2029年(44岁): 己酉', '2030年(45岁): 庚戌', '2031年(46岁): 辛亥', '2032年(47岁): 壬子', '2033年(48岁): 癸丑', '2034年(49岁): 甲寅']
+plugin:bazi-obsidian:1115 🎯 ========== 小运匹配执行流程检查 ==========
+plugin:bazi-obsidian:1115 🔍 步骤1: 检查小运数据
+plugin:bazi-obsidian:1115 🔍 小运数据总数: 119
+plugin:bazi-obsidian:1115 🔍 流年数据总数: 10
+plugin:bazi-obsidian:1115 🔍 步骤2: 检查数据范围
+plugin:bazi-obsidian:1115 🔍 小运范围: 1985年(0岁) - 2103年(118岁)
+plugin:bazi-obsidian:1115 🔍 前10个小运: (10) ['0岁(1985年): 壬辰', '1岁(1986年): 辛卯', '2岁(1987年): 庚寅', '3岁(1988年): 己丑', '4岁(1989年): 戊子', '5岁(1990年): 丁亥', '6岁(1991年): 丙戌', '7岁(1992年): 乙酉', '8岁(1993年): 甲申', '9岁(1994年): 癸未']
+plugin:bazi-obsidian:1115 🔍 流年范围: 2025年(40岁) - 2034年(49岁)
+plugin:bazi-obsidian:1115 🔍 所有流年: (10) ['40岁(2025年): 乙巳', '41岁(2026年): 丙午', '42岁(2027年): 丁未', '43岁(2028年): 戊申', '44岁(2029年): 己酉', '45岁(2030年): 庚戌', '46岁(2031年): 辛亥', '47岁(2032年): 壬子', '48岁(2033年): 癸丑', '49岁(2034年): 甲寅']
+plugin:bazi-obsidian:1115 🔍 步骤3: 逐个匹配流年和小运
+plugin:bazi-obsidian:1115 🔍 匹配流年0: 2025年(40岁) 乙巳
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 40岁 → 小运: undefined子(2025年)
+plugin:bazi-obsidian:1115 🔍 匹配流年1: 2026年(41岁) 丙午
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 41岁 → 小运: NaN(2026年)
+plugin:bazi-obsidian:1115 🔍 匹配流年2: 2027年(42岁) 丁未
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 42岁 → 小运: NaN(2027年)
+plugin:bazi-obsidian:1115 🔍 匹配流年3: 2028年(43岁) 戊申
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 43岁 → 小运: NaN(2028年)
+plugin:bazi-obsidian:1115 🔍 匹配流年4: 2029年(44岁) 己酉
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 44岁 → 小运: NaN(2029年)
+plugin:bazi-obsidian:1115 🔍 匹配流年5: 2030年(45岁) 庚戌
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 45岁 → 小运: NaN(2030年)
+plugin:bazi-obsidian:1115 🔍 匹配流年6: 2031年(46岁) 辛亥
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 46岁 → 小运: NaN(2031年)
+plugin:bazi-obsidian:1115 🔍 匹配流年7: 2032年(47岁) 壬子
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 47岁 → 小运: NaN(2032年)
+plugin:bazi-obsidian:1115 🔍 匹配流年8: 2033年(48岁) 癸丑
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 48岁 → 小运: 甲undefined(2033年)
+plugin:bazi-obsidian:1115 🔍 匹配流年9: 2034年(49岁) 甲寅
+plugin:bazi-obsidian:1115 ✅ 年龄匹配成功: 49岁 → 小运: NaN(2034年)
+plugin:bazi-obsidian:1115 🔍 步骤4: 统计匹配结果
+plugin:bazi-obsidian:1115 ✅ 小运匹配完成: 10/10 匹配成功, 0 匹配失败
+plugin:bazi-obsidian:1085 🔍 过滤后的流年数据长度: 10
+plugin:bazi-obsidian:1085 🔍 小运数据长度: 10
+plugin:bazi-obsidian:471 🚀 extendBaziTableToLevel: 开始扩展到dayun层级
+plugin:bazi-obsidian:471 🎯 实际目标层级: dayun (请求层级: dayun)
+plugin:bazi-obsidian:471 🔍 大运强制更新检查: lastIndex=4, currentIndex=4, needsUpdate=false
+plugin:bazi-obsidian:471 ⚠️ 已扩展到dayun层级，跳过重复扩展
+plugin:bazi-obsidian:1487 🔄 重置下级选择状态: dayun
+plugin:bazi-obsidian:1473 🔄 隐藏下级选择元素: dayun

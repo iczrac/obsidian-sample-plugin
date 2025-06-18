@@ -134,29 +134,45 @@ export class XiaoYunCalculator {
   private static calculateXiaoYunGanZhi(timeGan: string, timeZhi: string, age: number, isShunXing: boolean): string {
     const gans = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
     const zhis = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
-    
+
     const ganIndex = gans.indexOf(timeGan);
     const zhiIndex = zhis.indexOf(timeZhi);
-    
+
     if (ganIndex === -1 || zhiIndex === -1) {
       console.warn('无效的时柱干支:', timeGan, timeZhi);
       return timeGan + timeZhi;
     }
-    
+
     let newGanIndex: number;
     let newZhiIndex: number;
-    
+
     if (isShunXing) {
       // 顺行：干支都向前推进
       newGanIndex = (ganIndex + age) % 10;
       newZhiIndex = (zhiIndex + age) % 12;
     } else {
       // 逆行：干支都向后退
-      newGanIndex = (ganIndex - age + 10) % 10;
-      newZhiIndex = (zhiIndex - age + 12) % 12;
+      // 修复：确保结果为正数，使用多次加法避免负数
+      newGanIndex = (ganIndex - age % 10 + 10 * Math.ceil(age / 10)) % 10;
+      newZhiIndex = (zhiIndex - age % 12 + 12 * Math.ceil(age / 12)) % 12;
     }
-    
-    return gans[newGanIndex] + zhis[newZhiIndex];
+
+    // 验证索引有效性
+    if (newGanIndex < 0 || newGanIndex >= 10 || newZhiIndex < 0 || newZhiIndex >= 12) {
+      console.error(`小运干支计算错误: ganIndex=${newGanIndex}, zhiIndex=${newZhiIndex}, age=${age}, isShunXing=${isShunXing}`);
+      return timeGan + timeZhi; // 返回原始时柱作为备选
+    }
+
+    const resultGan = gans[newGanIndex];
+    const resultZhi = zhis[newZhiIndex];
+
+    // 验证结果有效性
+    if (!resultGan || !resultZhi) {
+      console.error(`小运干支获取失败: resultGan=${resultGan}, resultZhi=${resultZhi}, newGanIndex=${newGanIndex}, newZhiIndex=${newZhiIndex}`);
+      return timeGan + timeZhi; // 返回原始时柱作为备选
+    }
+
+    return resultGan + resultZhi;
   }
 
   /**
