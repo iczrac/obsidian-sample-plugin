@@ -449,9 +449,10 @@ export class BaziService {
         liuNian = this.calculateAllLiuNian(eightChar, solar, gender, dayStem, daYun);
         console.log('🔥 流年信息计算完成，数量:', liuNian.length);
 
-        // 计算小运信息
+        // 计算小运信息 - 生成足够覆盖所有大运的小运数据
         console.log('🔥 计算小运信息...');
-        xiaoYun = XiaoYunCalculator.calculateXiaoYun(eightChar, solar, gender, dayStem, yearNum, 10);
+        const xiaoYunCount = this.calculateXiaoYunCount(daYun);
+        xiaoYun = XiaoYunCalculator.calculateXiaoYun(eightChar, solar, gender, dayStem, yearNum, xiaoYunCount);
         console.log('🔥 小运信息计算完成，数量:', xiaoYun.length);
 
         console.log('🔥 ✅ 大运流年计算全部完成');
@@ -820,8 +821,9 @@ export class BaziService {
       // 计算流年信息 - 生成所有大运期间的流年数据
       liuNian = this.calculateAllLiuNian(eightChar, solar, gender, dayStem, daYun);
 
-      // 计算小运信息
-      xiaoYun = XiaoYunCalculator.calculateXiaoYun(eightChar, solar, gender, dayStem, solar.getYear(), 10);
+      // 计算小运信息 - 生成足够覆盖所有大运的小运数据
+      const xiaoYunCount = this.calculateXiaoYunCount(daYun);
+      xiaoYun = XiaoYunCalculator.calculateXiaoYun(eightChar, solar, gender, dayStem, solar.getYear(), xiaoYunCount);
     }
 
 
@@ -1010,35 +1012,113 @@ export class BaziService {
 
     // 计算出生年份
     const birthYear = solar.getYear();
+    console.log(`🔥 出生年份: ${birthYear}`);
 
     // 为每个大运生成流年数据
     for (let i = 0; i < daYunList.length; i++) {
       const daYun = daYunList[i];
-      if (!daYun.startYear || !daYun.endYear) {
-        console.log(`🔥 大运${i}缺少年份信息，跳过`);
+
+      console.log(`🔥 检查大运${i}:`, {
+        ganZhi: daYun.ganZhi,
+        startYear: daYun.startYear,
+        endYear: daYun.endYear,
+        startAge: daYun.startAge,
+        endAge: daYun.endAge,
+        isQianYun: daYun.isQianYun
+      });
+
+      // 检查大运年份信息
+      if (!daYun.startYear) {
+        console.log(`🔥 大运${i}缺少startYear，跳过`);
         continue;
       }
 
-      console.log(`🔥 为大运${i} (${daYun.ganZhi}) 生成流年数据: ${daYun.startYear}-${daYun.endYear}`);
+      // 如果没有endYear，计算endYear
+      let endYear = daYun.endYear;
+      if (!endYear) {
+        if (daYun.endAge && daYun.startAge) {
+          // 通过年龄计算结束年份
+          endYear = daYun.startYear + (daYun.endAge - daYun.startAge);
+          console.log(`🔥 大运${i}通过年龄计算endYear: ${endYear}`);
+        } else {
+          // 默认大运为10年
+          endYear = daYun.startYear + 9;
+          console.log(`🔥 大运${i}使用默认10年计算endYear: ${endYear}`);
+        }
+      }
+
+      console.log(`🔥 为大运${i} (${daYun.ganZhi}) 生成流年数据: ${daYun.startYear}-${endYear}`);
 
       // 使用年份范围计算方法生成该大运期间的流年
       const daYunLiuNian = LiuNianCalculator.calculateLiuNianByYearRange(
         daYun.startYear,
-        daYun.endYear,
+        endYear,
         birthYear,
         dayStem
       );
 
       console.log(`🔥 大运${i}生成流年数据${daYunLiuNian.length}年`);
+      if (daYunLiuNian.length > 0) {
+        console.log(`🔥 大运${i}流年范围: ${daYunLiuNian[0].year}-${daYunLiuNian[daYunLiuNian.length-1].year}`);
+      }
+
       allLiuNian.push(...daYunLiuNian);
     }
 
     // 按年份排序
     allLiuNian.sort((a, b) => a.year - b.year);
 
-    console.log(`🔥 所有大运流年数据生成完成，总计${allLiuNian.length}年，范围: ${allLiuNian[0]?.year}-${allLiuNian[allLiuNian.length - 1]?.year}`);
+    console.log(`🔥 所有大运流年数据生成完成，总计${allLiuNian.length}年`);
+    if (allLiuNian.length > 0) {
+      console.log(`🔥 流年数据范围: ${allLiuNian[0].year}-${allLiuNian[allLiuNian.length - 1].year}`);
+      console.log(`🔥 前5年流年:`, allLiuNian.slice(0, 5).map(ln => `${ln.year}年(${ln.age}岁): ${ln.ganZhi}`));
+    }
 
     return allLiuNian;
+  }
+
+  /**
+   * 计算小运数量，确保覆盖所有大运期间
+   * @param daYunList 大运列表
+   * @returns 小运数量
+   */
+  private static calculateXiaoYunCount(daYunList: any[]): number {
+    if (!daYunList || daYunList.length === 0) {
+      console.log('🔥 没有大运数据，使用默认小运数量100');
+      return 100; // 默认100年
+    }
+
+    // 找到最后一个大运的结束年份
+    let maxEndYear = 0;
+    let minStartYear = Number.MAX_SAFE_INTEGER;
+
+    for (const daYun of daYunList) {
+      if (daYun.startYear) {
+        minStartYear = Math.min(minStartYear, daYun.startYear);
+      }
+
+      let endYear = daYun.endYear;
+      if (!endYear && daYun.startYear) {
+        // 如果没有endYear，通过年龄计算或默认10年
+        if (daYun.endAge && daYun.startAge) {
+          endYear = daYun.startYear + (daYun.endAge - daYun.startAge);
+        } else {
+          endYear = daYun.startYear + 9; // 默认10年
+        }
+      }
+
+      if (endYear) {
+        maxEndYear = Math.max(maxEndYear, endYear);
+      }
+    }
+
+    // 计算需要的小运年数，加上一些缓冲
+    const totalYears = maxEndYear - minStartYear + 20; // 额外20年缓冲
+    const xiaoYunCount = Math.max(totalYears, 100); // 至少100年
+
+    console.log(`🔥 计算小运数量: 大运范围${minStartYear}-${maxEndYear}, 小运数量${xiaoYunCount}`);
+
+    return xiaoYunCount;
   }
 
 }
