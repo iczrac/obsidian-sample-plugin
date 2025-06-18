@@ -452,8 +452,13 @@ export class BaziService {
         // 计算小运信息 - 生成足够覆盖所有大运的小运数据
         console.log('🔥 计算小运信息...');
         const xiaoYunCount = this.calculateXiaoYunCount(daYun);
+        console.log(`🔥 计算的小运数量: ${xiaoYunCount}`);
         xiaoYun = XiaoYunCalculator.calculateXiaoYun(eightChar, solar, gender, dayStem, yearNum, xiaoYunCount);
         console.log('🔥 小运信息计算完成，数量:', xiaoYun.length);
+        if (xiaoYun.length > 0) {
+          console.log(`🔥 小运范围: ${xiaoYun[0].year}年(${xiaoYun[0].age}岁) - ${xiaoYun[xiaoYun.length-1].year}年(${xiaoYun[xiaoYun.length-1].age}岁)`);
+          console.log(`🔥 前10个小运:`, xiaoYun.slice(0, 10).map(xy => `${xy.age}岁(${xy.year}年): ${xy.ganZhi}`));
+        }
 
         console.log('🔥 ✅ 大运流年计算全部完成');
       } catch (error) {
@@ -823,7 +828,13 @@ export class BaziService {
 
       // 计算小运信息 - 生成足够覆盖所有大运的小运数据
       const xiaoYunCount = this.calculateXiaoYunCount(daYun);
+      console.log(`🔥 formatBaziInfo计算的小运数量: ${xiaoYunCount}`);
       xiaoYun = XiaoYunCalculator.calculateXiaoYun(eightChar, solar, gender, dayStem, solar.getYear(), xiaoYunCount);
+      console.log('🔥 formatBaziInfo小运信息计算完成，数量:', xiaoYun.length);
+      if (xiaoYun.length > 0) {
+        console.log(`🔥 formatBaziInfo小运范围: ${xiaoYun[0].year}年(${xiaoYun[0].age}岁) - ${xiaoYun[xiaoYun.length-1].year}年(${xiaoYun[xiaoYun.length-1].age}岁)`);
+        console.log(`🔥 formatBaziInfo前10个小运:`, xiaoYun.slice(0, 10).map(xy => `${xy.age}岁(${xy.year}年): ${xy.ganZhi}`));
+      }
     }
 
 
