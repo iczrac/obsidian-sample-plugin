@@ -1,7 +1,6 @@
 import { BaziInfo, LiuNianInfo } from '../../../types/BaziInfo';
 import { ColorSchemeService } from '../../../services/bazi/ColorSchemeService';
 import { BaziCalculator } from '../../../services/bazi/BaziCalculator';
-import { LiuNianCalculator } from '../../../services/bazi/LiuNianCalculator';
 import { ShiShenCalculator } from '../../../services/bazi/ShiShenCalculator';
 
 /**
@@ -181,10 +180,17 @@ export class LiuNianInfoManager {
 
 
   /**
-   * 获取当前大运对应的流年数据
+   * 获取过滤后的流年数据（统一使用baziInfo.liuNian）
    */
-  private getCurrentDaYunLiuNian(): LiuNianInfo[] {
-    console.log(`🎯 getCurrentDaYunLiuNian: 获取大运${this.selectedDaYunIndex}的流年数据`);
+  private getFilteredLiuNianData(): LiuNianInfo[] {
+    console.log(`🎯 getFilteredLiuNianData: 获取大运${this.selectedDaYunIndex}的流年数据`);
+
+    // 如果没有选中大运，返回前10年流年数据
+    if (this.selectedDaYunIndex === -1) {
+      const firstTenYears = this.baziInfo.liuNian?.slice(0, 10) || [];
+      console.log(`✅ 未选中大运，返回前${firstTenYears.length}年流年数据`);
+      return firstTenYears;
+    }
 
     if (!this.baziInfo.daYun || !Array.isArray(this.baziInfo.daYun)) {
       console.log('❌ 没有大运数据，返回空数组');
@@ -200,86 +206,26 @@ export class LiuNianInfoManager {
 
     console.log(`🎯 选中大运: ${selectedDaYun.ganZhi}, 起始年: ${selectedDaYun.startYear}, 结束年: ${selectedDaYun.endYear}`);
 
-    // 生成该大运对应的10年流年数据
+    // 从baziInfo.liuNian中过滤出该大运对应的流年数据
     const startYear = selectedDaYun.startYear;
     const endYear = selectedDaYun.endYear || (startYear + 9);
-    const liuNianData: LiuNianInfo[] = [];
 
-    for (let year = startYear; year <= endYear && liuNianData.length < 10; year++) {
-      // 查找现有的流年数据
-      let existingLiuNian = this.baziInfo.liuNian?.find(ln => ln.year === year);
+    const filteredData = this.baziInfo.liuNian?.filter(ln =>
+      ln.year >= startYear && ln.year <= endYear
+    ) || [];
 
-      if (!existingLiuNian) {
-        // 如果没有现有数据，生成基本的流年信息
-        const generatedLiuNian = this.generateLiuNianForYear(year);
-        if (generatedLiuNian) {
-          existingLiuNian = generatedLiuNian;
-        }
-      }
+    // 按年份排序并限制为10年
+    const sortedData = filteredData
+      .sort((a, b) => a.year - b.year)
+      .slice(0, 10);
 
-      if (existingLiuNian) {
-        liuNianData.push(existingLiuNian);
-      }
-    }
+    console.log(`✅ 过滤流年数据: ${sortedData.length}年，从${startYear}到${endYear}`);
+    console.log(`🔍 过滤后的流年数据:`, sortedData.map(ln => `${ln.year}年(${ln.age}岁): ${ln.ganZhi}`));
 
-    console.log(`✅ 生成流年数据: ${liuNianData.length}年，从${startYear}到${endYear}`);
-    return liuNianData;
+    return sortedData;
   }
 
-  /**
-   * 为指定年份生成流年信息
-   */
-  private generateLiuNianForYear(year: number): LiuNianInfo | null {
-    try {
-      // 获取出生年份和日干
-      const birthYear = this.getBirthYear();
-      const dayStem = this.baziInfo.dayStem || '';
 
-      if (!dayStem) {
-        console.warn(`生成${year}年流年信息失败: 缺少日干信息`);
-        return null;
-      }
-
-      // 使用后端计算服务生成流年信息
-      const liuNianList = LiuNianCalculator.calculateLiuNianByYearRange(
-        year,
-        year,
-        birthYear,
-        dayStem
-      );
-
-      if (liuNianList.length > 0) {
-        return liuNianList[0];
-      } else {
-        console.warn(`生成${year}年流年信息失败: 计算服务返回空结果`);
-        return null;
-      }
-    } catch (error) {
-      console.error(`生成${year}年流年信息失败:`, error);
-      return null;
-    }
-  }
-
-  /**
-   * 获取出生年份
-   */
-  private getBirthYear(): number {
-    // 尝试从八字信息中获取出生年份
-    if (this.baziInfo.originalDate?.year) {
-      return this.baziInfo.originalDate.year;
-    }
-
-    // 如果有大运信息，从第一个大运推算
-    if (this.baziInfo.daYun && Array.isArray(this.baziInfo.daYun) && this.baziInfo.daYun.length > 0) {
-      const firstDaYun = this.baziInfo.daYun[0];
-      if (firstDaYun.startYear && firstDaYun.startAge) {
-        return firstDaYun.startYear - firstDaYun.startAge;
-      }
-    }
-
-    // 默认值
-    return new Date().getFullYear() - 20;
-  }
 
 
 
@@ -291,8 +237,8 @@ export class LiuNianInfoManager {
   private createCombinedTable() {
     if (!this.infoContainer) return;
 
-    // 获取流年和小运数据
-    const liuNianData = this.getCurrentDaYunLiuNian();
+    // 直接使用baziInfo.liuNian，根据选中的大运进行过滤
+    const liuNianData = this.getFilteredLiuNianData();
     const xiaoYunData = this.getXiaoYunForLiuNian(liuNianData);
 
     if (liuNianData.length === 0) {
@@ -651,12 +597,8 @@ export class LiuNianInfoManager {
    */
   private getXiaoYunForLiuNian(liuNianData: LiuNianInfo[]): any[] {
     if (!this.baziInfo.xiaoYun || !Array.isArray(this.baziInfo.xiaoYun)) {
-      console.log('🔍 小运数据不存在或不是数组');
       return [];
     }
-
-    console.log('🔍 小运数据:', this.baziInfo.xiaoYun.map(xy => `${xy.age}岁(${xy.year}年): ${xy.ganZhi}`));
-    console.log('🔍 流年数据:', liuNianData.map(ln => `${ln.age}岁(${ln.year}年): ${ln.ganZhi}`));
 
     // 根据流年年龄匹配小运（优先使用年龄匹配，因为更准确）
     return liuNianData.map(ln => {
@@ -666,12 +608,6 @@ export class LiuNianInfoManager {
       // 如果年龄匹配失败，尝试按年份匹配
       if (!xiaoYun) {
         xiaoYun = this.baziInfo.xiaoYun?.find(xy => xy.year === ln.year);
-      }
-
-      if (xiaoYun) {
-        console.log(`🎯 流年${ln.year}年(${ln.age}岁)匹配到小运: ${xiaoYun.ganZhi}`);
-      } else {
-        console.log(`⚠️ 流年${ln.year}年(${ln.age}岁)未找到对应小运`);
       }
 
       return xiaoYun || null;
