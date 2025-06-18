@@ -31,6 +31,9 @@ export class LiuYueInfoManager {
   createLiuYueInfo(): HTMLElement {
     this.liuYueSection = this.container.createDiv({ cls: 'bazi-view-section bazi-liuyue-info' });
 
+    // 默认隐藏，等待流年选择
+    this.liuYueSection.style.display = 'none';
+
     // 创建标题
     this.createHeader();
 
@@ -556,10 +559,31 @@ export class LiuYueInfoManager {
     console.log(`🎯 LiuYueInfoManager: 设置年份 ${year}`);
     this.selectedYear = year;
 
+    // 显示流月区域
+    this.show();
+
     // 清空容器并重新创建流月表格
     if (this.infoContainer) {
       this.infoContainer.empty();
       this.addLiuYueInfo();
+    }
+  }
+
+  /**
+   * 显示流月信息区域
+   */
+  show() {
+    if (this.liuYueSection) {
+      this.liuYueSection.style.display = 'block';
+    }
+  }
+
+  /**
+   * 隐藏流月信息区域
+   */
+  hide() {
+    if (this.liuYueSection) {
+      this.liuYueSection.style.display = 'none';
     }
   }
 

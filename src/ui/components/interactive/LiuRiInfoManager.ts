@@ -32,6 +32,9 @@ export class LiuRiInfoManager {
   createLiuRiInfo(): HTMLElement {
     this.liuRiSection = this.container.createDiv({ cls: 'bazi-view-section bazi-liuri-info' });
 
+    // 默认隐藏，等待流月选择
+    this.liuRiSection.style.display = 'none';
+
     // 创建标题
     this.createHeader();
 
@@ -542,10 +545,31 @@ export class LiuRiInfoManager {
     this.selectedYear = year;
     this.selectedMonthGanZhi = monthGanZhi;
 
+    // 显示流日区域
+    this.show();
+
     // 清空容器并重新创建流日表格
     if (this.infoContainer) {
       this.infoContainer.empty();
       this.addLiuRiInfo();
+    }
+  }
+
+  /**
+   * 显示流日信息区域
+   */
+  show() {
+    if (this.liuRiSection) {
+      this.liuRiSection.style.display = 'block';
+    }
+  }
+
+  /**
+   * 隐藏流日信息区域
+   */
+  hide() {
+    if (this.liuRiSection) {
+      this.liuRiSection.style.display = 'none';
     }
   }
 

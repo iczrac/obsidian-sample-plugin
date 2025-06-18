@@ -226,7 +226,15 @@ export class SectionRenderManager {
   private handleLiuNianSelect(year: number) {
     console.log(`🎯 SectionRenderManager: 流年选择 ${year}`);
 
-    // 更新流月信息管理器的年份
+    // 隐藏下级元素
+    if (this.liuRiInfoManager) {
+      this.liuRiInfoManager.hide();
+    }
+    if (this.liuShiInfoManager) {
+      this.liuShiInfoManager.hide();
+    }
+
+    // 更新流月信息管理器的年份（这会显示流月）
     if (this.liuYueInfoManager) {
       this.liuYueInfoManager.setSelectedYear(year);
     }
@@ -245,7 +253,12 @@ export class SectionRenderManager {
   private handleLiuYueSelect(liuyue: any) {
     console.log(`🎯 SectionRenderManager: 流月选择 ${liuyue.month}月`);
 
-    // 更新流日信息管理器的年月（传递干支而不是月份数字）
+    // 隐藏流时
+    if (this.liuShiInfoManager) {
+      this.liuShiInfoManager.hide();
+    }
+
+    // 更新流日信息管理器的年月（传递干支而不是月份数字，这会显示流日）
     if (this.liuRiInfoManager) {
       this.liuRiInfoManager.setSelectedYearMonth(liuyue.year, liuyue.ganZhi);
     }
@@ -264,7 +277,7 @@ export class SectionRenderManager {
   private handleLiuRiSelect(liuri: any) {
     console.log(`🎯 SectionRenderManager: 流日选择 ${liuri.day}日`);
 
-    // 更新流时信息管理器的年月日
+    // 更新流时信息管理器的年月日（这会显示流时）
     if (this.liuShiInfoManager) {
       this.liuShiInfoManager.setSelectedYearMonthDay(liuri.year, liuri.month, liuri.day);
     }
@@ -296,6 +309,62 @@ export class SectionRenderManager {
    */
   getSpecialInfoManager(): SpecialInfoManager | null {
     return this.specialInfoManager;
+  }
+
+  /**
+   * 获取流月信息管理器
+   */
+  getLiuYueInfoManager(): LiuYueInfoManager | null {
+    return this.liuYueInfoManager;
+  }
+
+  /**
+   * 获取流日信息管理器
+   */
+  getLiuRiInfoManager(): LiuRiInfoManager | null {
+    return this.liuRiInfoManager;
+  }
+
+  /**
+   * 获取流时信息管理器
+   */
+  getLiuShiInfoManager(): LiuShiInfoManager | null {
+    return this.liuShiInfoManager;
+  }
+
+  /**
+   * 隐藏下级选择元素
+   * @param currentLevel 当前选择的层级
+   */
+  hideLowerLevelElements(currentLevel: string) {
+    console.log(`🔄 隐藏下级选择元素: ${currentLevel}`);
+
+    const levels = ['dayun', 'liunian', 'liuyue', 'liuri', 'liushi'];
+    const currentIndex = levels.indexOf(currentLevel);
+
+    if (currentIndex === -1) return;
+
+    // 隐藏当前层级之后的所有层级
+    for (let i = currentIndex + 1; i < levels.length; i++) {
+      const level = levels[i];
+      switch (level) {
+        case 'liuyue':
+          if (this.liuYueInfoManager) {
+            this.liuYueInfoManager.hide();
+          }
+          break;
+        case 'liuri':
+          if (this.liuRiInfoManager) {
+            this.liuRiInfoManager.hide();
+          }
+          break;
+        case 'liushi':
+          if (this.liuShiInfoManager) {
+            this.liuShiInfoManager.hide();
+          }
+          break;
+      }
+    }
   }
 
   /**

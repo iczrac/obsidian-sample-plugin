@@ -899,9 +899,47 @@ export class InteractiveBaziView {
 
     if (currentIndex === -1) return;
 
+    // 隐藏下级元素
+    this.sectionRenderManager.hideLowerLevelElements(currentLevel);
+
     // 重置当前层级之后的所有层级
     for (let i = currentIndex + 1; i < levels.length; i++) {
       const level = levels[i];
+      switch (level) {
+        case 'liunian':
+          this.extendedColumnManager.setSelectedLiuNianYear(0);
+          break;
+        case 'liuyue':
+          this.extendedColumnManager.setCurrentSelectedLiuYue(null);
+          break;
+        case 'liuri':
+          this.extendedColumnManager.setCurrentSelectedLiuRi(null);
+          break;
+        case 'liushi':
+          this.extendedColumnManager.setCurrentSelectedLiuShi(null);
+          break;
+      }
+    }
+  }
+
+  /**
+   * 重置下级选择状态（排除指定层级）
+   * @param currentLevel 当前选择的层级
+   * @param except 排除的层级列表
+   */
+  private resetLowerLevelSelectionsExcept(currentLevel: string, except: string[] = []) {
+    console.log(`🔄 重置下级选择状态（排除${except.join(', ')}）: ${currentLevel}`);
+
+    const levels = ['dayun', 'liunian', 'liuyue', 'liuri', 'liushi'];
+    const currentIndex = levels.indexOf(currentLevel);
+
+    if (currentIndex === -1) return;
+
+    // 重置当前层级之后的所有层级（排除指定层级）
+    for (let i = currentIndex + 1; i < levels.length; i++) {
+      const level = levels[i];
+      if (except.includes(level)) continue;
+
       switch (level) {
         case 'liunian':
           this.extendedColumnManager.setSelectedLiuNianYear(0);
@@ -928,11 +966,26 @@ export class InteractiveBaziView {
 
     this.selectLiuNian(liunian.year);
 
-    // 重置下级选择状态
-    this.resetLowerLevelSelections('liunian');
+    // 先隐藏流日和流时，但不隐藏流月
+    const liuRiInfoManager = this.sectionRenderManager.getLiuRiInfoManager();
+    const liuShiInfoManager = this.sectionRenderManager.getLiuShiInfoManager();
+    if (liuRiInfoManager) {
+      liuRiInfoManager.hide();
+    }
+    if (liuShiInfoManager) {
+      liuShiInfoManager.hide();
+    }
 
-    // 流月数据现在由LiuYueInfoManager自动处理
-    console.log(`✅ 流年选择完成，流月信息将自动更新`);
+    // 重置下级选择状态（但不隐藏流月）
+    this.resetLowerLevelSelectionsExcept('liunian', ['liuyue']);
+
+    // 显示流月
+    const liuYueInfoManager = this.sectionRenderManager.getLiuYueInfoManager();
+    if (liuYueInfoManager) {
+      liuYueInfoManager.setSelectedYear(liunian.year);
+    }
+
+    console.log(`✅ 流年选择完成，流月信息已显示`);
   }
 
 
@@ -1031,11 +1084,22 @@ export class InteractiveBaziView {
     // 扩展四柱表格到流月层级
     this.extendedColumnManager.extendBaziTableToLevel('liuyue');
 
-    // 重置下级选择状态
-    this.resetLowerLevelSelections('liuyue');
+    // 先隐藏流时
+    const liuShiInfoManager = this.sectionRenderManager.getLiuShiInfoManager();
+    if (liuShiInfoManager) {
+      liuShiInfoManager.hide();
+    }
 
-    // 生成并显示流日数据（使用干支而不是月份数字）
-    this.generateAndShowLiuRiData(liuYue.year, liuYue.ganZhi);
+    // 重置下级选择状态（但不隐藏流日）
+    this.resetLowerLevelSelectionsExcept('liuyue', ['liuri']);
+
+    // 显示流日
+    const liuRiInfoManager = this.sectionRenderManager.getLiuRiInfoManager();
+    if (liuRiInfoManager) {
+      liuRiInfoManager.setSelectedYearMonth(liuYue.year, liuYue.ganZhi);
+    }
+
+    console.log(`✅ 流月选择完成，流日信息已显示`);
   }
 
   /**
@@ -1049,11 +1113,16 @@ export class InteractiveBaziView {
     // 扩展四柱表格到流日层级
     this.extendedColumnManager.extendBaziTableToLevel('liuri');
 
-    // 重置下级选择状态
+    // 重置下级选择状态（不需要排除，因为流时是最后一级）
     this.resetLowerLevelSelections('liuri');
 
-    // 生成并显示流时数据
-    this.generateAndShowLiuShiData(liuRi.year, liuRi.month, liuRi.day);
+    // 显示流时
+    const liuShiInfoManager = this.sectionRenderManager.getLiuShiInfoManager();
+    if (liuShiInfoManager) {
+      liuShiInfoManager.setSelectedYearMonthDay(liuRi.year, liuRi.month, liuRi.day);
+    }
+
+    console.log(`✅ 流日选择完成，流时信息已显示`);
   }
 
   /**

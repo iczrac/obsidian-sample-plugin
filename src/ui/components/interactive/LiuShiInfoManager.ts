@@ -33,6 +33,9 @@ export class LiuShiInfoManager {
   createLiuShiInfo(): HTMLElement {
     this.liuShiSection = this.container.createDiv({ cls: 'bazi-view-section bazi-liushi-info' });
 
+    // 默认隐藏，等待流日选择
+    this.liuShiSection.style.display = 'none';
+
     // 创建标题
     this.createHeader();
 
@@ -575,10 +578,31 @@ export class LiuShiInfoManager {
     this.selectedMonth = month;
     this.selectedDay = day;
 
+    // 显示流时区域
+    this.show();
+
     // 清空容器并重新创建流时表格
     if (this.infoContainer) {
       this.infoContainer.empty();
       this.addLiuShiInfo();
+    }
+  }
+
+  /**
+   * 显示流时信息区域
+   */
+  show() {
+    if (this.liuShiSection) {
+      this.liuShiSection.style.display = 'block';
+    }
+  }
+
+  /**
+   * 隐藏流时信息区域
+   */
+  hide() {
+    if (this.liuShiSection) {
+      this.liuShiSection.style.display = 'none';
     }
   }
 
