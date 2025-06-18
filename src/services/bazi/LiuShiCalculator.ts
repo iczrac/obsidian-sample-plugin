@@ -3,6 +3,7 @@ import { BaziCalculator } from './BaziCalculator';
 import { ShiShenCalculator } from './ShiShenCalculator';
 import { XunKongCalculator } from './XunKongCalculator';
 import { LiuShiInfo } from '../../types/BaziInfo';
+import { ShenShaTimeService } from './shensha/ShenShaTimeService';
 
 /**
  * 流时计算器
@@ -81,8 +82,8 @@ export class LiuShiCalculator {
         // 计算地势
         const diShi = BaziCalculator.getDiShi(dayStem, branch);
 
-        // 神煞信息（暂时为空，后续可扩展）
-        const shenSha: string[] = [];
+        // 计算神煞信息
+        const shenSha = ShenShaTimeService.calculateLiuShiShenSha(dayStem, ganZhi);
 
         liuShiData.push({
           year,

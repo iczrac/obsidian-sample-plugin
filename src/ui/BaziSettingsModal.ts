@@ -22,12 +22,16 @@ export class BaziSettingsModal extends Modal {
     liuNian: boolean;
     xiaoYun: boolean;
     liuYue: boolean;
+    liuRi: boolean;
+    liuShi: boolean;
   } = {
     siZhu: true,
     daYun: true,
     liuNian: true,
     xiaoYun: true,
-    liuYue: true
+    liuYue: true,
+    liuRi: true,
+    liuShi: true
   };
 
   /**
@@ -95,6 +99,14 @@ export class BaziSettingsModal extends Modal {
 
         if (baziInfo.showShenSha.liuYue !== undefined) {
           this.showShenSha.liuYue = baziInfo.showShenSha.liuYue;
+        }
+
+        if (baziInfo.showShenSha.liuRi !== undefined) {
+          this.showShenSha.liuRi = baziInfo.showShenSha.liuRi;
+        }
+
+        if (baziInfo.showShenSha.liuShi !== undefined) {
+          this.showShenSha.liuShi = baziInfo.showShenSha.liuShi;
         }
       }
     }
@@ -257,6 +269,38 @@ export class BaziSettingsModal extends Modal {
           });
       });
 
+    // 流日神煞显示设置
+    new Setting(contentEl)
+      .setName('显示流日神煞')
+      .setDesc('是否在流日表格中显示神煞行')
+      .addToggle(toggle => {
+        toggle
+          .setValue(this.showShenSha.liuRi)
+          .onChange(value => {
+            this.showShenSha.liuRi = value;
+            console.log('切换流日神煞显示状态:', value);
+
+            // 重新渲染八字命盘以应用神煞设置变化
+            this.updateBaziWithCurrentSettings();
+          });
+      });
+
+    // 流时神煞显示设置
+    new Setting(contentEl)
+      .setName('显示流时神煞')
+      .setDesc('是否在流时表格中显示神煞行')
+      .addToggle(toggle => {
+        toggle
+          .setValue(this.showShenSha.liuShi)
+          .onChange(value => {
+            this.showShenSha.liuShi = value;
+            console.log('切换流时神煞显示状态:', value);
+
+            // 重新渲染八字命盘以应用神煞设置变化
+            this.updateBaziWithCurrentSettings();
+          });
+      });
+
     // 按钮区域
     const buttonContainer = contentEl.createDiv({ cls: 'bazi-settings-button-container' });
 
@@ -306,7 +350,9 @@ export class BaziSettingsModal extends Modal {
       daYun: this.showShenSha.daYun,
       liuNian: this.showShenSha.liuNian,
       xiaoYun: this.showShenSha.xiaoYun,
-      liuYue: this.showShenSha.liuYue
+      liuYue: this.showShenSha.liuYue,
+      liuRi: this.showShenSha.liuRi,
+      liuShi: this.showShenSha.liuShi
     };
 
     // 添加原始日期信息

@@ -416,6 +416,11 @@ export class LiuRiInfoManager {
    * 创建神煞行
    */
   private createShenShaRow(table: HTMLElement, liuRiData: any[]) {
+    // 检查神煞显示设置
+    if (this.baziInfo.showShenSha && this.baziInfo.showShenSha.liuRi === false) {
+      return;
+    }
+
     if (!liuRiData.some(lr => lr.shenSha && lr.shenSha.length > 0)) return;
 
     const row = table.createEl('tr', { cls: 'bazi-liuri-shensha-row' });

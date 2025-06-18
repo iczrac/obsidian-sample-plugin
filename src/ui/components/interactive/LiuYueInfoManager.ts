@@ -431,6 +431,11 @@ export class LiuYueInfoManager {
    * 创建神煞行
    */
   private createShenShaRow(table: HTMLElement, liuYueData: any[]) {
+    // 检查神煞显示设置
+    if (this.baziInfo.showShenSha && this.baziInfo.showShenSha.liuYue === false) {
+      return;
+    }
+
     if (!liuYueData.some(ly => ly.shenSha && ly.shenSha.length > 0)) return;
 
     const row = table.createEl('tr', { cls: 'bazi-liuyue-shensha-row' });

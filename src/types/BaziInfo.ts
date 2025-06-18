@@ -179,6 +179,8 @@ export interface BaziInfo {
     liuNian?: boolean; // 流年神煞
     xiaoYun?: boolean; // 小运神煞
     liuYue?: boolean; // 流月神煞
+    liuRi?: boolean; // 流日神煞
+    liuShi?: boolean; // 流时神煞
   };
   originalDate?: {
     year: number;

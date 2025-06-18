@@ -432,6 +432,11 @@ export class LiuShiInfoManager {
    * 创建神煞行
    */
   private createShenShaRow(table: HTMLElement, liuShiData: any[]) {
+    // 检查神煞显示设置
+    if (this.baziInfo.showShenSha && this.baziInfo.showShenSha.liuShi === false) {
+      return;
+    }
+
     if (!liuShiData.some(ls => ls.shenSha && ls.shenSha.length > 0)) return;
 
     const row = table.createEl('tr', { cls: 'bazi-liushi-shensha-row' });
