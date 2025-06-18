@@ -352,6 +352,8 @@ export class LiuNianInfoManager {
       this.createXiaoYunShiShenRow(table, xiaoYunData);
       this.createXiaoYunDiShiRow(table, xiaoYunData);
       this.createXiaoYunXunKongRow(table, xiaoYunData);
+      this.createXiaoYunNaYinRow(table, xiaoYunData);
+      this.createXiaoYunShenShaRow(table, xiaoYunData);
     }
   }
 
@@ -593,6 +595,11 @@ export class LiuNianInfoManager {
    * 创建小运神煞行
    */
   private createXiaoYunShenShaRow(table: HTMLElement, xiaoYunData: any[]) {
+    // 检查神煞显示设置
+    if (this.baziInfo.showShenSha && this.baziInfo.showShenSha.xiaoYun === false) {
+      return;
+    }
+
     if (!xiaoYunData.some(xy => xy && xy.shenSha && xy.shenSha.length > 0)) return;
 
     const row = table.createEl('tr', { cls: 'bazi-xiaoyun-shensha-row' });
@@ -644,12 +651,30 @@ export class LiuNianInfoManager {
    */
   private getXiaoYunForLiuNian(liuNianData: LiuNianInfo[]): any[] {
     if (!this.baziInfo.xiaoYun || !Array.isArray(this.baziInfo.xiaoYun)) {
+      console.log('🔍 小运数据不存在或不是数组');
       return [];
     }
 
-    // 根据流年年份匹配小运
+    console.log('🔍 小运数据:', this.baziInfo.xiaoYun.map(xy => `${xy.age}岁(${xy.year}年): ${xy.ganZhi}`));
+    console.log('🔍 流年数据:', liuNianData.map(ln => `${ln.age}岁(${ln.year}年): ${ln.ganZhi}`));
+
+    // 根据流年年龄匹配小运（优先使用年龄匹配，因为更准确）
     return liuNianData.map(ln => {
-      return this.baziInfo.xiaoYun?.find(xy => xy.year === ln.year) || null;
+      // 首先尝试按年龄匹配
+      let xiaoYun = this.baziInfo.xiaoYun?.find(xy => xy.age === ln.age);
+
+      // 如果年龄匹配失败，尝试按年份匹配
+      if (!xiaoYun) {
+        xiaoYun = this.baziInfo.xiaoYun?.find(xy => xy.year === ln.year);
+      }
+
+      if (xiaoYun) {
+        console.log(`🎯 流年${ln.year}年(${ln.age}岁)匹配到小运: ${xiaoYun.ganZhi}`);
+      } else {
+        console.log(`⚠️ 流年${ln.year}年(${ln.age}岁)未找到对应小运`);
+      }
+
+      return xiaoYun || null;
     });
   }
 
