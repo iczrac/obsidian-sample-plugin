@@ -185,6 +185,16 @@ export class LiuNianInfoManager {
   private getFilteredLiuNianData(): LiuNianInfo[] {
     console.log(`🎯 getFilteredLiuNianData: 获取大运${this.selectedDaYunIndex}的流年数据`);
 
+    // 添加详细的数据检查
+    console.log(`🔍 baziInfo.liuNian 存在: ${!!this.baziInfo.liuNian}`);
+    console.log(`🔍 baziInfo.liuNian 长度: ${this.baziInfo.liuNian?.length || 0}`);
+    if (this.baziInfo.liuNian && this.baziInfo.liuNian.length > 0) {
+      const firstYear = this.baziInfo.liuNian[0].year;
+      const lastYear = this.baziInfo.liuNian[this.baziInfo.liuNian.length - 1].year;
+      console.log(`🔍 流年数据范围: ${firstYear} - ${lastYear}`);
+      console.log(`🔍 前5年流年:`, this.baziInfo.liuNian.slice(0, 5).map(ln => `${ln.year}年(${ln.age}岁): ${ln.ganZhi}`));
+    }
+
     // 如果没有选中大运，返回前10年流年数据
     if (this.selectedDaYunIndex === -1) {
       const firstTenYears = this.baziInfo.liuNian?.slice(0, 10) || [];
@@ -210,17 +220,25 @@ export class LiuNianInfoManager {
     const startYear = selectedDaYun.startYear;
     const endYear = selectedDaYun.endYear || (startYear + 9);
 
-    const filteredData = this.baziInfo.liuNian?.filter(ln =>
-      ln.year >= startYear && ln.year <= endYear
-    ) || [];
+    console.log(`🔍 过滤条件: ${startYear} <= year <= ${endYear}`);
+
+    const filteredData = this.baziInfo.liuNian?.filter(ln => {
+      const matches = ln.year >= startYear && ln.year <= endYear;
+      if (!matches) {
+        console.log(`🔍 年份${ln.year}不匹配过滤条件`);
+      }
+      return matches;
+    }) || [];
+
+    console.log(`🔍 过滤后数据长度: ${filteredData.length}`);
 
     // 按年份排序并限制为10年
     const sortedData = filteredData
       .sort((a, b) => a.year - b.year)
       .slice(0, 10);
 
-    console.log(`✅ 过滤流年数据: ${sortedData.length}年，从${startYear}到${endYear}`);
-    console.log(`🔍 过滤后的流年数据:`, sortedData.map(ln => `${ln.year}年(${ln.age}岁): ${ln.ganZhi}`));
+    console.log(`✅ 最终流年数据: ${sortedData.length}年，从${startYear}到${endYear}`);
+    console.log(`🔍 最终流年数据:`, sortedData.map(ln => `${ln.year}年(${ln.age}岁): ${ln.ganZhi}`));
 
     return sortedData;
   }

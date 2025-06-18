@@ -444,9 +444,9 @@ export class BaziService {
         daYunStartAge = DaYunCalculator.getDaYunStartAge(eightChar, gender);
         console.log('🔥 大运信息计算完成，数量:', daYun.length);
 
-        // 计算流年信息
+        // 计算流年信息 - 生成所有大运期间的流年数据
         console.log('🔥 计算流年信息...');
-        liuNian = LiuNianCalculator.calculateLiuNian(eightChar, solar, gender, dayStem, undefined, 10);
+        liuNian = this.calculateAllLiuNian(eightChar, solar, gender, dayStem, daYun);
         console.log('🔥 流年信息计算完成，数量:', liuNian.length);
 
         // 计算小运信息
@@ -989,6 +989,56 @@ export class BaziService {
    */
   static getLiuShi(year: number, month: number, day: number, dayStem: string, sect = 2): any[] {
     return LiuShiCalculator.calculateLiuShi(year, month, day, dayStem, sect);
+  }
+
+  /**
+   * 计算所有大运期间的流年数据
+   * @param eightChar 八字对象
+   * @param solar 阳历对象
+   * @param gender 性别
+   * @param dayStem 日干
+   * @param daYunList 大运列表
+   * @returns 流年信息数组
+   */
+  private static calculateAllLiuNian(eightChar: EightChar, solar: Solar, gender: string, dayStem: string, daYunList: any[]): LiuNianInfo[] {
+    const allLiuNian: LiuNianInfo[] = [];
+
+    if (!daYunList || daYunList.length === 0) {
+      console.log('🔥 没有大运数据，返回空流年数组');
+      return allLiuNian;
+    }
+
+    // 计算出生年份
+    const birthYear = solar.getYear();
+
+    // 为每个大运生成流年数据
+    for (let i = 0; i < daYunList.length; i++) {
+      const daYun = daYunList[i];
+      if (!daYun.startYear || !daYun.endYear) {
+        console.log(`🔥 大运${i}缺少年份信息，跳过`);
+        continue;
+      }
+
+      console.log(`🔥 为大运${i} (${daYun.ganZhi}) 生成流年数据: ${daYun.startYear}-${daYun.endYear}`);
+
+      // 使用年份范围计算方法生成该大运期间的流年
+      const daYunLiuNian = LiuNianCalculator.calculateLiuNianByYearRange(
+        daYun.startYear,
+        daYun.endYear,
+        birthYear,
+        dayStem
+      );
+
+      console.log(`🔥 大运${i}生成流年数据${daYunLiuNian.length}年`);
+      allLiuNian.push(...daYunLiuNian);
+    }
+
+    // 按年份排序
+    allLiuNian.sort((a, b) => a.year - b.year);
+
+    console.log(`🔥 所有大运流年数据生成完成，总计${allLiuNian.length}年，范围: ${allLiuNian[0]?.year}-${allLiuNian[allLiuNian.length - 1]?.year}`);
+
+    return allLiuNian;
   }
 
 }
