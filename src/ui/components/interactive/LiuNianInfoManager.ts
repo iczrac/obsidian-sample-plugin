@@ -57,32 +57,32 @@ export class LiuNianInfoManager {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 8px 0;
+      padding: 8px 12px;
+      background: var(--background-secondary);
+      border: 1px solid var(--background-modifier-border);
+      border-radius: 4px;
+      margin-bottom: 8px;
       cursor: pointer;
-      user-select: none;
+      transition: all 0.2s ease;
     `;
 
-    // 标题
-    const title = header.createEl('h3', {
+    // 标题文本
+    const titleText = header.createEl('span', {
       text: '流年信息',
-      cls: 'bazi-view-subtitle'
+      cls: 'bazi-liunian-info-title'
     });
-    title.style.cssText = `
-      margin: 0;
-      flex: 1;
+    titleText.style.cssText = `
+      font-weight: bold;
+      color: var(--text-normal);
+      font-size: 14px;
     `;
 
-    // 收缩/展开按钮
-    this.toggleButton = header.createDiv({ cls: 'bazi-liunian-info-toggle' });
-    this.updateToggleButton();
+    // 切换按钮
+    this.toggleButton = header.createEl('span', {
+      text: this.isExpanded ? '▼' : '▶',
+      cls: 'bazi-liunian-info-toggle'
+    });
     this.toggleButton.style.cssText = `
-      width: 20px;
-      height: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 3px;
-      background: var(--background-modifier-border);
       color: var(--text-muted);
       font-size: 12px;
       transition: all 0.2s ease;
@@ -101,19 +101,9 @@ export class LiuNianInfoManager {
     });
 
     this.toggleButton.addEventListener('mouseleave', () => {
-      this.toggleButton!.style.background = 'var(--background-modifier-border)';
+      this.toggleButton!.style.background = 'transparent';
       this.toggleButton!.style.color = 'var(--text-muted)';
     });
-  }
-
-  /**
-   * 更新切换按钮
-   */
-  private updateToggleButton() {
-    if (!this.toggleButton) return;
-
-    this.toggleButton.textContent = this.isExpanded ? '−' : '+';
-    this.toggleButton.title = this.isExpanded ? '收起流年信息' : '展开流年信息';
   }
 
   /**
@@ -121,20 +111,15 @@ export class LiuNianInfoManager {
    */
   toggle() {
     this.isExpanded = !this.isExpanded;
-    this.updateToggleButton();
-    this.updateContainerVisibility();
+
+    if (this.toggleButton) {
+      this.toggleButton.textContent = this.isExpanded ? '▼' : '▶';
+    }
 
     // 重新渲染表格以显示/隐藏详细信息
     setTimeout(() => {
       this.reRenderTable();
     }, 150); // 等待动画完成一半时重新渲染
-
-    // 触发自定义事件，通知父组件状态变化
-    const event = new CustomEvent('liunian-info-toggle', {
-      detail: { isExpanded: this.isExpanded },
-      bubbles: true
-    });
-    this.container.dispatchEvent(event);
 
     console.log(`🎯 流年信息栏${this.isExpanded ? '展开' : '收起'}`);
   }
@@ -163,31 +148,11 @@ export class LiuNianInfoManager {
 
     this.infoContainer = this.liuNianSection.createDiv({ cls: 'bazi-liunian-info-container' });
     this.infoContainer.style.cssText = `
+      display: block;
+      border: 1px solid var(--background-modifier-border);
+      border-radius: 4px;
       overflow: hidden;
-      transition: all 0.3s ease;
     `;
-
-    this.updateContainerVisibility();
-  }
-
-  /**
-   * 更新容器可见性
-   */
-  private updateContainerVisibility() {
-    if (!this.infoContainer) return;
-
-    if (this.isExpanded) {
-      this.infoContainer.style.maxHeight = 'none';
-      this.infoContainer.style.opacity = '1';
-      this.infoContainer.style.marginTop = '12px';
-      this.infoContainer.style.display = 'block';
-    } else {
-      // 收起时仍然显示，但高度受限
-      this.infoContainer.style.maxHeight = 'auto';
-      this.infoContainer.style.opacity = '1';
-      this.infoContainer.style.marginTop = '12px';
-      this.infoContainer.style.display = 'block';
-    }
   }
 
   /**
@@ -347,13 +312,15 @@ export class LiuNianInfoManager {
     const tableContainer = this.infoContainer.createDiv({ cls: 'bazi-combined-table-container' });
     tableContainer.style.cssText = `
       overflow-x: auto;
+      background: var(--background-primary);
     `;
 
-    const table = tableContainer.createEl('table', { cls: 'bazi-combined-table' });
+    const table = tableContainer.createEl('table', { cls: 'bazi-view-table bazi-combined-table' });
     table.style.cssText = `
       width: 100%;
       border-collapse: collapse;
-      font-size: 12px;
+      font-size: 11px;
+      min-width: 800px;
     `;
 
     // 创建合并表格内容
@@ -933,7 +900,7 @@ export class LiuNianInfoManager {
       text-align: center;
       font-size: 11px;
       color: var(--text-normal);
-      min-width: 50px;
+      min-width: 60px;
     `;
   }
 
@@ -948,7 +915,7 @@ export class LiuNianInfoManager {
       font-size: 11px;
       cursor: pointer;
       transition: all 0.2s ease;
-      min-width: 50px;
+      min-width: 60px;
     `;
   }
 

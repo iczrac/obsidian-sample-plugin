@@ -56,32 +56,32 @@ export class DaYunInfoManager {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 8px 0;
+      padding: 8px 12px;
+      background: var(--background-secondary);
+      border: 1px solid var(--background-modifier-border);
+      border-radius: 4px;
+      margin-bottom: 8px;
       cursor: pointer;
-      user-select: none;
+      transition: all 0.2s ease;
     `;
 
-    // 标题
-    const title = header.createEl('h3', { 
-      text: '大运信息', 
-      cls: 'bazi-view-subtitle' 
+    // 标题文本
+    const titleText = header.createEl('span', {
+      text: '大运信息',
+      cls: 'bazi-dayun-info-title'
     });
-    title.style.cssText = `
-      margin: 0;
-      flex: 1;
+    titleText.style.cssText = `
+      font-weight: bold;
+      color: var(--text-normal);
+      font-size: 14px;
     `;
 
-    // 收缩/展开按钮
-    this.toggleButton = header.createDiv({ cls: 'bazi-dayun-info-toggle' });
-    this.updateToggleButton();
+    // 切换按钮
+    this.toggleButton = header.createEl('span', {
+      text: this.isExpanded ? '▼' : '▶',
+      cls: 'bazi-dayun-info-toggle'
+    });
     this.toggleButton.style.cssText = `
-      width: 20px;
-      height: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 3px;
-      background: var(--background-modifier-border);
       color: var(--text-muted);
       font-size: 12px;
       transition: all 0.2s ease;
@@ -100,7 +100,7 @@ export class DaYunInfoManager {
     });
 
     this.toggleButton.addEventListener('mouseleave', () => {
-      this.toggleButton!.style.background = 'var(--background-modifier-border)';
+      this.toggleButton!.style.background = 'transparent';
       this.toggleButton!.style.color = 'var(--text-muted)';
     });
   }
@@ -113,41 +113,11 @@ export class DaYunInfoManager {
 
     this.infoContainer = this.daYunSection.createDiv({ cls: 'bazi-dayun-info-container' });
     this.infoContainer.style.cssText = `
+      display: block;
+      border: 1px solid var(--background-modifier-border);
+      border-radius: 4px;
       overflow: hidden;
-      transition: all 0.3s ease;
     `;
-
-    this.updateContainerVisibility();
-  }
-
-  /**
-   * 更新容器可见性
-   */
-  private updateContainerVisibility() {
-    if (!this.infoContainer) return;
-
-    if (this.isExpanded) {
-      this.infoContainer.style.maxHeight = 'none';
-      this.infoContainer.style.opacity = '1';
-      this.infoContainer.style.marginTop = '12px';
-      this.infoContainer.style.display = 'block';
-    } else {
-      // 收起时仍然显示，但高度受限
-      this.infoContainer.style.maxHeight = 'auto';
-      this.infoContainer.style.opacity = '1';
-      this.infoContainer.style.marginTop = '12px';
-      this.infoContainer.style.display = 'block';
-    }
-  }
-
-  /**
-   * 更新切换按钮
-   */
-  private updateToggleButton() {
-    if (!this.toggleButton) return;
-
-    this.toggleButton.textContent = this.isExpanded ? '−' : '+';
-    this.toggleButton.title = this.isExpanded ? '收起大运信息' : '展开大运信息';
   }
 
   /**
@@ -155,8 +125,10 @@ export class DaYunInfoManager {
    */
   toggle() {
     this.isExpanded = !this.isExpanded;
-    this.updateToggleButton();
-    this.updateContainerVisibility();
+
+    if (this.toggleButton) {
+      this.toggleButton.textContent = this.isExpanded ? '▼' : '▶';
+    }
 
     // 重新渲染表格以显示/隐藏详细信息
     setTimeout(() => {
@@ -274,15 +246,16 @@ export class DaYunInfoManager {
 
     const tableContainer = this.infoContainer.createDiv({ cls: 'bazi-dayun-table-container' });
     tableContainer.style.cssText = `
-      margin-top: 12px;
       overflow-x: auto;
+      background: var(--background-primary);
     `;
 
-    const table = tableContainer.createEl('table', { cls: 'bazi-dayun-table' });
+    const table = tableContainer.createEl('table', { cls: 'bazi-view-table bazi-dayun-table' });
     table.style.cssText = `
       width: 100%;
       border-collapse: collapse;
-      font-size: 12px;
+      font-size: 11px;
+      min-width: 800px;
     `;
 
     const daYunData = this.baziInfo.daYun.slice(0, 10); // 显示前10个大运

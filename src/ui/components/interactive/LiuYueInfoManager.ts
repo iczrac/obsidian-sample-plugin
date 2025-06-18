@@ -111,7 +111,7 @@ export class LiuYueInfoManager {
 
     this.infoContainer = this.liuYueSection.createDiv({ cls: 'bazi-liuyue-info-container' });
     this.infoContainer.style.cssText = `
-      display: ${this.isExpanded ? 'block' : 'none'};
+      display: block;
       border: 1px solid var(--background-modifier-border);
       border-radius: 4px;
       overflow: hidden;
@@ -123,19 +123,17 @@ export class LiuYueInfoManager {
    */
   private toggle() {
     this.isExpanded = !this.isExpanded;
-    
+
     if (this.toggleButton) {
       this.toggleButton.textContent = this.isExpanded ? '▼' : '▶';
     }
-    
-    if (this.infoContainer) {
-      this.infoContainer.style.display = this.isExpanded ? 'block' : 'none';
-    }
 
-    // 如果展开且没有数据，重新渲染
-    if (this.isExpanded && this.selectedYear > 0) {
+    // 重新渲染表格以显示/隐藏详细信息
+    setTimeout(() => {
       this.reRenderTable();
-    }
+    }, 150); // 等待动画完成一半时重新渲染
+
+    console.log(`🎯 流月信息栏${this.isExpanded ? '展开' : '收起'}`);
   }
 
   /**
@@ -202,13 +200,28 @@ export class LiuYueInfoManager {
       min-width: 800px;
     `;
 
-    // 创建各行（月份行已包含干支，不需要单独的干支行）
+    // 创建表格内容
+    this.createLiuYueTableContent(table, liuYueData);
+  }
+
+  /**
+   * 创建流月表格内容
+   */
+  private createLiuYueTableContent(table: HTMLElement, liuYueData: any[]) {
+    // 清空表格
+    table.empty();
+
+    // 始终显示的行：月份行（包含干支）
     this.createMonthRow(table, liuYueData);
-    this.createShiShenRow(table, liuYueData);
-    this.createDiShiRow(table, liuYueData);
-    this.createXunKongRow(table, liuYueData);
-    this.createNaYinRow(table, liuYueData);
-    this.createShenShaRow(table, liuYueData);
+
+    // 展开时显示的详细信息
+    if (this.isExpanded) {
+      this.createShiShenRow(table, liuYueData);
+      this.createDiShiRow(table, liuYueData);
+      this.createXunKongRow(table, liuYueData);
+      this.createNaYinRow(table, liuYueData);
+      this.createShenShaRow(table, liuYueData);
+    }
   }
 
   /**
@@ -573,10 +586,14 @@ export class LiuYueInfoManager {
    * 重新渲染表格（在展开/收起时调用）
    */
   private reRenderTable() {
-    if (!this.infoContainer) return;
+    if (!this.infoContainer || this.selectedYear === 0) return;
 
-    // 清空容器并重新创建流月信息
-    this.infoContainer.empty();
-    this.addLiuYueInfo();
+    const table = this.infoContainer.querySelector('.bazi-liuyue-table') as HTMLElement;
+    if (table) {
+      const liuYueData = this.generateLiuYueData(this.selectedYear);
+      if (liuYueData && liuYueData.length > 0) {
+        this.createLiuYueTableContent(table, liuYueData);
+      }
+    }
   }
 }
