@@ -642,8 +642,19 @@ export class ExtendedColumnManager {
     const daYun = this.baziInfo.daYun[this.selectedDaYunIndex];
     console.log(`✅ 获取大运柱信息: ${daYun.ganZhi} (索引: ${this.selectedDaYunIndex})`);
 
+    // 准备四柱信息
+    const fourPillarInfo = {
+      yearStem: this.baziInfo.yearStem || '',
+      yearBranch: this.baziInfo.yearBranch || '',
+      monthStem: this.baziInfo.monthStem || '',
+      monthBranch: this.baziInfo.monthBranch || '',
+      dayBranch: this.baziInfo.dayBranch || '',
+      hourStem: this.baziInfo.timeStem || '',
+      hourBranch: this.baziInfo.timeBranch || ''
+    };
+
     // 使用现有的PillarCalculationService方法
-    return PillarCalculationService.calculateDaYunPillar(daYun, this.baziInfo.dayStem || '');
+    return PillarCalculationService.calculateDaYunPillar(daYun, this.baziInfo.dayStem || '', fourPillarInfo);
   }
 
   /**
@@ -665,7 +676,18 @@ export class ExtendedColumnManager {
       ganZhi: ganZhi
     };
 
-    return PillarCalculationService.calculateLiuNianPillar(liuNian, this.baziInfo.dayStem || '');
+    // 准备四柱信息
+    const fourPillarInfo = {
+      yearStem: this.baziInfo.yearStem || '',
+      yearBranch: this.baziInfo.yearBranch || '',
+      monthStem: this.baziInfo.monthStem || '',
+      monthBranch: this.baziInfo.monthBranch || '',
+      dayBranch: this.baziInfo.dayBranch || '',
+      hourStem: this.baziInfo.timeStem || '',
+      hourBranch: this.baziInfo.timeBranch || ''
+    };
+
+    return PillarCalculationService.calculateLiuNianPillar(liuNian, this.baziInfo.dayStem || '', fourPillarInfo);
   }
 
   /**
@@ -707,7 +729,18 @@ export class ExtendedColumnManager {
       day: this.currentSelectedLiuRi.day
     };
 
-    return PillarCalculationService.calculateLiuRiPillar(ganZhi, this.baziInfo.dayStem || '', dateInfo);
+    // 准备四柱信息
+    const fourPillarInfo = {
+      yearStem: this.baziInfo.yearStem || '',
+      yearBranch: this.baziInfo.yearBranch || '',
+      monthStem: this.baziInfo.monthStem || '',
+      monthBranch: this.baziInfo.monthBranch || '',
+      dayBranch: this.baziInfo.dayBranch || '',
+      hourStem: this.baziInfo.timeStem || '',
+      hourBranch: this.baziInfo.timeBranch || ''
+    };
+
+    return PillarCalculationService.calculateLiuRiPillar(ganZhi, this.baziInfo.dayStem || '', dateInfo, fourPillarInfo);
   }
 
   /**
@@ -732,7 +765,18 @@ export class ExtendedColumnManager {
         hour: this.currentSelectedLiuShi.timeIndex !== undefined ? this.currentSelectedLiuShi.timeIndex * 2 : undefined
       };
 
-      return PillarCalculationService.calculateLiuShiPillar(this.currentSelectedLiuShi.ganZhi, this.baziInfo.dayStem || '', timeInfo);
+      // 准备四柱信息
+      const fourPillarInfo = {
+        yearStem: this.baziInfo.yearStem || '',
+        yearBranch: this.baziInfo.yearBranch || '',
+        monthStem: this.baziInfo.monthStem || '',
+        monthBranch: this.baziInfo.monthBranch || '',
+        dayBranch: this.baziInfo.dayBranch || '',
+        hourStem: this.baziInfo.timeStem || '',
+        hourBranch: this.baziInfo.timeBranch || ''
+      };
+
+      return PillarCalculationService.calculateLiuShiPillar(this.currentSelectedLiuShi.ganZhi, this.baziInfo.dayStem || '', timeInfo, fourPillarInfo);
     }
 
     // 否则计算流时干支（使用timeIndex转换为标准时间）
@@ -757,7 +801,18 @@ export class ExtendedColumnManager {
       hour: standardTime
     };
 
-    return PillarCalculationService.calculateLiuShiPillar(ganZhi, this.baziInfo.dayStem || '', timeInfo);
+    // 准备四柱信息
+    const fourPillarInfo = {
+      yearStem: this.baziInfo.yearStem || '',
+      yearBranch: this.baziInfo.yearBranch || '',
+      monthStem: this.baziInfo.monthStem || '',
+      monthBranch: this.baziInfo.monthBranch || '',
+      dayBranch: this.baziInfo.dayBranch || '',
+      hourStem: this.baziInfo.timeStem || '',
+      hourBranch: this.baziInfo.timeBranch || ''
+    };
+
+    return PillarCalculationService.calculateLiuShiPillar(ganZhi, this.baziInfo.dayStem || '', timeInfo, fourPillarInfo);
   }
 
   /**

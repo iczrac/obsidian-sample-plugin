@@ -69,137 +69,264 @@ export class ShenShaAlgorithms {
 
   /**
    * 判断桃花
+   * @param yearBranch 年支
    * @param branch 地支
    * @returns 是否为桃花
    */
-  static isTaoHua(branch: string): boolean {
-    return ['卯', '酉', '子', '午'].includes(branch);
+  static isTaoHua(yearBranch: string, branch: string): boolean {
+    // 桃花的计算规则：寅午戌见卯，申子辰见酉，巳酉丑见午，亥卯未见子
+    const map: {[key: string]: string} = {
+      '寅': '卯', '午': '卯', '戌': '卯',
+      '申': '酉', '子': '酉', '辰': '酉',
+      '巳': '午', '酉': '午', '丑': '午',
+      '亥': '子', '卯': '子', '未': '子'
+    };
+    return map[yearBranch] === branch;
   }
 
   /**
    * 判断华盖
+   * @param yearBranch 年支
    * @param branch 地支
    * @returns 是否为华盖
    */
-  static isHuaGai(branch: string): boolean {
-    return ['戌', '辰', '未', '丑'].includes(branch);
+  static isHuaGai(yearBranch: string, branch: string): boolean {
+    // 华盖的计算规则：寅午戌见戌，申子辰见辰，巳酉丑见丑，亥卯未见未
+    const map: {[key: string]: string} = {
+      '寅': '戌', '午': '戌', '戌': '戌',
+      '申': '辰', '子': '辰', '辰': '辰',
+      '巳': '丑', '酉': '丑', '丑': '丑',
+      '亥': '未', '卯': '未', '未': '未'
+    };
+    return map[yearBranch] === branch;
   }
 
   /**
    * 判断文昌
+   * @param yearStem 年干
    * @param branch 地支
    * @returns 是否为文昌
    */
-  static isWenChang(branch: string): boolean {
-    return ['巳', '申', '亥', '寅'].includes(branch);
+  static isWenChang(yearStem: string, branch: string): boolean {
+    // 文昌的计算规则：甲乙见巳，丙丁见申，戊己见申，庚辛见亥，壬癸见寅
+    const map: {[key: string]: string} = {
+      '甲': '巳', '乙': '巳',
+      '丙': '申', '丁': '申',
+      '戊': '申', '己': '申',
+      '庚': '亥', '辛': '亥',
+      '壬': '寅', '癸': '寅'
+    };
+    return map[yearStem] === branch;
   }
 
   /**
    * 判断将星
-   * @param dayStem 日干
+   * @param yearBranch 年支
    * @param branch 地支
    * @returns 是否为将星
    */
-  static isJiangXing(dayStem: string, branch: string): boolean {
-    const map: {[key: string]: string[]} = {
-      '甲': ['子'], '乙': ['酉'], '丙': ['午'], '丁': ['卯'],
-      '戊': ['子'], '己': ['酉'], '庚': ['午'], '辛': ['卯'],
-      '壬': ['子'], '癸': ['酉']
+  static isJiangXing(yearBranch: string, branch: string): boolean {
+    // 将星的计算规则：寅午戌见午，申子辰见子，巳酉丑见酉，亥卯未见卯
+    const map: {[key: string]: string} = {
+      '寅': '午', '午': '午', '戌': '午',
+      '申': '子', '子': '子', '辰': '子',
+      '巳': '酉', '酉': '酉', '丑': '酉',
+      '亥': '卯', '卯': '卯', '未': '卯'
     };
-    return map[dayStem]?.includes(branch) || false;
+    return map[yearBranch] === branch;
   }
 
   /**
    * 判断驿马
+   * @param yearBranch 年支
    * @param branch 地支
    * @returns 是否为驿马
    */
-  static isYiMa(branch: string): boolean {
-    return ['寅', '申', '巳', '亥'].includes(branch);
+  static isYiMa(yearBranch: string, branch: string): boolean {
+    // 驿马的计算规则：寅午戌见申，申子辰见寅，巳酉丑见亥，亥卯未见巳
+    const map: {[key: string]: string} = {
+      '寅': '申', '午': '申', '戌': '申',
+      '申': '寅', '子': '寅', '辰': '寅',
+      '巳': '亥', '酉': '亥', '丑': '亥',
+      '亥': '巳', '卯': '巳', '未': '巳'
+    };
+    return map[yearBranch] === branch;
   }
 
   /**
    * 判断天德
+   * @param monthBranch 月支
    * @param stem 天干
-   * @param branch 地支
    * @returns 是否为天德
    */
-  static isTianDe(stem: string, branch: string): boolean {
-    const stemMap: {[key: string]: string[]} = {
-      '甲': ['丁'], '乙': ['申'], '丙': ['壬'], '丁': ['辛'],
-      '戊': ['亥'], '己': ['甲'], '庚': ['乙'], '辛': ['戊'],
-      '壬': ['丙'], '癸': ['己']
+  static isTianDe(monthBranch: string, stem: string): boolean {
+    // 天德的计算规则：根据月份查询对应的天干
+    // 正月丁，二月申，三月壬，四月辛，五月亥，六月甲，七月癸，八月寅，九月丙，十月乙，十一月巳，十二月庚
+    const monthToNumber: {[key: string]: number} = {
+      '寅': 1, '卯': 2, '辰': 3, '巳': 4, '午': 5, '未': 6,
+      '申': 7, '酉': 8, '戌': 9, '亥': 10, '子': 11, '丑': 12
     };
-    const branchMap: {[key: string]: string[]} = {
-      '子': ['壬'], '丑': ['癸'], '寅': ['甲'], '卯': ['乙'],
-      '辰': ['戊'], '巳': ['丙'], '午': ['丁'], '未': ['己'],
-      '申': ['庚'], '酉': ['辛'], '戌': ['戊'], '亥': ['壬']
+
+    const tianDeMap: {[key: number]: string} = {
+      1: '丁',   // 正月
+      2: '申',   // 二月（地支）
+      3: '壬',   // 三月
+      4: '辛',   // 四月
+      5: '亥',   // 五月（地支）
+      6: '甲',   // 六月
+      7: '癸',   // 七月
+      8: '寅',   // 八月（地支）
+      9: '丙',   // 九月
+      10: '乙',  // 十月
+      11: '巳',  // 十一月（地支）
+      12: '庚'   // 十二月
     };
-    return stemMap[stem]?.includes(stem) || branchMap[branch]?.includes(stem) || false;
+
+    const monthNumber = monthToNumber[monthBranch];
+    return monthNumber ? tianDeMap[monthNumber] === stem : false;
   }
 
   /**
    * 判断月德
+   * @param monthBranch 月支
    * @param stem 天干
    * @returns 是否为月德
    */
-  static isYueDe(stem: string): boolean {
-    const yueDeStems = ['丙', '甲', '庚', '丁', '乙'];
-    return yueDeStems.includes(stem);
+  static isYueDe(monthBranch: string, stem: string): boolean {
+    // 月德的计算规则：根据月份查询对应的天干
+    // 正月丙，二月甲，三月丁，四月辛，五月己，六月丁，七月壬，八月辛，九月戊，十月乙，十一月己，十二月丁
+    const monthToNumber: {[key: string]: number} = {
+      '寅': 1, '卯': 2, '辰': 3, '巳': 4, '午': 5, '未': 6,
+      '申': 7, '酉': 8, '戌': 9, '亥': 10, '子': 11, '丑': 12
+    };
+
+    const yueDeMap: {[key: number]: string} = {
+      1: '丙',   // 正月
+      2: '甲',   // 二月
+      3: '丁',   // 三月
+      4: '辛',   // 四月
+      5: '己',   // 五月
+      6: '丁',   // 六月
+      7: '壬',   // 七月
+      8: '辛',   // 八月
+      9: '戊',   // 九月
+      10: '乙',  // 十月
+      11: '己',  // 十一月
+      12: '丁'   // 十二月
+    };
+
+    const monthNumber = monthToNumber[monthBranch];
+    return monthNumber ? yueDeMap[monthNumber] === stem : false;
   }
 
   /**
    * 判断天医
+   * @param yearStem 年干
    * @param branch 地支
    * @returns 是否为天医
    */
-  static isTianYi(branch: string): boolean {
-    return ['亥', '子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌'].includes(branch);
+  static isTianYi(yearStem: string, branch: string): boolean {
+    // 天医的计算规则：根据年干查询对应的地支
+    // 甲见丑，乙见子，丙见亥，丁见戌，戊见酉，己见申，庚见未，辛见午，壬见巳，癸见辰
+    const tianYiMap: {[key: string]: string} = {
+      '甲': '丑',
+      '乙': '子',
+      '丙': '亥',
+      '丁': '戌',
+      '戊': '酉',
+      '己': '申',
+      '庚': '未',
+      '辛': '午',
+      '壬': '巳',
+      '癸': '辰'
+    };
+
+    return tianYiMap[yearStem] === branch;
   }
 
   /**
    * 判断劫煞
+   * @param yearBranch 年支
    * @param branch 地支
    * @returns 是否为劫煞
    */
-  static isJieSha(branch: string): boolean {
-    return ['巳', '寅', '亥', '申'].includes(branch);
+  static isJieSha(yearBranch: string, branch: string): boolean {
+    // 劫煞的计算规则：寅午戌见亥，申子辰见巳，巳酉丑见寅，亥卯未见申
+    const map: {[key: string]: string} = {
+      '寅': '亥', '午': '亥', '戌': '亥',
+      '申': '巳', '子': '巳', '辰': '巳',
+      '巳': '寅', '酉': '寅', '丑': '寅',
+      '亥': '申', '卯': '申', '未': '申'
+    };
+    return map[yearBranch] === branch;
   }
 
   /**
    * 判断灾煞
+   * @param yearBranch 年支
    * @param branch 地支
    * @returns 是否为灾煞
    */
-  static isZaiSha(branch: string): boolean {
-    return ['午', '卯', '子', '酉'].includes(branch);
+  static isZaiSha(yearBranch: string, branch: string): boolean {
+    // 灾煞的计算规则：寅午戌见子，申子辰见午，巳酉丑见卯，亥卯未见酉
+    const map: {[key: string]: string} = {
+      '寅': '子', '午': '子', '戌': '子',
+      '申': '午', '子': '午', '辰': '午',
+      '巳': '卯', '酉': '卯', '丑': '卯',
+      '亥': '酉', '卯': '酉', '未': '酉'
+    };
+    return map[yearBranch] === branch;
   }
 
   /**
    * 判断天刑
+   * @param yearBranch 年支
    * @param branch 地支
    * @returns 是否为天刑
    */
-  static isTianXing(branch: string): boolean {
-    return ['寅', '巳', '申', '亥'].includes(branch);
+  static isTianXing(yearBranch: string, branch: string): boolean {
+    // 天刑的计算规则：寅午戌见寅，申子辰见申，巳酉丑见巳，亥卯未见亥
+    const map: {[key: string]: string} = {
+      '寅': '寅', '午': '寅', '戌': '寅',
+      '申': '申', '子': '申', '辰': '申',
+      '巳': '巳', '酉': '巳', '丑': '巳',
+      '亥': '亥', '卯': '亥', '未': '亥'
+    };
+    return map[yearBranch] === branch;
   }
 
   /**
    * 判断孤辰
+   * @param yearBranch 年支
    * @param branch 地支
    * @returns 是否为孤辰
    */
-  static isGuChen(branch: string): boolean {
-    return ['寅', '巳', '申', '亥'].includes(branch);
+  static isGuChen(yearBranch: string, branch: string): boolean {
+    // 孤辰的计算规则：寅卯辰见寅，巳午未见巳，申酉戌见申，亥子丑见亥
+    const map: {[key: string]: string} = {
+      '寅': '寅', '卯': '寅', '辰': '寅',
+      '巳': '巳', '午': '巳', '未': '巳',
+      '申': '申', '酉': '申', '戌': '申',
+      '亥': '亥', '子': '亥', '丑': '亥'
+    };
+    return map[yearBranch] === branch;
   }
 
   /**
    * 判断寡宿
+   * @param yearBranch 年支
    * @param branch 地支
    * @returns 是否为寡宿
    */
-  static isGuaSu(branch: string): boolean {
-    return ['辰', '未', '戌', '丑'].includes(branch);
+  static isGuaSu(yearBranch: string, branch: string): boolean {
+    // 寡宿的计算规则：寅卯辰见戌，巳午未见丑，申酉戌见辰，亥子丑见未
+    const map: {[key: string]: string} = {
+      '寅': '戌', '卯': '戌', '辰': '戌',
+      '巳': '丑', '午': '丑', '未': '丑',
+      '申': '辰', '酉': '辰', '戌': '辰',
+      '亥': '未', '子': '未', '丑': '未'
+    };
+    return map[yearBranch] === branch;
   }
 
   /**
@@ -275,22 +402,290 @@ export class ShenShaAlgorithms {
 
   /**
    * 判断空亡
+   * @param dayStem 日干
    * @param dayBranch 日支
    * @param branch 地支
    * @returns 是否为空亡
    */
-  static isKongWang(dayBranch: string, branch: string): boolean {
-    // 空亡的计算规则：以日柱为主，柱中年、月、时支见者为空亡
-    // 子丑空在戌亥，寅卯空在申酉，辰巳空在午未，午未空在辰巳，申酉空在寅卯，戌亥空在子丑
-    const kongWangMap: {[key: string]: string[]} = {
-      '子': ['戌', '亥'], '丑': ['戌', '亥'],
-      '寅': ['申', '酉'], '卯': ['申', '酉'],
-      '辰': ['午', '未'], '巳': ['午', '未'],
-      '午': ['辰', '巳'], '未': ['辰', '巳'],
-      '申': ['寅', '卯'], '酉': ['寅', '卯'],
-      '戌': ['子', '丑'], '亥': ['子', '丑']
+  static isKongWang(dayStem: string, dayBranch: string, branch: string): boolean {
+    // 空亡的计算规则：根据日柱查旬空
+    // 甲子旬空戌亥，甲戌旬空申酉，甲申旬空午未，甲午旬空辰巳，甲辰旬空寅卯，甲寅旬空子丑
+    const dayGanZhi = dayStem + dayBranch;
+
+    // 确定日柱所在的旬
+    const xunMap: {[key: string]: string[]} = {
+      // 甲子旬（甲子、乙丑、丙寅、丁卯、戊辰、己巳、庚午、辛未、壬申、癸酉）
+      '甲子': ['戌', '亥'], '乙丑': ['戌', '亥'], '丙寅': ['戌', '亥'], '丁卯': ['戌', '亥'], '戊辰': ['戌', '亥'],
+      '己巳': ['戌', '亥'], '庚午': ['戌', '亥'], '辛未': ['戌', '亥'], '壬申': ['戌', '亥'], '癸酉': ['戌', '亥'],
+
+      // 甲戌旬（甲戌、乙亥、丙子、丁丑、戊寅、己卯、庚辰、辛巳、壬午、癸未）
+      '甲戌': ['申', '酉'], '乙亥': ['申', '酉'], '丙子': ['申', '酉'], '丁丑': ['申', '酉'], '戊寅': ['申', '酉'],
+      '己卯': ['申', '酉'], '庚辰': ['申', '酉'], '辛巳': ['申', '酉'], '壬午': ['申', '酉'], '癸未': ['申', '酉'],
+
+      // 甲申旬（甲申、乙酉、丙戌、丁亥、戊子、己丑、庚寅、辛卯、壬辰、癸巳）
+      '甲申': ['午', '未'], '乙酉': ['午', '未'], '丙戌': ['午', '未'], '丁亥': ['午', '未'], '戊子': ['午', '未'],
+      '己丑': ['午', '未'], '庚寅': ['午', '未'], '辛卯': ['午', '未'], '壬辰': ['午', '未'], '癸巳': ['午', '未'],
+
+      // 甲午旬（甲午、乙未、丙申、丁酉、戊戌、己亥、庚子、辛丑、壬寅、癸卯）
+      '甲午': ['辰', '巳'], '乙未': ['辰', '巳'], '丙申': ['辰', '巳'], '丁酉': ['辰', '巳'], '戊戌': ['辰', '巳'],
+      '己亥': ['辰', '巳'], '庚子': ['辰', '巳'], '辛丑': ['辰', '巳'], '壬寅': ['辰', '巳'], '癸卯': ['辰', '巳'],
+
+      // 甲辰旬（甲辰、乙巳、丙午、丁未、戊申、己酉、庚戌、辛亥、壬子、癸丑）
+      '甲辰': ['寅', '卯'], '乙巳': ['寅', '卯'], '丙午': ['寅', '卯'], '丁未': ['寅', '卯'], '戊申': ['寅', '卯'],
+      '己酉': ['寅', '卯'], '庚戌': ['寅', '卯'], '辛亥': ['寅', '卯'], '壬子': ['寅', '卯'], '癸丑': ['寅', '卯'],
+
+      // 甲寅旬（甲寅、乙卯、丙辰、丁巳、戊午、己未、庚申、辛酉、壬戌、癸亥）
+      '甲寅': ['子', '丑'], '乙卯': ['子', '丑'], '丙辰': ['子', '丑'], '丁巳': ['子', '丑'], '戊午': ['子', '丑'],
+      '己未': ['子', '丑'], '庚申': ['子', '丑'], '辛酉': ['子', '丑'], '壬戌': ['子', '丑'], '癸亥': ['子', '丑']
     };
-    return kongWangMap[dayBranch]?.includes(branch) || false;
+
+    return xunMap[dayGanZhi]?.includes(branch) || false;
+  }
+
+  /**
+   * 判断年空亡
+   * @param yearStem 年干
+   * @param yearBranch 年支
+   * @param branch 地支
+   * @returns 是否为年空亡
+   */
+  static isNianKongWang(yearStem: string, yearBranch: string, branch: string): boolean {
+    // 年空亡：根据年柱查旬空
+    const yearGanZhi = yearStem + yearBranch;
+
+    // 完整的旬空映射表
+    const xunMap: {[key: string]: string[]} = {
+      '甲子': ['戌', '亥'], '乙丑': ['戌', '亥'], '丙寅': ['戌', '亥'], '丁卯': ['戌', '亥'], '戊辰': ['戌', '亥'],
+      '己巳': ['戌', '亥'], '庚午': ['戌', '亥'], '辛未': ['戌', '亥'], '壬申': ['戌', '亥'], '癸酉': ['戌', '亥'],
+      '甲戌': ['申', '酉'], '乙亥': ['申', '酉'], '丙子': ['申', '酉'], '丁丑': ['申', '酉'], '戊寅': ['申', '酉'],
+      '己卯': ['申', '酉'], '庚辰': ['申', '酉'], '辛巳': ['申', '酉'], '壬午': ['申', '酉'], '癸未': ['申', '酉'],
+      '甲申': ['午', '未'], '乙酉': ['午', '未'], '丙戌': ['午', '未'], '丁亥': ['午', '未'], '戊子': ['午', '未'],
+      '己丑': ['午', '未'], '庚寅': ['午', '未'], '辛卯': ['午', '未'], '壬辰': ['午', '未'], '癸巳': ['午', '未'],
+      '甲午': ['辰', '巳'], '乙未': ['辰', '巳'], '丙申': ['辰', '巳'], '丁酉': ['辰', '巳'], '戊戌': ['辰', '巳'],
+      '己亥': ['辰', '巳'], '庚子': ['辰', '巳'], '辛丑': ['辰', '巳'], '壬寅': ['辰', '巳'], '癸卯': ['辰', '巳'],
+      '甲辰': ['寅', '卯'], '乙巳': ['寅', '卯'], '丙午': ['寅', '卯'], '丁未': ['寅', '卯'], '戊申': ['寅', '卯'],
+      '己酉': ['寅', '卯'], '庚戌': ['寅', '卯'], '辛亥': ['寅', '卯'], '壬子': ['寅', '卯'], '癸丑': ['寅', '卯'],
+      '甲寅': ['子', '丑'], '乙卯': ['子', '丑'], '丙辰': ['子', '丑'], '丁巳': ['子', '丑'], '戊午': ['子', '丑'],
+      '己未': ['子', '丑'], '庚申': ['子', '丑'], '辛酉': ['子', '丑'], '壬戌': ['子', '丑'], '癸亥': ['子', '丑']
+    };
+
+    return xunMap[yearGanZhi]?.includes(branch) || false;
+  }
+
+  /**
+   * 判断月空亡
+   * @param monthStem 月干
+   * @param monthBranch 月支
+   * @param branch 地支
+   * @returns 是否为月空亡
+   */
+  static isYueKongWang(monthStem: string, monthBranch: string, branch: string): boolean {
+    // 月空亡：根据月柱查旬空
+    const monthGanZhi = monthStem + monthBranch;
+
+    // 完整的旬空映射表
+    const xunMap: {[key: string]: string[]} = {
+      '甲子': ['戌', '亥'], '乙丑': ['戌', '亥'], '丙寅': ['戌', '亥'], '丁卯': ['戌', '亥'], '戊辰': ['戌', '亥'],
+      '己巳': ['戌', '亥'], '庚午': ['戌', '亥'], '辛未': ['戌', '亥'], '壬申': ['戌', '亥'], '癸酉': ['戌', '亥'],
+      '甲戌': ['申', '酉'], '乙亥': ['申', '酉'], '丙子': ['申', '酉'], '丁丑': ['申', '酉'], '戊寅': ['申', '酉'],
+      '己卯': ['申', '酉'], '庚辰': ['申', '酉'], '辛巳': ['申', '酉'], '壬午': ['申', '酉'], '癸未': ['申', '酉'],
+      '甲申': ['午', '未'], '乙酉': ['午', '未'], '丙戌': ['午', '未'], '丁亥': ['午', '未'], '戊子': ['午', '未'],
+      '己丑': ['午', '未'], '庚寅': ['午', '未'], '辛卯': ['午', '未'], '壬辰': ['午', '未'], '癸巳': ['午', '未'],
+      '甲午': ['辰', '巳'], '乙未': ['辰', '巳'], '丙申': ['辰', '巳'], '丁酉': ['辰', '巳'], '戊戌': ['辰', '巳'],
+      '己亥': ['辰', '巳'], '庚子': ['辰', '巳'], '辛丑': ['辰', '巳'], '壬寅': ['辰', '巳'], '癸卯': ['辰', '巳'],
+      '甲辰': ['寅', '卯'], '乙巳': ['寅', '卯'], '丙午': ['寅', '卯'], '丁未': ['寅', '卯'], '戊申': ['寅', '卯'],
+      '己酉': ['寅', '卯'], '庚戌': ['寅', '卯'], '辛亥': ['寅', '卯'], '壬子': ['寅', '卯'], '癸丑': ['寅', '卯'],
+      '甲寅': ['子', '丑'], '乙卯': ['子', '丑'], '丙辰': ['子', '丑'], '丁巳': ['子', '丑'], '戊午': ['子', '丑'],
+      '己未': ['子', '丑'], '庚申': ['子', '丑'], '辛酉': ['子', '丑'], '壬戌': ['子', '丑'], '癸亥': ['子', '丑']
+    };
+
+    return xunMap[monthGanZhi]?.includes(branch) || false;
+  }
+
+  /**
+   * 判断日空亡（原有的空亡算法）
+   * @param dayStem 日干
+   * @param dayBranch 日支
+   * @param branch 地支
+   * @returns 是否为日空亡
+   */
+  static isRiKongWang(dayStem: string, dayBranch: string, branch: string): boolean {
+    // 日空亡：根据日柱查旬空（与原有空亡算法相同）
+    return ShenShaAlgorithms.isKongWang(dayStem, dayBranch, branch);
+  }
+
+  /**
+   * 判断时空亡
+   * @param hourStem 时干
+   * @param hourBranch 时支
+   * @param branch 地支
+   * @returns 是否为时空亡
+   */
+  static isShiKongWang(hourStem: string, hourBranch: string, branch: string): boolean {
+    // 时空亡：根据时柱查旬空
+    const hourGanZhi = hourStem + hourBranch;
+
+    // 完整的旬空映射表
+    const xunMap: {[key: string]: string[]} = {
+      '甲子': ['戌', '亥'], '乙丑': ['戌', '亥'], '丙寅': ['戌', '亥'], '丁卯': ['戌', '亥'], '戊辰': ['戌', '亥'],
+      '己巳': ['戌', '亥'], '庚午': ['戌', '亥'], '辛未': ['戌', '亥'], '壬申': ['戌', '亥'], '癸酉': ['戌', '亥'],
+      '甲戌': ['申', '酉'], '乙亥': ['申', '酉'], '丙子': ['申', '酉'], '丁丑': ['申', '酉'], '戊寅': ['申', '酉'],
+      '己卯': ['申', '酉'], '庚辰': ['申', '酉'], '辛巳': ['申', '酉'], '壬午': ['申', '酉'], '癸未': ['申', '酉'],
+      '甲申': ['午', '未'], '乙酉': ['午', '未'], '丙戌': ['午', '未'], '丁亥': ['午', '未'], '戊子': ['午', '未'],
+      '己丑': ['午', '未'], '庚寅': ['午', '未'], '辛卯': ['午', '未'], '壬辰': ['午', '未'], '癸巳': ['午', '未'],
+      '甲午': ['辰', '巳'], '乙未': ['辰', '巳'], '丙申': ['辰', '巳'], '丁酉': ['辰', '巳'], '戊戌': ['辰', '巳'],
+      '己亥': ['辰', '巳'], '庚子': ['辰', '巳'], '辛丑': ['辰', '巳'], '壬寅': ['辰', '巳'], '癸卯': ['辰', '巳'],
+      '甲辰': ['寅', '卯'], '乙巳': ['寅', '卯'], '丙午': ['寅', '卯'], '丁未': ['寅', '卯'], '戊申': ['寅', '卯'],
+      '己酉': ['寅', '卯'], '庚戌': ['寅', '卯'], '辛亥': ['寅', '卯'], '壬子': ['寅', '卯'], '癸丑': ['寅', '卯'],
+      '甲寅': ['子', '丑'], '乙卯': ['子', '丑'], '丙辰': ['子', '丑'], '丁巳': ['子', '丑'], '戊午': ['子', '丑'],
+      '己未': ['子', '丑'], '庚申': ['子', '丑'], '辛酉': ['子', '丑'], '壬戌': ['子', '丑'], '癸亥': ['子', '丑']
+    };
+
+    return xunMap[hourGanZhi]?.includes(branch) || false;
+  }
+
+  /**
+   * 判断命宫空亡
+   * @param mingGongStem 命宫干
+   * @param mingGongBranch 命宫支
+   * @param branch 地支
+   * @returns 是否为命宫空亡
+   */
+  static isMingGongKongWang(mingGongStem: string, mingGongBranch: string, branch: string): boolean {
+    // 命宫空亡：根据命宫干支查旬空
+    const mingGongGanZhi = mingGongStem + mingGongBranch;
+
+    // 完整的旬空映射表
+    const xunMap: {[key: string]: string[]} = {
+      '甲子': ['戌', '亥'], '乙丑': ['戌', '亥'], '丙寅': ['戌', '亥'], '丁卯': ['戌', '亥'], '戊辰': ['戌', '亥'],
+      '己巳': ['戌', '亥'], '庚午': ['戌', '亥'], '辛未': ['戌', '亥'], '壬申': ['戌', '亥'], '癸酉': ['戌', '亥'],
+      '甲戌': ['申', '酉'], '乙亥': ['申', '酉'], '丙子': ['申', '酉'], '丁丑': ['申', '酉'], '戊寅': ['申', '酉'],
+      '己卯': ['申', '酉'], '庚辰': ['申', '酉'], '辛巳': ['申', '酉'], '壬午': ['申', '酉'], '癸未': ['申', '酉'],
+      '甲申': ['午', '未'], '乙酉': ['午', '未'], '丙戌': ['午', '未'], '丁亥': ['午', '未'], '戊子': ['午', '未'],
+      '己丑': ['午', '未'], '庚寅': ['午', '未'], '辛卯': ['午', '未'], '壬辰': ['午', '未'], '癸巳': ['午', '未'],
+      '甲午': ['辰', '巳'], '乙未': ['辰', '巳'], '丙申': ['辰', '巳'], '丁酉': ['辰', '巳'], '戊戌': ['辰', '巳'],
+      '己亥': ['辰', '巳'], '庚子': ['辰', '巳'], '辛丑': ['辰', '巳'], '壬寅': ['辰', '巳'], '癸卯': ['辰', '巳'],
+      '甲辰': ['寅', '卯'], '乙巳': ['寅', '卯'], '丙午': ['寅', '卯'], '丁未': ['寅', '卯'], '戊申': ['寅', '卯'],
+      '己酉': ['寅', '卯'], '庚戌': ['寅', '卯'], '辛亥': ['寅', '卯'], '壬子': ['寅', '卯'], '癸丑': ['寅', '卯'],
+      '甲寅': ['子', '丑'], '乙卯': ['子', '丑'], '丙辰': ['子', '丑'], '丁巳': ['子', '丑'], '戊午': ['子', '丑'],
+      '己未': ['子', '丑'], '庚申': ['子', '丑'], '辛酉': ['子', '丑'], '壬戌': ['子', '丑'], '癸亥': ['子', '丑']
+    };
+
+    return xunMap[mingGongGanZhi]?.includes(branch) || false;
+  }
+
+  /**
+   * 判断身宫空亡
+   * @param shenGongStem 身宫干
+   * @param shenGongBranch 身宫支
+   * @param branch 地支
+   * @returns 是否为身宫空亡
+   */
+  static isShenGongKongWang(shenGongStem: string, shenGongBranch: string, branch: string): boolean {
+    // 身宫空亡：根据身宫干支查旬空
+    const shenGongGanZhi = shenGongStem + shenGongBranch;
+
+    // 完整的旬空映射表
+    const xunMap: {[key: string]: string[]} = {
+      '甲子': ['戌', '亥'], '乙丑': ['戌', '亥'], '丙寅': ['戌', '亥'], '丁卯': ['戌', '亥'], '戊辰': ['戌', '亥'],
+      '己巳': ['戌', '亥'], '庚午': ['戌', '亥'], '辛未': ['戌', '亥'], '壬申': ['戌', '亥'], '癸酉': ['戌', '亥'],
+      '甲戌': ['申', '酉'], '乙亥': ['申', '酉'], '丙子': ['申', '酉'], '丁丑': ['申', '酉'], '戊寅': ['申', '酉'],
+      '己卯': ['申', '酉'], '庚辰': ['申', '酉'], '辛巳': ['申', '酉'], '壬午': ['申', '酉'], '癸未': ['申', '酉'],
+      '甲申': ['午', '未'], '乙酉': ['午', '未'], '丙戌': ['午', '未'], '丁亥': ['午', '未'], '戊子': ['午', '未'],
+      '己丑': ['午', '未'], '庚寅': ['午', '未'], '辛卯': ['午', '未'], '壬辰': ['午', '未'], '癸巳': ['午', '未'],
+      '甲午': ['辰', '巳'], '乙未': ['辰', '巳'], '丙申': ['辰', '巳'], '丁酉': ['辰', '巳'], '戊戌': ['辰', '巳'],
+      '己亥': ['辰', '巳'], '庚子': ['辰', '巳'], '辛丑': ['辰', '巳'], '壬寅': ['辰', '巳'], '癸卯': ['辰', '巳'],
+      '甲辰': ['寅', '卯'], '乙巳': ['寅', '卯'], '丙午': ['寅', '卯'], '丁未': ['寅', '卯'], '戊申': ['寅', '卯'],
+      '己酉': ['寅', '卯'], '庚戌': ['寅', '卯'], '辛亥': ['寅', '卯'], '壬子': ['寅', '卯'], '癸丑': ['寅', '卯'],
+      '甲寅': ['子', '丑'], '乙卯': ['子', '丑'], '丙辰': ['子', '丑'], '丁巳': ['子', '丑'], '戊午': ['子', '丑'],
+      '己未': ['子', '丑'], '庚申': ['子', '丑'], '辛酉': ['子', '丑'], '壬戌': ['子', '丑'], '癸亥': ['子', '丑']
+    };
+
+    return xunMap[shenGongGanZhi]?.includes(branch) || false;
+  }
+
+  /**
+   * 判断胎元空亡
+   * @param taiYuanStem 胎元干
+   * @param taiYuanBranch 胎元支
+   * @param branch 地支
+   * @returns 是否为胎元空亡
+   */
+  static isTaiYuanKongWang(taiYuanStem: string, taiYuanBranch: string, branch: string): boolean {
+    // 胎元空亡：根据胎元干支查旬空
+    const taiYuanGanZhi = taiYuanStem + taiYuanBranch;
+
+    // 完整的旬空映射表
+    const xunMap: {[key: string]: string[]} = {
+      '甲子': ['戌', '亥'], '乙丑': ['戌', '亥'], '丙寅': ['戌', '亥'], '丁卯': ['戌', '亥'], '戊辰': ['戌', '亥'],
+      '己巳': ['戌', '亥'], '庚午': ['戌', '亥'], '辛未': ['戌', '亥'], '壬申': ['戌', '亥'], '癸酉': ['戌', '亥'],
+      '甲戌': ['申', '酉'], '乙亥': ['申', '酉'], '丙子': ['申', '酉'], '丁丑': ['申', '酉'], '戊寅': ['申', '酉'],
+      '己卯': ['申', '酉'], '庚辰': ['申', '酉'], '辛巳': ['申', '酉'], '壬午': ['申', '酉'], '癸未': ['申', '酉'],
+      '甲申': ['午', '未'], '乙酉': ['午', '未'], '丙戌': ['午', '未'], '丁亥': ['午', '未'], '戊子': ['午', '未'],
+      '己丑': ['午', '未'], '庚寅': ['午', '未'], '辛卯': ['午', '未'], '壬辰': ['午', '未'], '癸巳': ['午', '未'],
+      '甲午': ['辰', '巳'], '乙未': ['辰', '巳'], '丙申': ['辰', '巳'], '丁酉': ['辰', '巳'], '戊戌': ['辰', '巳'],
+      '己亥': ['辰', '巳'], '庚子': ['辰', '巳'], '辛丑': ['辰', '巳'], '壬寅': ['辰', '巳'], '癸卯': ['辰', '巳'],
+      '甲辰': ['寅', '卯'], '乙巳': ['寅', '卯'], '丙午': ['寅', '卯'], '丁未': ['寅', '卯'], '戊申': ['寅', '卯'],
+      '己酉': ['寅', '卯'], '庚戌': ['寅', '卯'], '辛亥': ['寅', '卯'], '壬子': ['寅', '卯'], '癸丑': ['寅', '卯'],
+      '甲寅': ['子', '丑'], '乙卯': ['子', '丑'], '丙辰': ['子', '丑'], '丁巳': ['子', '丑'], '戊午': ['子', '丑'],
+      '己未': ['子', '丑'], '庚申': ['子', '丑'], '辛酉': ['子', '丑'], '壬戌': ['子', '丑'], '癸亥': ['子', '丑']
+    };
+
+    return xunMap[taiYuanGanZhi]?.includes(branch) || false;
+  }
+
+  /**
+   * 综合空亡判断 - 检查所有柱的空亡情况
+   * @param params 包含所有柱信息的参数对象
+   * @param branch 要检查的地支
+   * @returns 空亡详情对象
+   */
+  static getKongWangDetails(params: {
+    yearStem: string, yearBranch: string,
+    monthStem: string, monthBranch: string,
+    dayStem: string, dayBranch: string,
+    hourStem: string, hourBranch: string,
+    mingGongStem?: string, mingGongBranch?: string,
+    shenGongStem?: string, shenGongBranch?: string,
+    taiYuanStem?: string, taiYuanBranch?: string
+  }, branch: string): {
+    hasKongWang: boolean,
+    details: {
+      年空: boolean,
+      月空: boolean,
+      日空: boolean,
+      时空: boolean,
+      命宫空?: boolean,
+      身宫空?: boolean,
+      胎元空?: boolean
+    }
+  } {
+    const details = {
+      年空: ShenShaAlgorithms.isNianKongWang(params.yearStem, params.yearBranch, branch),
+      月空: ShenShaAlgorithms.isYueKongWang(params.monthStem, params.monthBranch, branch),
+      日空: ShenShaAlgorithms.isRiKongWang(params.dayStem, params.dayBranch, branch),
+      时空: ShenShaAlgorithms.isShiKongWang(params.hourStem, params.hourBranch, branch)
+    };
+
+    // 可选的命宫、身宫、胎元空亡检查
+    if (params.mingGongStem && params.mingGongBranch) {
+      details['命宫空'] = ShenShaAlgorithms.isMingGongKongWang(params.mingGongStem, params.mingGongBranch, branch);
+    }
+
+    if (params.shenGongStem && params.shenGongBranch) {
+      details['身宫空'] = ShenShaAlgorithms.isShenGongKongWang(params.shenGongStem, params.shenGongBranch, branch);
+    }
+
+    if (params.taiYuanStem && params.taiYuanBranch) {
+      details['胎元空'] = ShenShaAlgorithms.isTaiYuanKongWang(params.taiYuanStem, params.taiYuanBranch, branch);
+    }
+
+    const hasKongWang = Object.values(details).some(value => value === true);
+
+    return {
+      hasKongWang,
+      details
+    };
   }
 
   /**
@@ -364,9 +759,9 @@ export class ShenShaAlgorithms {
     // 检查是否包含任一组三奇
     for (let i = 0; i <= stems.length - 3; i++) {
       const threeStem = stems.slice(i, i + 3);
-      if (this.arrayEquals(threeStem, tianShangSanQi) ||
-          this.arrayEquals(threeStem, diXiaSanQi) ||
-          this.arrayEquals(threeStem, renZhongSanQi)) {
+      if (ShenShaAlgorithms.arrayEquals(threeStem, tianShangSanQi) ||
+          ShenShaAlgorithms.arrayEquals(threeStem, diXiaSanQi) ||
+          ShenShaAlgorithms.arrayEquals(threeStem, renZhongSanQi)) {
         return true;
       }
     }
@@ -439,7 +834,7 @@ export class ShenShaAlgorithms {
     // 子年支红鸾在酉，丑年支红鸾在申，寅年支红鸾在未，卯年支红鸾在午，
     // 辰年支红鸾在巳，巳年支红鸾在辰，午年支红鸾在卯，未年支红鸾在寅，
     // 申年支红鸾在丑，酉年支红鸾在子，戌年支红鸾在亥，亥年支红鸾在戌
-    return this.isTianXi(yearBranch, branch);
+    return ShenShaAlgorithms.isTianXi(yearBranch, branch);
   }
 
   /**
@@ -450,7 +845,7 @@ export class ShenShaAlgorithms {
    */
   static isHongYan(yearBranch: string, branch: string): boolean {
     // 红艳的计算规则：与天喜、红鸾相同
-    return this.isTianXi(yearBranch, branch);
+    return ShenShaAlgorithms.isTianXi(yearBranch, branch);
   }
 
   /**
@@ -675,28 +1070,7 @@ export class ShenShaAlgorithms {
     return map[yearBranch] === branch;
   }
 
-  /**
-   * 判断天德合
-   * @param stem 天干
-   * @param branch 地支
-   * @returns 是否为天德合
-   */
-  static isTianDeHe(stem: string, branch: string): boolean {
-    // 天德合与天干的对应关系
-    const tianDeHeMap: {[key: string]: string} = {
-      '甲': '壬', '乙': '癸', '丙': '丁', '丁': '戊', '戊': '己',
-      '己': '庚', '庚': '辛', '辛': '壬', '壬': '癸', '癸': '甲'
-    };
 
-    // 天德合与地支的对应关系
-    const tianDeHeBranchMap: {[key: string]: string} = {
-      '子': '壬', '丑': '癸', '寅': '丁', '卯': '戊', '辰': '己',
-      '巳': '庚', '午': '辛', '未': '壬', '申': '癸', '酉': '甲',
-      '戌': '乙', '亥': '丙'
-    };
-
-    return tianDeHeMap[stem] === branch || tianDeHeBranchMap[branch] === stem;
-  }
 
   /**
    * 判断天空
@@ -786,6 +1160,515 @@ export class ShenShaAlgorithms {
   }
 
   /**
+   * 判断五鬼
+   * @param yearBranch 年支
+   * @param branch 地支
+   * @returns 是否为五鬼
+   */
+  static isWuGui(yearBranch: string, branch: string): boolean {
+    // 五鬼的计算规则：申子辰见卯，寅午戌见酉，巳酉丑见子，亥卯未见午
+    const map: {[key: string]: string} = {
+      '申': '卯', '子': '卯', '辰': '卯',
+      '寅': '酉', '午': '酉', '戌': '酉',
+      '巳': '子', '酉': '子', '丑': '子',
+      '亥': '午', '卯': '午', '未': '午'
+    };
+    return map[yearBranch] === branch;
+  }
+
+  /**
+   * 判断白虎
+   * @param yearBranch 年支
+   * @param branch 地支
+   * @returns 是否为白虎
+   */
+  static isBaiHu(yearBranch: string, branch: string): boolean {
+    // 白虎的计算规则：年支后九位
+    const map: {[key: string]: string} = {
+      '子': '申', '丑': '酉', '寅': '戌', '卯': '亥',
+      '辰': '子', '巳': '丑', '午': '寅', '未': '卯',
+      '申': '辰', '酉': '巳', '戌': '午', '亥': '未'
+    };
+    return map[yearBranch] === branch;
+  }
+
+  /**
+   * 判断天狗
+   * @param yearBranch 年支
+   * @param branch 地支
+   * @returns 是否为天狗
+   */
+  static isTianGou(yearBranch: string, branch: string): boolean {
+    // 天狗的计算规则：年支后十位
+    const map: {[key: string]: string} = {
+      '子': '戌', '丑': '亥', '寅': '子', '卯': '丑',
+      '辰': '寅', '巳': '卯', '午': '辰', '未': '巳',
+      '申': '午', '酉': '未', '戌': '申', '亥': '酉'
+    };
+    return map[yearBranch] === branch;
+  }
+
+  /**
+   * 判断三台
+   * @param yearStem 年干
+   * @param branch 地支
+   * @returns 是否为三台
+   */
+  static isSanTai(yearStem: string, branch: string): boolean {
+    // 三台的计算规则
+    const map: {[key: string]: string} = {
+      '甲': '寅', '乙': '卯', '丙': '巳', '丁': '午', '戊': '巳',
+      '己': '午', '庚': '申', '辛': '酉', '壬': '亥', '癸': '子'
+    };
+    return map[yearStem] === branch;
+  }
+
+  /**
+   * 判断八座
+   * @param yearStem 年干
+   * @param branch 地支
+   * @returns 是否为八座
+   */
+  static isBaZuo(yearStem: string, branch: string): boolean {
+    // 八座的计算规则
+    const map: {[key: string]: string} = {
+      '甲': '丑', '乙': '寅', '丙': '辰', '丁': '巳', '戊': '辰',
+      '己': '巳', '庚': '未', '辛': '申', '壬': '戌', '癸': '亥'
+    };
+    return map[yearStem] === branch;
+  }
+
+  /**
+   * 判断三刑
+   * @param branch1 地支1
+   * @param branch2 地支2
+   * @returns 是否为三刑
+   */
+  static isSanXing(branch1: string, branch2: string): boolean {
+    // 三刑的计算规则
+    const xingGroups = [
+      ['寅', '巳', '申'], // 寅巳申三刑
+      ['丑', '戌', '未'], // 丑戌未三刑
+      ['子', '卯'],       // 子卯相刑
+      ['辰', '午', '酉', '亥'] // 辰午酉亥自刑
+    ];
+
+    for (const group of xingGroups) {
+      if (group.includes(branch1) && group.includes(branch2) && branch1 !== branch2) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * 判断六冲
+   * @param branch1 地支1
+   * @param branch2 地支2
+   * @returns 是否为六冲
+   */
+  static isLiuChong(branch1: string, branch2: string): boolean {
+    // 六冲的计算规则
+    const chongPairs: {[key: string]: string} = {
+      '子': '午', '午': '子',
+      '丑': '未', '未': '丑',
+      '寅': '申', '申': '寅',
+      '卯': '酉', '酉': '卯',
+      '辰': '戌', '戌': '辰',
+      '巳': '亥', '亥': '巳'
+    };
+    return chongPairs[branch1] === branch2;
+  }
+
+  /**
+   * 判断六合
+   * @param branch1 地支1
+   * @param branch2 地支2
+   * @returns 是否为六合
+   */
+  static isLiuHe(branch1: string, branch2: string): boolean {
+    // 六合的计算规则
+    const hePairs: {[key: string]: string} = {
+      '子': '丑', '丑': '子',
+      '寅': '亥', '亥': '寅',
+      '卯': '戌', '戌': '卯',
+      '辰': '酉', '酉': '辰',
+      '巳': '申', '申': '巳',
+      '午': '未', '未': '午'
+    };
+    return hePairs[branch1] === branch2;
+  }
+
+  /**
+   * 判断三合
+   * @param branches 地支数组
+   * @returns 是否为三合
+   */
+  static isSanHe(branches: string[]): boolean {
+    // 三合的计算规则
+    const heGroups = [
+      ['申', '子', '辰'], // 申子辰三合水局
+      ['寅', '午', '戌'], // 寅午戌三合火局
+      ['巳', '酉', '丑'], // 巳酉丑三合金局
+      ['亥', '卯', '未']  // 亥卯未三合木局
+    ];
+
+    for (const group of heGroups) {
+      if (group.every(branch => branches.includes(branch))) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * 判断天赦
+   * @param season 季节
+   * @param stem 天干
+   * @param branch 地支
+   * @returns 是否为天赦
+   */
+  static isTianShe(season: string, stem: string, branch: string): boolean {
+    // 天赦的计算规则：春戊寅，夏甲午，秋戊申，冬甲子
+    const map: {[key: string]: string} = {
+      '春': '戊寅',
+      '夏': '甲午',
+      '秋': '戊申',
+      '冬': '甲子'
+    };
+    return map[season] === stem + branch;
+  }
+
+  /**
+   * 判断天恩
+   * @param stem 天干
+   * @param branch 地支
+   * @returns 是否为天恩
+   */
+  static isTianEn(stem: string, branch: string): boolean {
+    // 天恩的计算规则
+    const map: {[key: string]: string} = {
+      '甲': '丑', '己': '丑',
+      '乙': '寅', '庚': '寅',
+      '丙': '巳', '辛': '巳',
+      '丁': '申', '壬': '申',
+      '戊': '亥', '癸': '亥'
+    };
+    return map[stem] === branch;
+  }
+
+  /**
+   * 判断天福
+   * @param stem 天干
+   * @param branch 地支
+   * @returns 是否为天福
+   */
+  static isTianFu(stem: string, branch: string): boolean {
+    // 天福的计算规则
+    const map: {[key: string]: string} = {
+      '甲': '亥', '乙': '子', '丙': '寅', '丁': '卯', '戊': '巳',
+      '己': '午', '庚': '申', '辛': '酉', '壬': '亥', '癸': '子'
+    };
+    return map[stem] === branch;
+  }
+
+  /**
+   * 判断太岁
+   * @param yearBranch 年支
+   * @param branch 地支
+   * @returns 是否为太岁
+   */
+  static isTaiSui(yearBranch: string, branch: string): boolean {
+    // 太岁的计算规则：与年支相同即为太岁
+    return yearBranch === branch;
+  }
+
+  /**
+   * 判断岁破
+   * @param yearBranch 年支
+   * @param branch 地支
+   * @returns 是否为岁破
+   */
+  static isSuiPo(yearBranch: string, branch: string): boolean {
+    // 岁破的计算规则：与年支相冲即为岁破
+    const chongPairs: {[key: string]: string} = {
+      '子': '午', '午': '子',
+      '丑': '未', '未': '丑',
+      '寅': '申', '申': '寅',
+      '卯': '酉', '酉': '卯',
+      '辰': '戌', '戌': '辰',
+      '巳': '亥', '亥': '巳'
+    };
+    return chongPairs[yearBranch] === branch;
+  }
+
+  /**
+   * 判断天德合
+   * @param monthBranch 月支
+   * @param stem 天干
+   * @returns 是否为天德合
+   */
+  static isTianDeHe(monthBranch: string, stem: string): boolean {
+    // 天德合的计算规则：天德的合化
+    // 先找到天德，再找其合化
+    const monthToNumber: {[key: string]: number} = {
+      '寅': 1, '卯': 2, '辰': 3, '巳': 4, '午': 5, '未': 6,
+      '申': 7, '酉': 8, '戌': 9, '亥': 10, '子': 11, '丑': 12
+    };
+
+    const tianDeMap: {[key: number]: string} = {
+      1: '丁', 2: '申', 3: '壬', 4: '辛', 5: '亥', 6: '甲',
+      7: '癸', 8: '寅', 9: '丙', 10: '乙', 11: '巳', 12: '庚'
+    };
+
+    // 天干合化：甲己合，乙庚合，丙辛合，丁壬合，戊癸合
+    const heHuaMap: {[key: string]: string} = {
+      '甲': '己', '己': '甲', '乙': '庚', '庚': '乙', '丙': '辛',
+      '辛': '丙', '丁': '壬', '壬': '丁', '戊': '癸', '癸': '戊'
+    };
+
+    const monthNumber = monthToNumber[monthBranch];
+    if (!monthNumber) return false;
+
+    const tianDe = tianDeMap[monthNumber];
+    const tianDeHe = heHuaMap[tianDe];
+
+    return tianDeHe === stem;
+  }
+
+  /**
+   * 判断月德合
+   * @param monthBranch 月支
+   * @param stem 天干
+   * @returns 是否为月德合
+   */
+  static isYueDeHe(monthBranch: string, stem: string): boolean {
+    // 月德合的计算规则：月德的合化
+    const monthToNumber: {[key: string]: number} = {
+      '寅': 1, '卯': 2, '辰': 3, '巳': 4, '午': 5, '未': 6,
+      '申': 7, '酉': 8, '戌': 9, '亥': 10, '子': 11, '丑': 12
+    };
+
+    const yueDeMap: {[key: number]: string} = {
+      1: '丙', 2: '甲', 3: '丁', 4: '辛', 5: '己', 6: '丁',
+      7: '壬', 8: '辛', 9: '戊', 10: '乙', 11: '己', 12: '丁'
+    };
+
+    // 天干合化：甲己合，乙庚合，丙辛合，丁壬合，戊癸合
+    const heHuaMap: {[key: string]: string} = {
+      '甲': '己', '己': '甲', '乙': '庚', '庚': '乙', '丙': '辛',
+      '辛': '丙', '丁': '壬', '壬': '丁', '戊': '癸', '癸': '戊'
+    };
+
+    const monthNumber = monthToNumber[monthBranch];
+    if (!monthNumber) return false;
+
+    const yueDe = yueDeMap[monthNumber];
+    const yueDeHe = heHuaMap[yueDe];
+
+    return yueDeHe === stem;
+  }
+
+  /**
+   * 判断禄马同乡
+   * @param stem 天干
+   * @param branches 四柱地支数组
+   * @returns 是否为禄马同乡
+   */
+  static isLuMaTongXiang(stem: string, branches: string[]): boolean {
+    // 禄马同乡：禄神和驿马在同一地支
+    // 先找到禄神
+    const luShenMap: {[key: string]: string} = {
+      '甲': '寅', '乙': '卯', '丙': '巳', '丁': '午', '戊': '巳',
+      '己': '午', '庚': '申', '辛': '酉', '壬': '亥', '癸': '子'
+    };
+
+    const luShen = luShenMap[stem];
+    if (!luShen) return false;
+
+    // 检查是否有驿马在同一地支
+    // 驿马规则：寅午戌见申，申子辰见寅，巳酉丑见亥，亥卯未见巳
+    const yiMaMap: {[key: string]: string} = {
+      '寅': '申', '午': '申', '戌': '申',
+      '申': '寅', '子': '寅', '辰': '寅',
+      '巳': '亥', '酉': '亥', '丑': '亥',
+      '亥': '巳', '卯': '巳', '未': '巳'
+    };
+
+    // 检查四柱中是否有年支能产生驿马，且驿马位置与禄神相同
+    for (const branch of branches) {
+      const yiMa = yiMaMap[branch];
+      if (yiMa === luShen && branches.includes(luShen)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  /**
+   * 判断福德秀气
+   * @param dayStem 日干
+   * @param dayBranch 日支
+   * @param monthBranch 月支
+   * @returns 是否为福德秀气
+   */
+  static isFuDeXiuQi(dayStem: string, dayBranch: string, monthBranch: string): boolean {
+    // 福德秀气：日干得月令生扶，且坐下有德神
+    // 先检查日干是否得月令生扶
+    const wuXingMap: {[key: string]: string} = {
+      '甲': '木', '乙': '木', '丙': '火', '丁': '火', '戊': '土',
+      '己': '土', '庚': '金', '辛': '金', '壬': '水', '癸': '水'
+    };
+
+    const branchWuXingMap: {[key: string]: string} = {
+      '寅': '木', '卯': '木', '巳': '火', '午': '火', '辰': '土',
+      '戌': '土', '丑': '土', '未': '土', '申': '金', '酉': '金',
+      '亥': '水', '子': '水'
+    };
+
+    const dayWuXing = wuXingMap[dayStem];
+    const monthWuXing = branchWuXingMap[monthBranch];
+
+    // 检查是否得月令生扶（同类或生我）
+    const shengKeMap: {[key: string]: string[]} = {
+      '木': ['水', '木'], // 水生木，木助木
+      '火': ['木', '火'], // 木生火，火助火
+      '土': ['火', '土'], // 火生土，土助土
+      '金': ['土', '金'], // 土生金，金助金
+      '水': ['金', '水']  // 金生水，水助水
+    };
+
+    const isSupported = shengKeMap[dayWuXing]?.includes(monthWuXing);
+    if (!isSupported) return false;
+
+    // 检查日支是否有德神（简化为检查是否为贵人地支）
+    const guiRenBranches = ['丑', '未', '子', '申', '亥', '酉', '巳', '卯', '午', '寅'];
+    const hasDeShen = guiRenBranches.includes(dayBranch);
+
+    return hasDeShen;
+  }
+
+  /**
+   * 判断学堂
+   * @param dayStem 日干
+   * @param branch 地支
+   * @returns 是否为学堂
+   */
+  static isXueTang(dayStem: string, branch: string): boolean {
+    // 学堂的计算规则：甲见巳，乙见午，丙见申，丁见酉，戊见申，己见酉，庚见亥，辛见子，壬见寅，癸见卯
+    const xueTangMap: {[key: string]: string} = {
+      '甲': '巳', '乙': '午', '丙': '申', '丁': '酉', '戊': '申',
+      '己': '酉', '庚': '亥', '辛': '子', '壬': '寅', '癸': '卯'
+    };
+
+    return xueTangMap[dayStem] === branch;
+  }
+
+  /**
+   * 判断词馆
+   * @param dayStem 日干
+   * @param branch 地支
+   * @returns 是否为词馆
+   */
+  static isCiGuan(dayStem: string, branch: string): boolean {
+    // 词馆的计算规则：甲见午，乙见巳，丙见酉，丁见申，戊见酉，己见申，庚见子，辛见亥，壬见卯，癸见寅
+    const ciGuanMap: {[key: string]: string} = {
+      '甲': '午', '乙': '巳', '丙': '酉', '丁': '申', '戊': '酉',
+      '己': '申', '庚': '子', '辛': '亥', '壬': '卯', '癸': '寅'
+    };
+
+    return ciGuanMap[dayStem] === branch;
+  }
+
+  /**
+   * 判断财富通门户
+   * @param dayStem 日干
+   * @param branches 四柱地支数组
+   * @param stems 四柱天干数组
+   * @returns 是否为财富通门户
+   */
+  static isCaiFuTongMenHu(dayStem: string, branches: string[], stems: string[]): boolean {
+    // 财富通门户：财星通根且有门户星相助
+    // 1. 先找到财星（日干所克的五行）
+    const wuXingMap: {[key: string]: string} = {
+      '甲': '木', '乙': '木', '丙': '火', '丁': '火', '戊': '土',
+      '己': '土', '庚': '金', '辛': '金', '壬': '水', '癸': '水'
+    };
+
+    const keMap: {[key: string]: string} = {
+      '木': '土', '火': '金', '土': '水', '金': '木', '水': '火'
+    };
+
+    const dayWuXing = wuXingMap[dayStem];
+    const caiXingWuXing = keMap[dayWuXing]; // 财星五行
+
+    // 2. 找到财星对应的天干
+    const caiXingGans: string[] = [];
+    Object.entries(wuXingMap).forEach(([gan, wuxing]) => {
+      if (wuxing === caiXingWuXing) {
+        caiXingGans.push(gan);
+      }
+    });
+
+    // 3. 检查四柱中是否有财星
+    const hasCaiXing = stems.some(stem => caiXingGans.includes(stem));
+    if (!hasCaiXing) return false;
+
+    // 4. 检查财星是否通根（在地支中有根）
+    const branchWuXingMap: {[key: string]: string} = {
+      '寅': '木', '卯': '木', '巳': '火', '午': '火', '辰': '土',
+      '戌': '土', '丑': '土', '未': '土', '申': '金', '酉': '金',
+      '亥': '水', '子': '水'
+    };
+
+    const hasCaiXingRoot = branches.some(branch => branchWuXingMap[branch] === caiXingWuXing);
+    if (!hasCaiXingRoot) return false;
+
+    // 5. 检查是否有门户星（驿马、天乙贵人、禄神等）
+    // 驿马
+    const yiMaMap: {[key: string]: string} = {
+      '寅': '申', '午': '申', '戌': '申',
+      '申': '寅', '子': '寅', '辰': '寅',
+      '巳': '亥', '酉': '亥', '丑': '亥',
+      '亥': '巳', '卯': '巳', '未': '巳'
+    };
+
+    const hasYiMa = branches.some(yearBranch => {
+      const yiMa = yiMaMap[yearBranch];
+      return yiMa && branches.includes(yiMa);
+    });
+
+    // 天乙贵人
+    const tianYiMap: {[key: string]: string[]} = {
+      '甲': ['丑', '未'], '乙': ['子', '申'], '丙': ['亥', '酉'], '丁': ['亥', '酉'],
+      '戊': ['丑', '未'], '己': ['子', '申'], '庚': ['丑', '未'], '辛': ['午', '寅'],
+      '壬': ['卯', '巳'], '癸': ['卯', '巳']
+    };
+
+    const hasTianYi = stems.some(stem => {
+      const tianYiBranches = tianYiMap[stem];
+      return tianYiBranches && tianYiBranches.some(branch => branches.includes(branch));
+    });
+
+    // 禄神
+    const luShenMap: {[key: string]: string} = {
+      '甲': '寅', '乙': '卯', '丙': '巳', '丁': '午', '戊': '巳',
+      '己': '午', '庚': '申', '辛': '酉', '壬': '亥', '癸': '子'
+    };
+
+    const hasLuShen = stems.some(stem => {
+      const luShen = luShenMap[stem];
+      return luShen && branches.includes(luShen);
+    });
+
+    // 有门户星之一即可
+    const hasMenHu = hasYiMa || hasTianYi || hasLuShen;
+
+    return hasMenHu;
+  }
+
+  /**
    * 辅助方法：判断数组是否相等
    */
   private static arrayEquals(a: string[], b: string[]): boolean {
@@ -798,55 +1681,78 @@ export class ShenShaAlgorithms {
    */
   static getAllAlgorithms(): {[key: string]: Function} {
     return {
-      '天乙贵人': this.isTianYiGuiRen,
-      '禄神': this.isLuShen,
-      '羊刃': this.isYangRen,
-      '桃花': this.isTaoHua,
-      '华盖': this.isHuaGai,
-      '文昌': this.isWenChang,
-      '将星': this.isJiangXing,
-      '驿马': this.isYiMa,
-      '天德': this.isTianDe,
-      '月德': this.isYueDe,
-      '天医': this.isTianYi,
-      '劫煞': this.isJieSha,
-      '灾煞': this.isZaiSha,
-      '天刑': this.isTianXing,
-      '孤辰': this.isGuChen,
-      '寡宿': this.isGuaSu,
-      '魁罡': this.isKuiGang,
-      '阴差阳错': this.isYinChaYangCuo,
-      '空亡': this.isKongWang,
-      '太极贵人': this.isTaiJiGuiRen,
-      '金舆': this.isJinYu,
-      '国印贵人': this.isGuoYinGuiRen,
-      '三奇贵人': this.isSanQiGuiRen,
-      '福星贵人': this.isFuXingGuiRen,
-      '文曲': this.isWenQu,
-      '天喜': this.isTianXi,
-      '红鸾': this.isHongLuan,
-      '红艳': this.isHongYan,
-      '天姚': this.isTianYao,
-      '学堂词馆': this.isXueTangCiGuan,
-      '德秀贵人': this.isDeXiuGuiRen,
-      '十恶大败': this.isShiEDaBai,
-      '孤鸾煞': this.isGuLuanSha,
-      '四废': this.isSiFei,
-      '天罗地网': this.isTianLuoDiWang,
-      '亡神': this.isWangShen,
-      '披麻': this.isPiMa,
-      '吊客': this.isDiaoKe,
-      '丧门': this.isSangMen,
-      '元辰': this.isYuanChen,
-      '天德合': this.isTianDeHe,
-      '天空': this.isTianKong,
-      '地劫': this.isDiJie,
-      '天哭': this.isTianKu,
-      '天虚': this.isTianXu,
-      '咸池': this.isXianChi,
-      '解神': this.isJieShen,
-      '金神': this.isJinShen,
-      '日德': this.isRiDe
+      '天乙贵人': ShenShaAlgorithms.isTianYiGuiRen,
+      '禄神': ShenShaAlgorithms.isLuShen,
+      '羊刃': ShenShaAlgorithms.isYangRen,
+      '桃花': ShenShaAlgorithms.isTaoHua,
+      '华盖': ShenShaAlgorithms.isHuaGai,
+      '文昌': ShenShaAlgorithms.isWenChang,
+      '将星': ShenShaAlgorithms.isJiangXing,
+      '驿马': ShenShaAlgorithms.isYiMa,
+      '天德': ShenShaAlgorithms.isTianDe,
+      '月德': ShenShaAlgorithms.isYueDe,
+      '天医': ShenShaAlgorithms.isTianYi,
+      '劫煞': ShenShaAlgorithms.isJieSha,
+      '灾煞': ShenShaAlgorithms.isZaiSha,
+      '天刑': ShenShaAlgorithms.isTianXing,
+      '孤辰': ShenShaAlgorithms.isGuChen,
+      '寡宿': ShenShaAlgorithms.isGuaSu,
+      '魁罡': ShenShaAlgorithms.isKuiGang,
+      '阴差阳错': ShenShaAlgorithms.isYinChaYangCuo,
+      // '空亡': ShenShaAlgorithms.isKongWang, // 备注：使用更细致的分类空亡
+      '年空亡': ShenShaAlgorithms.isNianKongWang,
+      '月空亡': ShenShaAlgorithms.isYueKongWang,
+      '日空亡': ShenShaAlgorithms.isRiKongWang,
+      '时空亡': ShenShaAlgorithms.isShiKongWang,
+      '命宫空亡': ShenShaAlgorithms.isMingGongKongWang,
+      '身宫空亡': ShenShaAlgorithms.isShenGongKongWang,
+      '胎元空亡': ShenShaAlgorithms.isTaiYuanKongWang,
+      '太极贵人': ShenShaAlgorithms.isTaiJiGuiRen,
+      '金舆': ShenShaAlgorithms.isJinYu,
+      '国印贵人': ShenShaAlgorithms.isGuoYinGuiRen,
+      '三奇贵人': ShenShaAlgorithms.isSanQiGuiRen,
+      '福星贵人': ShenShaAlgorithms.isFuXingGuiRen,
+      '文曲': ShenShaAlgorithms.isWenQu,
+      '天喜': ShenShaAlgorithms.isTianXi,
+      '红鸾': ShenShaAlgorithms.isHongLuan,
+      '红艳': ShenShaAlgorithms.isHongYan,
+      '天姚': ShenShaAlgorithms.isTianYao,
+      '学堂词馆': ShenShaAlgorithms.isXueTangCiGuan,
+      '德秀贵人': ShenShaAlgorithms.isDeXiuGuiRen,
+      '十恶大败': ShenShaAlgorithms.isShiEDaBai,
+      '孤鸾煞': ShenShaAlgorithms.isGuLuanSha,
+      '四废': ShenShaAlgorithms.isSiFei,
+      '天罗地网': ShenShaAlgorithms.isTianLuoDiWang,
+      '亡神': ShenShaAlgorithms.isWangShen,
+      '披麻': ShenShaAlgorithms.isPiMa,
+      '吊客': ShenShaAlgorithms.isDiaoKe,
+      '丧门': ShenShaAlgorithms.isSangMen,
+      '元辰': ShenShaAlgorithms.isYuanChen,
+      '天德合': ShenShaAlgorithms.isTianDeHe,
+      '天空': ShenShaAlgorithms.isTianKong,
+      '地劫': ShenShaAlgorithms.isDiJie,
+      '天哭': ShenShaAlgorithms.isTianKu,
+      '天虚': ShenShaAlgorithms.isTianXu,
+      '咸池': ShenShaAlgorithms.isXianChi,
+      '解神': ShenShaAlgorithms.isJieShen,
+      '金神': ShenShaAlgorithms.isJinShen,
+      '日德': ShenShaAlgorithms.isRiDe,
+      '五鬼': ShenShaAlgorithms.isWuGui,
+      '白虎': ShenShaAlgorithms.isBaiHu,
+      '天狗': ShenShaAlgorithms.isTianGou,
+      '三台': ShenShaAlgorithms.isSanTai,
+      '八座': ShenShaAlgorithms.isBaZuo,
+      '天赦': ShenShaAlgorithms.isTianShe,
+      '天恩': ShenShaAlgorithms.isTianEn,
+      '天福': ShenShaAlgorithms.isTianFu,
+      '太岁': ShenShaAlgorithms.isTaiSui,
+      '岁破': ShenShaAlgorithms.isSuiPo,
+      '月德合': ShenShaAlgorithms.isYueDeHe,
+      '禄马同乡': ShenShaAlgorithms.isLuMaTongXiang,
+      '福德秀气': ShenShaAlgorithms.isFuDeXiuQi,
+      '学堂': ShenShaAlgorithms.isXueTang,
+      '词馆': ShenShaAlgorithms.isCiGuan,
+      '财富通门户': ShenShaAlgorithms.isCaiFuTongMenHu
     };
   }
 }

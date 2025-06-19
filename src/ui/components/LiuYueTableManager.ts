@@ -1,4 +1,5 @@
 import { BaziInfo, LiuYueInfo } from '../../types/BaziInfo';
+import { ColorSchemeService } from '../../services/bazi/ColorSchemeService';
 import { ShenShaDataService } from '../../services/bazi/shensha/ShenShaDataService';
 import { StyleUtilsService } from '../../services/bazi/StyleUtilsService';
 
@@ -154,46 +155,18 @@ export class LiuYueTableManager {
           cls: 'bazi-shensha-month-label'
         });
 
-        const shenShaList = monthShenShaDiv.createEl('span', { cls: 'bazi-shensha-list' });
-        
-        ly.shenSha.forEach((shenSha: string, shenShaIndex: number) => {
-          if (shenShaIndex > 0) {
-            shenShaList.createSpan({ text: ' ' });
-          }
-
-          const shenShaSpan = shenShaList.createSpan({
-            text: shenSha,
-            cls: 'shensha-tag'
-          });
-
-          // 添加样式
-          this.applyShenShaStyle(shenShaSpan);
-
-          // 添加点击事件
-          shenShaSpan.addEventListener('click', (e) => {
-            e.stopPropagation();
-            this.handleShenShaClick(shenSha);
-          });
-        });
+        // 使用统一的ColorSchemeService创建神煞元素
+        ColorSchemeService.createColoredShenShaElement(
+          monthShenShaDiv,
+          ly.shenSha,
+          (shenSha) => this.handleShenShaClick(shenSha),
+          'bazi-shensha-list'
+        );
       }
     });
   }
 
-  /**
-   * 应用神煞样式
-   */
-  private applyShenShaStyle(element: HTMLElement) {
-    element.style.cssText = `
-      display: inline-block;
-      padding: 2px 4px;
-      margin: 1px;
-      border-radius: 3px;
-      font-size: 10px;
-      background: var(--background-modifier-border);
-      color: var(--text-muted);
-      cursor: pointer;
-    `;
-  }
+
 
   /**
    * 处理神煞点击事件

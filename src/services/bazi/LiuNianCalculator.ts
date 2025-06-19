@@ -52,7 +52,17 @@ export class LiuNianCalculator {
         const shiShenZhi = ShiShenCalculator.getHiddenShiShen(dayStem, ganZhi.charAt(1));
 
         // 计算流年神煞
-        const shenSha = ShenShaTimeService.calculateLiuNianShenSha(dayStem, ganZhi);
+        // 计算流年神煞（传递四柱信息用于细分空亡等）
+      const fourPillarInfo = {
+        yearStem: eightChar.getYearGan(),
+        yearBranch: eightChar.getYearZhi(),
+        monthStem: eightChar.getMonthGan(),
+        monthBranch: eightChar.getMonthZhi(),
+        dayBranch: eightChar.getDayZhi(),
+        hourStem: eightChar.getTimeGan(),
+        hourBranch: eightChar.getTimeZhi()
+      };
+      const shenSha = ShenShaTimeService.calculateLiuNianShenSha(dayStem, ganZhi, fourPillarInfo);
 
         // 计算地势
         const diShi = this.calculateDiShi(ganZhi.charAt(0), ganZhi.charAt(1));
@@ -84,6 +94,62 @@ export class LiuNianCalculator {
       console.error('计算流年出错:', e);
       return [];
     }
+  }
+
+  /**
+   * 计算指定年份范围的流年信息（带四柱信息）
+   * @param startYear 开始年份
+   * @param endYear 结束年份
+   * @param birthYear 出生年份
+   * @param dayStem 日干
+   * @param fourPillarInfo 四柱信息（可选，用于细分空亡等）
+   * @returns 流年信息数组
+   */
+  static calculateLiuNianByYearRangeWithFourPillar(
+    startYear: number,
+    endYear: number,
+    birthYear: number,
+    dayStem: string,
+    fourPillarInfo?: {
+      yearStem: string, yearBranch: string,
+      monthStem: string, monthBranch: string,
+      dayBranch: string,
+      hourStem: string, hourBranch: string
+    }
+  ): LiuNianInfo[] {
+    const liuNianList: LiuNianInfo[] = [];
+
+    for (let year = startYear; year <= endYear; year++) {
+      const age = year - birthYear;
+      const ganZhi = this.calculateYearGanZhi(year);
+      const naYin = BaziCalculator.getNaYin(ganZhi);
+      const shiShenGan = ShiShenCalculator.getShiShen(dayStem, ganZhi.charAt(0));
+      const shiShenZhi = ShiShenCalculator.getHiddenShiShen(dayStem, ganZhi.charAt(1));
+
+      // 计算流年神煞（传递四柱信息）
+      const shenSha = ShenShaTimeService.calculateLiuNianShenSha(dayStem, ganZhi, fourPillarInfo);
+
+      // 计算地势
+      const diShi = this.calculateDiShi(ganZhi.charAt(0), ganZhi.charAt(1));
+
+      // 计算旬空
+      const xunKong = this.calculateXunKong(ganZhi);
+
+      liuNianList.push({
+        year,
+        age,
+        index: year - startYear,
+        ganZhi,
+        naYin,
+        shiShenGan,
+        shiShenZhi,
+        diShi,
+        xunKong,
+        shenSha
+      });
+    }
+
+    return liuNianList;
   }
 
   /**

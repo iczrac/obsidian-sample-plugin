@@ -12,6 +12,14 @@ export interface PillarShenShaParams {
   branch: string;
   pillarType: string;
   includeSpecial?: boolean;
+  // 四柱信息（用于细分空亡等需要完整四柱的神煞）
+  yearStem?: string;
+  yearBranch?: string;
+  monthStem?: string;
+  monthBranch?: string;
+  dayBranch?: string;
+  hourStem?: string;
+  hourBranch?: string;
 }
 
 export class ShenShaTimeService {
@@ -22,14 +30,21 @@ export class ShenShaTimeService {
    * @returns 神煞数组
    */
   static calculatePillarShenSha(params: PillarShenShaParams): string[] {
-    const { dayStem, stem, branch, pillarType } = params;
+    const { dayStem, stem, branch, pillarType, yearStem, yearBranch, monthStem, monthBranch, dayBranch, hourStem, hourBranch } = params;
 
     // 使用统一计算引擎计算基础神煞
     const calculationParams: ShenShaCalculationParams = {
       dayStem,
       stem,
       branch,
-      pillarType
+      pillarType,
+      yearStem,
+      yearBranch,
+      monthStem,
+      monthBranch,
+      dayBranch,
+      hourStem,
+      hourBranch
     };
 
     const baseShenSha = ShenShaCalculationEngine.calculateShenSha(calculationParams);
@@ -77,16 +92,12 @@ export class ShenShaTimeService {
         
       case '年柱':
         // 年柱特有神煞
-        if (ShenShaAlgorithms.isJiangXing(dayStem, branch)) {
-          shenShaList.push('年上将星');
-        }
+        // 注意：将星需要年支信息，这里暂时跳过特殊处理
         break;
         
       case '月柱':
         // 月柱特有神煞
-        if (ShenShaAlgorithms.isWenChang(branch)) {
-          shenShaList.push('月上文昌');
-        }
+        // 注意：文昌需要年干信息，这里暂时跳过特殊处理
         break;
         
       case '日柱': {
@@ -113,19 +124,30 @@ export class ShenShaTimeService {
    * 为大运计算神煞
    * @param dayStem 日干
    * @param ganZhi 大运干支
+   * @param fourPillarInfo 四柱信息（可选，用于细分空亡等）
    * @returns 大运神煞数组
    */
-  static calculateDaYunShenSha(dayStem: string, ganZhi: string): string[] {
+  static calculateDaYunShenSha(
+    dayStem: string,
+    ganZhi: string,
+    fourPillarInfo?: {
+      yearStem: string, yearBranch: string,
+      monthStem: string, monthBranch: string,
+      dayBranch: string,
+      hourStem: string, hourBranch: string
+    }
+  ): string[] {
     if (ganZhi.length !== 2) return [];
-    
+
     const stem = ganZhi.charAt(0);
     const branch = ganZhi.charAt(1);
-    
+
     return this.calculatePillarShenSha({
       dayStem,
       stem,
       branch,
-      pillarType: '大运'
+      pillarType: '大运',
+      ...fourPillarInfo
     });
   }
 
@@ -133,19 +155,30 @@ export class ShenShaTimeService {
    * 为流年计算神煞
    * @param dayStem 日干
    * @param ganZhi 流年干支
+   * @param fourPillarInfo 四柱信息（可选，用于细分空亡等）
    * @returns 流年神煞数组
    */
-  static calculateLiuNianShenSha(dayStem: string, ganZhi: string): string[] {
+  static calculateLiuNianShenSha(
+    dayStem: string,
+    ganZhi: string,
+    fourPillarInfo?: {
+      yearStem: string, yearBranch: string,
+      monthStem: string, monthBranch: string,
+      dayBranch: string,
+      hourStem: string, hourBranch: string
+    }
+  ): string[] {
     if (ganZhi.length !== 2) return [];
-    
+
     const stem = ganZhi.charAt(0);
     const branch = ganZhi.charAt(1);
-    
+
     return this.calculatePillarShenSha({
       dayStem,
       stem,
       branch,
-      pillarType: '流年'
+      pillarType: '流年',
+      ...fourPillarInfo
     });
   }
 
@@ -153,19 +186,30 @@ export class ShenShaTimeService {
    * 为流月计算神煞
    * @param dayStem 日干
    * @param ganZhi 流月干支
+   * @param fourPillarInfo 四柱信息（可选，用于细分空亡等）
    * @returns 流月神煞数组
    */
-  static calculateLiuYueShenSha(dayStem: string, ganZhi: string): string[] {
+  static calculateLiuYueShenSha(
+    dayStem: string,
+    ganZhi: string,
+    fourPillarInfo?: {
+      yearStem: string, yearBranch: string,
+      monthStem: string, monthBranch: string,
+      dayBranch: string,
+      hourStem: string, hourBranch: string
+    }
+  ): string[] {
     if (ganZhi.length !== 2) return [];
-    
+
     const stem = ganZhi.charAt(0);
     const branch = ganZhi.charAt(1);
-    
+
     return this.calculatePillarShenSha({
       dayStem,
       stem,
       branch,
-      pillarType: '流月'
+      pillarType: '流月',
+      ...fourPillarInfo
     });
   }
 
@@ -173,19 +217,30 @@ export class ShenShaTimeService {
    * 为流日计算神煞
    * @param dayStem 日干
    * @param ganZhi 流日干支
+   * @param fourPillarInfo 四柱信息（可选，用于细分空亡等）
    * @returns 流日神煞数组
    */
-  static calculateLiuRiShenSha(dayStem: string, ganZhi: string): string[] {
+  static calculateLiuRiShenSha(
+    dayStem: string,
+    ganZhi: string,
+    fourPillarInfo?: {
+      yearStem: string, yearBranch: string,
+      monthStem: string, monthBranch: string,
+      dayBranch: string,
+      hourStem: string, hourBranch: string
+    }
+  ): string[] {
     if (ganZhi.length !== 2) return [];
-    
+
     const stem = ganZhi.charAt(0);
     const branch = ganZhi.charAt(1);
-    
+
     return this.calculatePillarShenSha({
       dayStem,
       stem,
       branch,
-      pillarType: '流日'
+      pillarType: '流日',
+      ...fourPillarInfo
     });
   }
 
@@ -193,19 +248,30 @@ export class ShenShaTimeService {
    * 为流时计算神煞
    * @param dayStem 日干
    * @param ganZhi 流时干支
+   * @param fourPillarInfo 四柱信息（可选，用于细分空亡等）
    * @returns 流时神煞数组
    */
-  static calculateLiuShiShenSha(dayStem: string, ganZhi: string): string[] {
+  static calculateLiuShiShenSha(
+    dayStem: string,
+    ganZhi: string,
+    fourPillarInfo?: {
+      yearStem: string, yearBranch: string,
+      monthStem: string, monthBranch: string,
+      dayBranch: string,
+      hourStem: string, hourBranch: string
+    }
+  ): string[] {
     if (ganZhi.length !== 2) return [];
-    
+
     const stem = ganZhi.charAt(0);
     const branch = ganZhi.charAt(1);
-    
+
     return this.calculatePillarShenSha({
       dayStem,
       stem,
       branch,
-      pillarType: '流时'
+      pillarType: '流时',
+      ...fourPillarInfo
     });
   }
 
@@ -213,19 +279,30 @@ export class ShenShaTimeService {
    * 为小运计算神煞
    * @param dayStem 日干
    * @param ganZhi 小运干支
+   * @param fourPillarInfo 四柱信息（可选，用于细分空亡等）
    * @returns 小运神煞数组
    */
-  static calculateXiaoYunShenSha(dayStem: string, ganZhi: string): string[] {
+  static calculateXiaoYunShenSha(
+    dayStem: string,
+    ganZhi: string,
+    fourPillarInfo?: {
+      yearStem: string, yearBranch: string,
+      monthStem: string, monthBranch: string,
+      dayBranch: string,
+      hourStem: string, hourBranch: string
+    }
+  ): string[] {
     if (ganZhi.length !== 2) return [];
-    
+
     const stem = ganZhi.charAt(0);
     const branch = ganZhi.charAt(1);
-    
+
     return this.calculatePillarShenSha({
       dayStem,
       stem,
       branch,
-      pillarType: '小运'
+      pillarType: '小运',
+      ...fourPillarInfo
     });
   }
 
@@ -233,39 +310,46 @@ export class ShenShaTimeService {
    * 批量计算多个时间层级的神煞
    * @param dayStem 日干
    * @param timeLayerData 时间层级数据
+   * @param fourPillarInfo 四柱信息（可选，用于细分空亡等）
    * @returns 批量神煞结果
    */
   static calculateBatchShenSha(
-    dayStem: string, 
-    timeLayerData: {[key: string]: string}
+    dayStem: string,
+    timeLayerData: {[key: string]: string},
+    fourPillarInfo?: {
+      yearStem: string, yearBranch: string,
+      monthStem: string, monthBranch: string,
+      dayBranch: string,
+      hourStem: string, hourBranch: string
+    }
   ): {[key: string]: string[]} {
     const results: {[key: string]: string[]} = {};
-    
+
     Object.entries(timeLayerData).forEach(([layerType, ganZhi]) => {
       switch (layerType) {
         case '大运':
-          results[layerType] = this.calculateDaYunShenSha(dayStem, ganZhi);
+          results[layerType] = this.calculateDaYunShenSha(dayStem, ganZhi, fourPillarInfo);
           break;
         case '流年':
-          results[layerType] = this.calculateLiuNianShenSha(dayStem, ganZhi);
+          results[layerType] = this.calculateLiuNianShenSha(dayStem, ganZhi, fourPillarInfo);
           break;
         case '流月':
-          results[layerType] = this.calculateLiuYueShenSha(dayStem, ganZhi);
+          results[layerType] = this.calculateLiuYueShenSha(dayStem, ganZhi, fourPillarInfo);
           break;
         case '流日':
-          results[layerType] = this.calculateLiuRiShenSha(dayStem, ganZhi);
+          results[layerType] = this.calculateLiuRiShenSha(dayStem, ganZhi, fourPillarInfo);
           break;
         case '流时':
-          results[layerType] = this.calculateLiuShiShenSha(dayStem, ganZhi);
+          results[layerType] = this.calculateLiuShiShenSha(dayStem, ganZhi, fourPillarInfo);
           break;
         case '小运':
-          results[layerType] = this.calculateXiaoYunShenSha(dayStem, ganZhi);
+          results[layerType] = this.calculateXiaoYunShenSha(dayStem, ganZhi, fourPillarInfo);
           break;
         default:
           results[layerType] = [];
       }
     });
-    
+
     return results;
   }
 

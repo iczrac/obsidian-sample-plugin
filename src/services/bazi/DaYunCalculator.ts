@@ -93,8 +93,17 @@ export class DaYunCalculator {
         const shiShenGan = ShiShenCalculator.getShiShen(dayStem, ganZhi.charAt(0));
         const shiShenZhi = ShiShenCalculator.getHiddenShiShen(dayStem, ganZhi.charAt(1));
 
-        // 计算大运神煞
-        const shenSha = ShenShaTimeService.calculateDaYunShenSha(dayStem, ganZhi);
+        // 计算大运神煞（传递四柱信息用于细分空亡等）
+        const fourPillarInfo = {
+          yearStem: eightChar.getYearGan(),
+          yearBranch: eightChar.getYearZhi(),
+          monthStem: eightChar.getMonthGan(),
+          monthBranch: eightChar.getMonthZhi(),
+          dayBranch: eightChar.getDayZhi(),
+          hourStem: eightChar.getTimeGan(),
+          hourBranch: eightChar.getTimeZhi()
+        };
+        const shenSha = ShenShaTimeService.calculateDaYunShenSha(dayStem, ganZhi, fourPillarInfo);
 
         // 计算地势
         const diShi = this.calculateDiShi(ganZhi.charAt(0), ganZhi.charAt(1));
@@ -212,7 +221,17 @@ export class DaYunCalculator {
     const shiShenZhi = ShiShenCalculator.getHiddenShiShen(dayStem, qianYunGanZhi.charAt(1));
     const diShi = this.calculateDiShi(qianYunGanZhi.charAt(0), qianYunGanZhi.charAt(1));
     const xunKong = this.calculateXunKongSafe(qianYunGanZhi);
-    const shenSha = ShenShaTimeService.calculateDaYunShenSha(dayStem, qianYunGanZhi);
+    // 计算前运神煞（传递四柱信息用于细分空亡等）
+    const fourPillarInfo = {
+      yearStem: eightChar.getYearGan(),
+      yearBranch: eightChar.getYearZhi(),
+      monthStem: eightChar.getMonthGan(),
+      monthBranch: eightChar.getMonthZhi(),
+      dayBranch: eightChar.getDayZhi(),
+      hourStem: eightChar.getTimeGan(),
+      hourBranch: eightChar.getTimeZhi()
+    };
+    const shenSha = ShenShaTimeService.calculateDaYunShenSha(dayStem, qianYunGanZhi, fourPillarInfo);
 
     return {
       ganZhi: qianYunGanZhi,

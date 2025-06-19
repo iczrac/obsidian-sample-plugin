@@ -613,28 +613,13 @@ export class LiuNianInfoManager {
       cell.style.cssText = this.getDataCellStyle();
 
       if (xy && xy.shenSha && xy.shenSha.length > 0) {
-        // 创建神煞容器
-        const shenShaContainer = cell.createDiv({ cls: 'bazi-shensha-container' });
-        shenShaContainer.style.cssText = `
-          display: flex;
-          flex-wrap: wrap;
-          gap: 2px;
-        `;
-
-        xy.shenSha.forEach((sha: string) => {
-          const shenShaSpan = shenShaContainer.createSpan({
-            text: sha,
-            cls: 'bazi-shensha-item'
-          });
-          shenShaSpan.style.cssText = `
-            font-size: 8px;
-            padding: 1px 3px;
-            border-radius: 2px;
-            color: white;
-            opacity: 0.8;
-          `;
-          shenShaSpan.style.background = ColorSchemeService.getShenShaColor(sha);
-        });
+        // 使用统一的ColorSchemeService创建神煞元素
+        ColorSchemeService.createColoredShenShaElement(
+          cell,
+          xy.shenSha,
+          (shenSha) => this.handleShenShaClick(shenSha),
+          'bazi-shensha-list'
+        );
       } else {
         cell.textContent = '';
       }
@@ -895,28 +880,13 @@ export class LiuNianInfoManager {
       cell.style.cssText = this.getDataCellStyle();
 
       if (ln.shenSha && ln.shenSha.length > 0) {
-        // 创建神煞容器
-        const shenShaContainer = cell.createDiv({ cls: 'bazi-shensha-container' });
-        shenShaContainer.style.cssText = `
-          display: flex;
-          flex-wrap: wrap;
-          gap: 2px;
-        `;
-
-        ln.shenSha.forEach(sha => {
-          const shenShaSpan = shenShaContainer.createSpan({
-            text: sha,
-            cls: 'bazi-shensha-item'
-          });
-          shenShaSpan.style.cssText = `
-            font-size: 8px;
-            padding: 1px 3px;
-            border-radius: 2px;
-            color: white;
-            opacity: 0.8;
-          `;
-          shenShaSpan.style.background = ColorSchemeService.getShenShaColor(sha);
-        });
+        // 使用统一的ColorSchemeService创建神煞元素
+        ColorSchemeService.createColoredShenShaElement(
+          cell,
+          ln.shenSha,
+          (shenSha) => this.handleShenShaClick(shenSha),
+          'bazi-shensha-list'
+        );
       } else {
         cell.textContent = '';
       }
@@ -1068,6 +1038,20 @@ export class LiuNianInfoManager {
       console.error('计算地势失败:', error);
       return '';
     }
+  }
+
+  /**
+   * 处理神煞点击事件
+   */
+  private handleShenShaClick(shenSha: string) {
+    console.log(`🎯 神煞被点击: ${shenSha}`);
+
+    // 触发神煞点击事件
+    const event = new CustomEvent('shensha-click', {
+      detail: { shenSha },
+      bubbles: true
+    });
+    this.container.dispatchEvent(event);
   }
 
 }

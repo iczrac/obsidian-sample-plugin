@@ -75,7 +75,7 @@ export class LiuYueCalculator {
       // 计算地势
       const diShi = BaziCalculator.getDiShi(dayStem, monthBranch);
 
-      // 计算神煞信息
+      // 计算神煞信息（流月计算时没有完整四柱信息，细分空亡将被跳过）
       const shenSha = ShenShaTimeService.calculateLiuYueShenSha(dayStem, ganZhi);
 
       liuYueData.push({

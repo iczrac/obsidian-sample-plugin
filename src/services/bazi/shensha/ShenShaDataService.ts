@@ -212,6 +212,69 @@ export class ShenShaDataService {
       category: '虚空类',
       level: 8
     },
+    '年空亡': {
+      name: '年空亡',
+      type: '凶神',
+      description: '年柱旬空，主祖业虚空',
+      effect: '年空亡主祖业虚空，祖上根基不稳，早年环境变动较大，需自立自强',
+      calculation: '根据年柱干支查旬空',
+      category: '空亡类',
+      level: 6
+    },
+    '月空亡': {
+      name: '月空亡',
+      type: '凶神',
+      description: '月柱旬空，主父母缘薄',
+      effect: '月空亡主父母缘薄，与父母关系疏远，或父母助力有限，需独立发展',
+      calculation: '根据月柱干支查旬空',
+      category: '空亡类',
+      level: 6
+    },
+    '日空亡': {
+      name: '日空亡',
+      type: '凶神',
+      description: '日柱旬空，主自身虚空',
+      effect: '日空亡主自身虚空，性格飘忽，做事容易半途而废，需要坚持和专注',
+      calculation: '根据日柱干支查旬空',
+      category: '空亡类',
+      level: 8
+    },
+    '时空亡': {
+      name: '时空亡',
+      type: '凶神',
+      description: '时柱旬空，主子女缘薄',
+      effect: '时空亡主子女缘薄，与子女关系疏远，或子女发展不如意，晚年孤独',
+      calculation: '根据时柱干支查旬空',
+      category: '空亡类',
+      level: 6
+    },
+    '命宫空亡': {
+      name: '命宫空亡',
+      type: '凶神',
+      description: '命宫旬空，主命运虚空',
+      effect: '命宫空亡主命运虚空，人生目标不明确，容易迷茫困顿，需要明确方向',
+      calculation: '根据命宫干支查旬空',
+      category: '空亡类',
+      level: 7
+    },
+    '身宫空亡': {
+      name: '身宫空亡',
+      type: '凶神',
+      description: '身宫旬空，主身体虚空',
+      effect: '身宫空亡主身体虚弱，精神不振，容易疲劳，需要注意健康调养',
+      calculation: '根据身宫干支查旬空',
+      category: '空亡类',
+      level: 6
+    },
+    '胎元空亡': {
+      name: '胎元空亡',
+      type: '凶神',
+      description: '胎元旬空，主先天不足',
+      effect: '胎元空亡主先天不足，体质较弱，需要后天调养补充，注意健康保养',
+      calculation: '根据胎元干支查旬空',
+      category: '空亡类',
+      level: 5
+    },
     '太极贵人': {
       name: '太极贵人',
       type: '吉神',
@@ -266,15 +329,7 @@ export class ShenShaDataService {
       category: '学业类',
       level: 7
     },
-    '天德合': {
-      name: '天德合',
-      type: '吉神',
-      description: '天德配偶星，主和合团结',
-      effect: '天德合是天德的配偶，主和合、团结、协作。有天德合的人，人际关系好，容易得到他人的帮助，生活和谐美满',
-      calculation: '寅午戌月支见辰，申子辰月支见戌，亥卯未月支见丑，巳酉丑月支见未',
-      category: '德星类',
-      level: 7
-    },
+
     '学堂词馆': {
       name: '学堂词馆',
       type: '吉神',
@@ -482,6 +537,197 @@ export class ShenShaDataService {
       calculation: '甲寅、戊辰、丙辰、庚辰、壬戌日',
       category: '德神类',
       level: 7
+    },
+
+    // 补充重要缺失神煞
+    '五鬼': {
+      name: '五鬼',
+      type: '凶神',
+      description: '小人是非之星，主小人陷害',
+      effect: '命犯五鬼，主小人多，是非不断，易遭暗算，工作不顺，人际关系复杂',
+      calculation: '申子辰见卯，寅午戌见酉，巳酉丑见子，亥卯未见午',
+      category: '小人类',
+      level: 7
+    },
+    '白虎': {
+      name: '白虎',
+      type: '凶神',
+      description: '血光凶煞之星，主意外伤害',
+      effect: '白虎主血光之灾，意外伤害，手术开刀，交通事故，需特别注意安全',
+      calculation: '以年支为主，子年见申，丑年见酉，寅年见戌，卯年见亥，辰年见子，巳年见丑，午年见寅，未年见卯，申年见辰，酉年见巳，戌年见午，亥年见未',
+      category: '血光类',
+      level: 8
+    },
+    '天狗': {
+      name: '天狗',
+      type: '凶神',
+      description: '意外灾祸之星，主突发事件',
+      effect: '天狗主意外灾祸，突发事件，容易遇到不测之灾，需谨慎行事，避免冒险',
+      calculation: '以年支为主，子年见戌，丑年见亥，寅年见子，卯年见丑，辰年见寅，巳年见卯，午年见辰，未年见巳，申年见午，酉年见未，戌年见申，亥年见酉',
+      category: '灾祸类',
+      level: 7
+    },
+    '三台': {
+      name: '三台',
+      type: '吉凶神',
+      description: '权威地位之星，主官职权力',
+      effect: '三台主权威和地位，利于升职加薪，但也主责任重大，压力较大',
+      calculation: '甲年见寅，乙年见卯，丙年见巳，丁年见午，戊年见巳，己年见午，庚年见申，辛年见酉，壬年见亥，癸年见子',
+      category: '权威类',
+      level: 7
+    },
+    '八座': {
+      name: '八座',
+      type: '吉凶神',
+      description: '威权显贵之星，主地位尊崇',
+      effect: '八座主威权和显贵，有领导才能，地位尊崇，但易孤高自傲',
+      calculation: '甲年见丑，乙年见寅，丙年见辰，丁年见巳，戊年见辰，己年见巳，庚年见未，辛年见申，壬年见戌，癸年见亥',
+      category: '权威类',
+      level: 7
+    },
+    '三刑': {
+      name: '三刑',
+      type: '凶神',
+      description: '刑罚冲突之星，主刑伤不和',
+      effect: '三刑主刑罚和冲突，容易有官司诉讼，人际关系紧张，家庭不和',
+      calculation: '寅巳申三刑，丑戌未三刑，子卯相刑，辰午酉亥自刑',
+      category: '刑冲类',
+      level: 8
+    },
+    '六冲': {
+      name: '六冲',
+      type: '凶神',
+      description: '冲突变动之星，主动荡不安',
+      effect: '六冲主冲突和变动，生活动荡不安，易有变故，感情不稳',
+      calculation: '子午相冲，丑未相冲，寅申相冲，卯酉相冲，辰戌相冲，巳亥相冲',
+      category: '刑冲类',
+      level: 7
+    },
+    '六合': {
+      name: '六合',
+      type: '吉神',
+      description: '和谐合作之星，主人际和睦',
+      effect: '六合主和谐合作，人际关系好，容易得到帮助，婚姻美满，事业顺利',
+      calculation: '子丑合，寅亥合，卯戌合，辰酉合，巳申合，午未合',
+      category: '合化类',
+      level: 8
+    },
+    '三合': {
+      name: '三合',
+      type: '吉神',
+      description: '团结合作之星，主事业有成',
+      effect: '三合主团结合作，事业有成，容易得到贵人相助，团队合作顺利',
+      calculation: '申子辰三合水局，寅午戌三合火局，巳酉丑三合金局，亥卯未三合木局',
+      category: '合化类',
+      level: 8
+    },
+    '天赦': {
+      name: '天赦',
+      type: '吉神',
+      description: '赦免解脱之星，主化解灾难',
+      effect: '天赦主赦免和解脱，能化解灾难，逢凶化吉，遇难呈祥，是极为吉利的神煞',
+      calculation: '春戊寅，夏甲午，秋戊申，冬甲子',
+      category: '化解类',
+      level: 9
+    },
+    '天恩': {
+      name: '天恩',
+      type: '吉神',
+      description: '恩泽福德之星，主得天恩惠',
+      effect: '天恩主恩泽和福德，得天恩惠，多福多寿，贵人相助，生活幸福',
+      calculation: '甲己见丑，乙庚见寅，丙辛见巳，丁壬见申，戊癸见亥',
+      category: '福德类',
+      level: 8
+    },
+    '天福': {
+      name: '天福',
+      type: '吉神',
+      description: '福气安康之星，主平安幸福',
+      effect: '天福主福气和安康，平安幸福，衣食无忧，家庭和睦，晚年安康',
+      calculation: '甲见亥，乙见子，丙见寅，丁见卯，戊见巳，己见午，庚见申，辛见酉，壬见亥，癸见子',
+      category: '福德类',
+      level: 7
+    },
+    '太岁': {
+      name: '太岁',
+      type: '吉凶神',
+      description: '当年值年之神，主权威变动',
+      effect: '太岁当头坐，无喜必有祸。主当年运势变化大，有权威但也有压力，需谨慎行事',
+      calculation: '与年支相同即为太岁，如子年生人见子',
+      category: '流年类',
+      level: 9
+    },
+    '岁破': {
+      name: '岁破',
+      type: '凶神',
+      description: '与太岁相冲之神，主破败损失',
+      effect: '岁破主破败、损失、变动，容易有意外之事，财运不佳，需特别小心',
+      calculation: '与年支相冲即为岁破，如子年生人见午',
+      category: '流年类',
+      level: 8
+    },
+    '天德合': {
+      name: '天德合',
+      type: '吉神',
+      description: '天德的合化之神，主德行合和',
+      effect: '天德合主德行合和，品德高尚，能化解灾难，得贵人相助，事业顺利',
+      calculation: '天德的合化，如正月天德丁，天德合为壬',
+      category: '德神类',
+      level: 8
+    },
+    '月德合': {
+      name: '月德合',
+      type: '吉神',
+      description: '月德的合化之神，主月德合和',
+      effect: '月德合主月德合和，心地善良，能逢凶化吉，多得贵人帮助，家庭和睦',
+      calculation: '月德的合化，如正月月德丙，月德合为辛',
+      category: '德神类',
+      level: 8
+    },
+    '禄马同乡': {
+      name: '禄马同乡',
+      type: '吉神',
+      description: '禄神与驿马同在一地支，主富贵双全',
+      effect: '禄马同乡主富贵双全，既有财禄又有变动机会，容易在变动中获得财富和地位',
+      calculation: '禄神和驿马在同一地支，如甲日干禄在寅，年支为戌，驿马也在寅',
+      category: '富贵类',
+      level: 9
+    },
+    '福德秀气': {
+      name: '福德秀气',
+      type: '吉神',
+      description: '日干得月令生扶且坐德神，主福德兼备',
+      effect: '福德秀气主福德兼备，品德高尚，才华出众，容易得到社会认可和尊重',
+      calculation: '日干得月令生扶，且日支坐贵人或德神',
+      category: '德才类',
+      level: 8
+    },
+    '学堂': {
+      name: '学堂',
+      type: '吉神',
+      description: '主学业文昌，利于求学',
+      effect: '学堂主学业有成，聪明好学，容易在学术或文化领域取得成就',
+      calculation: '甲见巳，乙见午，丙见申，丁见酉，戊见申，己见酉，庚见亥，辛见子，壬见寅，癸见卯',
+      category: '学业类',
+      level: 7
+    },
+    '词馆': {
+      name: '词馆',
+      type: '吉神',
+      description: '主文学才华，利于文艺',
+      effect: '词馆主文学才华，善于文字表达，容易在文学、艺术、传媒等领域取得成就',
+      calculation: '甲见午，乙见巳，丙见酉，丁见申，戊见酉，己见申，庚见子，辛见亥，壬见卯，癸见寅',
+      category: '学业类',
+      level: 7
+    },
+    '财富通门户': {
+      name: '财富通门户',
+      type: '吉神',
+      description: '财星通根且有门户星相助，主财富亨通',
+      effect: '财富通门户主财运亨通，财源广进，善于理财投资，容易通过正当途径获得财富，财富增长稳定持续',
+      calculation: '财星在四柱中通根，且有驿马、天乙贵人、禄神等门户星相助',
+      category: '财富类',
+      level: 9
     }
   };
 
@@ -531,6 +777,55 @@ export class ShenShaDataService {
       precautions: ['充实精神生活', '寻找人生目标', '多行善事'],
       effectiveness: 6
     },
+    '年空亡': {
+      method: '自立自强，创建新的根基',
+      items: ['祖先牌位', '家族符', '根基符'],
+      timing: '祭祖时节',
+      precautions: ['自立自强', '创建新根基', '不依赖祖业'],
+      effectiveness: 6
+    },
+    '月空亡': {
+      method: '孝敬父母，改善亲情关系',
+      items: ['孝心符', '亲情符', '和睦符'],
+      timing: '父母生日',
+      precautions: ['孝敬父母', '改善关系', '独立发展'],
+      effectiveness: 6
+    },
+    '日空亡': {
+      method: '坚定意志，专注目标',
+      items: ['意志符', '专注符', '坚持符'],
+      timing: '日常修持',
+      precautions: ['坚定意志', '专注目标', '避免半途而废'],
+      effectiveness: 7
+    },
+    '时空亡': {
+      method: '关爱子女，培养感情',
+      items: ['子女符', '亲情符', '传承符'],
+      timing: '子女生日',
+      precautions: ['关爱子女', '培养感情', '注重传承'],
+      effectiveness: 6
+    },
+    '命宫空亡': {
+      method: '明确目标，规划人生',
+      items: ['目标符', '方向符', '智慧符'],
+      timing: '新年规划',
+      precautions: ['明确目标', '规划人生', '避免迷茫'],
+      effectiveness: 7
+    },
+    '身宫空亡': {
+      method: '调养身体，增强体质',
+      items: ['健康符', '体质符', '养生符'],
+      timing: '日常保健',
+      precautions: ['调养身体', '增强体质', '注重健康'],
+      effectiveness: 6
+    },
+    '胎元空亡': {
+      method: '后天调养，补充先天',
+      items: ['补益符', '调养符', '先天符'],
+      timing: '四季调养',
+      precautions: ['后天调养', '补充先天', '注重保养'],
+      effectiveness: 5
+    },
     '十恶大败': {
       method: '积德行善，谨慎理财',
       items: ['护身符', '五帝钱', '聚宝盆'],
@@ -545,27 +840,182 @@ export class ShenShaDataService {
       precautions: ['择吉结婚', '夫妻和睦', '互相包容'],
       effectiveness: 6
     },
-    '天罗地网': {
-      method: '谨慎行事，避免官司',
-      items: ['护身符', '平安符', '观音像'],
+
+    // 补充重要凶神的化解方法
+    '灾煞': {
+      method: '佩戴护身符，注意安全',
+      items: ['护身符', '平安扣', '观音吊坠'],
       timing: '日常佩戴',
-      precautions: ['谨慎行事', '避免官司', '多行善事'],
+      precautions: ['注意交通安全', '避免危险场所', '定期体检'],
       effectiveness: 7
     },
-    '元辰': {
-      method: '节约开支，避免浪费',
-      items: ['聚宝盆', '五帝钱', '貔貅'],
-      timing: '理财时',
-      precautions: ['节约开支', '避免浪费', '谨慎投资'],
+    '天刑': {
+      method: '守法守规，避免争讼',
+      items: ['护身符', '佛珠', '平安符'],
+      timing: '日常佩戴',
+      precautions: ['遵纪守法', '避免争讼', '谨慎签约'],
+      effectiveness: 7
+    },
+    '孤辰': {
+      method: '多交朋友，参与社交',
+      items: ['粉水晶', '人缘石', '社交符'],
+      timing: '社交场合',
+      precautions: ['主动社交', '培养兴趣', '参与团体活动'],
       effectiveness: 6
     },
-
-    '日德': {
-      method: '继续行善积德，保持善心',
-      items: ['佛珠', '善书', '慈善证书'],
+    '寡宿': {
+      method: '积极社交，寻找良缘',
+      items: ['红绳', '桃花符', '和合符'],
+      timing: '感情期间',
+      precautions: ['积极社交', '开放心态', '寻找良缘'],
+      effectiveness: 6
+    },
+    '亡神': {
+      method: '积德行善，化解凶煞',
+      items: ['护身符', '佛珠', '善书'],
       timing: '日常修持',
-      precautions: ['继续行善', '保持慈悲心', '多做好事'],
+      precautions: ['积德行善', '多做好事', '避免邪恶'],
+      effectiveness: 7
+    },
+    '天罗地网': {
+      method: '念经持咒，化解牢狱',
+      items: ['护身符', '经书', '佛珠'],
+      timing: '日常修持',
+      precautions: ['遵纪守法', '避免争斗', '多行善事'],
       effectiveness: 8
+    },
+    '四废': {
+      method: '锻炼身体，调养精神',
+      items: ['健康符', '运动器材', '营养品'],
+      timing: '日常保健',
+      precautions: ['规律作息', '适度运动', '营养均衡'],
+      effectiveness: 6
+    },
+    '元辰': {
+      method: '谨慎理财，避免损耗',
+      items: ['聚宝盆', '五帝钱', '财神符'],
+      timing: '理财投资时',
+      precautions: ['谨慎投资', '避免赌博', '稳健理财'],
+      effectiveness: 7
+    },
+    '五鬼': {
+      method: '化解小人，增强人缘',
+      items: ['五帝钱', '化小人符', '人缘石'],
+      timing: '工作社交时',
+      precautions: ['谨言慎行', '避免得罪人', '增强人缘'],
+      effectiveness: 7
+    },
+    '白虎': {
+      method: '避免血光，注意安全',
+      items: ['护身符', '平安扣', '红绳'],
+      timing: '日常佩戴',
+      precautions: ['避免尖锐物品', '注意交通安全', '避免手术'],
+      effectiveness: 8
+    },
+    '天狗': {
+      method: '避免意外，谨慎行事',
+      items: ['护身符', '平安符', '避邪物'],
+      timing: '外出时佩戴',
+      precautions: ['避免冒险', '谨慎行事', '注意安全'],
+      effectiveness: 7
+    },
+    '三刑': {
+      method: '化解刑冲，和谐相处',
+      items: ['和合符', '化解符', '平安符'],
+      timing: '人际交往时',
+      precautions: ['避免争斗', '和谐相处', '忍让包容'],
+      effectiveness: 7
+    },
+    '六冲': {
+      method: '稳定情绪，避免冲动',
+      items: ['稳定符', '平安符', '镇静石'],
+      timing: '情绪波动时',
+      precautions: ['控制情绪', '避免冲动', '稳定心态'],
+      effectiveness: 6
+    },
+    '太岁': {
+      method: '拜太岁，求平安',
+      items: ['太岁符', '护身符', '红绳'],
+      timing: '年初拜太岁',
+      precautions: ['谨慎行事', '避免大变动', '多行善事'],
+      effectiveness: 8
+    },
+    '岁破': {
+      method: '化解岁破，避免破败',
+      items: ['化太岁符', '五帝钱', '护身符'],
+      timing: '年初化解',
+      precautions: ['避免投资', '谨慎理财', '注意安全'],
+      effectiveness: 7
+    },
+    '天德合': {
+      method: '继续行善积德，保持德行',
+      items: ['德行符', '善书', '慈善证书'],
+      timing: '日常修持',
+      precautions: ['继续行善', '保持德行', '多做好事'],
+      effectiveness: 9
+    },
+    '月德合': {
+      method: '保持善心，增强德行',
+      items: ['月德符', '善书', '佛珠'],
+      timing: '日常修持',
+      precautions: ['保持善心', '增强德行', '多行善事'],
+      effectiveness: 9
+    },
+    '禄马同乡': {
+      method: '把握机遇，稳健发展',
+      items: ['招财符', '事业符', '贵人符'],
+      timing: '事业发展时',
+      precautions: ['把握机遇', '稳健发展', '避免冒进'],
+      effectiveness: 8
+    },
+    '福德秀气': {
+      method: '继续修德，提升才华',
+      items: ['文昌符', '智慧符', '德行符'],
+      timing: '学习工作时',
+      precautions: ['继续修德', '提升才华', '保持谦逊'],
+      effectiveness: 8
+    },
+    '学堂': {
+      method: '勤奋学习，增长知识',
+      items: ['文昌塔', '学业符', '智慧珠'],
+      timing: '学习期间',
+      precautions: ['勤奋学习', '增长知识', '专心致志'],
+      effectiveness: 8
+    },
+    '词馆': {
+      method: '培养文才，多读书籍',
+      items: ['文昌笔', '书籍', '文房四宝'],
+      timing: '创作学习时',
+      precautions: ['培养文才', '多读书籍', '勤于练习'],
+      effectiveness: 8
+    },
+    '天德': {
+      method: '继续行善，保持德行',
+      items: ['天德符', '善书', '功德箱'],
+      timing: '日常修持',
+      precautions: ['继续行善', '保持德行', '积德行善'],
+      effectiveness: 9
+    },
+    '月德': {
+      method: '保持善心，多行善事',
+      items: ['月德符', '善书', '慈善物品'],
+      timing: '日常修持',
+      precautions: ['保持善心', '多行善事', '德行为先'],
+      effectiveness: 9
+    },
+    '天医': {
+      method: '注意健康，预防疾病',
+      items: ['健康符', '药师佛像', '保健品'],
+      timing: '日常保健',
+      precautions: ['注意健康', '预防疾病', '定期体检'],
+      effectiveness: 7
+    },
+    '财富通门户': {
+      method: '把握财机，稳健投资',
+      items: ['招财符', '财神像', '聚宝盆', '五帝钱'],
+      timing: '投资理财时',
+      precautions: ['把握财机', '稳健投资', '避免贪心', '合法经营'],
+      effectiveness: 9
     }
   };
 

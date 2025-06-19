@@ -35,9 +35,19 @@ export class PillarCalculationService {
    * 计算大运柱信息
    * @param daYun 大运信息
    * @param dayStem 日干
+   * @param fourPillarInfo 四柱信息（用于神煞计算）
    * @returns 扩展柱信息
    */
-  static calculateDaYunPillar(daYun: DaYunInfo, dayStem: string): ExtendedPillarInfo | null {
+  static calculateDaYunPillar(
+    daYun: DaYunInfo,
+    dayStem: string,
+    fourPillarInfo?: {
+      yearStem: string, yearBranch: string,
+      monthStem: string, monthBranch: string,
+      dayBranch: string,
+      hourStem: string, hourBranch: string
+    }
+  ): ExtendedPillarInfo | null {
     if (!daYun.ganZhi || daYun.ganZhi.length < 2) {
       console.log(`❌ calculateDaYunPillar: 大运干支无效`, daYun.ganZhi);
       return null;
@@ -83,7 +93,7 @@ export class PillarCalculationService {
       naYin: BaziCalculator.getNaYin(ganZhi),
       xunKong: BaziCalculator.calculateXunKong(stem, branch),
       shengXiao: BaziUtils.getShengXiao(branch),
-      shenSha: daYun.shenSha || ShenShaTimeService.calculateDaYunShenSha(dayStem, ganZhi),
+      shenSha: daYun.shenSha || ShenShaTimeService.calculateDaYunShenSha(dayStem, ganZhi, fourPillarInfo),
       wuXing: BaziUtils.getStemWuXing(stem)
     };
   }
@@ -92,9 +102,19 @@ export class PillarCalculationService {
    * 计算流年柱信息
    * @param liuNian 流年信息
    * @param dayStem 日干
+   * @param fourPillarInfo 四柱信息（用于神煞计算）
    * @returns 扩展柱信息
    */
-  static calculateLiuNianPillar(liuNian: any, dayStem: string): ExtendedPillarInfo | null {
+  static calculateLiuNianPillar(
+    liuNian: any,
+    dayStem: string,
+    fourPillarInfo?: {
+      yearStem: string, yearBranch: string,
+      monthStem: string, monthBranch: string,
+      dayBranch: string,
+      hourStem: string, hourBranch: string
+    }
+  ): ExtendedPillarInfo | null {
     if (!liuNian.ganZhi || liuNian.ganZhi.length < 2) {
       console.log(`❌ calculateLiuNianPillar: 流年干支无效`, liuNian.ganZhi);
       return null;
@@ -121,7 +141,7 @@ export class PillarCalculationService {
       naYin: BaziCalculator.getNaYin(ganZhi),
       xunKong: BaziCalculator.calculateXunKong(stem, branch),
       shengXiao: BaziUtils.getShengXiao(branch),
-      shenSha: liuNian.shenSha || ShenShaTimeService.calculateLiuNianShenSha(dayStem, ganZhi),
+      shenSha: liuNian.shenSha || ShenShaTimeService.calculateLiuNianShenSha(dayStem, ganZhi, fourPillarInfo),
       wuXing: BaziUtils.getStemWuXing(stem)
     };
   }
@@ -130,9 +150,19 @@ export class PillarCalculationService {
    * 计算流月柱信息
    * @param liuYue 流月信息
    * @param dayStem 日干
+   * @param fourPillarInfo 四柱信息（用于神煞计算）
    * @returns 扩展柱信息
    */
-  static calculateLiuYuePillar(liuYue: any, dayStem: string): ExtendedPillarInfo | null {
+  static calculateLiuYuePillar(
+    liuYue: any,
+    dayStem: string,
+    fourPillarInfo?: {
+      yearStem: string, yearBranch: string,
+      monthStem: string, monthBranch: string,
+      dayBranch: string,
+      hourStem: string, hourBranch: string
+    }
+  ): ExtendedPillarInfo | null {
     if (!liuYue.ganZhi || liuYue.ganZhi.length < 2) {
       console.log(`❌ calculateLiuYuePillar: 流月干支无效`, liuYue.ganZhi);
       return null;
@@ -169,7 +199,7 @@ export class PillarCalculationService {
       naYin: BaziCalculator.getNaYin(ganZhi),
       xunKong: BaziCalculator.calculateXunKong(stem, branch),
       shengXiao: BaziUtils.getShengXiao(branch),
-      shenSha: liuYue.shenSha || ShenShaTimeService.calculateLiuYueShenSha(dayStem, stem + branch),
+      shenSha: liuYue.shenSha || ShenShaTimeService.calculateLiuYueShenSha(dayStem, stem + branch, fourPillarInfo),
       wuXing: BaziUtils.getStemWuXing(stem)
     };
   }
@@ -179,9 +209,20 @@ export class PillarCalculationService {
    * @param ganZhi 流日干支
    * @param dayStem 日干
    * @param dateInfo 日期信息（可选）
+   * @param fourPillarInfo 四柱信息（用于神煞计算）
    * @returns 扩展柱信息
    */
-  static calculateLiuRiPillar(ganZhi: string, dayStem: string, dateInfo?: any): ExtendedPillarInfo | null {
+  static calculateLiuRiPillar(
+    ganZhi: string,
+    dayStem: string,
+    dateInfo?: any,
+    fourPillarInfo?: {
+      yearStem: string, yearBranch: string,
+      monthStem: string, monthBranch: string,
+      dayBranch: string,
+      hourStem: string, hourBranch: string
+    }
+  ): ExtendedPillarInfo | null {
     if (!ganZhi || ganZhi.length < 2) {
       console.log(`❌ calculateLiuRiPillar: 流日干支无效`, ganZhi);
       return null;
@@ -217,7 +258,7 @@ export class PillarCalculationService {
       naYin: BaziCalculator.getNaYin(ganZhi),
       xunKong: BaziCalculator.calculateXunKong(stem, branch),
       shengXiao: BaziUtils.getShengXiao(branch),
-      shenSha: ShenShaTimeService.calculateLiuRiShenSha(dayStem, stem + branch),
+      shenSha: ShenShaTimeService.calculateLiuRiShenSha(dayStem, stem + branch, fourPillarInfo),
       wuXing: BaziUtils.getStemWuXing(stem)
     };
   }
@@ -227,9 +268,20 @@ export class PillarCalculationService {
    * @param ganZhi 流时干支
    * @param dayStem 日干
    * @param timeInfo 时间信息（可选）
+   * @param fourPillarInfo 四柱信息（用于神煞计算）
    * @returns 扩展柱信息
    */
-  static calculateLiuShiPillar(ganZhi: string, dayStem: string, timeInfo?: any): ExtendedPillarInfo | null {
+  static calculateLiuShiPillar(
+    ganZhi: string,
+    dayStem: string,
+    timeInfo?: any,
+    fourPillarInfo?: {
+      yearStem: string, yearBranch: string,
+      monthStem: string, monthBranch: string,
+      dayBranch: string,
+      hourStem: string, hourBranch: string
+    }
+  ): ExtendedPillarInfo | null {
     if (!ganZhi || ganZhi.length < 2) {
       console.log(`❌ calculateLiuShiPillar: 流时干支无效`, ganZhi);
       return null;
@@ -265,7 +317,7 @@ export class PillarCalculationService {
       naYin: BaziCalculator.getNaYin(ganZhi),
       xunKong: BaziCalculator.calculateXunKong(stem, branch),
       shengXiao: BaziUtils.getShengXiao(branch),
-      shenSha: ShenShaTimeService.calculateLiuShiShenSha(dayStem, stem + branch),
+      shenSha: ShenShaTimeService.calculateLiuShiShenSha(dayStem, stem + branch, fourPillarInfo),
       wuXing: BaziUtils.getStemWuXing(stem)
     };
   }

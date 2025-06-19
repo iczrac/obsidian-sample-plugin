@@ -93,8 +93,17 @@ export class XiaoYunCalculator {
         // 计算地势（使用十二长生）
         const diShi = this.calculateDiShiForXiaoYun(dayStem, xiaoYunGanZhi[1]);
 
-        // 计算神煞（简化版本，只计算基本神煞）
-        const shenSha = ShenShaTimeService.calculateXiaoYunShenSha(dayStem, xiaoYunGanZhi);
+        // 计算神煞（传递四柱信息用于细分空亡等）
+        const fourPillarInfo = {
+          yearStem: eightChar.getYearGan(),
+          yearBranch: eightChar.getYearZhi(),
+          monthStem: eightChar.getMonthGan(),
+          monthBranch: eightChar.getMonthZhi(),
+          dayBranch: eightChar.getDayZhi(),
+          hourStem: eightChar.getTimeGan(),
+          hourBranch: eightChar.getTimeZhi()
+        };
+        const shenSha = ShenShaTimeService.calculateXiaoYunShenSha(dayStem, xiaoYunGanZhi, fourPillarInfo);
 
         const xiaoYunInfo: XiaoYunInfo = {
           year,

@@ -28,6 +28,8 @@ export class CodeBlockProcessor {
 			console.log('🎯 bazi代码块被触发!');
 			this.processBaziCodeBlock(source, el);
 		});
+
+
 	}
 
 	/**
@@ -67,6 +69,10 @@ export class CodeBlockProcessor {
 			});
 		}
 	}
+
+
+
+
 
 	/**
 	 * 解析代码块参数

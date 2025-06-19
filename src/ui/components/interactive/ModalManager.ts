@@ -52,133 +52,40 @@ export class ModalManager {
   }
 
   /**
-   * 创建增强的神煞内容
+   * 创建增强的神煞内容（优化布局，神煞名在顶部）
    */
   private createEnhancedShenShaContent(shenShaInfo: any): string {
+    // 获取化解方法和影响评估
+    const resolutionMethod = ShenShaDataService.getResolutionMethod(shenShaInfo.name);
+    const impactLevel = ShenShaDataService.getShenShaImpact(shenShaInfo.name);
+
     return `
-      <div class="shensha-explanation-enhanced">
-        <div class="shensha-header">
-          <div class="shensha-type-badge shensha-type-${shenShaInfo.type.toLowerCase()}">
-            ${shenShaInfo.type}
-          </div>
+        <!-- 类型标识（小标签样式） -->
+        <div class="shensha-type-badge shensha-type-${shenShaInfo.type.toLowerCase()}">
+          ${this.getTypeIcon(shenShaInfo.type)} ${shenShaInfo.type}
         </div>
 
-        <div class="shensha-content">
-          <div class="shensha-section">
-            <h4 class="section-title">
-              <span class="section-icon">📖</span>
-              概述
-            </h4>
-            <p class="section-content">${shenShaInfo.description}</p>
-          </div>
-
-          <div class="shensha-section">
-            <h4 class="section-title">
-              <span class="section-icon">🎯</span>
-              主要影响
-            </h4>
-            <p class="section-content">${shenShaInfo.effect}</p>
-          </div>
-
-          <div class="shensha-section">
-            <h4 class="section-title">
-              <span class="section-icon">💡</span>
-              化解建议
-            </h4>
-            <p class="section-content">${this.getAdviceFromType(shenShaInfo.type)}</p>
-          </div>
-
-          <div class="shensha-section calculation-section">
-            <h4 class="section-title">
-              <span class="section-icon">🔢</span>
-              计算方法
-            </h4>
-            <div class="calculation-content">${shenShaInfo.calculation}</div>
-          </div>
+        <!-- 概述 -->
+        <div class="content-section">
+          <h4 class="section-title">📋 概述</h4>
+          <p class="section-content">${shenShaInfo.description}</p>
         </div>
 
-        <style>
-          .shensha-explanation-enhanced {
-            font-family: var(--font-interface);
-            line-height: 1.6;
-          }
+        <!-- 主要影响 -->
+        <div class="content-section">
+          <h4 class="section-title">🎯 主要影响</h4>
+          <p class="section-content">${shenShaInfo.effect}</p>
+        </div>
 
-          .shensha-header {
-            margin-bottom: 20px;
-            text-align: center;
-          }
+        ${impactLevel ? this.createImpactSection(impactLevel) : ''}
 
-          .shensha-type-badge {
-            display: inline-block;
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            color: white;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-          }
+        <!-- 计算方法 -->
+        <div class="content-section">
+          <h4 class="section-title">🧮 计算方法</h4>
+          <div class="calculation-content">${shenShaInfo.calculation}</div>
+        </div>
 
-          .shensha-type-吉神 { background: linear-gradient(135deg, #4CAF50, #45a049); }
-          .shensha-type-凶神 { background: linear-gradient(135deg, #f44336, #d32f2f); }
-          .shensha-type-吉凶神 { background: linear-gradient(135deg, #FF9800, #F57C00); }
-
-          .shensha-content {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-          }
-
-          .shensha-section {
-            background: var(--background-secondary);
-            border: 1px solid var(--background-modifier-border);
-            border-radius: 8px;
-            padding: 16px;
-            transition: all 0.2s ease;
-          }
-
-          .shensha-section:hover {
-            border-color: var(--text-accent);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-          }
-
-          .section-title {
-            margin: 0 0 12px 0;
-            color: var(--text-accent);
-            font-size: 14px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-          }
-
-          .section-icon {
-            font-size: 16px;
-          }
-
-          .section-content {
-            margin: 0;
-            color: var(--text-normal);
-            font-size: 13px;
-          }
-
-          .calculation-section {
-            background: var(--background-primary);
-          }
-
-          .calculation-content {
-            font-family: var(--font-monospace);
-            font-size: 12px;
-            color: var(--text-muted);
-            background: var(--background-secondary);
-            padding: 12px;
-            border-radius: 6px;
-            border: 1px solid var(--background-modifier-border);
-            line-height: 1.4;
-          }
-        </style>
-      </div>
+        ${resolutionMethod ? this.createResolutionSection(resolutionMethod) : this.createBasicAdviceSection(shenShaInfo.type)}
     `;
   }
 
@@ -296,7 +203,7 @@ export class ModalManager {
   }
 
   /**
-   * 创建通用模态框
+   * 创建通用模态框（扁平化结构，无多层嵌套）
    */
   private createModal(options: {
     title: string;
@@ -308,42 +215,282 @@ export class ModalManager {
   }) {
     const { title, content, type, wuXing, value, event } = options;
 
-    // 创建模态框容器
+    // 创建背景遮罩
+    const backdrop = document.createElement('div');
+    backdrop.className = 'bazi-modal-backdrop';
+    backdrop.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity ${this.animationDuration}ms ease;
+    `;
+
+    // 创建模态框容器（紧凑布局）
     const modal = document.createElement('div');
     modal.className = `bazi-modal bazi-modal-${type}`;
     modal.style.cssText = `
-      position: fixed;
       background: var(--background-primary);
-      border: 2px solid var(--background-modifier-border);
-      border-radius: 12px;
-      padding: 20px;
-      min-width: 480px;
-      max-width: 600px;
-      max-height: 70vh;
-      overflow-y: auto;
-      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
-      z-index: 1000;
-      opacity: 0;
+      border: 1px solid var(--background-modifier-border);
+      border-radius: 8px;
+      padding: 0;
+      width: 85%;
+      max-width: 500px;
+      max-height: 80vh;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      position: relative;
       transform: scale(0.9);
-      transition: all ${this.animationDuration}ms ease;
+      transition: transform ${this.animationDuration}ms ease;
       font-family: var(--font-interface);
+      line-height: 1.5;
+      display: flex;
+      flex-direction: column;
     `;
 
-    // 创建标题
-    const titleEl = modal.createDiv({ cls: 'bazi-modal-title' });
+    // 添加全局样式（直接在模态框中）
+    modal.innerHTML = `
+      <style>
+        .bazi-modal .shensha-type-badge {
+          display: inline-block;
+          text-align: center;
+          padding: 4px 12px;
+          border-radius: 16px;
+          font-size: 12px;
+          font-weight: 500;
+          color: white;
+          margin: 0 auto 20px auto;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+          display: block;
+          width: fit-content;
+        }
+
+        .bazi-modal .shensha-type-吉神 { background: linear-gradient(135deg, #4CAF50, #45a049); }
+        .bazi-modal .shensha-type-凶神 { background: linear-gradient(135deg, #f44336, #d32f2f); }
+        .bazi-modal .shensha-type-吉凶神 { background: linear-gradient(135deg, #FF9800, #F57C00); }
+        .bazi-modal .shensha-type-中性 { background: linear-gradient(135deg, #2196F3, #1976D2); }
+
+        .bazi-modal .content-section {
+          margin-bottom: 16px;
+        }
+
+        .bazi-modal .content-section:last-child {
+          margin-bottom: 0;
+        }
+
+        .bazi-modal .section-title {
+          margin: 0 0 6px 0;
+          color: var(--text-accent);
+          font-size: 15px;
+          font-weight: 600;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+        }
+
+        .bazi-modal .section-content {
+          margin: 0;
+          color: var(--text-normal);
+          font-size: 14px;
+          line-height: 1.5;
+          padding: 0;
+        }
+
+        .bazi-modal .calculation-content {
+          font-family: var(--font-monospace);
+          font-size: 12px;
+          color: var(--text-muted);
+          line-height: 1.4;
+          margin-top: 2px;
+          padding: 4px 0;
+          font-style: italic;
+        }
+
+        .bazi-modal .impact-grid {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+          margin-top: 6px;
+        }
+
+        .bazi-modal .impact-item {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 4px 8px;
+          background: var(--background-secondary);
+          border-radius: 4px;
+          border: 1px solid var(--background-modifier-border);
+        }
+
+        .bazi-modal .impact-label {
+          min-width: 60px;
+          font-size: 12px;
+          font-weight: 500;
+          color: var(--text-muted);
+        }
+
+        .bazi-modal .impact-bar {
+          flex: 1;
+          height: 6px;
+          background: var(--background-modifier-border);
+          border-radius: 3px;
+          overflow: hidden;
+        }
+
+        .bazi-modal .impact-fill {
+          height: 100%;
+          border-radius: 3px;
+          transition: width 0.3s ease;
+        }
+
+        .bazi-modal .impact-score {
+          min-width: 30px;
+          font-size: 12px;
+          font-weight: 600;
+          color: var(--text-normal);
+        }
+
+        .bazi-modal .resolution-content {
+          margin-top: 6px;
+        }
+
+        .bazi-modal .resolution-item {
+          margin-bottom: 8px;
+          padding: 6px 10px;
+          background: var(--background-secondary);
+          border-radius: 6px;
+          border: 1px solid var(--background-modifier-border);
+        }
+
+        .bazi-modal .resolution-item h5 {
+          margin: 0 0 4px 0;
+          font-size: 13px;
+          font-weight: 600;
+          color: var(--text-accent);
+        }
+
+        .bazi-modal .resolution-item p {
+          margin: 0;
+          font-size: 12px;
+          color: var(--text-normal);
+          line-height: 1.4;
+        }
+
+        .bazi-modal .item-tags {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 4px;
+          margin-top: 4px;
+        }
+
+        .bazi-modal .item-tag {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+          padding: 2px 8px;
+          border-radius: 10px;
+          font-size: 11px;
+          font-weight: 500;
+        }
+      </style>
+    `;
+
+    // 创建标题区域（紧凑布局）
+    const headerSection = document.createElement('div');
+    headerSection.style.cssText = `
+      padding: 16px 20px;
+      text-align: center;
+      border-bottom: 1px solid var(--background-modifier-border);
+      background: var(--background-primary);
+    `;
+
+    const titleEl = document.createElement('h1');
     titleEl.textContent = title;
     titleEl.style.cssText = `
-      font-weight: bold;
-      font-size: 16px;
-      margin-bottom: 12px;
+      font-weight: 600;
+      font-size: 20px;
+      margin: 0;
       color: var(--text-normal);
-      border-bottom: 1px solid var(--background-modifier-border);
-      padding-bottom: 8px;
+      text-align: center;
     `;
+
+    headerSection.appendChild(titleEl);
+    modal.appendChild(headerSection);
+
+    // 创建内容区域（紧凑布局）
+    const contentSection = document.createElement('div');
+    contentSection.style.cssText = `
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      background: var(--background-primary);
+      line-height: 1.5;
+    `;
+
+    // 添加基础样式
+    const basicStyle = document.createElement('style');
+    basicStyle.textContent = `
+      /* 滚动条样式 */
+      .bazi-modal .content-section::-webkit-scrollbar {
+        width: 6px;
+      }
+      .bazi-modal .content-section::-webkit-scrollbar-track {
+        background: var(--background-secondary);
+        border-radius: 3px;
+      }
+      .bazi-modal .content-section::-webkit-scrollbar-thumb {
+        background: var(--text-muted);
+        border-radius: 3px;
+        opacity: 0.5;
+      }
+      .bazi-modal .content-section::-webkit-scrollbar-thumb:hover {
+        background: var(--text-normal);
+        opacity: 0.8;
+      }
+
+      /* 化解建议基础样式 */
+      .resolution-section {
+        margin: 16px 0;
+      }
+
+      .resolution-item {
+        margin-bottom: 12px;
+      }
+
+      .resolution-item h5 {
+        margin: 0 0 4px 0;
+        font-size: 14px;
+        color: var(--text-accent);
+        font-weight: 600;
+      }
+
+      .item-tags {
+        margin-top: 4px;
+      }
+
+      .item-tag {
+        display: inline-block;
+        background: var(--interactive-accent);
+        color: white;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-size: 11px;
+        margin: 1px 2px 1px 0;
+      }
+    `;
+    document.head.appendChild(basicStyle);
+    contentSection.className = 'content-section';
 
     // 如果是五行模态框，添加强度信息
     if (type === 'wuxing' && wuXing && value !== undefined) {
-      const valueEl = modal.createDiv({ cls: 'bazi-modal-type' });
+      const valueEl = document.createElement('div');
       valueEl.textContent = `强度值: ${value}`;
       valueEl.className = `bazi-modal-type bazi-modal-type-${this.getWuXingClassFromName(wuXing)}`;
       valueEl.style.cssText = `
@@ -352,53 +499,82 @@ export class ModalManager {
         border-radius: 4px;
         font-size: 12px;
         font-weight: bold;
-        margin-bottom: 8px;
+        margin-bottom: 12px;
       `;
+      contentSection.appendChild(valueEl);
     }
 
-    // 创建内容
-    const contentEl = modal.createDiv({ cls: 'bazi-modal-content' });
-    contentEl.innerHTML = content;
-    contentEl.style.cssText = `
-      line-height: 1.6;
-      color: var(--text-muted);
-    `;
+    // 添加内容
+    const contentContainer = document.createElement('div');
+    contentContainer.innerHTML = content;
+    contentSection.appendChild(contentContainer);
 
-    // 创建关闭按钮
-    const closeBtn = modal.createDiv({ cls: 'bazi-modal-close' });
+    modal.appendChild(contentSection);
+
+    // 创建关闭按钮（紧凑样式）
+    const closeBtn = document.createElement('div');
     closeBtn.textContent = '×';
     closeBtn.style.cssText = `
       position: absolute;
-      top: 8px;
-      right: 12px;
-      font-size: 20px;
+      top: 12px;
+      right: 16px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: bold;
       cursor: pointer;
       color: var(--text-muted);
-      hover: color: var(--text-normal);
+      transition: all 0.2s ease;
+      z-index: 10;
     `;
+    modal.appendChild(closeBtn);
 
-    // 关闭按钮事件
-    closeBtn.addEventListener('click', () => {
-      this.closeModal(modal);
+    // 添加简单的悬停效果
+    closeBtn.addEventListener('mouseenter', () => {
+      closeBtn.style.background = 'rgba(255, 0, 0, 0.2)';
+      closeBtn.style.color = '#ff4444';
+      closeBtn.style.transform = 'scale(1.1)';
     });
 
-    // 点击模态框外部关闭
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) {
-        this.closeModal(modal);
+    closeBtn.addEventListener('mouseleave', () => {
+      closeBtn.style.background = 'rgba(0, 0, 0, 0.1)';
+      closeBtn.style.color = 'var(--text-muted)';
+      closeBtn.style.transform = 'scale(1)';
+    });
+
+    // 关闭按钮事件
+    closeBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      this.closeModal(backdrop);
+    });
+
+    // 点击背景遮罩关闭（正确的实现）
+    backdrop.addEventListener('click', (e) => {
+      if (e.target === backdrop) {
+        this.closeModal(backdrop);
       }
     });
 
-    // 添加到页面
-    document.body.appendChild(modal);
-    this.shownModals.push(modal);
+    // 阻止点击模态框内部时关闭
+    modal.addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
 
-    // 计算位置
-    this.positionModal(modal, event);
+    // 将模态框添加到背景遮罩中
+    backdrop.appendChild(modal);
+
+    // 添加到页面
+    document.body.appendChild(backdrop);
+    this.shownModals.push(backdrop);
 
     // 显示动画
     requestAnimationFrame(() => {
-      modal.style.opacity = '1';
+      backdrop.style.opacity = '1';
       modal.style.transform = 'scale(1)';
     });
   }
@@ -433,16 +609,21 @@ export class ModalManager {
   /**
    * 关闭模态框
    */
-  private closeModal(modal: HTMLElement) {
-    modal.style.opacity = '0';
-    modal.style.transform = 'scale(0.9)';
+  private closeModal(backdrop: HTMLElement) {
+    const modal = backdrop.querySelector('.bazi-modal') as HTMLElement;
+
+    // 开始关闭动画
+    backdrop.style.opacity = '0';
+    if (modal) {
+      modal.style.transform = 'scale(0.9)';
+    }
 
     setTimeout(() => {
-      if (modal.parentNode) {
-        modal.parentNode.removeChild(modal);
+      if (backdrop.parentNode) {
+        backdrop.parentNode.removeChild(backdrop);
       }
       // 从已显示列表中移除
-      const index = this.shownModals.indexOf(modal);
+      const index = this.shownModals.indexOf(backdrop);
       if (index > -1) {
         this.shownModals.splice(index, 1);
       }
@@ -457,6 +638,131 @@ export class ModalManager {
       const title = modal.querySelector('.bazi-modal-title');
       return title && title.textContent === key;
     });
+  }
+
+  /**
+   * 获取神煞类型对应的图标
+   */
+  private getTypeIcon(type: string): string {
+    switch (type) {
+      case '吉神':
+        return '🍀';
+      case '凶神':
+        return '⚠️';
+      case '吉凶神':
+        return '⚖️';
+      case '中性':
+        return '🔹';
+      default:
+        return '🔍';
+    }
+  }
+
+  /**
+   * 创建影响程度评估区域
+   */
+  private createImpactSection(impactLevel: any): string {
+    return `
+      <div class="content-section">
+        <h4 class="section-title">📊 影响程度评估</h4>
+        <div class="impact-grid">
+          <div class="impact-item">
+            <span class="impact-label">正面影响</span>
+            <div class="impact-bar">
+              <div class="impact-fill" style="width: ${impactLevel.positive * 10}%; background-color: ${this.getImpactColor(impactLevel.positive)};"></div>
+            </div>
+            <span class="impact-score">${impactLevel.positive}/10</span>
+          </div>
+          <div class="impact-item">
+            <span class="impact-label">负面影响</span>
+            <div class="impact-bar">
+              <div class="impact-fill" style="width: ${impactLevel.negative * 10}%; background-color: ${this.getImpactColor(10 - impactLevel.negative)};"></div>
+            </div>
+            <span class="impact-score">${impactLevel.negative}/10</span>
+          </div>
+        </div>
+        <p class="section-text" style="margin-top: 8px;"><strong>综合评价：</strong>${impactLevel.description}</p>
+      </div>
+    `;
+  }
+
+  /**
+   * 创建化解建议区域（紧凑布局）
+   */
+  private createResolutionSection(resolutionMethod: any): string {
+    const itemTags = resolutionMethod.items && resolutionMethod.items.length > 0
+      ? `<div class="item-tags">${resolutionMethod.items.map((item: string) => `<span class="item-tag">${item}</span>`).join('')}</div>`
+      : '';
+
+    const precautions = resolutionMethod.precautions && resolutionMethod.precautions.length > 0
+      ? `<div class="resolution-item">
+          <h5>注意事项</h5>
+          <ul style="margin: 4px 0 0 16px; padding: 0; font-size: 12px;">
+            ${resolutionMethod.precautions.map((precaution: string) => `<li style="margin-bottom: 2px;">${precaution}</li>`).join('')}
+          </ul>
+        </div>`
+      : '';
+
+    return `
+      <div class="resolution-section">
+        <h4 style="color: var(--text-accent); margin-bottom: 12px;">💡 化解建议</h4>
+
+        <div class="resolution-item">
+          <h5>化解方法</h5>
+          <p style="margin: 4px 0; font-size: 13px;">${resolutionMethod.method}</p>
+        </div>
+
+        ${resolutionMethod.items && resolutionMethod.items.length > 0 ? `
+        <div class="resolution-item">
+          <h5>推荐物品</h5>
+          ${itemTags}
+        </div>
+        ` : ''}
+
+        <div class="resolution-item">
+          <h5>使用时机</h5>
+          <p style="margin: 4px 0; font-size: 13px;">${resolutionMethod.timing}</p>
+        </div>
+
+        ${precautions}
+
+        <div class="resolution-item">
+          <h5>有效性评估</h5>
+          <div style="background: #e8f5e8; padding: 6px; border-radius: 4px; margin-top: 4px;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <span style="font-size: 12px;">有效性</span>
+              <span style="font-size: 12px; font-weight: bold;">7/10</span>
+            </div>
+            <div style="width: 100%; height: 4px; background: #ddd; border-radius: 2px; margin-top: 4px;">
+              <div style="width: 70%; height: 100%; background: #4caf50; border-radius: 2px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  /**
+   * 创建基础建议区域
+   */
+  private createBasicAdviceSection(type: string): string {
+    return `
+      <div class="content-section">
+        <h4 class="section-title">💡 化解建议</h4>
+        <p class="section-text">${this.getAdviceFromType(type)}</p>
+      </div>
+    `;
+  }
+
+  /**
+   * 获取影响程度对应的颜色
+   */
+  private getImpactColor(score: number): string {
+    if (score >= 8) return '#4CAF50';
+    if (score >= 6) return '#8BC34A';
+    if (score >= 4) return '#FFC107';
+    if (score >= 2) return '#FF9800';
+    return '#F44336';
   }
 
   /**

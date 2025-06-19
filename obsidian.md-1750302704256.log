@@ -1,0 +1,5139 @@
+plugin:bazi-obsidian:6 ⚠️ 年空亡计算跳过：缺少年柱信息 (yearStem=undefined, yearBranch=undefined)
+plugin:bazi-obsidian:6 ⚠️ 月空亡计算跳过：缺少月柱信息 (monthStem=undefined, monthBranch=undefined)
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=undefined, branch=丑
+plugin:bazi-obsidian:6 ⚠️ 日空亡计算跳过：参数不完整 (dayStem=丙, dayBranch=undefined, branch=丑)
+plugin:bazi-obsidian:6 ⚠️ 时空亡计算跳过：缺少时柱信息 (hourStem=undefined, hourBranch=undefined)
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 年空亡计算跳过：缺少年柱信息 (yearStem=undefined, yearBranch=undefined)
+plugin:bazi-obsidian:6 ⚠️ 月空亡计算跳过：缺少月柱信息 (monthStem=undefined, monthBranch=undefined)
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=undefined, branch=午
+plugin:bazi-obsidian:6 ⚠️ 日空亡计算跳过：参数不完整 (dayStem=丙, dayBranch=undefined, branch=午)
+plugin:bazi-obsidian:6 ⚠️ 时空亡计算跳过：缺少时柱信息 (hourStem=undefined, hourBranch=undefined)
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 年空亡计算跳过：缺少年柱信息 (yearStem=undefined, yearBranch=undefined)
+plugin:bazi-obsidian:6 ⚠️ 月空亡计算跳过：缺少月柱信息 (monthStem=undefined, monthBranch=undefined)
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=undefined, branch=午
+plugin:bazi-obsidian:6 ⚠️ 日空亡计算跳过：参数不完整 (dayStem=丙, dayBranch=undefined, branch=午)
+plugin:bazi-obsidian:6 ⚠️ 时空亡计算跳过：缺少时柱信息 (hourStem=undefined, hourBranch=undefined)
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 年空亡计算跳过：缺少年柱信息 (yearStem=undefined, yearBranch=undefined)
+plugin:bazi-obsidian:6 ⚠️ 月空亡计算跳过：缺少月柱信息 (monthStem=undefined, monthBranch=undefined)
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=undefined, branch=巳
+plugin:bazi-obsidian:6 ⚠️ 日空亡计算跳过：参数不完整 (dayStem=丙, dayBranch=undefined, branch=巳)
+plugin:bazi-obsidian:6 ⚠️ 时空亡计算跳过：缺少时柱信息 (hourStem=undefined, hourBranch=undefined)
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=午
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateDaYunShenSha (plugin:bazi-obsidian:6:380523)
+    at ze.calculateQianYun (plugin:bazi-obsidian:6:386924)
+    at eval (plugin:bazi-obsidian:6:383464)
+    at Array.map (<anonymous>)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateDaYunShenSha @ plugin:bazi-obsidian:6
+calculateQianYun @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateDaYun @ plugin:bazi-obsidian:6
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 ShenShaCalculationEngine.calculateShenSha 计算完成，结果: (7) ['天姚', '孤鸾煞', '时空亡', '桃花', '福德秀气', '羊刃', '阴差阳错']
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=巳
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateDaYunShenSha (plugin:bazi-obsidian:6:380523)
+    at eval (plugin:bazi-obsidian:6:384431)
+    at Array.map (<anonymous>)
+    at ze.calculateDaYun (plugin:bazi-obsidian:6:383248)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateDaYunShenSha @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateDaYun @ plugin:bazi-obsidian:6
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 辛巳
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 申酉
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=辰
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateDaYunShenSha (plugin:bazi-obsidian:6:380523)
+    at eval (plugin:bazi-obsidian:6:384431)
+    at Array.map (<anonymous>)
+    at ze.calculateDaYun (plugin:bazi-obsidian:6:383248)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateDaYunShenSha @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateDaYun @ plugin:bazi-obsidian:6
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 庚辰
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 申酉
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=卯
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateDaYunShenSha (plugin:bazi-obsidian:6:380523)
+    at eval (plugin:bazi-obsidian:6:384431)
+    at Array.map (<anonymous>)
+    at ze.calculateDaYun (plugin:bazi-obsidian:6:383248)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateDaYunShenSha @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateDaYun @ plugin:bazi-obsidian:6
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 己卯
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 申酉
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=寅
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateDaYunShenSha (plugin:bazi-obsidian:6:380523)
+    at eval (plugin:bazi-obsidian:6:384431)
+    at Array.map (<anonymous>)
+    at ze.calculateDaYun (plugin:bazi-obsidian:6:383248)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateDaYunShenSha @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateDaYun @ plugin:bazi-obsidian:6
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 戊寅
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 申酉
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=丑
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateDaYunShenSha (plugin:bazi-obsidian:6:380523)
+    at eval (plugin:bazi-obsidian:6:384431)
+    at Array.map (<anonymous>)
+    at ze.calculateDaYun (plugin:bazi-obsidian:6:383248)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateDaYunShenSha @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateDaYun @ plugin:bazi-obsidian:6
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 丁丑
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 申酉
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=子
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateDaYunShenSha (plugin:bazi-obsidian:6:380523)
+    at eval (plugin:bazi-obsidian:6:384431)
+    at Array.map (<anonymous>)
+    at ze.calculateDaYun (plugin:bazi-obsidian:6:383248)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateDaYunShenSha @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateDaYun @ plugin:bazi-obsidian:6
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 丙子
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 申酉
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=亥
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateDaYunShenSha (plugin:bazi-obsidian:6:380523)
+    at eval (plugin:bazi-obsidian:6:384431)
+    at Array.map (<anonymous>)
+    at ze.calculateDaYun (plugin:bazi-obsidian:6:383248)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateDaYunShenSha @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateDaYun @ plugin:bazi-obsidian:6
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 ShenShaCalculationEngine.calculateShenSha 计算完成，结果: (10) ['吊客', '国印贵人', '天乙贵人', '天狗', '孤辰', '孤鸾煞', '年空亡', '福德秀气', '阴差阳错', '驿马']
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 乙亥
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 申酉
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=戌
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateDaYunShenSha (plugin:bazi-obsidian:6:380523)
+    at eval (plugin:bazi-obsidian:6:384431)
+    at Array.map (<anonymous>)
+    at ze.calculateDaYun (plugin:bazi-obsidian:6:383248)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateDaYunShenSha @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateDaYun @ plugin:bazi-obsidian:6
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 ShenShaCalculationEngine.calculateShenSha 计算完成，结果: (9) ['咸池', '天空', '孤鸾煞', '年空亡', '披麻', '文曲', '月德合', '福德秀气', '阴差阳错']
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 甲戌
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 申酉
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=酉
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateDaYunShenSha (plugin:bazi-obsidian:6:380523)
+    at eval (plugin:bazi-obsidian:6:384431)
+    at Array.map (<anonymous>)
+    at ze.calculateDaYun (plugin:bazi-obsidian:6:383248)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateDaYunShenSha @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateDaYun @ plugin:bazi-obsidian:6
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 ShenShaCalculationEngine.calculateShenSha 计算完成，结果: (9) ['天乙贵人', '太极贵人', '孤鸾煞', '将星', '月空亡', '白虎', '福德秀气', '词馆', '阴差阳错']
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 癸酉
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 戌亥
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=丑
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=寅
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=卯
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=辰
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=巳
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=午
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 ShenShaCalculationEngine.calculateShenSha 计算完成，结果: (7) ['天姚', '孤鸾煞', '时空亡', '桃花', '福德秀气', '羊刃', '阴差阳错']
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=未
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 ShenShaCalculationEngine.calculateShenSha 计算完成，结果: (9) ['咸池', '天哭', '孤鸾煞', '寡宿', '岁破', '时空亡', '福德秀气', '金舆', '阴差阳错']
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=申
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 ShenShaCalculationEngine.calculateShenSha 计算完成，结果: (9) ['亡神', '元辰', '天喜', '天恩', '孤鸾煞', '学堂', '月空亡', '福德秀气', '阴差阳错']
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=未
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 ShenShaCalculationEngine.calculateShenSha 计算完成，结果: (9) ['咸池', '天哭', '孤鸾煞', '寡宿', '岁破', '时空亡', '福德秀气', '金舆', '阴差阳错']
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=申
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 ShenShaCalculationEngine.calculateShenSha 计算完成，结果: (9) ['亡神', '元辰', '天喜', '孤鸾煞', '学堂', '月德合', '月空亡', '福德秀气', '阴差阳错']
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=酉
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 ShenShaCalculationEngine.calculateShenSha 计算完成，结果: (9) ['天乙贵人', '太极贵人', '孤鸾煞', '将星', '月空亡', '白虎', '福德秀气', '词馆', '阴差阳错']
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=戌
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 ShenShaCalculationEngine.calculateShenSha 计算完成，结果: (8) ['咸池', '天空', '孤鸾煞', '年空亡', '披麻', '文曲', '福德秀气', '阴差阳错']
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=亥
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 ShenShaCalculationEngine.calculateShenSha 计算完成，结果: (10) ['吊客', '国印贵人', '天乙贵人', '天狗', '孤辰', '孤鸾煞', '年空亡', '福德秀气', '阴差阳错', '驿马']
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=子
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=丑
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=寅
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=卯
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=辰
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=巳
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=午
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 ShenShaCalculationEngine.calculateShenSha 计算完成，结果: (8) ['天姚', '孤鸾煞', '时空亡', '月德合', '桃花', '福德秀气', '羊刃', '阴差阳错']
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=未
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 ShenShaCalculationEngine.calculateShenSha 计算完成，结果: (9) ['咸池', '天哭', '孤鸾煞', '寡宿', '岁破', '时空亡', '福德秀气', '金舆', '阴差阳错']
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=申
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 ShenShaCalculationEngine.calculateShenSha 计算完成，结果: (8) ['亡神', '元辰', '天喜', '孤鸾煞', '学堂', '月空亡', '福德秀气', '阴差阳错']
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=酉
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 ShenShaCalculationEngine.calculateShenSha 计算完成，结果: (9) ['天乙贵人', '太极贵人', '孤鸾煞', '将星', '月空亡', '白虎', '福德秀气', '词馆', '阴差阳错']
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=戌
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 ShenShaCalculationEngine.calculateShenSha 计算完成，结果: (8) ['咸池', '天空', '孤鸾煞', '年空亡', '披麻', '文曲', '福德秀气', '阴差阳错']
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=亥
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 ShenShaCalculationEngine.calculateShenSha 计算完成，结果: (11) ['吊客', '国印贵人', '天乙贵人', '天狗', '孤辰', '孤鸾煞', '年空亡', '月德', '福德秀气', '阴差阳错', '驿马']
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=子
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=丑
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=寅
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=卯
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=辰
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=巳
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=午
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 ShenShaCalculationEngine.calculateShenSha 计算完成，结果: (7) ['天姚', '孤鸾煞', '时空亡', '桃花', '福德秀气', '羊刃', '阴差阳错']
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=未
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 ShenShaCalculationEngine.calculateShenSha 计算完成，结果: (9) ['咸池', '天哭', '孤鸾煞', '寡宿', '岁破', '时空亡', '福德秀气', '金舆', '阴差阳错']
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=申
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 ShenShaCalculationEngine.calculateShenSha 计算完成，结果: (8) ['亡神', '元辰', '天喜', '孤鸾煞', '学堂', '月空亡', '福德秀气', '阴差阳错']
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=酉
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 ShenShaCalculationEngine.calculateShenSha 计算完成，结果: (10) ['天乙贵人', '太极贵人', '孤鸾煞', '将星', '月德', '月空亡', '白虎', '福德秀气', '词馆', '阴差阳错']
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=戌
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 ShenShaCalculationEngine.calculateShenSha 计算完成，结果: (8) ['咸池', '天空', '孤鸾煞', '年空亡', '披麻', '文曲', '福德秀气', '阴差阳错']
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=亥
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 ShenShaCalculationEngine.calculateShenSha 计算完成，结果: (10) ['吊客', '国印贵人', '天乙贵人', '天狗', '孤辰', '孤鸾煞', '年空亡', '福德秀气', '阴差阳错', '驿马']
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=子
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=丑
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=寅
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=卯
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=辰
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=巳
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=午
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 ShenShaCalculationEngine.calculateShenSha 计算完成，结果: (7) ['天姚', '孤鸾煞', '时空亡', '桃花', '福德秀气', '羊刃', '阴差阳错']
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=未
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 ShenShaCalculationEngine.calculateShenSha 计算完成，结果: (10) ['咸池', '天哭', '孤鸾煞', '寡宿', '岁破', '时空亡', '月德', '福德秀气', '金舆', '阴差阳错']
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=申
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 ShenShaCalculationEngine.calculateShenSha 计算完成，结果: (11) ['亡神', '元辰', '天喜', '天福', '孤鸾煞', '学堂', '月空亡', '禄马同乡', '福德秀气', '财富通门户', '阴差阳错']
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=酉
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 ShenShaCalculationEngine.calculateShenSha 计算完成，结果: (11) ['天乙贵人', '天福', '太极贵人', '孤鸾煞', '将星', '月空亡', '白虎', '福德秀气', '词馆', '财富通门户', '阴差阳错']
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=戌
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 ShenShaCalculationEngine.calculateShenSha 计算完成，结果: (8) ['咸池', '天空', '孤鸾煞', '年空亡', '披麻', '文曲', '福德秀气', '阴差阳错']
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=亥
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 ShenShaCalculationEngine.calculateShenSha 计算完成，结果: (11) ['吊客', '国印贵人', '天乙贵人', '天恩', '天狗', '孤辰', '孤鸾煞', '年空亡', '福德秀气', '阴差阳错', '驿马']
+plugin:bazi-obsidian:6 🔍 日空亡计算: dayStem=丙, dayBranch=午, branch=子
+plugin:bazi-obsidian:6 ❌ 日空亡计算错误: TypeError: Cannot read properties of undefined (reading 'isKongWang')
+    at isRiKongWang (plugin:bazi-obsidian:6:349347)
+    at Xe.callAlgorithmWithAdaptedParams (plugin:bazi-obsidian:6:374771)
+    at eval (plugin:bazi-obsidian:6:373905)
+    at Array.forEach (<anonymous>)
+    at Xe.calculateShenSha (plugin:bazi-obsidian:6:373878)
+    at R.calculatePillarShenSha (plugin:bazi-obsidian:6:379854)
+    at R.calculateLiuNianShenSha (plugin:bazi-obsidian:6:380713)
+    at Xt.calculateLiuNianByYearRangeWithFourPillar (plugin:bazi-obsidian:6:392266)
+    at te.calculateAllLiuNian (plugin:bazi-obsidian:21:45878)
+    at te.formatBaziInfo (plugin:bazi-obsidian:21:42412)
+callAlgorithmWithAdaptedParams @ plugin:bazi-obsidian:6
+eval @ plugin:bazi-obsidian:6
+calculateShenSha @ plugin:bazi-obsidian:6
+calculatePillarShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianShenSha @ plugin:bazi-obsidian:6
+calculateLiuNianByYearRangeWithFourPillar @ plugin:bazi-obsidian:6
+calculateAllLiuNian @ plugin:bazi-obsidian:21
+formatBaziInfo @ plugin:bazi-obsidian:21
+parseBaziString @ plugin:bazi-obsidian:21
+processBaziStringBased @ plugin:bazi-obsidian:2164
+processBaziCodeBlock @ plugin:bazi-obsidian:2163
+eval @ plugin:bazi-obsidian:2163
+t.initDOM @ app.js:1
+t.toDOM @ app.js:1
+t.sync @ app.js:1
+e.sync @ app.js:1
+(anonymous) @ app.js:1
+e.ignore @ app.js:1
+t.updateInner @ app.js:1
+t.update @ app.js:1
+e.update @ app.js:1
+dispatchTransactions @ app.js:1
+e.dispatch @ app.js:1
+(anonymous) @ app.js:1
+setTimeout (async)
+zV @ app.js:1
+(anonymous) @ app.js:1
+e.tryTrigger @ app.js:1
+e.trigger @ app.js:1
+t.trigger @ app.js:1
+t.registerMarkdownCodeBlockProcessor @ app.js:1
+register @ plugin:bazi-obsidian:2163
+onload @ plugin:bazi-obsidian:2179
+await in onload (async)
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+t.load @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+a @ app.js:1
+Promise.then (async)
+l @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.loadPlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePlugin @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+e.enablePluginAndSave @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+(anonymous) @ app.js:1
+g @ app.js:1
+(anonymous) @ app.js:1
+t.setValue @ app.js:1
+t.onClick @ app.js:1
+plugin:bazi-obsidian:6 ⚠️ 命宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 身宫空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 ⚠️ 胎元空亡计算跳过：缺少宫位信息
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 辛巳
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 申酉
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 庚辰
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 申酉
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 己卯
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 申酉
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 戊寅
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 申酉
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 丁丑
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 申酉
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 丙子
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 申酉
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 乙亥
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 申酉
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 甲戌
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 申酉
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 尝试获取大运旬空，干支: 癸酉
+plugin:bazi-obsidian:6 🔍 DaYunCalculator: 成功获取旬空: 戌亥

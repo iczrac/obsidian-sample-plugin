@@ -862,6 +862,8 @@ export class InteractiveBaziView {
     this.modalManager.showShenShaModal(shenSha, mockEvent);
   }
 
+
+
   /**
    * 为指定大运生成流年数据
    * @param daYun 大运信息

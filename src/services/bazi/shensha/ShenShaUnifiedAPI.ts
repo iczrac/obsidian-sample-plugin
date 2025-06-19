@@ -26,6 +26,12 @@ export interface TimeLayer {
 export interface TimeLayerParams {
   dayStem: string;
   ganZhi: string;
+  fourPillarInfo?: {
+    yearStem: string, yearBranch: string,
+    monthStem: string, monthBranch: string,
+    dayBranch: string,
+    hourStem: string, hourBranch: string
+  };
 }
 
 export interface ShenShaInfo {
@@ -89,25 +95,25 @@ export class ShenShaUnifiedAPI {
    * @returns 神煞数组
    */
   static getTimeLayerShenSha(timeLayer: string, params: TimeLayerParams): string[] {
-    const { dayStem, ganZhi } = params;
-    
+    const { dayStem, ganZhi, fourPillarInfo } = params;
+
     if (!ShenShaTimeService.validateTimeLayerParams(timeLayer, ganZhi)) {
       return [];
     }
-    
+
     switch (timeLayer) {
       case '大运':
-        return ShenShaTimeService.calculateDaYunShenSha(dayStem, ganZhi);
+        return ShenShaTimeService.calculateDaYunShenSha(dayStem, ganZhi, fourPillarInfo);
       case '流年':
-        return ShenShaTimeService.calculateLiuNianShenSha(dayStem, ganZhi);
+        return ShenShaTimeService.calculateLiuNianShenSha(dayStem, ganZhi, fourPillarInfo);
       case '流月':
-        return ShenShaTimeService.calculateLiuYueShenSha(dayStem, ganZhi);
+        return ShenShaTimeService.calculateLiuYueShenSha(dayStem, ganZhi, fourPillarInfo);
       case '流日':
-        return ShenShaTimeService.calculateLiuRiShenSha(dayStem, ganZhi);
+        return ShenShaTimeService.calculateLiuRiShenSha(dayStem, ganZhi, fourPillarInfo);
       case '流时':
-        return ShenShaTimeService.calculateLiuShiShenSha(dayStem, ganZhi);
+        return ShenShaTimeService.calculateLiuShiShenSha(dayStem, ganZhi, fourPillarInfo);
       case '小运':
-        return ShenShaTimeService.calculateXiaoYunShenSha(dayStem, ganZhi);
+        return ShenShaTimeService.calculateXiaoYunShenSha(dayStem, ganZhi, fourPillarInfo);
       default:
         return [];
     }
@@ -190,13 +196,20 @@ export class ShenShaUnifiedAPI {
    * 批量计算多个时间层级神煞
    * @param dayStem 日干
    * @param timeLayerData 时间层级数据
+   * @param fourPillarInfo 四柱信息（可选，用于细分空亡等）
    * @returns 批量结果
    */
   static getBatchTimeLayerShenSha(
-    dayStem: string, 
-    timeLayerData: {[key: string]: string}
+    dayStem: string,
+    timeLayerData: {[key: string]: string},
+    fourPillarInfo?: {
+      yearStem: string, yearBranch: string,
+      monthStem: string, monthBranch: string,
+      dayBranch: string,
+      hourStem: string, hourBranch: string
+    }
   ): {[key: string]: string[]} {
-    return ShenShaTimeService.calculateBatchShenSha(dayStem, timeLayerData);
+    return ShenShaTimeService.calculateBatchShenSha(dayStem, timeLayerData, fourPillarInfo);
   }
 
   /**

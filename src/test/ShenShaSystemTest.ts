@@ -75,7 +75,7 @@ export class ShenShaSystemTest {
     console.log(`✓ 羊刃算法测试: 甲日见卯 = ${isYangRen}`);
     
     // 测试新增算法
-    const isKongWang = ShenShaAlgorithms.isKongWang('子', '戌');
+    const isKongWang = ShenShaAlgorithms.isKongWang('甲', '子', '戌');
     console.log(`✓ 空亡算法测试: 子日见戌 = ${isKongWang}`);
     
     const isTaiJi = ShenShaAlgorithms.isTaiJiGuiRen('甲', '子');
@@ -171,7 +171,7 @@ export class ShenShaSystemTest {
     for (let i = 0; i < 1000; i++) {
       ShenShaAlgorithms.isTianYiGuiRen('甲', '丑');
       ShenShaAlgorithms.isYangRen('甲', '卯');
-      ShenShaAlgorithms.isKongWang('子', '戌');
+      ShenShaAlgorithms.isKongWang('甲', '子', '戌');
     }
     
     const algoEndTime = Date.now();

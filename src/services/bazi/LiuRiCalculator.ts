@@ -68,7 +68,7 @@ export class LiuRiCalculator {
           // 计算地势
           const diShi = BaziCalculator.getDiShi(dayStem, branch);
 
-          // 计算神煞信息
+          // 计算神煞信息（流日计算时没有完整四柱信息，细分空亡将被跳过）
           const shenSha = ShenShaTimeService.calculateLiuRiShenSha(dayStem, ganZhi);
 
           liuRiData.push({

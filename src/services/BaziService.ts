@@ -1060,12 +1060,22 @@ export class BaziService {
 
       console.log(`🔥 为大运${i} (${daYun.ganZhi}) 生成流年数据: ${daYun.startYear}-${endYear}`);
 
-      // 使用年份范围计算方法生成该大运期间的流年
-      const daYunLiuNian = LiuNianCalculator.calculateLiuNianByYearRange(
+      // 使用年份范围计算方法生成该大运期间的流年（传递四柱信息用于细分空亡等）
+      const fourPillarInfo = {
+        yearStem: eightChar.getYearGan(),
+        yearBranch: eightChar.getYearZhi(),
+        monthStem: eightChar.getMonthGan(),
+        monthBranch: eightChar.getMonthZhi(),
+        dayBranch: eightChar.getDayZhi(),
+        hourStem: eightChar.getTimeGan(),
+        hourBranch: eightChar.getTimeZhi()
+      };
+      const daYunLiuNian = LiuNianCalculator.calculateLiuNianByYearRangeWithFourPillar(
         daYun.startYear,
         endYear,
         birthYear,
-        dayStem
+        dayStem,
+        fourPillarInfo
       );
 
       console.log(`🔥 大运${i}生成流年数据${daYunLiuNian.length}年`);
